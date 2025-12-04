@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class LichHen extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',        // THÊM DÒNG NÀY
+        'bac_si_id',
+        'dich_vu_id',
+        'tong_tien',      // THÊM: Lưu giá dịch vụ tại thời điểm đặt
+        'ngay_hen',
+        'thoi_gian_hen',
+        'ghi_chu',
+        'trang_thai',
+        'payment_status',
+        'payment_method',
+        'paid_at',
+    ];
+
+    protected $casts = [
+        'ngay_hen' => 'date',
+        'tong_tien' => 'decimal:2',
+        'paid_at' => 'datetime',
+    ];
+
+    // Relations
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function bacSi()
+    {
+        return $this->belongsTo(BacSi::class);
+    }
+
+    public function dichVu()
+    {
+        return $this->belongsTo(\App\Models\DichVu::class, 'dich_vu_id');
+    }
+
+    public function hoaDon()
+    {
+        return $this->hasOne(\App\Models\HoaDon::class);
+    }
+
+    public function setStatusAttribute($value)
+    {
+        $aliases = [
+            'pending' => 'Chờ xác nhận',
+            'cho_xac_nhan' => 'Chờ xác nhận',
+            'cho' => 'Chờ xác nhận',
+            'confirmed' => 'Đã xác nhận',
+            'approved' => 'Đã xác nhận',
+            'canceled' => 'Đã hủy',
+            'cancelled' => 'Đã hủy',
+        ];
+        $key = mb_strtolower(trim((string) $value));
+        $this->attributes['status'] = $aliases[$key] ?? ($value ?: 'Chờ xác nhận');
+    }
+
+    public function setTrangThaiAttribute($value)
+    {
+        $aliases = [
+            'pending' => 'Chờ xác nhận',
+            'cho_xac_nhan' => 'Chờ xác nhận',
+            'cho' => 'Chờ xác nhận',
+            'confirmed' => 'Đã xác nhận',
+            'approved' => 'Đã xác nhận',
+            'canceled' => 'Đã hủy',
+            'cancelled' => 'Đã hủy',
+        ];
+        $key = mb_strtolower(trim((string) $value));
+        $this->attributes['trang_thai'] = $aliases[$key] ?? ($value ?: 'Chờ xác nhận');
+    }
+
+    public function getThanhToanTrangThaiAttribute()
+    {
+        return optional($this->hoaDon)->trang_thai ?? 'Chưa thanh toán';
+    }
+
+    /** Gợi ý tổng tiền nếu chưa có hóa đơn (dựa theo dịch vụ) */
+    public function getTongTienDeXuatAttribute()
+    {
+        return optional($this->dichVu)->gia ?? 0;
+    }
+
+    public function getIsPaidAttribute(): bool
+    {
+        return ($this->payment_status === 'Đã thanh toán')
+            || (optional($this->hoaDon)->trang_thai === 'Đã thanh toán');
+    }
+
+    public function getPaymentLabelAttribute(): string
+    {
+        return $this->payment_status
+            ?? (optional($this->hoaDon)->trang_thai ?? 'Chưa thanh toán');
+    }
+}
