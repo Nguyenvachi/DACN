@@ -42,9 +42,9 @@ class User extends Authenticatable
     // --- ❌ XÓA HOẶC COMMENT ĐOẠN NÀY (Vì Spatie đã có sẵn) ---
     /*
     public function roleKey(): string { ... }
-    
+
     // Hàm này đang GHI ĐÈ hàm của Spatie -> Gây lỗi logic
-    public function hasRole(string $role): bool { ... } 
+    public function hasRole(string $role): bool { ... }
 
     public function hasAnyRole(array $roles): bool { ... }
     */
@@ -89,6 +89,16 @@ class User extends Authenticatable
     public function loginAudits()
     {
         return $this->hasMany(\App\Models\LoginAudit::class);
+    }
+
+    public function patientProfile()
+    {
+        return $this->hasOne(\App\Models\PatientProfile::class);
+    }
+
+    public function notificationPreference()
+    {
+        return $this->hasOne(\App\Models\NotificationPreference::class);
     }
 
     // --- LOGIC KHÓA TÀI KHOẢN GIỮ NGUYÊN ---

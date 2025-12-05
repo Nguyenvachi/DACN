@@ -34,6 +34,20 @@ class BenhAn extends Model
     {
         return $this->belongsTo(LichHen::class, 'lich_hen_id');
     }
+
+    // Lấy dịch vụ qua lịch hẹn
+    public function dichVu()
+    {
+        return $this->hasOneThrough(
+            DichVu::class,
+            LichHen::class,
+            'id',           // Foreign key on lich_hens table
+            'id',           // Foreign key on dich_vus table
+            'lich_hen_id',  // Local key on benh_ans table
+            'dich_vu_id'    // Local key on lich_hens table
+        );
+    }
+
     public function files()
     {
         return $this->hasMany(BenhAnFile::class);

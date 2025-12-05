@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\LinkDoctors::class,
         \App\Console\Commands\TestSendReminder::class,
         \App\Console\Commands\CancelUnpaidAppointments::class, // THÊM: Command tự động hủy lịch chưa thanh toán
+        \App\Console\Commands\PublishScheduledPosts::class, // THÊM: Command tự động publish bài viết
     ];
 
     protected function schedule(Schedule $schedule): void
@@ -67,6 +68,9 @@ class Kernel extends ConsoleKernel
 
         // Kiểm tra thuốc giảm tồn mỗi ngày lúc 9:00 sáng
         $schedule->job(new \App\Jobs\CheckThuocGiamTon)->dailyAt('09:00');
+
+        // THÊM: Tự động publish bài viết đã đến giờ mỗi 10 phút
+        $schedule->command('posts:publish-scheduled')->everyTenMinutes();
     }
 
     protected function commands(): void

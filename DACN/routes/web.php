@@ -20,6 +20,7 @@ use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\NhanVienController;
 use App\Http\Controllers\Patient\PaymentController as PatientPaymentController;
+use App\Http\Controllers\PatientDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -252,6 +253,16 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
             'index' => 'danhmuc.index', 'create' => 'danhmuc.create', 'store' => 'danhmuc.store', 'show' => 'danhmuc.show', 'edit' => 'danhmuc.edit', 'update' => 'danhmuc.update', 'destroy' => 'danhmuc.destroy',
         ]);
         Route::resource('tag', \App\Http\Controllers\Admin\TagController::class);
+
+        // Media Library
+        Route::get('media', [\App\Http\Controllers\Admin\MediaController::class, 'index'])->name('media.index');
+        Route::post('media/upload', [\App\Http\Controllers\Admin\MediaController::class, 'upload'])->name('media.upload');
+        Route::delete('media/destroy', [\App\Http\Controllers\Admin\MediaController::class, 'destroy'])->name('media.destroy');
+
+        // Soft delete routes
+        Route::get('baiviet-trashed', [\App\Http\Controllers\Admin\BaiVietController::class, 'trashed'])->name('baiviet.trashed');
+        Route::post('baiviet/{id}/restore', [\App\Http\Controllers\Admin\BaiVietController::class, 'restore'])->name('baiviet.restore');
+        Route::delete('baiviet/{id}/force-delete', [\App\Http\Controllers\Admin\BaiVietController::class, 'forceDelete'])->name('baiviet.forceDelete');
     });
 
     // Tools
@@ -293,12 +304,14 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::post('benh-an/{benh_an}/files', [BenhAnController::class, 'uploadFile'])->name('benhan.files.upload');
     Route::delete('benh-an/{benh_an}/files/{file}', [BenhAnController::class, 'destroyFile'])->name('benhan.files.destroy');
     Route::get('benh-an/{benh_an}/audit', [BenhAnController::class, 'auditLog'])->name('benhan.audit');
+    Route::get('benh-an/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('benhan.exportPdf');
     Route::get('benh-an/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('benhan.files.download')->middleware('signed');
     Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
 });
 
 // Patient
 Route::middleware(['auth', 'role:patient'])->group(function () {
+    Route::get('/dashboard/health', [PatientDashboardController::class, 'index'])->name('patient.dashboard.health');
     Route::get('/lich-hen/create', [LichHenController::class, 'create'])->name('lichhen.create');
     Route::post('/lich-hen', [LichHenController::class, 'store'])->name('lichhen.store');
     Route::get('/lich-hen-cua-toi', [LichHenController::class, 'myAppointments'])->name('lichhen.my');
@@ -310,6 +323,7 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
     Route::prefix('benh-an')->name('patient.benhan.')->group(function () {
         Route::get('/', [BenhAnController::class, 'index'])->name('index');
         Route::get('/{benh_an}', [BenhAnController::class, 'show'])->name('show');
+        Route::get('/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('exportPdf');
         Route::get('/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('files.download')->middleware('signed');
         Route::get('/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('xetnghiem.download')->middleware('signed');
     });
@@ -336,6 +350,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/benh-an/{benhAn}/don-thuoc', [BenhAnController::class, 'storePrescription'])->name('benhan.donthuoc.store');
     Route::post('/don-thuoc/{donThuoc}/items', [BenhAnController::class, 'addPrescriptionItem'])->name('donthuoc.item.add');
     Route::post('/benh-an/{benhAn}/xet-nghiem', [BenhAnController::class, 'uploadXetNghiem'])->name('benhan.xetnghiem.upload');
+
+    // Patient Profile Routes
+    Route::post('/profile/medical', [ProfileController::class, 'updateMedical'])->name('profile.updateMedical');
+    Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.uploadAvatar');
+    Route::post('/profile/notifications', [ProfileController::class, 'updateNotifications'])->name('profile.updateNotifications');
 });
 Route::get('/ajax/chuyen-khoa', [LichHenController::class, 'ajaxChuyenKhoa'])->name('ajax.chuyenkhoa');
 Route::get('/ajax/bac-si-by-chuyen-khoa', [LichHenController::class, 'ajaxBacSiByChuyenKhoa'])->name('ajax.bacsi.byChuyenKhoa');
@@ -372,3 +391,6 @@ Route::middleware(['auth','verified'])->get('/tools/make-test-reminder-url', fun
     return response()->json(['url' => $url]);
 })->name('tools.make-test-reminder-url');
 Route::get('/tin-tuc', [\App\Http\Controllers\BlogController::class, 'index'])->name('public.blog.index');
+
+// Sitemap.xml
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');

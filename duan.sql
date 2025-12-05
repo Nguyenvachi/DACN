@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 04, 2025 lúc 12:55 PM
+-- Thời gian đã tạo: Th12 05, 2025 lúc 06:13 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.0.30
 
@@ -115,15 +115,19 @@ CREATE TABLE `bai_viets` (
   `meta_description` text DEFAULT NULL,
   `thumbnail` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `bai_viets`
 --
 
-INSERT INTO `bai_viets` (`id`, `user_id`, `danh_muc_id`, `title`, `slug`, `excerpt`, `content`, `status`, `published_at`, `meta_title`, `meta_description`, `thumbnail`, `created_at`, `updated_at`) VALUES
-(1, 21, 1, '5 dấu hiệu nhận biết mang thai sớm chính xác nhất', '5-dau-hieu-nhan-biet-mang-thai-som-chinh-xac-nhat', 'Làm sao để biết mình đã có thai? Dưới đây là 5 dấu hiệu cơ thể báo hiệu sớm nhất bạn cần biết.', 'Khoa sản là gì?\r\nKhoa sản, còn được biết đến với tên gọi là sản khoa, là một lĩnh vực chuyên môn trong ngành y học, chuyên về việc chăm sóc và quản lý sức khỏe của phụ nữ trước, trong và sau quá trình mang thai, sinh nở. Lĩnh vực này không chỉ tập trung vào việc đảm bảo sự an toàn và sức khỏe cho mẹ và bé trong suốt quá trình thai kỳ và sinh nở mà còn bao gồm việc phòng ngừa, chẩn đoán và điều trị các biến chứng có thể xảy ra. Khoa sản kết hợp sự hiểu biết sâu sắc về sinh lý học, dược học và các kỹ thuật phẫu thuật để cung cấp cho các bà mẹ và em bé sự chăm sóc tốt nhất có thể. Ngoài ra, lĩnh vực này cũng thường xuyên phối hợp với các chuyên ngành khác như nhi khoa, y học nội tổng hợp và tâm lý học để đáp ứng nhu cầu đa dạng của phụ nữ trong giai đoạn quan trọng này của cuộc đời.\r\n\r\nKhác biệt với các chuyên ngành khác trong ngành y học như nội khoa, ngoại khoa hay nhi khoa, khoa sản tập trung vào việc theo dõi và đảm bảo sức khỏe cho cả mẹ và bé trong suốt quá trình thai kỳ và sau khi sinh nở. Trong khi đó, nội khoa chủ yếu điều trị các bệnh lý nội tạng không cần phẫu thuật, ngoại khoa tập trung vào điều trị bằng phẫu thuật và nhi khoa chăm sóc sức khỏe cho trẻ em. Khoa sản không chỉ giới hạn ở việc sinh đẻ mà còn bao gồm cả việc tư vấn và điều trị về sức khỏe sinh sản, phòng ngừa và xử lý các vấn đề liên quan đến cơ quan sinh dục nữ, mang lại cho phụ nữ sự an tâm và sức khỏe tốt nhất để họ có thể đảm nhận vai trò làm mẹ một cách trọn vẹn nhất.', 'published', '2025-11-16 08:07:00', '5 dấu hiệu mang thai sớm - Phòng khám Sản phụ khoa', 'Trễ kinh, buồn nôn, thay đổi vùng ngực... là những dấu hiệu mang thai sớm. Xem chi tiết tư vấn từ bác sĩ.', 'https://cdn.nhathuoclongchau.com.vn/unsafe/800x0/khoa_san_la_gi_tam_quan_trong_cua_khoa_san_trong_suc_khoe_sinh_san_o_nu_gioi1_1d2c573ee2.jpg', '2025-11-17 01:08:26', '2025-11-17 01:08:26');
+INSERT INTO `bai_viets` (`id`, `user_id`, `danh_muc_id`, `title`, `slug`, `excerpt`, `content`, `status`, `published_at`, `meta_title`, `meta_description`, `thumbnail`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 21, 1, '5 dấu hiệu nhận biết mang thai sớm chính xác nhất', '5-dau-hieu-nhan-biet-mang-thai-som-chinh-xac-nhat', 'Làm sao để biết mình đã có thai? Dưới đây là 5 dấu hiệu cơ thể báo hiệu sớm nhất bạn cần biết.', 'Khoa sản là gì?\r\nKhoa sản, còn được biết đến với tên gọi là sản khoa, là một lĩnh vực chuyên môn trong ngành y học, chuyên về việc chăm sóc và quản lý sức khỏe của phụ nữ trước, trong và sau quá trình mang thai, sinh nở. Lĩnh vực này không chỉ tập trung vào việc đảm bảo sự an toàn và sức khỏe cho mẹ và bé trong suốt quá trình thai kỳ và sinh nở mà còn bao gồm việc phòng ngừa, chẩn đoán và điều trị các biến chứng có thể xảy ra. Khoa sản kết hợp sự hiểu biết sâu sắc về sinh lý học, dược học và các kỹ thuật phẫu thuật để cung cấp cho các bà mẹ và em bé sự chăm sóc tốt nhất có thể. Ngoài ra, lĩnh vực này cũng thường xuyên phối hợp với các chuyên ngành khác như nhi khoa, y học nội tổng hợp và tâm lý học để đáp ứng nhu cầu đa dạng của phụ nữ trong giai đoạn quan trọng này của cuộc đời.\r\n\r\nKhác biệt với các chuyên ngành khác trong ngành y học như nội khoa, ngoại khoa hay nhi khoa, khoa sản tập trung vào việc theo dõi và đảm bảo sức khỏe cho cả mẹ và bé trong suốt quá trình thai kỳ và sau khi sinh nở. Trong khi đó, nội khoa chủ yếu điều trị các bệnh lý nội tạng không cần phẫu thuật, ngoại khoa tập trung vào điều trị bằng phẫu thuật và nhi khoa chăm sóc sức khỏe cho trẻ em. Khoa sản không chỉ giới hạn ở việc sinh đẻ mà còn bao gồm cả việc tư vấn và điều trị về sức khỏe sinh sản, phòng ngừa và xử lý các vấn đề liên quan đến cơ quan sinh dục nữ, mang lại cho phụ nữ sự an tâm và sức khỏe tốt nhất để họ có thể đảm nhận vai trò làm mẹ một cách trọn vẹn nhất.', 'published', '2025-11-16 08:07:00', '5 dấu hiệu mang thai sớm - Phòng khám Sản phụ khoa', 'Trễ kinh, buồn nôn, thay đổi vùng ngực... là những dấu hiệu mang thai sớm. Xem chi tiết tư vấn từ bác sĩ.', 'https://cdn.nhathuoclongchau.com.vn/unsafe/800x0/khoa_san_la_gi_tam_quan_trong_cua_khoa_san_trong_suc_khoe_sinh_san_o_nu_gioi1_1d2c573ee2.jpg', '2025-11-17 01:08:26', '2025-12-05 02:35:45', NULL),
+(2, 21, NULL, 'Bài test lịch đăng', 'bai-test-lich-dang', NULL, '<p><i><strong>Test auto publish</strong></i></p>', 'published', '2025-12-05 02:40:00', NULL, NULL, NULL, '2025-12-05 02:37:23', '2025-12-05 02:39:32', '2025-12-05 02:39:32'),
+(3, 21, 1, 'Lịch khám thai định kỳ chuẩn mẹ bầu cần nhớ', 'lich-kham-thai-dinh-ky-chuan-me-bau-can-nho', 'Việc khám thai đúng lịch giúp bác sĩ theo dõi sát sao sự phát triển của thai nhi và phát hiện sớm các bất thường.', '<p><strong>Mốc 1 (Tuần 5-8):</strong> Xác định có thai, vị trí thai và tim thai.</p><p><strong>Mốc 2 (Tuần 11-13):</strong> Đo độ mờ da gáy (sàng lọc Down).</p><p><strong>Mốc 3 (Tuần 20-22):</strong> Siêu âm 4D khảo sát dị tật hình thái.</p>', 'published', '2025-12-05 02:58:00', 'Lịch khám thai chuẩn 2025 - Những mốc quan trọng', 'Mẹ bầu cần khám thai vào những tuần nào? Xem ngay lịch khám thai chi tiết để đảm bảo thai kỳ khỏe mạnh.', 'http://127.0.0.1:8000/storage/uploads/posts/1764902080_win-20221201-23-47-35-pro.jpg', '2025-12-05 02:58:11', '2025-12-05 02:58:38', NULL),
+(4, 21, 2, '5 dấu hiệu nhận biết tiểu đường thai kỳ sớm nhất', '5-dau-hieu-nhan-biet-tieu-duong-thai-ky-som-nhat', 'Tiểu đường thai kỳ nếu không phát hiện sớm có thể gây biến chứng nguy hiểm cho cả mẹ và bé.', '<p><i><strong>Thường xuyên khát nước, đi tiểu nhiều lần, mệt mỏi, sụt cân hoặc tăng cân bất thường...</strong></i></p>', 'published', '2025-12-05 03:06:00', NULL, NULL, NULL, '2025-12-05 03:00:59', '2025-12-05 03:08:51', '2025-12-05 03:08:51');
 
 -- --------------------------------------------------------
 
@@ -141,7 +145,10 @@ CREATE TABLE `bai_viet_tag` (
 --
 
 INSERT INTO `bai_viet_tag` (`bai_viet_id`, `tag_id`) VALUES
-(1, 1);
+(1, 1),
+(2, 1),
+(3, 4),
+(4, 2);
 
 -- --------------------------------------------------------
 
@@ -373,7 +380,9 @@ CREATE TABLE `danh_mucs` (
 --
 
 INSERT INTO `danh_mucs` (`id`, `name`, `slug`, `meta_title`, `meta_description`, `description`, `created_at`, `updated_at`) VALUES
-(1, 'Cẩm nang Mẹ bầu', 'cam-nang-me-bau', 'Cẩm nang Mẹ bầu - Kiến thức mang thai chuẩn Y khoa', 'Tổng hợp các bài viết hướng dẫn chăm sóc sức khỏe cho mẹ và bé trong suốt thai kỳ.', 'Chuyên mục chia sẻ kiến thức từ bác sĩ chuyên khoa.', '2025-11-17 01:05:25', '2025-11-17 01:05:25');
+(1, 'Cẩm nang Mẹ bầu', 'cam-nang-me-bau', 'Cẩm nang Mẹ bầu - Kiến thức mang thai chuẩn Y khoa', 'Tổng hợp các bài viết hướng dẫn chăm sóc sức khỏe cho mẹ và bé trong suốt thai kỳ.', 'Chuyên mục chia sẻ kiến thức từ bác sĩ chuyên khoa.', '2025-11-17 01:05:25', '2025-11-17 01:05:25'),
+(2, 'Sức khỏe Phụ khoa', 'suc-khoe-phu-khoa', 'Tư vấn & Điều trị bệnh Phụ khoa uy tín', 'Giải đáp các vấn đề thầm kín, bệnh lý viêm nhiễm và sức khỏe sinh sản cho chị em phụ nữ.', 'Các bài viết về bệnh lý phụ khoa thường gặp.', '2025-12-05 02:54:17', '2025-12-05 02:54:17'),
+(3, 'Kế hoạch hóa gia đình', 'ke-hoach-hoa-gia-dinh', 'Các biện pháp tránh thai an toàn & hiệu quả', 'Thông tin về thuốc tránh thai, đặt vòng, cấy que và tư vấn sức khỏe sinh sản.', 'Tư vấn kế hoạch hóa gia đình.', '2025-12-05 02:54:48', '2025-12-05 02:54:48');
 
 -- --------------------------------------------------------
 
@@ -805,7 +814,14 @@ INSERT INTO `login_audits` (`id`, `user_id`, `email`, `ip`, `user_agent`, `statu
 (71, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-04 06:49:40', '2025-12-04 06:49:40'),
 (72, 38, 'Patient3@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-04 06:50:07', '2025-12-04 06:50:07'),
 (73, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-04 06:59:42', '2025-12-04 06:59:42'),
-(74, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-04 11:09:55', '2025-12-04 11:09:55');
+(74, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-04 11:09:55', '2025-12-04 11:09:55'),
+(75, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 02:18:02', '2025-12-05 02:18:02'),
+(76, 38, 'Patient3@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 02:33:31', '2025-12-05 02:33:31'),
+(77, 38, 'Patient3@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 02:59:02', '2025-12-05 02:59:02'),
+(78, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 03:23:02', '2025-12-05 03:23:02'),
+(79, 38, 'Patient3@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 03:45:22', '2025-12-05 03:45:22'),
+(80, 38, 'Patient3@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 04:10:52', '2025-12-05 04:10:52'),
+(81, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 04:16:17', '2025-12-05 04:16:17');
 
 -- --------------------------------------------------------
 
@@ -890,7 +906,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (67, '2025_12_04_160000_fix_phieu_nhaps_foreign_key', 37),
 (68, '2025_12_04_160100_fix_phieu_nhap_items_foreign_key', 38),
 (69, '2025_12_04_160200_fix_phieu_xuat_items_foreign_key', 38),
-(70, '2025_12_04_150000_add_status_to_phongs_table', 39);
+(70, '2025_12_04_150000_add_status_to_phongs_table', 39),
+(71, '2025_12_05_092931_add_deleted_at_to_bai_viets_table', 40),
+(72, '2025_12_05_101210_create_patient_profiles_table', 41),
+(73, '2025_12_05_101211_create_notification_preferences_table', 41);
 
 -- --------------------------------------------------------
 
@@ -1049,6 +1068,34 @@ INSERT INTO `nha_cung_cap_thuoc` (`id`, `nha_cung_cap_id`, `thuoc_id`, `gia_nhap
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `notification_preferences`
+--
+
+CREATE TABLE `notification_preferences` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `email_appointment_reminder` tinyint(1) NOT NULL DEFAULT 1,
+  `email_appointment_confirmed` tinyint(1) NOT NULL DEFAULT 1,
+  `email_appointment_cancelled` tinyint(1) NOT NULL DEFAULT 1,
+  `email_test_results` tinyint(1) NOT NULL DEFAULT 1,
+  `email_promotions` tinyint(1) NOT NULL DEFAULT 0,
+  `sms_appointment_reminder` tinyint(1) NOT NULL DEFAULT 0,
+  `sms_appointment_confirmed` tinyint(1) NOT NULL DEFAULT 0,
+  `reminder_hours_before` int(11) NOT NULL DEFAULT 24 COMMENT 'Nhắc trước bao nhiêu giờ',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `notification_preferences`
+--
+
+INSERT INTO `notification_preferences` (`id`, `user_id`, `email_appointment_reminder`, `email_appointment_confirmed`, `email_appointment_cancelled`, `email_test_results`, `email_promotions`, `sms_appointment_reminder`, `sms_appointment_confirmed`, `reminder_hours_before`, `created_at`, `updated_at`) VALUES
+(1, 36, 1, 1, 1, 1, 0, 0, 0, 24, '2025-12-05 04:37:24', '2025-12-05 04:37:24');
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `password_resets`
 --
 
@@ -1057,6 +1104,38 @@ CREATE TABLE `password_resets` (
   `token` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `patient_profiles`
+--
+
+CREATE TABLE `patient_profiles` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `nhom_mau` varchar(255) DEFAULT NULL COMMENT 'A, B, AB, O, A+, A-, ...',
+  `chieu_cao` decimal(5,2) DEFAULT NULL COMMENT 'cm',
+  `can_nang` decimal(5,2) DEFAULT NULL COMMENT 'kg',
+  `allergies` text DEFAULT NULL COMMENT 'Dị ứng (JSON array)',
+  `tien_su_benh` text DEFAULT NULL COMMENT 'Tiền sử bệnh lý',
+  `thuoc_dang_dung` text DEFAULT NULL COMMENT 'Thuốc đang sử dụng',
+  `benh_man_tinh` text DEFAULT NULL COMMENT 'Bệnh mạn tính',
+  `emergency_contact_name` varchar(255) DEFAULT NULL,
+  `emergency_contact_phone` varchar(255) DEFAULT NULL,
+  `emergency_contact_relation` varchar(255) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `patient_profiles`
+--
+
+INSERT INTO `patient_profiles` (`id`, `user_id`, `nhom_mau`, `chieu_cao`, `can_nang`, `allergies`, `tien_su_benh`, `thuoc_dang_dung`, `benh_man_tinh`, `emergency_contact_name`, `emergency_contact_phone`, `emergency_contact_relation`, `avatar`, `created_at`, `updated_at`) VALUES
+(1, 36, 'A', 170.00, 65.00, '[\"Penicillin\",\"Ph\\u1ea5n hoa\",\"H\\u1ea3i s\\u1ea3n\"]', 'Phẫu thuật ruột thừa 2020', 'Vitamin C', 'Không', 'Nguyễn Văn A', '0398219340', 'Vợ', 'avatars/w3ySyRmzoyXphvU4nPc5tYT6D7QQJuQ4V0DGtIAv.jpg', '2025-12-05 03:23:48', '2025-12-05 04:36:52'),
+(2, 38, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'avatars/qonVp1TTXsRdUyrjTIE7E8ibPneR51vwQpszH6MX.jpg', '2025-12-05 04:11:17', '2025-12-05 04:11:17');
 
 -- --------------------------------------------------------
 
@@ -1536,7 +1615,11 @@ CREATE TABLE `tags` (
 --
 
 INSERT INTO `tags` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
-(1, 'Dinh dưỡng thai kỳ', 'dinh-duong-thai-ky', '2025-11-17 01:04:32', '2025-11-17 01:04:32');
+(1, 'Dinh dưỡng thai kỳ', 'dinh-duong-thai-ky', '2025-11-17 01:04:32', '2025-11-17 01:04:32'),
+(2, 'Tiểu đường thai kỳ', 'tieu-duong-thai-ky', '2025-12-05 02:55:10', '2025-12-05 02:55:10'),
+(3, 'Viêm âm đạo', 'viem-am-dao', '2025-12-05 02:55:15', '2025-12-05 02:55:15'),
+(4, 'Khám thai định kỳ', 'kham-thai-dinh-ky', '2025-12-05 02:55:19', '2025-12-05 02:55:19'),
+(5, 'Vô sinh hiếm muộn', 'vo-sinh-hiem-muon', '2025-12-05 02:55:28', '2025-12-05 02:55:28');
 
 -- --------------------------------------------------------
 
@@ -1665,16 +1748,16 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `locked_at`, `locked_until`, `must_change_password`, `last_login_at`, `login_attempts`, `last_login_ip`, `created_at`, `updated_at`, `role`) VALUES
-(21, 'Admin', 'Admin@gmail.com', NULL, '$2y$10$WciFB/wsj9Qvjg8l6iUxsOIjGZm5UFJXjAivamXlwDBAlAZfSZdyC', NULL, NULL, NULL, 0, '2025-12-04 06:17:58', 0, '127.0.0.1', '2025-10-27 08:29:43', '2025-12-04 06:17:58', 'admin'),
+(21, 'Admin', 'Admin@gmail.com', NULL, '$2y$10$WciFB/wsj9Qvjg8l6iUxsOIjGZm5UFJXjAivamXlwDBAlAZfSZdyC', NULL, NULL, NULL, 0, '2025-12-05 02:18:02', 0, '127.0.0.1', '2025-10-27 08:29:43', '2025-12-05 02:18:02', 'admin'),
 (30, 'Võ Thị Diễm Hằng', 'vo-thi-diem-hang.10@gmail.com', NULL, '$2y$10$b/iOfFWVgth1b.AZxAd0JuEk1hrGJQ9ZHrRZnC1omUUyvcVX1jYKO', NULL, NULL, NULL, 0, '2025-12-04 06:49:40', 0, '127.0.0.1', '2025-11-04 02:37:58', '2025-12-04 06:49:40', 'doctor'),
 (31, 'Bệnh nhân 1', 'Patient1@gmail.com', NULL, '$2y$10$alQbaYP.EqXhC3t07r9fEOC3r8N0NlI5e9QjMoE8rNPIAviWuPS26', NULL, NULL, NULL, 0, '2025-11-28 07:51:08', 0, '127.0.0.1', '2025-11-04 02:49:17', '2025-11-28 07:51:08', 'patient'),
 (32, 'Nhân viên', 'Staff@gmail.com', NULL, '$2y$10$qNgMxPiExJCL96JW7X1oVOmBBiLVF6a8t.BWxtuqOsx9OIZNv7as6', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-11-04 02:53:09', '2025-11-04 02:53:09', 'staff'),
 (33, 'Bệnh nhân 2', 'Patient2@gmail.com', NULL, '$2y$10$Uf82vR0N6c2ZFb6acO6ie.rJPGXPLYV.tvqm4zx7zEWRqcMMDuJ/C', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-11-04 03:17:19', '2025-11-04 03:17:19', 'patient'),
 (34, 'Bác sĩ 2', 'bac-si-2.11@gmail.com', NULL, '$2y$10$j.fLKLmhCgmtZKmqLbZew.1R00lIl/KA9oGMNqjqYT5.cLbnu166W', NULL, NULL, NULL, 0, '2025-11-28 06:08:15', 0, '127.0.0.1', '2025-11-04 03:19:00', '2025-11-28 06:08:15', 'doctor'),
 (35, 'Ngoãnh Chí Thiên', 'henvaemhen@gmail.com', NULL, '$2y$10$VV3v57c1/X0a9q3YwnF1euIdv3ffIQIde9w7REOuggdBQtzHkkDeO', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-11-06 21:13:33', '2025-11-06 21:13:33', 'patient'),
-(36, 'Nguyễn Thích', 'tn822798@gmail.com', NULL, '$2y$10$TOH36mrBmRe.tZwE8XE4KOJVWhUvjSqxZXEN7KNtB7gTD71f.LHQu', NULL, NULL, NULL, 1, '2025-12-04 11:09:55', 0, '127.0.0.1', '2025-11-20 01:49:19', '2025-12-04 11:09:55', 'patient'),
+(36, 'Nguyễn Thích', 'tn822798@gmail.com', NULL, '$2y$10$TOH36mrBmRe.tZwE8XE4KOJVWhUvjSqxZXEN7KNtB7gTD71f.LHQu', NULL, NULL, NULL, 1, '2025-12-05 04:16:17', 0, '127.0.0.1', '2025-11-20 01:49:19', '2025-12-05 04:16:17', 'patient'),
 (37, 'Nhân viên Võ', 'vothidiemhang2020qng@gmail.com', NULL, '$2y$10$wqIVbhQjPtjblosomwkoXubcp0gBAZWEsCBvh.p8Pstzlkz250vJC', 'ruuHtqQYiPJuqUojrAb5G4tTBPsQzbhrnqj9llwhKhaCSNEpUF1U8QYjDZjK', NULL, NULL, 1, '2025-11-28 08:06:12', 0, '127.0.0.1', '2025-11-20 20:41:40', '2025-11-28 08:06:12', 'staff'),
-(38, 'Bệnh nhân 3', 'Patient3@gmail.com', NULL, '$2y$10$Tv8v7lIQi5uTtmIjRYY7.ehH.67ReLaZubDvBkAEQVAFVRw9CMXhe', NULL, NULL, NULL, 0, '2025-12-04 06:50:07', 0, '127.0.0.1', '2025-11-27 11:26:44', '2025-12-04 06:50:07', 'patient');
+(38, 'Bệnh nhân 3', 'Patient3@gmail.com', NULL, '$2y$10$Tv8v7lIQi5uTtmIjRYY7.ehH.67ReLaZubDvBkAEQVAFVRw9CMXhe', NULL, NULL, NULL, 0, '2025-12-05 04:10:52', 0, '127.0.0.1', '2025-11-27 11:26:44', '2025-12-05 04:10:52', 'patient');
 
 -- --------------------------------------------------------
 
@@ -1972,10 +2055,24 @@ ALTER TABLE `nha_cung_cap_thuoc`
   ADD KEY `nha_cung_cap_thuoc_thuoc_id_foreign` (`thuoc_id`);
 
 --
+-- Chỉ mục cho bảng `notification_preferences`
+--
+ALTER TABLE `notification_preferences`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `notification_preferences_user_id_unique` (`user_id`);
+
+--
 -- Chỉ mục cho bảng `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD PRIMARY KEY (`email`);
+
+--
+-- Chỉ mục cho bảng `patient_profiles`
+--
+ALTER TABLE `patient_profiles`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `patient_profiles_user_id_foreign` (`user_id`);
 
 --
 -- Chỉ mục cho bảng `payment_logs`
@@ -2117,7 +2214,7 @@ ALTER TABLE `bac_sis`
 -- AUTO_INCREMENT cho bảng `bai_viets`
 --
 ALTER TABLE `bai_viets`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `benh_ans`
@@ -2165,7 +2262,7 @@ ALTER TABLE `coupons`
 -- AUTO_INCREMENT cho bảng `danh_mucs`
 --
 ALTER TABLE `danh_mucs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `dich_vus`
@@ -2243,13 +2340,13 @@ ALTER TABLE `lich_nghis`
 -- AUTO_INCREMENT cho bảng `login_audits`
 --
 ALTER TABLE `login_audits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT cho bảng `nhan_viens`
@@ -2274,6 +2371,18 @@ ALTER TABLE `nha_cung_caps`
 --
 ALTER TABLE `nha_cung_cap_thuoc`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT cho bảng `notification_preferences`
+--
+ALTER TABLE `notification_preferences`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `patient_profiles`
+--
+ALTER TABLE `patient_profiles`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `payment_logs`
@@ -2333,7 +2442,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT cho bảng `tags`
 --
 ALTER TABLE `tags`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `thanh_toans`
@@ -2539,6 +2648,18 @@ ALTER TABLE `nhan_vien_audits`
 ALTER TABLE `nha_cung_cap_thuoc`
   ADD CONSTRAINT `nha_cung_cap_thuoc_nha_cung_cap_id_foreign` FOREIGN KEY (`nha_cung_cap_id`) REFERENCES `nha_cung_caps` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `nha_cung_cap_thuoc_thuoc_id_foreign` FOREIGN KEY (`thuoc_id`) REFERENCES `thuocs` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `notification_preferences`
+--
+ALTER TABLE `notification_preferences`
+  ADD CONSTRAINT `notification_preferences_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `patient_profiles`
+--
+ALTER TABLE `patient_profiles`
+  ADD CONSTRAINT `patient_profiles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `payment_logs`

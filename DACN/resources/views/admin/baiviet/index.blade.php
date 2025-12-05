@@ -10,9 +10,17 @@
         <i class="fas fa-newspaper me-2"></i> Danh sách Bài viết
     </h1>
 
-    <a href="{{ route('admin.baiviet.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus-circle"></i> Thêm bài viết
-    </a>
+    <div>
+        <a href="{{ route('admin.media.index') }}" class="btn btn-info">
+            <i class="bi bi-images"></i> Media
+        </a>
+        <a href="{{ route('admin.baiviet.trashed') }}" class="btn btn-warning">
+            <i class="fas fa-trash-restore"></i> Thùng rác
+        </a>
+        <a href="{{ route('admin.baiviet.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> Thêm bài viết
+        </a>
+    </div>
 </div>
 
 {{-- =============================

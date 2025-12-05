@@ -135,6 +135,7 @@
             <li><a href="{{ route('admin.baiviet.index') }}">📝 Bài viết</a></li>
             <li><a href="{{ route('admin.danhmuc.index') }}">📂 Danh mục</a></li>
             <li><a href="{{ route('admin.tag.index') }}">🏷️ Thẻ</a></li>
+            <li><a href="{{ route('admin.media.index') }}">🖼️ Media Library</a></li>
 
             <hr>
 

@@ -87,8 +87,37 @@ class BaiVietController extends Controller
 
     public function destroy(BaiViet $baiviet)
     {
-        $baiviet->delete();
-        return redirect()->route('admin.baiviet.index')->with('success', 'Đã xóa bài viết');
+        $baiviet->delete(); // Soft delete
+        return redirect()->route('admin.baiviet.index')->with('success', 'Đã chuyển bài viết vào thùng rác');
+    }
+
+    /**
+     * Hiển thị bài viết đã xóa (trashed)
+     */
+    public function trashed()
+    {
+        $posts = BaiViet::onlyTrashed()->with(['danhMuc', 'author'])->latest('deleted_at')->paginate(12);
+        return view('admin.baiviet.trashed', compact('posts'));
+    }
+
+    /**
+     * Khôi phục bài viết
+     */
+    public function restore($id)
+    {
+        $post = BaiViet::onlyTrashed()->findOrFail($id);
+        $post->restore();
+        return redirect()->route('admin.baiviet.trashed')->with('success', 'Đã khôi phục bài viết');
+    }
+
+    /**
+     * Xóa vĩnh viễn
+     */
+    public function forceDelete($id)
+    {
+        $post = BaiViet::onlyTrashed()->findOrFail($id);
+        $post->forceDelete();
+        return redirect()->route('admin.baiviet.trashed')->with('success', 'Đã xóa vĩnh viễn bài viết');
     }
 
     private function makeUniqueSlug(string $title, ?int $ignoreId = null): string

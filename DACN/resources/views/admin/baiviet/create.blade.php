@@ -70,7 +70,7 @@
                 {{-- Nội dung --}}
                 <div class="col-md-12">
                     <label class="form-label fw-bold">Nội dung <span class="text-danger">*</span></label>
-                    <textarea name="content" rows="8"
+                    <textarea name="content" id="editor"
                               class="form-control form-control-lg @error('content') is-invalid @enderror">{{ old('content') }}</textarea>
                     @error('content')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -154,6 +154,40 @@
     textarea {
         resize: none;
     }
+
+    .ck-editor__editable {
+        min-height: 400px;
+    }
 </style>
+
+{{-- CKEditor 5 CDN --}}
+<script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
+                'outdent', 'indent', '|',
+                'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', '|',
+                'undo', 'redo'
+            ],
+            image: {
+                toolbar: [
+                    'imageTextAlternative', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side'
+                ]
+            },
+            simpleUpload: {
+                // Upload adapter cho CKEditor
+                uploadUrl: '{{ route("admin.media.upload") }}',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
 
 @endsection

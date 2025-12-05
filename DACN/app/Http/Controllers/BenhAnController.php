@@ -174,6 +174,25 @@ class BenhAnController extends Controller
         return redirect()->route($this->routeByRole('index'))->with('status', 'Đã xóa.');
     }
 
+    /**
+     * Export bệnh án ra file PDF
+     */
+    public function exportPdf(BenhAn $benh_an)
+    {
+        // Check authorization
+        $this->authorize('view', $benh_an);
+
+        // Load relationships
+        $benh_an->load(['benhNhan', 'bacSi.user', 'dichVu', 'donThuocs.items.thuoc', 'xetNghiems']);
+
+        // Tạo PDF view
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('benh_an.pdf', compact('benh_an'));
+
+        // Download PDF
+        $filename = 'benh-an-' . $benh_an->id . '-' . date('Ymd') . '.pdf';
+        return $pdf->download($filename);
+    }
+
     // THÊM: upload thêm file vào bệnh án
     public function uploadFile(Request $request, BenhAn $benh_an)
     {
@@ -199,7 +218,7 @@ class BenhAnController extends Controller
                 ]);
                 $uploadedCount++;
             }
-            
+
             // BỔ SUNG: Ghi audit log cho upload file
             \App\Observers\BenhAnObserver::logCustomAction(
                 $benh_an,
@@ -220,7 +239,7 @@ class BenhAnController extends Controller
         }
 
         $fileName = $file->ten_file;
-        
+
         // BỔ SUNG: xóa file từ đúng disk
         Storage::disk($file->disk_name)->delete($file->path);
         $file->delete();
@@ -284,8 +303,8 @@ class BenhAnController extends Controller
 
         // BỔ SUNG: Ghi audit log cho hoạt động kê đơn
         \App\Observers\BenhAnObserver::logCustomAction(
-            $benhAn, 
-            'prescription_created', 
+            $benhAn,
+            'prescription_created',
             "Kê đơn thuốc #{$don->id} với {$don->items->count()} loại thuốc"
         );
 
@@ -373,10 +392,10 @@ class BenhAnController extends Controller
     public function auditLog(BenhAn $benh_an)
     {
         $this->authorize('view', $benh_an);
-        
+
         $audits = $benh_an->audits()->with('user')->paginate(20);
         $role = $this->getCurrentRole();
-        
+
         return view('benh_an.audit', [
             'benhAn' => $benh_an,
             'audits' => $audits,
@@ -397,7 +416,7 @@ class BenhAnController extends Controller
 
         // Trả về file download từ storage
         $filePath = storage_path('app/' . ($file->disk_name === 'public' ? 'public/' : 'benh_an/') . $file->path);
-        
+
         // Force download (bắt buộc tải về)
         return response()->download($filePath, $file->ten_file);
     }
@@ -415,10 +434,10 @@ class BenhAnController extends Controller
 
         // Trả về file từ storage
         $filePath = storage_path('app/' . ($xetNghiem->disk_name === 'public' ? 'public/' : 'benh_an/') . $xetNghiem->file_path);
-        
+
         // Lấy tên file từ path
         $fileName = basename($xetNghiem->file_path);
-        
+
         // Force download (bắt buộc tải về)
         return response()->download($filePath, $fileName);
     }
