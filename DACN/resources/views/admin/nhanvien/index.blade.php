@@ -50,7 +50,7 @@
             <div class="card-body p-0">
 
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered align-middle mb-0">
+                    <table id="nhanvienTable" class="table table-hover table-bordered align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 70px;">ID</th>
@@ -163,11 +163,9 @@
             </div>
         </div>
 
-        {{-- PAGINATION --}}
-        <div class="mt-3">
-            {{ $items->links() }}
-        </div>
-
     </div>
 
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="nhanvienTable" />

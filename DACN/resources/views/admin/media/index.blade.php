@@ -50,6 +50,18 @@
 
 <div class="container-fluid py-4">
 
+    @if(isset($storageLinkMissing) && $storageLinkMissing)
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <div>
+                Phát hiện thiếu liên kết thư mục public/storage. Ảnh có thể 404.
+                Vui lòng chạy:
+                <code>php artisan storage:link</code>
+                rồi làm mới trình duyệt.
+            </div>
+        </div>
+    @endif
+
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 fw-bold">

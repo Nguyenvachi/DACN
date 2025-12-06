@@ -75,9 +75,10 @@
         <h5 class="fw-bold mb-3"><i class="fas fa-user-md me-2"></i>Bác sĩ</h5>
 
         <ul>
+            <li><a href="{{ route('doctor.dashboard') }}">📊 Tổng quan</a></li>
             <li><a href="{{ route('doctor.calendar.index') }}">📅 Lịch làm việc</a></li>
             <li><a href="{{ route('doctor.benhan.index') }}">📋 Bệnh án</a></li>
-            <li><a href="{{ route('lichhen.my') }}">📥 Lịch hẹn của tôi</a></li>
+            <li><a href="{{ route('doctor.chat.index') }}">💬 Tin nhắn bệnh nhân</a></li>
             <li><a href="{{ route('profile.edit') }}">⚙️ Hồ sơ</a></li>
 
             <hr>
@@ -137,6 +138,8 @@
             });
         });
     </script>
+
+    {{-- DataTables Scripts Stack (removed duplicate scripts stack to avoid double-binding events) --}}
 
 </body>
 

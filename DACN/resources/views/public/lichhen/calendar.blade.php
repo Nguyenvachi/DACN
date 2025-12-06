@@ -1,4 +1,9 @@
-@extends('layouts.app')
+@php
+    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+    $layout = $isPatient ? 'layouts.patient-modern' : 'layouts.app';
+@endphp
+
+@extends($layout)
 
 @push('meta')
     <meta name="description" content="Chọn bác sĩ, dịch vụ và ngày để xem khung giờ trống">

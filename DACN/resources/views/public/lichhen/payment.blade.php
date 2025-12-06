@@ -3,12 +3,26 @@
     Child: payment.blade.php
     Purpose: Trang chọn phương thức thanh toán cho bệnh nhân
 --}}
+@php
+    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+@endphp
+
+@if($isPatient)
+    @extends('layouts.patient-modern')
+
+    @section('title', 'Thanh toán lịch hẹn')
+    @section('page-title', 'Thanh toán lịch hẹn #' . $lichHen->id)
+    @section('page-subtitle', 'Chọn phương thức thanh toán')
+
+    @section('content')
+@else
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Thanh toán lịch hẹn #{{ $lichHen->id }}
         </h2>
     </x-slot>
+@endif
 
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
@@ -101,7 +115,7 @@
                         </form>
 
                         {{-- Thanh toán sau --}}
-                        <form method="POST" action="{{ route('patient.payment.skip', $lichHen) }}" 
+                        <form method="POST" action="{{ route('patient.payment.skip', $lichHen) }}"
                             class="border border-red-300 rounded-lg p-4"
                             onsubmit="return confirm('⚠️ CẢNH BÁO: Nếu bỏ qua thanh toán, lịch hẹn của bạn sẽ BỊ HỦY ngay lập tức!\n\nBạn có chắc muốn hủy lịch hẹn không?');">
                             @csrf
@@ -137,8 +151,12 @@
                         </a>
                     </div>
 
-                </div>
             </div>
         </div>
     </div>
+</div>
+
+@if(!$isPatient ?? false)
 </x-app-layout>
+@endif
+@endsection

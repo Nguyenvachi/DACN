@@ -50,6 +50,16 @@ class LichHen extends Model
         return $this->hasOne(\App\Models\HoaDon::class);
     }
 
+    public function danhGia()
+    {
+        return $this->hasOne(DanhGia::class);
+    }
+
+    public function conversation()
+    {
+        return $this->hasOne(Conversation::class, 'lich_hen_id');
+    }
+
     public function setStatusAttribute($value)
     {
         $aliases = [

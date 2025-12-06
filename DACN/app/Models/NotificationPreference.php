@@ -21,6 +21,7 @@ class NotificationPreference extends Model
         'email_promotions',
         'sms_appointment_reminder',
         'sms_appointment_confirmed',
+        'sms_appointment_cancelled',
         'reminder_hours_before',
     ];
 
@@ -32,6 +33,7 @@ class NotificationPreference extends Model
         'email_promotions' => 'boolean',
         'sms_appointment_reminder' => 'boolean',
         'sms_appointment_confirmed' => 'boolean',
+        'sms_appointment_cancelled' => 'boolean',
         'reminder_hours_before' => 'integer',
     ];
 

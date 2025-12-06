@@ -28,7 +28,7 @@
             <div class="card-body p-0">
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover align-middle mb-0">
+                    <table id="rolesTable" class="table table-bordered table-hover align-middle mb-0">
 
                         <thead class="table-light">
                             <tr>
@@ -114,3 +114,9 @@
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="rolesTable" />
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="rolesTable" />

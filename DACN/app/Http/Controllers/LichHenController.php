@@ -160,13 +160,13 @@ class LichHenController extends Controller
             return redirect()->route('login')->with('error', 'Vui lòng đăng nhập');
         }
 
-        $danhSachLichHen = LichHen::where('user_id', Auth::id()) // ĐỔI từ benh_nhan_id thành user_id
-            ->with(['bacSi', 'dichVu'])
+        $danhSachLichHen = LichHen::where('user_id', Auth::id())
+            ->with(['bacSi', 'dichVu', 'hoaDon'])
             ->orderBy('ngay_hen', 'desc')
             ->orderBy('thoi_gian_hen', 'desc')
             ->get();
 
-        return view('public.lichhen.my_appointments', compact('danhSachLichHen'));
+        return view('patient.lichhen.index', compact('danhSachLichHen'));
     }
 
     // Form sửa lịch hẹn
@@ -245,7 +245,25 @@ class LichHenController extends Controller
         return back()->with('success', 'Cập nhật lịch hẹn thành công');
     }
 
-    // Hủy lịch hẹn
+    // Xóa/Hủy lịch hẹn (RESTful destroy method)
+    public function destroy(LichHen $lichHen)
+    {
+        // Kiểm tra quyền sở hữu
+        if ($lichHen->user_id != Auth::id()) {
+            return back()->with('error', 'Bạn không có quyền hủy lịch hẹn này');
+        }
+
+        // Chỉ cho phép hủy nếu chưa hoàn thành
+        if (in_array($lichHen->trang_thai, ['Đã hủy', 'Hoàn thành'])) {
+            return back()->with('error', 'Không thể hủy lịch hẹn này');
+        }
+
+        $lichHen->update(['trang_thai' => 'Đã hủy']);
+
+        return redirect()->route('patient.lichhen.index')->with('success', 'Đã hủy lịch hẹn thành công');
+    }
+
+    // Hủy lịch hẹn (Legacy method - kept for backward compatibility)
     public function cancel($id)
     {
         $lichHen = LichHen::findOrFail($id);

@@ -33,7 +33,7 @@
             <div class="card-body p-0">
                 <div class="table-responsive">
 
-                    <table class="table table-hover mb-0">
+                    <table id="danhmucTable" class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th width="8%">ID</th>
@@ -96,3 +96,6 @@
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="danhmucTable" />

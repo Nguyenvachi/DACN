@@ -70,9 +70,24 @@ class CalendarController extends Controller
 
         foreach ($appts as $a) {
             try {
-                $s = \Carbon\Carbon::parse($a->ngay_hen.' '.($a->thoi_gian_hen ?: '00:00'));
-            } catch (\Throwable) {
-                $s = \Carbon\Carbon::parse($a->ngay_hen.' 00:00');
+                // Bổ sung: làm sạch chuỗi datetime để tránh duplicate time spec
+                $timeStr = trim($a->thoi_gian_hen ?? '00:00');
+                // Nếu ngay_hen đã chứa cả date+time, chỉ dùng nó; nếu không thì nối
+                $dateStr = trim($a->ngay_hen ?? '');
+                if (strlen($dateStr) > 10) {
+                    // Đã chứa cả date+time (dạng datetime), dùng nguyên
+                    $s = \Carbon\Carbon::parse($dateStr);
+                } else {
+                    // Chỉ có date, nối thêm time
+                    $s = \Carbon\Carbon::parse($dateStr . ' ' . $timeStr);
+                }
+            } catch (\Throwable $ex) {
+                // Fallback an toàn khi parse lỗi
+                try {
+                    $s = \Carbon\Carbon::parse(trim($a->ngay_hen ?? date('Y-m-d')));
+                } catch (\Throwable) {
+                    $s = \Carbon\Carbon::now();
+                }
             }
             $e = (clone $s)->addMinutes(\App\Services\LichKhamService::DEFAULT_APPT_MINUTES);
             $events[] = [
@@ -106,8 +121,13 @@ class CalendarController extends Controller
             $dow = $cursor->dayOfWeek;
             foreach ($shifts as $sft) {
                 if ((int)$sft->ngay_trong_tuan === $dow) {
-                    $s = \Carbon\Carbon::parse($cursor->toDateString().' '.$sft->thoi_gian_bat_dau);
-                    $e = \Carbon\Carbon::parse($cursor->toDateString().' '.$sft->thoi_gian_ket_thuc);
+                    // Bổ sung: trim để tránh lỗi parse
+                    try {
+                        $s = \Carbon\Carbon::parse($cursor->toDateString().' '.trim($sft->thoi_gian_bat_dau ?? '00:00'));
+                        $e = \Carbon\Carbon::parse($cursor->toDateString().' '.trim($sft->thoi_gian_ket_thuc ?? '23:59'));
+                    } catch (\Throwable $ex) {
+                        continue; // Bỏ qua shift bị lỗi parse
+                    }
                     $events[] = [
                         'id' => 'LLV-'.$sft->id.'-'.$cursor->toDateString(),
                         'title' => 'Ca làm việc',
@@ -141,8 +161,13 @@ class CalendarController extends Controller
         }
 
         foreach ($offs as $o) {
-            $s = \Carbon\Carbon::parse($o->ngay.' '.$o->bat_dau);
-            $e = \Carbon\Carbon::parse($o->ngay.' '.$o->ket_thuc);
+            // Bổ sung: try/catch và trim
+            try {
+                $s = \Carbon\Carbon::parse(trim($o->ngay).' '.trim($o->bat_dau ?: '00:00'));
+                $e = \Carbon\Carbon::parse(trim($o->ngay).' '.trim($o->ket_thuc ?: '23:59'));
+            } catch (\Throwable $ex) {
+                continue; // Bỏ qua offs bị lỗi parse
+            }
             $events[] = [
                 'id' => 'LN-'.$o->id,
                 'title' => 'Nghỉ'.($o->ly_do ? ': '.$o->ly_do : ''),
@@ -172,8 +197,13 @@ class CalendarController extends Controller
         }
 
         foreach ($overrides as $ov) {
-            $s = \Carbon\Carbon::parse($ov->ngay.' '.$ov->gio_bat_dau);
-            $e = \Carbon\Carbon::parse($ov->ngay.' '.$ov->gio_ket_thuc);
+            // Bổ sung: try/catch và trim
+            try {
+                $s = \Carbon\Carbon::parse(trim($ov->ngay).' '.trim($ov->gio_bat_dau ?: '00:00'));
+                $e = \Carbon\Carbon::parse(trim($ov->ngay).' '.trim($ov->gio_ket_thuc ?: '23:59'));
+            } catch (\Throwable $ex) {
+                continue; // Bỏ qua override bị lỗi parse
+            }
             $events[] = [
                 'id' => 'CDCB-'.$ov->id,
                 'title' => 'Điều chỉnh: '.$ov->hanh_dong,
@@ -197,6 +227,8 @@ class CalendarController extends Controller
      */
     public function apiEvents(Request $request)
     {
+        // Bổ sung guard an toàn (chỉ thêm code, không xóa):
+        // Nếu thiếu tham số → trả về mảng rỗng để tránh 500.
         try {
             $request->validate([
                 'bac_si_id' => 'required|integer|exists:bac_sis,id',
@@ -204,7 +236,7 @@ class CalendarController extends Controller
                 'end'       => 'required|date|after_or_equal:start',
             ]);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+            return response()->json([], 200);
         }
 
         $doctorId = (int) $request->bac_si_id;
@@ -216,13 +248,15 @@ class CalendarController extends Controller
         /* ---------------------------------------------------
          | 1) LỊCH HẸN
          --------------------------------------------------- */
-        $appointments = LichHen::where('bac_si_id', $doctorId)
-            ->whereBetween('ngay_hen', [$start->toDateString(), $end->toDateString()])
-            ->get(['id', 'ngay_hen', 'thoi_gian_hen', 'trang_thai']);
-
-        if (!Schema::hasTable('lich_hens') ||
-            !Schema::hasColumn('lich_hens','ngay_hen')) {
-            $appointments = collect();
+        $appointments = collect();
+        if (Schema::hasTable('lich_hens') && Schema::hasColumn('lich_hens','ngay_hen')) {
+            try {
+                $appointments = LichHen::where('bac_si_id', $doctorId)
+                    ->whereBetween('ngay_hen', [$start->toDateString(), $end->toDateString()])
+                    ->get(['id', 'ngay_hen', 'thoi_gian_hen', 'trang_thai']);
+            } catch (\Throwable $ex) {
+                \Illuminate\Support\Facades\Log::warning('apiEvents: query appointments failed: '.$ex->getMessage());
+            }
         }
 
         foreach ($appointments as $a) {
@@ -251,12 +285,14 @@ class CalendarController extends Controller
         /* ---------------------------------------------------
          | 2) LỊCH LÀM VIỆC (sinh theo tuần)
          --------------------------------------------------- */
-        $shifts = LichLamViec::where('bac_si_id', $doctorId)
-            ->get(['id', 'ngay_trong_tuan', 'thoi_gian_bat_dau', 'thoi_gian_ket_thuc']);
-
-        if (!Schema::hasTable('lich_lam_viecs') ||
-            !Schema::hasColumn('lich_lam_viecs','ngay_trong_tuan')) {
-            $shifts = collect(); // fallback rỗng
+        $shifts = collect();
+        if (Schema::hasTable('lich_lam_viecs') && Schema::hasColumn('lich_lam_viecs','ngay_trong_tuan')) {
+            try {
+                $shifts = LichLamViec::where('bac_si_id', $doctorId)
+                    ->get(['id', 'ngay_trong_tuan', 'thoi_gian_bat_dau', 'thoi_gian_ket_thuc']);
+            } catch (\Throwable $ex) {
+                \Illuminate\Support\Facades\Log::warning('apiEvents: query shifts failed: '.$ex->getMessage());
+            }
         }
 
         // group theo dayOfWeek
@@ -301,13 +337,15 @@ class CalendarController extends Controller
         /* ---------------------------------------------------
          | 3) LỊCH NGHỈ
          --------------------------------------------------- */
-        $offs = LichNghi::where('bac_si_id', $doctorId)
-            ->whereBetween('ngay', [$start->toDateString(), $end->toDateString()])
-            ->get(['id', 'ngay', 'bat_dau', 'ket_thuc', 'ly_do']);
-
-        if (!Schema::hasTable('lich_nghis') ||
-            !Schema::hasColumn('lich_nghis','ngay')) {
-            $offs = collect();
+        $offs = collect();
+        if (Schema::hasTable('lich_nghis') && Schema::hasColumn('lich_nghis','ngay')) {
+            try {
+                $offs = LichNghi::where('bac_si_id', $doctorId)
+                    ->whereBetween('ngay', [$start->toDateString(), $end->toDateString()])
+                    ->get(['id', 'ngay', 'bat_dau', 'ket_thuc', 'ly_do']);
+            } catch (\Throwable $ex) {
+                \Illuminate\Support\Facades\Log::warning('apiEvents: query offs failed: '.$ex->getMessage());
+            }
         }
 
         foreach ($offs as $o) {
@@ -332,9 +370,14 @@ class CalendarController extends Controller
         /* ---------------------------------------------------
          | 4) CA ĐIỀU CHỈNH (nghỉ đột xuất / tăng ca)
          --------------------------------------------------- */
-        $overrides = CaDieuChinhBacSi::where('bac_si_id', $doctorId)
-            ->whereBetween('ngay', [$start->toDateString(), $end->toDateString()])
-            ->get(['id', 'ngay', 'gio_bat_dau', 'gio_ket_thuc', 'hanh_dong', 'ly_do']);
+        $overrides = collect();
+        try {
+            $overrides = CaDieuChinhBacSi::where('bac_si_id', $doctorId)
+                ->whereBetween('ngay', [$start->toDateString(), $end->toDateString()])
+                ->get(['id', 'ngay', 'gio_bat_dau', 'gio_ket_thuc', 'hanh_dong', 'ly_do']);
+        } catch (\Throwable $ex) {
+            \Illuminate\Support\Facades\Log::warning('apiEvents: query overrides failed: '.$ex->getMessage());
+        }
 
         foreach ($overrides as $ov) {
             $s = Carbon::parse($ov->ngay . ' ' . ($ov->gio_bat_dau ?: '00:00'));

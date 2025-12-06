@@ -35,7 +35,7 @@
             <div class="card-body p-0">
 
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped mb-0 align-middle">
+                    <table id="chuyenkhoaTable" class="table table-hover table-striped mb-0 align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th width="35%">Tên chuyên khoa</th>
@@ -58,8 +58,7 @@
                                     <td class="text-center text-nowrap">
 
                                         <a href="{{ route('admin.chuyenkhoa.edit', $k) }}"
-                                            class="btn btn-sm btn-outline-primary me-1"
-                                            title="Sửa">
+                                            class="btn btn-sm btn-outline-primary me-1" title="Sửa">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
 
@@ -111,3 +110,6 @@
         }
     </style>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="chuyenkhoaTable" />

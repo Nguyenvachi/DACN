@@ -73,7 +73,7 @@
 
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped align-middle">
+                    <table id="bacsiTable" class="table table-bordered table-striped align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th width="5%">ID</th>
@@ -115,41 +115,12 @@
 
                                     <td>
 
-                                        <!-- =========================
-                                                         🔥 BỔ SUNG: Quick View modal
-                                                    ========================== -->
-                                        <button class="btn btn-sm btn-outline-info me-1 mb-1" data-bs-toggle="modal"
-                                            data-bs-target="#modalBacSi{{ $bacSi->id }}"
-                                            title="Xem">
+                                        <!-- Xem chi tiết bác sĩ -->
+                                        <a href="{{ route('admin.bac-si.show', $bacSi) }}"
+                                           class="btn btn-sm btn-outline-info me-1 mb-1"
+                                           title="Xem chi tiết">
                                             <i class="bi bi-eye"></i>
-                                        </button>
-
-                                        <div class="modal fade" id="modalBacSi{{ $bacSi->id }}" tabindex="-1">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Thông tin Bác sĩ</h5>
-                                                        <button class="btn-close" data-bs-dismiss="modal"></button>
-                                                    </div>
-
-                                                    <div class="modal-body">
-                                                        <p><strong>Họ tên:</strong> {{ $bacSi->ho_ten }}</p>
-                                                        <p><strong>Chuyên khoa:</strong> {{ $bacSi->chuyen_khoa }}</p>
-                                                        <p><strong>SĐT:</strong> {{ $bacSi->so_dien_thoai }}</p>
-                                                        <p><strong>Email:</strong> {{ $bacSi->email }}</p>
-                                                        <p><strong>Kinh nghiệm:</strong> {{ $bacSi->kinh_nghiem }} năm</p>
-                                                        <p><strong>Trạng thái:</strong> {{ $bacSi->trang_thai }}</p>
-                                                    </div>
-
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Đóng</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- ========================= -->
-
+                                        </a>
 
                                         <a href="{{ route('admin.bac-si.edit', $bacSi) }}"
                                             class="btn btn-sm btn-outline-primary me-1 mb-1"
@@ -239,3 +210,6 @@
         }
     </style>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="bacsiTable" />

@@ -31,7 +31,7 @@
                             🎉 Bạn không có ca làm việc hôm nay!
                         </div>
                     @else
-                        <table class="table table-hover">
+                        <table id="todayShiftsTable" class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>Giờ bắt đầu</th>
@@ -64,7 +64,7 @@
                             Không có ca làm việc nào trong tuần này.
                         </div>
                     @else
-                        <table class="table table-sm table-bordered">
+                        <table id="weekShiftsTable" class="table table-sm table-bordered">
                             <thead class="table-light">
                                 <tr>
                                     <th>Ngày</th>
@@ -121,3 +121,7 @@
         @endif
     </div>
 @endsection
+
+{{-- DataTables Scripts --}}
+<x-datatable-script tableId="todayShiftsTable" />
+<x-datatable-script tableId="weekShiftsTable" />

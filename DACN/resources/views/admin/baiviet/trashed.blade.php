@@ -23,7 +23,7 @@
 
         @if($posts->count() > 0)
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table id="trashedPostsTable" class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
                             <th>ID</th>

@@ -36,7 +36,7 @@
             <div class="card-body">
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped align-middle">
+                    <table id="hoadonTable" class="table table-bordered table-striped align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th width="5%">#</th>
@@ -110,15 +110,11 @@
                     </table>
                 </div>
 
-                {{-- Pagination --}}
-                @if ($items->hasPages())
-                    <div class="mt-3">
-                        {{ $items->links() }}
-                    </div>
-                @endif
-
             </div>
         </div>
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="hoadonTable" />

@@ -34,7 +34,7 @@
             <div class="card-body p-0">
 
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered align-middle mb-0">
+                    <table id="thuocTable" class="table table-hover table-bordered align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th>Tên</th>
@@ -102,21 +102,11 @@
             {{-- FOOTER: Pagination --}}
             <div class="card-footer d-flex justify-content-between align-items-center">
 
-                <div class="text-muted small">
-                    @if ($thuocs->total() > 0)
-                        Hiển thị {{ $thuocs->firstItem() }}–{{ $thuocs->lastItem() }} /
-                        {{ $thuocs->total() }} thuốc
-                    @else
-                        Không có kết quả
-                    @endif
-                </div>
-
-                <div>
-                    {{ $thuocs->links() }}
-                </div>
-
             </div>
         </div>
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="thuocTable" />

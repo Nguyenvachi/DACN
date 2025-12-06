@@ -4,7 +4,7 @@
         'admin' => 'layouts.admin',
         'doctor' => 'layouts.doctor',
         'staff' => 'layouts.staff',
-        'patient' => 'layouts.patient',
+        'patient' => 'layouts.patient-modern',
         default => 'layouts.app',
     };
 @endphp
@@ -61,7 +61,7 @@
 
             @if ($audits->count() > 0)
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                    <table id="benhAnAuditTable" class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th>Thời gian</th>
@@ -176,3 +176,6 @@
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="benhAnAuditTable" />

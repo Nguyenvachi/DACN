@@ -36,7 +36,7 @@
             <div class="card-body p-0">
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover align-middle mb-0">
+                    <table id="phongTable" class="table table-bordered table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th>Tên phòng</th>
@@ -108,3 +108,6 @@
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="phongTable" />

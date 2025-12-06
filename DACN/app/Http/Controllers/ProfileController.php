@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use App\Models\PatientProfile;
 use App\Models\NotificationPreference;
+use App\Models\BacSi;
 
 class ProfileController extends Controller
 {
@@ -150,6 +151,7 @@ class ProfileController extends Controller
             'email_promotions' => 'boolean',
             'sms_appointment_reminder' => 'boolean',
             'sms_appointment_confirmed' => 'boolean',
+            'sms_appointment_cancelled' => 'boolean',
             'reminder_hours_before' => 'integer|min:1|max:168',
         ]);
 
@@ -160,5 +162,48 @@ class ProfileController extends Controller
         $preferences->save();
 
         return Redirect::route('profile.edit')->with('status', 'notification-preferences-updated');
+    }
+
+    /**
+     * Cập nhật thông tin chuyên môn cho Bác sĩ
+     * File mẹ: routes/web.php - Route: profile.updateDoctor
+     */
+    public function updateDoctor(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        // Chỉ doctor mới được phép
+        if ($user->role !== 'doctor') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'ho_ten' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'so_dien_thoai' => 'nullable|string|max:20',
+            'chuyen_khoa' => 'nullable|string|max:255',
+            'dia_chi' => 'nullable|string|max:500',
+            'kinh_nghiem' => 'nullable|integer|min:0|max:99',
+            'mo_ta' => 'nullable|string|max:2000',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $bacSi = BacSi::where('user_id', $user->id)->firstOrFail();
+
+        // Upload avatar nếu có
+        if ($request->hasFile('avatar')) {
+            // Xóa ảnh cũ
+            if ($bacSi->avatar && Storage::disk('public')->exists($bacSi->avatar)) {
+                Storage::disk('public')->delete($bacSi->avatar);
+            }
+
+            // Upload ảnh mới
+            $path = $request->file('avatar')->store('doctors/avatars', 'public');
+            $validated['avatar'] = $path;
+        }
+
+        $bacSi->update($validated);
+
+        return Redirect::route('profile.edit')->with('status', 'doctor-profile-updated');
     }
 }

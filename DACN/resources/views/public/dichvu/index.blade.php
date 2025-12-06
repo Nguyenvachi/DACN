@@ -1,4 +1,9 @@
-<x-app-layout>
+@php
+    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+    $layout = $isPatient ? 'layouts.patient-modern' : 'layouts.app';
+@endphp
+
+@extends($layout)
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Danh Sách Dịch Vụ') }}
@@ -13,7 +18,7 @@
                     <h1 class="text-2xl font-bold mb-4">Danh sách Dịch vụ của chúng tôi</h1>
 
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200 border">
+                        <table id="publicDichvuTable" class="min-w-full divide-y divide-gray-200 border">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -68,4 +73,17 @@
             </div>
         </div>
     </div>
+
+@if($isPatient ?? false)
+    @endsection
+
+    @push('scripts')
+    {{-- DataTables Script --}}
+    <x-datatable-script tableId="publicDichvuTable" />
+    @endpush
+@else
 </x-app-layout>
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="publicDichvuTable" />
+@endif

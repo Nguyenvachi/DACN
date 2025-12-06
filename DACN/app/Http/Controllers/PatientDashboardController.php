@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\LichHen;
 use App\Models\BenhAn;
+use App\Models\HoaDon;
+use App\Models\DonThuoc;
+use App\Models\XetNghiem;
+use App\Models\DanhGia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -11,13 +15,37 @@ use Carbon\Carbon;
 class PatientDashboardController extends Controller
 {
     /**
-     * Dashboard sức khỏe cho bệnh nhân
+     * Dashboard sức khỏe cho bệnh nhân với đầy đủ thống kê
      */
     public function index()
     {
         $user = Auth::user();
+        $profile = $user->patientProfile;
 
-        // Lấy lịch hẹn sắp tới (5 appointment gần nhất)
+        // === THỐNG KÊ TỔNG QUAN ===
+        $statistics = [
+            'total_appointments' => LichHen::where('user_id', $user->id)->count(),
+            'upcoming_appointments' => LichHen::where('user_id', $user->id)
+                ->where('ngay_hen', '>=', Carbon::today())
+                ->whereIn('trang_thai', ['pending', 'confirmed'])
+                ->count(),
+            'completed_appointments' => LichHen::where('user_id', $user->id)
+                ->where('trang_thai', 'completed')
+                ->count(),
+            'pending_appointments' => LichHen::where('user_id', $user->id)
+                ->where('trang_thai', 'pending')
+                ->count(),
+            'total_medical_records' => BenhAn::where('user_id', $user->id)->count(),
+            'unpaid_invoices' => HoaDon::where('user_id', $user->id)
+                ->where('trang_thai', '!=', 'Đã thanh toán')
+                ->count(),
+            'total_prescriptions' => DonThuoc::whereHas('benhAn', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->count(),
+            'total_tests' => XetNghiem::where('user_id', $user->id)->count(),
+        ];
+
+        // === LỊCH HẸN SẮP TỚI (5 gần nhất) ===
         $upcomingAppointments = LichHen::where('user_id', $user->id)
             ->where('ngay_hen', '>=', Carbon::today())
             ->whereIn('trang_thai', ['pending', 'confirmed'])
@@ -27,17 +55,22 @@ class PatientDashboardController extends Controller
             ->with(['bacSi.user', 'dichVu'])
             ->get();
 
-        // Lấy bệnh án gần đây (3 records)
+        // === BỆNH ÁN GẦN ĐÂY (3 records) ===
         $recentMedicalRecords = BenhAn::where('user_id', $user->id)
             ->orderBy('ngay_kham', 'desc')
             ->take(3)
             ->with(['bacSi.user', 'dichVu'])
             ->get();
 
-        // Lấy thông tin y tế
-        $profile = $user->patientProfile;
+        // === HÓA ĐƠN CHƯA THANH TOÁN ===
+        $unpaidInvoices = HoaDon::where('user_id', $user->id)
+            ->where('trang_thai', '!=', 'Đã thanh toán')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->with(['lichHen.bacSi.user', 'lichHen.dichVu'])
+            ->get();
 
-        // Health stats
+        // === CHỈ SỐ SỨC KHỎE ===
         $healthStats = [
             'bmi' => $profile ? $profile->bmi : null,
             'bmi_category' => $profile ? $profile->bmi_category : null,
@@ -45,34 +78,78 @@ class PatientDashboardController extends Controller
             'height' => $profile ? $profile->chieu_cao : null,
             'weight' => $profile ? $profile->can_nang : null,
             'allergies_count' => $profile && $profile->allergies ? count($profile->allergies) : 0,
+            'last_checkup' => BenhAn::where('user_id', $user->id)
+                ->latest('ngay_kham')
+                ->value('ngay_kham'),
         ];
 
-        // Thống kê tổng quan
-        $statistics = [
-            'total_appointments' => LichHen::where('user_id', $user->id)->count(),
-            'completed_appointments' => LichHen::where('user_id', $user->id)
-                ->where('trang_thai', 'completed')
-                ->count(),
-            'total_medical_records' => BenhAn::where('user_id', $user->id)->count(),
-            'pending_appointments' => LichHen::where('user_id', $user->id)
-                ->where('trang_thai', 'pending')
-                ->count(),
-        ];
+        // === BIỂU ĐỒ LỊCH HẸN 6 THÁNG GẦN NHẤT ===
+        $appointmentChartData = $this->getAppointmentChartData($user->id);
 
-        // Lấy dữ liệu BMI history (6 tháng gần nhất) nếu có
-        // (giả sử trong tương lai có table patient_health_logs để track BMI theo thời gian)
-        $bmiHistory = [
-            'labels' => ['Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
-            'data' => [22.5, 22.8, 23.0, 22.9, 22.7, $profile ? $profile->bmi : 0],
-        ];
+        // === XÉT NGHIỆM GẦN ĐÂY ===
+        $recentTests = XetNghiem::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->with(['bacSi', 'benhAn'])
+            ->get();
 
-        return view('patient.dashboard', compact(
+        // === ĐÁNH GIÁ CỦA TÔI ===
+        $myReviews = DanhGia::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->with(['bacSi.user'])
+            ->get();
+
+        // === THÔNG BÁO CHƯA ĐỌC ===
+        $unreadNotifications = $user->unreadNotifications()->take(5)->get();
+
+        return view('patient.dashboard-modern', compact(
+            'statistics',
             'upcomingAppointments',
             'recentMedicalRecords',
+            'unpaidInvoices',
             'healthStats',
-            'statistics',
-            'bmiHistory',
+            'appointmentChartData',
+            'recentTests',
+            'myReviews',
+            'unreadNotifications',
             'profile'
         ));
+    }
+
+    /**
+     * Lấy dữ liệu biểu đồ lịch hẹn 6 tháng
+     */
+    private function getAppointmentChartData($userId)
+    {
+        $months = [];
+        $completed = [];
+        $cancelled = [];
+
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $months[] = $month->format('m/Y');
+
+            $completedCount = LichHen::where('user_id', $userId)
+                ->whereYear('ngay_hen', $month->year)
+                ->whereMonth('ngay_hen', $month->month)
+                ->where('trang_thai', 'completed')
+                ->count();
+
+            $cancelledCount = LichHen::where('user_id', $userId)
+                ->whereYear('ngay_hen', $month->year)
+                ->whereMonth('ngay_hen', $month->month)
+                ->where('trang_thai', 'cancelled')
+                ->count();
+
+            $completed[] = $completedCount;
+            $cancelled[] = $cancelledCount;
+        }
+
+        return [
+            'labels' => $months,
+            'completed' => $completed,
+            'cancelled' => $cancelled,
+        ];
     }
 }

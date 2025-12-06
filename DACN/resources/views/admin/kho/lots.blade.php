@@ -74,7 +74,7 @@
             <div class="card-body p-0">
 
                 <div class="table-responsive">
-                    <table class="table table-bordered align-middle mb-0">
+                    <table id="lotsTable" class="table table-bordered align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th style="width:14%">Mã lô</th>
@@ -113,3 +113,6 @@
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="lotsTable" />

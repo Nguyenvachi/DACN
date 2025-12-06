@@ -112,128 +112,129 @@
     {{-- SCRIPT --}}
     @push('scripts')
         <script>
-            let drugs = JSON.parse(document.getElementById('drugs-data').textContent);
-            let currentDrugs = drugs; // Danh sách thuốc hiện tại
+            (function() {
+                const DRUGS = JSON.parse(document.getElementById('drugs-data').textContent);
+                let currentDrugs = DRUGS; // Danh sách thuốc hiện tại (scope cục bộ)
 
-            // Lắng nghe sự kiện thay đổi NCC
-            document.getElementById('ncc-select').addEventListener('change', async function() {
-                const nccId = this.value;
+                let i = 0;
+                const tbody = document.querySelector('#items tbody');
 
-                if (!nccId) {
-                    // Không chọn NCC → Hiển thị tất cả thuốc
-                    currentDrugs = drugs;
-                    alert('⚠️ Chưa chọn nhà cung cấp. Hiển thị tất cả thuốc.');
-                    return;
+                function row(idx) {
+                    const options = (currentDrugs || []).map(d =>
+                        `<option value="${d.id}">${d.ten}${d.ham_luong ? ' - ' + d.ham_luong : ''}</option>`
+                    ).join('');
+
+                    return `
+            <tr>
+
+                <td>
+                    <select name="items[${idx}][thuoc_id]"
+                            class="form-select drug-select">
+                        <option value="">-- Chọn thuốc --</option>
+                        ${options}
+                    </select>
+                </td>
+
+                <td>
+                    <input class="form-control"
+                           name="items[${idx}][ma_lo]"
+                           placeholder="VD: L001">
+                </td>
+
+                <td>
+                    <input type="date"
+                           class="form-control"
+                           name="items[${idx}][han_su_dung]">
+                </td>
+
+                <td>
+                    <input type="number" min="1"
+                           class="form-control"
+                           value="1"
+                           name="items[${idx}][so_luong]">
+                </td>
+
+                <td>
+                    <input type="number" min="0" step="0.01"
+                           class="form-control drug-price"
+                           value="0"
+                           name="items[${idx}][don_gia]"
+                           placeholder="Giá nhập">
+                </td>
+
+                <td class="text-center">
+                    <button type="button"
+                            class="btn btn-outline-danger btn-del del">
+                        <i class="bi bi-dash-lg"></i>
+                    </button>
+                </td>
+
+            </tr>`;
                 }
 
-                // Gọi API load thuốc theo NCC
-                try {
-                    const response = await fetch(`{{ route('admin.kho.api.thuocs_by_ncc') }}?ncc_id=${nccId}`);
-                    const result = await response.json();
+                // Lắng nghe sự kiện thay đổi NCC
+                document.getElementById('ncc-select').addEventListener('change', async function() {
+                    const nccId = this.value;
 
-                    if (result.success) {
-                        currentDrugs = result.data;
+                    if (!nccId) {
+                        // Không chọn NCC → Hiển thị tất cả thuốc
+                        currentDrugs = DRUGS;
+                        alert('⚠️ Chưa chọn nhà cung cấp. Hiển thị tất cả thuốc.');
+                        return;
+                    }
 
-                        if (currentDrugs.length === 0) {
-                            alert('⚠️ Nhà cung cấp này chưa có thuốc nào. Vui lòng thêm thuốc vào danh mục NCC trước.');
-                            currentDrugs = drugs; // Fallback về tất cả
-                        } else {
-                            // Xóa tất cả dòng hiện tại
-                            document.querySelector('#items tbody').innerHTML = '';
-                            // Thêm 1 dòng mới với danh sách thuốc đã lọc
+                    // Gọi API load thuốc theo NCC
+                    try {
+                        const response = await fetch(`{{ route('admin.kho.api.thuocs_by_ncc') }}?ncc_id=${nccId}`);
+                        const result = await response.json();
+
+                        if (result.success) {
+                            currentDrugs = result.data;
+
+                            if (!Array.isArray(currentDrugs) || currentDrugs.length === 0) {
+                                alert('⚠️ Nhà cung cấp này chưa có thuốc nào. Vui lòng thêm thuốc vào danh mục NCC trước.');
+                                currentDrugs = DRUGS; // Fallback về tất cả
+                            }
+
+                            // Xóa tất cả dòng hiện tại và reset chỉ số
+                            tbody.innerHTML = '';
                             i = 0;
                             tbody.insertAdjacentHTML('beforeend', row(i++));
                         }
+                    } catch (error) {
+                        console.error('Lỗi load thuốc:', error);
+                        alert('Lỗi khi tải danh sách thuốc!');
                     }
-                } catch (error) {
-                    console.error('Lỗi load thuốc:', error);
-                    alert('Lỗi khi tải danh sách thuốc!');
-                }
-            });
+                });
 
-            function row(idx) {
-                const options = currentDrugs.map(d =>
-                    `<option value="${d.id}">${d.ten}${d.ham_luong ? ' - ' + d.ham_luong : ''}</option>`
-                ).join('');
+                document.getElementById('add-row').addEventListener('click', () => {
+                    if (!document.getElementById('ncc-select').value) {
+                        alert('⚠️ Vui lòng chọn nhà cung cấp trước!');
+                        return;
+                    }
+                    tbody.insertAdjacentHTML('beforeend', row(i++));
+                });
 
-                return `
-        <tr>
+                tbody.addEventListener('click', e => {
+                    if (e.target.closest('.del'))
+                        e.target.closest('tr').remove();
+                });
 
-            <td>
-                <select name="items[${idx}][thuoc_id]"
-                        class="form-select drug-select">
-                    <option value="">-- Chọn thuốc --</option>
-                    ${options}
-                </select>
-            </td>
+                // Tự động điền giá nhập mặc định khi chọn thuốc
+                tbody.addEventListener('change', e => {
+                    if (e.target.classList && e.target.classList.contains('drug-select')) {
+                        const thuocId = e.target.value;
+                        const drug = (currentDrugs || []).find(d => d.id == thuocId);
+                        if (drug && drug.gia_nhap_mac_dinh) {
+                            const priceInput = e.target.closest('tr').querySelector('.drug-price');
+                            if (priceInput) priceInput.value = drug.gia_nhap_mac_dinh;
+                        }
+                    }
+                });
 
-            <td>
-                <input class="form-control"
-                       name="items[${idx}][ma_lo]"
-                       placeholder="VD: L001">
-            </td>
-
-            <td>
-                <input type="date"
-                       class="form-control"
-                       name="items[${idx}][han_su_dung]">
-            </td>
-
-            <td>
-                <input type="number" min="1"
-                       class="form-control"
-                       value="1"
-                       name="items[${idx}][so_luong]">
-            </td>
-
-            <td>
-                <input type="number" min="0" step="0.01"
-                       class="form-control drug-price"
-                       value="0"
-                       name="items[${idx}][don_gia]"
-                       placeholder="Giá nhập">
-            </td>
-
-            <td class="text-center">
-                <button type="button"
-                        class="btn btn-outline-danger btn-del del">
-                    <i class="bi bi-dash-lg"></i>
-                </button>
-            </td>
-
-        </tr>`;
-            }
-
-            let i = 0;
-            const tbody = document.querySelector('#items tbody');
-
-            document.getElementById('add-row').addEventListener('click', () => {
-                if (!document.getElementById('ncc-select').value) {
-                    alert('⚠️ Vui lòng chọn nhà cung cấp trước!');
-                    return;
-                }
+                // Khởi tạo 1 dòng mặc định
                 tbody.insertAdjacentHTML('beforeend', row(i++));
-            });
-
-            tbody.addEventListener('click', e => {
-                if (e.target.closest('.del'))
-                    e.target.closest('tr').remove();
-            });
-
-            // Tự động điền giá nhập mặc định khi chọn thuốc
-            tbody.addEventListener('change', e => {
-                if (e.target.classList.contains('drug-select')) {
-                    const thuocId = e.target.value;
-                    const drug = currentDrugs.find(d => d.id == thuocId);
-                    if (drug && drug.gia_nhap_mac_dinh) {
-                        const priceInput = e.target.closest('tr').querySelector('.drug-price');
-                        priceInput.value = drug.gia_nhap_mac_dinh;
-                    }
-                }
-            });
-
-            // Khởi tạo 1 dòng mặc định
-            tbody.insertAdjacentHTML('beforeend', row(i++));
+            })();
         </script>
     @endpush
 @endsection

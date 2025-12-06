@@ -1,9 +1,23 @@
+@php
+    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+@endphp
+
+@if($isPatient)
+    @extends('layouts.patient-modern')
+
+    @section('title', 'Đặt Lịch Hẹn')
+    @section('page-title', 'Đặt Lịch Hẹn')
+    @section('page-subtitle', 'Tạo lịch hẹn khám bệnh mới')
+
+    @section('content')
+@else
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Đặt Lịch Hẹn') }}
         </h2>
     </x-slot>
+@endif
 
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
@@ -374,8 +388,12 @@
                 if (this.value && this.value != currentBacSiId) {
                     window.location.href = `/dat-lich/${this.value}`;
                 }
-            });
         });
-    </script>
-    @endpush
+    });
+</script>
+@endpush
+
+@if(!$isPatient ?? false)
 </x-app-layout>
+@endif
+@endsection

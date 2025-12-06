@@ -96,7 +96,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-striped align-middle mb-0">
+                    <table id="baoCaoTable" class="table table-striped align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th>Thuốc</th>
@@ -132,3 +132,9 @@
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="baoCaoTable" />
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="baoCaoTable" />

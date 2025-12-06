@@ -83,7 +83,7 @@
                 </div>
             @else
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
+                    <table id="refundsTable" class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 5%">#</th>
@@ -326,3 +326,6 @@
 }
 </style>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="refundsTable" />

@@ -40,7 +40,7 @@
     <div class="card-body">
 
         {{-- bảng cũ của bạn giữ nguyên, chỉ thêm class bootstrap --}}
-        <table class="table table-bordered table-hover align-middle">
+        <table id="baivietTable" class="table table-bordered table-hover align-middle">
             <thead class="table-light">
                 <tr>
                     <th>ID</th>

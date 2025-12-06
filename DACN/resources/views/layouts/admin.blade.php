@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    {{-- DataTables CSS --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 
     @stack('meta')
     @stack('styles')
@@ -112,6 +114,8 @@
             <li><strong>Lịch & Hẹn</strong></li>
             <li><a href="{{ route('admin.lichhen.index') }}">📅 Lịch hẹn</a></li>
             <li><a href="{{ route('admin.calendar.index') }}">📆 Calendar</a></li>
+            <li><a href="{{ route('admin.danhgia.index') }}">⭐ Đánh giá</a></li>
+            <li><a href="{{ route('admin.chat.index') }}">💬 Chat tư vấn</a></li>
 
             <hr>
 
@@ -123,6 +127,7 @@
 
             <li><strong>Quản lý kho</strong></li>
             <li><a href="{{ route('admin.thuoc.index') }}">💊 Thuốc</a></li>
+            <li><a href="{{ route('admin.coupons.index') }}">🎫 Mã giảm giá</a></li>
             <li><a href="{{ route('admin.kho.index') }}">📦 Kho</a></li>
             <li><a href="{{ route('admin.kho.nhap.form') }}">📥 Nhập kho</a></li>
             <li><a href="{{ route('admin.kho.xuat.form') }}">📤 Xuất kho</a></li>
@@ -168,6 +173,9 @@
     {{-- JS --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- DataTables JS --}}
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 
     @stack('scripts')
 
@@ -206,6 +214,8 @@
             });
         });
     </script>
+
+    {{-- DataTables Scripts Stack (removed duplicate scripts stack to avoid double-binding) --}}
 
 </body>
 

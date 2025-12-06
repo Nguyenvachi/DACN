@@ -108,7 +108,7 @@
                 </form>
 
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table id="lichhenTable" class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th>ID</th>
@@ -249,16 +249,12 @@
                     </table>
                 </div>
 
-                {{-- Pagination --}}
-                @if ($danhSachLichHen->hasPages())
-                    <div class="mt-4">
-                        {{ $danhSachLichHen->links() }}
-                    </div>
-                @endif
-
             </div>
         </div>
 
     </div>
 
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="lichhenTable" />

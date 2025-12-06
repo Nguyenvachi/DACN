@@ -25,6 +25,7 @@ return new class extends Migration
             // SMS notifications (nếu có tích hợp SMS)
             $table->boolean('sms_appointment_reminder')->default(false);
             $table->boolean('sms_appointment_confirmed')->default(false);
+            $table->boolean('sms_appointment_cancelled')->default(false);
 
             // Thời gian nhắc trước
             $table->integer('reminder_hours_before')->default(24)->comment('Nhắc trước bao nhiêu giờ');

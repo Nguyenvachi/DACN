@@ -1,4 +1,9 @@
-@extends('layouts.app')
+@php
+    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+    $layout = $isPatient ? 'layouts.patient-modern' : 'layouts.app';
+@endphp
+
+@extends($layout)
 
 @push('meta')
     {{-- Meta Title --}}

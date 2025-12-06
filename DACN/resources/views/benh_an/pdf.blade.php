@@ -255,7 +255,7 @@
             <div class="section-title">KẾT QUẢ XÉT NGHIỆM</div>
             @foreach($benh_an->xetNghiems as $xetNghiem)
                 <div class="test-results">
-                    <p><strong>{{ $xetNghiem->ten_xet_nghiem }}</strong></p>
+                    <p><strong>{{ $xetNghiem->loai ?? 'Xét nghiệm' }}</strong></p>
                     <p style="margin-top: 5px;">{{ $xetNghiem->ket_qua }}</p>
                     @if($xetNghiem->ghi_chu)
                         <p style="margin-top: 3px; font-size: 11px; color: #666;">

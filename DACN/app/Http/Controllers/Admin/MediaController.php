@@ -56,7 +56,10 @@ class MediaController extends Controller
     public function index()
     {
         $images = $this->getUploadedImages();
-        return view('admin.media.index', compact('images'));
+        // Bổ sung: kiểm tra symlink public/storage để hướng dẫn người dùng khi 404
+        $publicStorageDir = public_path('storage');
+        $storageLinkMissing = !is_dir($publicStorageDir);
+        return view('admin.media.index', compact('images', 'storageLinkMissing'));
     }
 
     /**

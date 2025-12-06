@@ -1,4 +1,9 @@
-@extends('layouts.app')
+@php
+    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+    $layout = $isPatient ? 'layouts.patient-modern' : 'layouts.app';
+@endphp
+
+@extends($layout)
 
 @section('content')
     <style>
@@ -152,6 +157,91 @@
             <i class="fas fa-info-circle"></i>
             <strong>Lưu ý:</strong> Click vào khung giờ để đặt lịch khám. Mỗi slot có thời lượng 30 phút.
         </div>
+
+        <!-- Reviews Section -->
+        @php
+            $avgRating = \App\Models\DanhGia::getAverageRating($bacSi->id);
+            $totalReviews = \App\Models\DanhGia::getTotalReviews($bacSi->id);
+            $reviews = \App\Models\DanhGia::where('bac_si_id', $bacSi->id)
+                ->approved()
+                ->with('user')
+                ->latest()
+                ->take(5)
+                ->get();
+        @endphp
+
+        @if ($totalReviews > 0)
+            <div class="card mt-4 shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-star-fill text-warning"></i>
+                        Đánh giá từ bệnh nhân
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-3 text-center border-end">
+                            <div class="display-4 fw-bold text-warning">{{ number_format($avgRating, 1) }}</div>
+                            <div class="mb-2">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= round($avgRating))
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                    @else
+                                        <i class="bi bi-star text-muted"></i>
+                                    @endif
+                                @endfor
+                            </div>
+                            <div class="text-muted">{{ $totalReviews }} đánh giá</div>
+                        </div>
+                        <div class="col-md-9">
+                            @php
+                                $distribution = \App\Models\DanhGia::getRatingDistribution($bacSi->id);
+                            @endphp
+                            @for ($i = 5; $i >= 1; $i--)
+                                @php
+                                    $count = $distribution[$i] ?? 0;
+                                    $percentage = $totalReviews > 0 ? ($count / $totalReviews) * 100 : 0;
+                                @endphp
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="me-2" style="width: 60px;">{{ $i }} sao</span>
+                                    <div class="progress flex-grow-1" style="height: 20px;">
+                                        <div class="progress-bar bg-warning" role="progressbar"
+                                             style="width: {{ $percentage }}%"
+                                             aria-valuenow="{{ $percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                    <span class="ms-2 text-muted" style="width: 50px;">{{ $count }}</span>
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h6 class="fw-bold mb-3">Đánh giá gần đây</h6>
+                    @foreach ($reviews as $review)
+                        <div class="mb-3 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <strong>{{ $review->user->name }}</strong>
+                                    <div class="text-warning">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $review->rating)
+                                                <i class="bi bi-star-fill"></i>
+                                            @else
+                                                <i class="bi bi-star"></i>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                </div>
+                                <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
+                            </div>
+                            <p class="mb-0">{{ $review->noi_dung }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
 
     <script>

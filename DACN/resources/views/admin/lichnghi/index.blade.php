@@ -128,7 +128,7 @@
             <div class="card-body p-0">
 
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle table-bordered mb-0">
+                    <table id="lichnghiTable" class="table table-hover align-middle table-bordered mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 15%">Ngày nghỉ</th>
@@ -181,3 +181,6 @@
     </div>
 
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="lichnghiTable" />

@@ -1,327 +1,478 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-blue-800 leading-tight flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            Dashboard Sức khỏe
-        </h2>
-    </x-slot>
+@extends('layouts.patient-modern')
 
-    <div class="py-8 bg-gray-50">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+@section('title', 'Quản Lý Sức Khỏe')
+@section('page-title', 'Dashboard Bệnh Nhân')
+@section('page-subtitle', 'Theo dõi sức khỏe và quản lý lịch hẹn của bạn')
 
-            <!-- Thống kê tổng quan -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                <!-- Total Appointments -->
-                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600 font-medium">Tổng lịch hẹn</p>
-                            <p class="text-3xl font-bold text-gray-800">{{ $statistics['total_appointments'] }}</p>
+@section('content')
+<div class="container-fluid py-4">
+    {{-- Welcome Banner --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm overflow-hidden" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                <div class="card-body p-4 text-white">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold mb-2">
+                                <i class="fas fa-hand-sparkles me-2"></i>Chào mừng trở lại, {{ auth()->user()->name }}!
+                            </h2>
+                            <p class="mb-0 opacity-90 fs-5">
+                                Hôm nay là {{ now()->locale('vi')->isoFormat('dddd, D THÁNG M, YYYY') }}
+                            </p>
+                            @if($statistics['upcoming_appointments'] > 0)
+                            <div class="mt-3 p-3 bg-white bg-opacity-25 rounded d-inline-block">
+                                <i class="fas fa-calendar-check me-2"></i>
+                                Bạn có <strong>{{ $statistics['upcoming_appointments'] }}</strong> lịch hẹn sắp tới
+                            </div>
+                            @endif
                         </div>
-                        <div class="p-3 bg-blue-100 rounded-full">
-                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Completed -->
-                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600 font-medium">Đã hoàn thành</p>
-                            <p class="text-3xl font-bold text-gray-800">{{ $statistics['completed_appointments'] }}</p>
-                        </div>
-                        <div class="p-3 bg-green-100 rounded-full">
-                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Medical Records -->
-                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600 font-medium">Bệnh án</p>
-                            <p class="text-3xl font-bold text-gray-800">{{ $statistics['total_medical_records'] }}</p>
-                        </div>
-                        <div class="p-3 bg-purple-100 rounded-full">
-                            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pending -->
-                <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600 font-medium">Chờ xác nhận</p>
-                            <p class="text-3xl font-bold text-gray-800">{{ $statistics['pending_appointments'] }}</p>
-                        </div>
-                        <div class="p-3 bg-yellow-100 rounded-full">
-                            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                        <div class="col-md-4 text-center d-none d-md-block">
+                            <i class="fas fa-hospital-user" style="font-size: 100px; opacity: 0.3;"></i>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                <!-- Cột trái: Lịch hẹn & Bệnh án -->
-                <div class="lg:col-span-2 space-y-6">
-
-                    <!-- Lịch hẹn sắp tới -->
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                Lịch hẹn sắp tới
-                            </h3>
-                            <a href="{{ route('lichhen.my') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                                Xem tất cả →
-                            </a>
-                        </div>
-
-                        @if($upcomingAppointments->isEmpty())
-                            <div class="text-center py-8 text-gray-500">
-                                <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <p>Bạn chưa có lịch hẹn nào</p>
-                                <a href="{{ route('lichhen.create') }}" class="mt-3 inline-block text-blue-600 hover:text-blue-800 font-medium">
-                                    Đặt lịch ngay
-                                </a>
-                            </div>
-                        @else
-                            <div class="space-y-3">
-                                @foreach($upcomingAppointments as $appointment)
-                                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
-                                        <div class="flex justify-between items-start">
-                                            <div class="flex-1">
-                                                <div class="flex items-center mb-2">
-                                                    <span class="px-2 py-1 text-xs font-semibold rounded-full
-                                                        {{ $appointment->trang_thai === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                                        {{ $appointment->trang_thai === 'confirmed' ? 'Đã xác nhận' : 'Chờ xác nhận' }}
-                                                    </span>
-                                                </div>
-                                                <p class="font-semibold text-gray-800">{{ $appointment->dichVu->ten_dich_vu ?? 'Khám bệnh' }}</p>
-                                                <p class="text-sm text-gray-600 mt-1">
-                                                    <span class="font-medium">Bác sĩ:</span> {{ $appointment->bacSi->user->name ?? 'N/A' }}
-                                                </p>
-                                                <p class="text-sm text-gray-600 mt-1">
-                                                    <span class="font-medium">Thời gian:</span>
-                                                    {{ \Carbon\Carbon::parse($appointment->ngay_hen)->format('d/m/Y') }} - {{ substr($appointment->thoi_gian_hen, 0, 5) }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>
-
-                    <!-- Bệnh án gần đây -->
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                Bệnh án gần đây
-                            </h3>
-                        </div>
-
-                        @if($recentMedicalRecords->isEmpty())
-                            <div class="text-center py-8 text-gray-500">
-                                <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <p>Chưa có bệnh án nào</p>
-                            </div>
-                        @else
-                            <div class="space-y-3">
-                                @foreach($recentMedicalRecords as $record)
-                                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
-                                        <div class="flex justify-between items-start">
-                                            <div class="flex-1">
-                                                <p class="font-semibold text-gray-800">{{ $record->chan_doan }}</p>
-                                                <p class="text-sm text-gray-600 mt-1">
-                                                    <span class="font-medium">Bác sĩ:</span> {{ $record->bacSi->user->name ?? 'N/A' }}
-                                                </p>
-                                                <p class="text-sm text-gray-600">
-                                                    <span class="font-medium">Ngày khám:</span>
-                                                    {{ \Carbon\Carbon::parse($record->ngay_kham)->format('d/m/Y') }}
-                                                </p>
-                                            </div>
-                                            @if($record->id)
-                                                <a href="{{ route('patient.benhan.exportPdf', $record->id) }}"
-                                                   class="ml-3 text-blue-600 hover:text-blue-800"
-                                                   title="Tải PDF">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                    </svg>
-                                                </a>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>
-
-                </div>
-
-                <!-- Cột phải: Health Stats & BMI Chart -->
-                <div class="space-y-6">
-
-                    <!-- Health Stats -->
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                            Chỉ số sức khỏe
-                        </h3>
-
-                        @if($profile)
-                            <div class="space-y-4">
-                                <!-- BMI -->
-                                @if($healthStats['bmi'])
-                                    <div class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg">
-                                        <p class="text-sm text-gray-600 mb-1">Chỉ số BMI</p>
-                                        <p class="text-3xl font-bold text-blue-700">{{ number_format($healthStats['bmi'], 1) }}</p>
-                                        <p class="text-sm text-gray-700 mt-1">
-                                            <span class="px-2 py-1 rounded-full text-xs font-semibold
-                                                @if($healthStats['bmi_category'] === 'Bình thường') bg-green-200 text-green-800
-                                                @elseif($healthStats['bmi_category'] === 'Thiếu cân') bg-yellow-200 text-yellow-800
-                                                @else bg-orange-200 text-orange-800
-                                                @endif">
-                                                {{ $healthStats['bmi_category'] }}
-                                            </span>
-                                        </p>
-                                    </div>
-                                @endif
-
-                                <!-- Other stats -->
-                                <div class="grid grid-cols-2 gap-3">
-                                    @if($healthStats['blood_type'])
-                                        <div class="p-3 bg-gray-50 rounded-lg">
-                                            <p class="text-xs text-gray-600">Nhóm máu</p>
-                                            <p class="text-lg font-bold text-gray-800">{{ $healthStats['blood_type'] }}</p>
-                                        </div>
-                                    @endif
-
-                                    @if($healthStats['height'])
-                                        <div class="p-3 bg-gray-50 rounded-lg">
-                                            <p class="text-xs text-gray-600">Chiều cao</p>
-                                            <p class="text-lg font-bold text-gray-800">{{ $healthStats['height'] }} cm</p>
-                                        </div>
-                                    @endif
-
-                                    @if($healthStats['weight'])
-                                        <div class="p-3 bg-gray-50 rounded-lg">
-                                            <p class="text-xs text-gray-600">Cân nặng</p>
-                                            <p class="text-lg font-bold text-gray-800">{{ $healthStats['weight'] }} kg</p>
-                                        </div>
-                                    @endif
-
-                                    <div class="p-3 bg-gray-50 rounded-lg">
-                                        <p class="text-xs text-gray-600">Dị ứng</p>
-                                        <p class="text-lg font-bold text-gray-800">{{ $healthStats['allergies_count'] }}</p>
-                                    </div>
-                                </div>
-
-                                <a href="{{ route('profile.edit') }}" class="block w-full text-center py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
-                                    Cập nhật hồ sơ y tế
-                                </a>
-                            </div>
-                        @else
-                            <div class="text-center py-8 text-gray-500">
-                                <p class="mb-3">Chưa cập nhật thông tin y tế</p>
-                                <a href="{{ route('profile.edit') }}" class="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
-                                    Cập nhật ngay
-                                </a>
-                            </div>
-                        @endif
-                    </div>
-
-                    <!-- BMI Chart -->
-                    @if($healthStats['bmi'])
-                        <div class="bg-white rounded-lg shadow-md p-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                </svg>
-                                Xu hướng BMI (6 tháng)
-                            </h3>
-                            <canvas id="bmiChart" height="200"></canvas>
-                        </div>
-                    @endif
-
-                </div>
-
-            </div>
-
         </div>
     </div>
 
-    @if($healthStats['bmi'])
-        @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-        <script>
-            const ctx = document.getElementById('bmiChart').getContext('2d');
-            const bmiChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: @json($bmiHistory['labels']),
-                    datasets: [{
-                        label: 'BMI',
-                        data: @json($bmiHistory['data']),
-                        borderColor: 'rgb(59, 130, 246)',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    {{-- Stats Cards --}}
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar avatar-lg rounded-circle bg-primary bg-opacity-10">
+                                <i class="fas fa-calendar-check fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <p class="text-muted mb-1 small">Lịch Hẹn Sắp Tới</p>
+                            <h3 class="mb-0 fw-bold">{{ $statistics['upcoming_appointments'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <a href="{{ route('patient.lichhen.index') }}" class="btn btn-sm btn-outline-primary w-100">
+                        <i class="fas fa-arrow-right me-1"></i>Xem tất cả
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar avatar-lg rounded-circle bg-success bg-opacity-10">
+                                <i class="fas fa-file-medical fa-2x text-success"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <p class="text-muted mb-1 small">Hồ Sơ Bệnh Án</p>
+                            <h3 class="mb-0 fw-bold">{{ $statistics['total_medical_records'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <a href="{{ route('patient.benhan.index') }}" class="btn btn-sm btn-outline-success w-100">
+                        <i class="fas fa-arrow-right me-1"></i>Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar avatar-lg rounded-circle bg-warning bg-opacity-10">
+                                <i class="fas fa-file-invoice-dollar fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <p class="text-muted mb-1 small">Hóa Đơn Chưa Thanh Toán</p>
+                            <h3 class="mb-0 fw-bold">{{ $statistics['unpaid_invoices'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <a href="{{ route('patient.hoadon.index') }}" class="btn btn-sm btn-outline-warning w-100">
+                        <i class="fas fa-arrow-right me-1"></i>Thanh toán
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar avatar-lg rounded-circle bg-info bg-opacity-10">
+                                <i class="fas fa-flask fa-2x text-info"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <p class="text-muted mb-1 small">Xét Nghiệm</p>
+                            <h3 class="mb-0 fw-bold">{{ $statistics['total_tests'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0">
+                    <a href="{{ route('patient.xetnghiem.index') }}" class="btn btn-sm btn-outline-info w-100">
+                        <i class="fas fa-arrow-right me-1"></i>Xem kết quả
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {{-- Left Column --}}
+        <div class="col-xl-8">
+            {{-- Lịch Hẹn Sắp Tới --}}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 pt-4 pb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>Lịch Hẹn Sắp Tới
+                        </h5>
+                        <a href="{{ route('public.bacsi.index') }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus me-1"></i>Đặt Lịch Mới
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    @if($upcomingAppointments->count() > 0)
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ngày & Giờ</th>
+                                    <th>Bác Sĩ</th>
+                                    <th>Dịch Vụ</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($upcomingAppointments as $appointment)
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">{{ \Carbon\Carbon::parse($appointment->ngay_hen)->format('d/m/Y') }}</div>
+                                        <small class="text-muted">{{ $appointment->thoi_gian_hen }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ $appointment->bacSi->avatar_url ?? asset('images/default-avatar.svg') }}"
+                                                 alt="Doctor" class="rounded-circle me-2" width="40" height="40">
+                                            <div>
+                                                <div class="fw-semibold">{{ $appointment->bacSi->ho_ten }}</div>
+                                                <small class="text-muted">{{ $appointment->bacSi->chuyen_khoa }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ $appointment->dichVu->ten_dich_vu ?? 'N/A' }}</td>
+                                    <td>
+                                        @php
+                                            $statusColors = [
+                                                'pending' => 'warning',
+                                                'confirmed' => 'success',
+                                                'completed' => 'info',
+                                                'cancelled' => 'danger',
+                                            ];
+                                            $color = $statusColors[$appointment->trang_thai] ?? 'secondary';
+                                        @endphp
+                                        <span class="badge bg-{{ $color }}">{{ ucfirst($appointment->trang_thai) }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('patient.lichhen.show', $appointment->id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    @else
+                    <div class="p-5 text-center text-muted">
+                        <i class="fas fa-calendar-times fa-3x mb-3 opacity-50"></i>
+                        <p class="mb-3">Bạn chưa có lịch hẹn nào sắp tới</p>
+                        <a href="{{ route('public.bacsi.index') }}" class="btn btn-primary">
+                            <i class="fas fa-calendar-plus me-2"></i>Đặt Lịch Ngay
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Biểu Đồ Lịch Hẹn --}}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 pt-4">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-chart-line me-2 text-success"></i>Thống Kê Lịch Hẹn 6 Tháng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="appointmentChart" height="80"></canvas>
+                </div>
+            </div>
+
+            {{-- Bệnh Án Gần Đây --}}
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pt-4 pb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-notes-medical me-2 text-success"></i>Bệnh Án Gần Đây
+                        </h5>
+                        <a href="{{ route('patient.benhan.index') }}" class="text-primary text-decoration-none">
+                            Xem tất cả <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    @if($recentMedicalRecords->count() > 0)
+                    <div class="list-group list-group-flush">
+                        @foreach($recentMedicalRecords as $record)
+                        <a href="{{ route('patient.benhan.show', $record->id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar rounded-circle bg-success bg-opacity-10">
+                                        <i class="fas fa-stethoscope text-success"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1">{{ $record->dichVu->ten_dich_vu ?? 'Khám bệnh' }}</h6>
+                                        <small class="text-muted">{{ \Carbon\Carbon::parse($record->ngay_kham)->format('d/m/Y') }}</small>
+                                    </div>
+                                    <p class="mb-1 text-muted small">BS. {{ $record->bacSi->ho_ten }}</p>
+                                    <p class="mb-0 small text-truncate">{{ Str::limit($record->chan_doan, 100) }}</p>
+                                </div>
+                            </div>
+                        </a>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="p-4 text-center text-muted">
+                        <i class="fas fa-notes-medical fa-2x mb-2 opacity-50"></i>
+                        <p class="mb-0">Chưa có bệnh án nào</p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        {{-- Right Column --}}
+        <div class="col-xl-4">
+            {{-- Chỉ Số Sức Khỏe --}}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 pt-4">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-heartbeat me-2 text-danger"></i>Chỉ Số Sức Khỏe
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if($profile)
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded text-center">
+                                <i class="fas fa-weight fa-2x text-primary mb-2"></i>
+                                <div class="fw-bold">{{ $healthStats['weight'] ?? '--' }} kg</div>
+                                <small class="text-muted">Cân nặng</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded text-center">
+                                <i class="fas fa-ruler-vertical fa-2x text-success mb-2"></i>
+                                <div class="fw-bold">{{ $healthStats['height'] ?? '--' }} cm</div>
+                                <small class="text-muted">Chiều cao</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded text-center">
+                                <i class="fas fa-calculator fa-2x text-warning mb-2"></i>
+                                <div class="fw-bold">{{ number_format($healthStats['bmi'] ?? 0, 1) }}</div>
+                                <small class="text-muted">BMI</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded text-center">
+                                <i class="fas fa-tint fa-2x text-danger mb-2"></i>
+                                <div class="fw-bold">{{ $healthStats['blood_type'] ?? '--' }}</div>
+                                <small class="text-muted">Nhóm máu</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if($healthStats['bmi'])
+                    <div class="mt-3 p-3 bg-info bg-opacity-10 rounded">
+                        <h6 class="mb-2"><i class="fas fa-info-circle me-2"></i>Phân Loại BMI</h6>
+                        <p class="mb-0 fw-semibold">{{ $healthStats['bmi_category'] }}</p>
+                    </div>
+                    @endif
+
+                    @if($healthStats['allergies_count'] > 0)
+                    <div class="alert alert-warning mt-3 mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Lưu ý:</strong> Bạn có {{ $healthStats['allergies_count'] }} dị ứng đã ghi nhận
+                    </div>
+                    @endif
+                    @else
+                    <div class="text-center py-4">
+                        <i class="fas fa-user-plus fa-3x text-muted mb-3"></i>
+                        <p class="text-muted mb-3">Hồ sơ sức khỏe chưa được cập nhật</p>
+                        <a href="{{ route('profile.edit') }}" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Cập Nhật Hồ Sơ
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Hóa Đơn Chưa Thanh Toán --}}
+            @if($unpaidInvoices->count() > 0)
+            <div class="card border-0 shadow-sm mb-4 border-start border-warning border-3">
+                <div class="card-header bg-warning bg-opacity-10 border-0 pt-4">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-exclamation-circle me-2 text-warning"></i>Hóa Đơn Cần Thanh Toán
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @foreach($unpaidInvoices as $invoice)
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                        <div>
+                            <div class="fw-semibold">#{{ $invoice->id }}</div>
+                            <small class="text-muted">{{ \Carbon\Carbon::parse($invoice->created_at)->format('d/m/Y') }}</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold text-warning">{{ number_format($invoice->tong_tien) }}đ</div>
+                            <a href="{{ route('patient.hoadon.show', $invoice->id) }}" class="btn btn-sm btn-warning mt-1">
+                                Thanh toán
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            {{-- Quick Actions --}}
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pt-4">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-bolt me-2 text-primary"></i>Thao Tác Nhanh
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ route('public.bacsi.index') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-calendar-plus me-2"></i>Đặt Lịch Khám
+                        </a>
+                        <a href="{{ route('patient.donthuoc.index') }}" class="btn btn-outline-success">
+                            <i class="fas fa-prescription me-2"></i>Đơn Thuốc
+                        </a>
+                        <a href="{{ route('patient.xetnghiem.index') }}" class="btn btn-outline-info">
+                            <i class="fas fa-vial me-2"></i>Xét Nghiệm
+                        </a>
+                        <a href="{{ route('patient.chat.index') }}" class="btn btn-outline-warning">
+                            <i class="fas fa-comments me-2"></i>Tư Vấn Online
+                        </a>
+                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-user-cog me-2"></i>Cài Đặt
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('styles')
+<style>
+.hover-lift {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-lg {
+    width: 60px;
+    height: 60px;
+}
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Appointment Chart
+    const ctx = document.getElementById('appointmentChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @json($appointmentChartData['labels']),
+                datasets: [
+                    {
+                        label: 'Hoàn thành',
+                        data: @json($appointmentChartData['completed']),
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         tension: 0.4,
-                        fill: true,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                        }
+                        fill: true
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            min: 18,
-                            max: 30,
-                            ticks: {
-                                stepSize: 2
-                            }
+                    {
+                        label: 'Đã hủy',
+                        data: @json($appointmentChartData['cancelled']),
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
                         }
                     }
                 }
-            });
-        </script>
-        @endpush
-    @endif
-
-</x-app-layout>
+            }
+        });
+    }
+});
+</script>
+@endpush
+@endsection

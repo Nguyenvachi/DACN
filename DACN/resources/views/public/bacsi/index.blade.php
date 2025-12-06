@@ -1,4 +1,9 @@
-@extends('layouts.app')
+@php
+    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+    $layout = $isPatient ? 'layouts.patient-modern' : 'layouts.app';
+@endphp
+
+@extends($layout)
 
 @section('content')
     <style>
@@ -130,6 +135,30 @@
                             <h5 class="card-title fw-bold mb-3 text-dark">
                                 {{ $bacSi->ho_ten ?? optional($bacSi->user)->name }}
                             </h5>
+
+                            {{-- Rating Section --}}
+                            @php
+                                $avgRating = \App\Models\DanhGia::getAverageRating($bacSi->id);
+                                $totalReviews = \App\Models\DanhGia::getTotalReviews($bacSi->id);
+                            @endphp
+                            @if ($totalReviews > 0)
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= round($avgRating))
+                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                @else
+                                                    <i class="bi bi-star text-muted"></i>
+                                                @endif
+                                            @endfor
+                                        </div>
+                                        <span class="text-muted small">
+                                            {{ number_format($avgRating, 1) }} ({{ $totalReviews }} đánh giá)
+                                        </span>
+                                    </div>
+                                </div>
+                            @endif
 
                             <div class="mb-3">
                                 {{-- Kinh nghiệm --}}

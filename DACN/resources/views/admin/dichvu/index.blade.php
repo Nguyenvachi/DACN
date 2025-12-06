@@ -42,7 +42,7 @@
             <div class="card-body">
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped align-middle">
+                    <table id="dichvuTable" class="table table-bordered table-striped align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th width="5%">ID</th>
@@ -101,14 +101,11 @@
                     </table>
                 </div>
 
-                @if ($dsDichVu->hasPages())
-                    <div class="mt-3">
-                        {{ $dsDichVu->links() }}
-                    </div>
-                @endif
-
             </div>
         </div>
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="dichvuTable" />

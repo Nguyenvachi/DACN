@@ -56,6 +56,16 @@ class BacSi extends Model
         return $this->hasMany(CaDieuChinhBacSi::class, 'bac_si_id');
     }
 
+    public function danhGias()
+    {
+        return $this->hasMany(DanhGia::class, 'bac_si_id');
+    }
+
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class, 'bac_si_id');
+    }
+
     // Thuộc nhiều chuyên khoa
     public function chuyenKhoas()
     {

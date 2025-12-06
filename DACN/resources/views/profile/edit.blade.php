@@ -1,125 +1,331 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-blue-800 leading-tight flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 01112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {{ __('Quản lý Hồ sơ cá nhân') }}
+@php
+    // Phân biệt layout theo role rõ ràng
+    $role = auth()->user()->role ?? 'patient';
+
+    $layout = match ($role) {
+        'admin' => 'layouts.admin',
+        'doctor' => 'layouts.doctor',
+        'staff' => 'layouts.staff',
+        'patient' => 'layouts.patient-modern',
+        default => 'layouts.app',
+    };
+
+    $isPatient = $role === 'patient';
+@endphp
+
+@extends($layout)
+
+@if($isPatient)
+    @section('title', 'Quản lý Hồ sơ cá nhân')
+    @section('page-title', 'Quản lý Hồ sơ cá nhân')
+    @section('page-subtitle', 'Cập nhật thông tin tài khoản và hồ sơ y tế')
+@endif
+
+@section('content')
+
+<div class="container-fluid py-4">
+    @if(!$isPatient)
+    {{-- Header cho Doctor/Admin/Staff --}}
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">
+            <i class="fas fa-user-cog me-2 text-primary"></i>Hồ sơ cá nhân
         </h2>
-    </x-slot>
+        <p class="text-muted mb-0">Cập nhật thông tin tài khoản, bảo mật và cài đặt</p>
+    </div>
+    @endif
 
-    <div class="py-12 bg-gray-50">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    {{-- TAB NAVIGATION - Tối ưu cho tất cả roles --}}
+    <ul class="nav nav-tabs mb-4 bg-white rounded shadow-sm" id="profileTabs" role="tablist" style="border: none;">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active px-4 py-3" id="account-tab" data-bs-toggle="tab" data-bs-target="#account" type="button" role="tab">
+                <i class="fas fa-user-circle me-2"></i>Thông tin tài khoản
+            </button>
+        </li>
+        @if($role === 'doctor')
+        <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 py-3" id="professional-tab" data-bs-toggle="tab" data-bs-target="#professional" type="button" role="tab">
+                <i class="fas fa-user-md me-2"></i>Thông tin chuyên môn
+            </button>
+        </li>
+        @endif
+        @if(auth()->user()->isPatient())
+        <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 py-3" id="medical-tab" data-bs-toggle="tab" data-bs-target="#medical" type="button" role="tab">
+                <i class="fas fa-heartbeat me-2"></i>Hồ sơ y tế
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 py-3" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab">
+                <i class="fas fa-bell me-2"></i>Thông báo
+            </button>
+        </li>
+        @endif
+    </ul>
 
-            <!-- TAB NAVIGATION -->
-            <ul class="nav nav-tabs mb-4 bg-white rounded-lg shadow-sm p-2" id="profileTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="account-tab" data-bs-toggle="tab" data-bs-target="#account" type="button" role="tab">
-                        <i class="bi bi-person-circle me-2"></i>Thông tin tài khoản
-                    </button>
-                </li>
-                @if(auth()->user()->isPatient())
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="medical-tab" data-bs-toggle="tab" data-bs-target="#medical" type="button" role="tab">
-                        <i class="bi bi-heart-pulse me-2"></i>Hồ sơ y tế
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab">
-                        <i class="bi bi-bell me-2"></i>Thông báo
-                    </button>
-                </li>
-                @endif
-            </ul>
+    {{-- TAB CONTENT --}}
+    <div class="tab-content" id="profileTabsContent">
 
-            <!-- TAB CONTENT -->
-            <div class="tab-content" id="profileTabsContent">
-
-                <!-- TAB 1: ACCOUNT INFO -->
-                <div class="tab-pane fade show active" id="account" role="tabpanel">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div class="lg:col-span-2">
-                            <div class="p-6 sm:p-8 bg-white shadow-lg sm:rounded-xl border border-gray-100">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Thông tin cơ bản
-                                </h3>
-                                <div class="border-t border-gray-200 pt-4">
-                                    @include('profile.partials.update-profile-information-form')
-                                </div>
-                            </div>
+        {{-- TAB 1: ACCOUNT INFO --}}
+        <div class="tab-pane fade show active" id="account" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    {{-- Thông tin cơ bản --}}
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-0 pt-4">
+                            <h5 class="fw-bold mb-0">
+                                <i class="fas fa-info-circle me-2 text-primary"></i>Thông tin cơ bản
+                            </h5>
                         </div>
-
-                        <div class="lg:col-span-1 space-y-6">
-                            <div class="p-6 sm:p-8 bg-white shadow-md sm:rounded-xl border border-yellow-300/40">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.1 0 2-.9 2-2V7a4 4 0 00-8 0v2c0 1.1.9 2 2 2h4zm-6 4h12a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4a2 2 0 012-2z" />
-                                    </svg>
-                                    Bảo mật tài khoản
-                                </h3>
-                                <div class="border-t border-gray-200 pt-4">
-                                    @include('profile.partials.update-password-form')
-                                </div>
-                            </div>
-
-                            <div class="p-6 sm:p-8 bg-white shadow-md sm:rounded-xl border border-red-400/40">
-                                <h3 class="text-lg font-semibold text-red-600 mb-3 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.002 20h13.996c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.27 17c-.77 1.333.192 3 1.732 3z" />
-                                    </svg>
-                                    Khu vực nguy hiểm
-                                </h3>
-                                <p class="text-sm text-gray-600 mb-4">
-                                    Thao tác này không thể hoàn tác. Hãy cân nhắc trước khi xóa tài khoản.
-                                </p>
-                                <div class="border-t border-gray-200 pt-4">
-                                    @include('profile.partials.delete-user-form')
-                                </div>
-                            </div>
+                        <div class="card-body p-4">
+                            @include('profile.partials.update-profile-information-form')
                         </div>
                     </div>
                 </div>
 
-                @if(auth()->user()->isPatient())
-                <!-- TAB 2: MEDICAL PROFILE -->
-                <div class="tab-pane fade" id="medical" role="tabpanel">
-                    <div class="row">
-                        <!-- Avatar Upload -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card shadow-sm">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title mb-3"><i class="bi bi-person-bounding-box me-2"></i>Ảnh đại diện</h5>
-                                    <img src="{{ $profile && $profile->avatar ? asset('storage/' . $profile->avatar) : asset('images/default-avatar.svg') }}"
-                                         alt="Avatar" class="rounded-circle mb-3" width="150" height="150" id="avatarPreview">
+                <div class="col-lg-4">
+                    {{-- Bảo mật tài khoản --}}
+                    <div class="card border-0 shadow-sm mb-4 border-start border-warning border-3">
+                        <div class="card-header bg-warning bg-opacity-10 border-0 pt-4">
+                            <h5 class="fw-bold mb-0">
+                                <i class="fas fa-shield-alt me-2 text-warning"></i>Bảo mật tài khoản
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            @include('profile.partials.update-password-form')
+                        </div>
+                    </div>
 
-                                    <form action="{{ route('profile.uploadAvatar') }}" method="POST" enctype="multipart/form-data" id="avatarForm">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <input type="file" class="form-control" name="avatar" accept="image/*" id="avatarInput" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-upload me-1"></i>Tải ảnh lên
-                                        </button>
-                                    </form>
+                    {{-- Xóa tài khoản --}}
+                    <div class="card border-0 shadow-sm border-start border-danger border-3">
+                        <div class="card-header bg-danger bg-opacity-10 border-0 pt-4">
+                            <h5 class="fw-bold mb-0">
+                                <i class="fas fa-exclamation-triangle me-2 text-danger"></i>Vùng nguy hiểm
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            @include('profile.partials.delete-user-form')
+                </div>
+            </div>
+        </div>
+
+        @if($role === 'doctor')
+        {{-- TAB THÔNG TIN CHUYÊN MÔN CHO BÁC SĨ --}}
+        <div class="tab-pane fade" id="professional" role="tabpanel">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-primary text-white pt-4">
+                            <h5 class="fw-bold mb-0">
+                                <i class="fas fa-stethoscope me-2"></i>Hồ sơ bác sĩ
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            @php
+                                $bacSi = \App\Models\BacSi::where('user_id', auth()->id())->first();
+                            @endphp
+
+                            @if($bacSi)
+                            <form action="{{ route('profile.updateDoctor') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">
+                                            <i class="fas fa-user me-1"></i>Họ và tên
+                                        </label>
+                                        <input type="text" name="ho_ten" class="form-control" value="{{ $bacSi->ho_ten }}" required>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">
+                                            <i class="fas fa-envelope me-1"></i>Email
+                                        </label>
+                                        <input type="email" name="email" class="form-control" value="{{ $bacSi->email }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">
+                                            <i class="fas fa-phone me-1"></i>Số điện thoại
+                                        </label>
+                                        <input type="text" name="so_dien_thoai" class="form-control" value="{{ $bacSi->so_dien_thoai }}">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-semibold">
+                                            <i class="fas fa-hospital me-1"></i>Chuyên khoa
+                                        </label>
+                                        <input type="text" name="chuyen_khoa" class="form-control" value="{{ $bacSi->chuyen_khoa }}" placeholder="Nội khoa, Ngoại khoa...">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-map-marker-alt me-1"></i>Địa chỉ
+                                    </label>
+                                    <input type="text" name="dia_chi" class="form-control" value="{{ $bacSi->dia_chi }}" placeholder="Địa chỉ làm việc">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-graduation-cap me-1"></i>Kinh nghiệm (năm)
+                                    </label>
+                                    <input type="number" name="kinh_nghiem" class="form-control" value="{{ $bacSi->kinh_nghiem }}" placeholder="Số năm kinh nghiệm">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-info-circle me-1"></i>Mô tả ngắn
+                                    </label>
+                                    <textarea name="mo_ta" class="form-control" rows="4" placeholder="Giới thiệu về bản thân, chuyên môn, thành tích...">{{ $bacSi->mo_ta }}</textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">
+                                        <i class="fas fa-image me-1"></i>Ảnh đại diện
+                                    </label>
+                                    @if($bacSi->avatar_url)
+                                    <div class="mb-2">
+                                        <img src="{{ $bacSi->avatar_url }}" alt="Avatar" class="rounded-circle" width="100" height="100" style="object-fit: cover;">
+                                    </div>
+                                    @endif
+                                    <input type="file" name="avatar" class="form-control" accept="image/*">
+                                    <small class="text-muted">Chọn file ảnh mới nếu muốn thay đổi</small>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Lưu ý:</strong> Thông tin này sẽ hiển thị công khai cho bệnh nhân khi tìm kiếm bác sĩ.
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-save me-2"></i>Cập nhật thông tin
+                                </button>
+                            </form>
+                            @else
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Hồ sơ bác sĩ chưa được tạo. Vui lòng liên hệ quản trị viên.
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    {{-- Thống kê nhanh --}}
+                    <div class="card border-0 shadow-sm mb-4 bg-success bg-opacity-10">
+                        <div class="card-body text-center p-4">
+                            @if($bacSi)
+                            <div class="mb-3">
+                                @if($bacSi->avatar_url)
+                                <img src="{{ $bacSi->avatar_url }}" alt="Avatar" class="rounded-circle border border-3 border-success" width="120" height="120" style="object-fit: cover;">
+                                @else
+                                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px; font-size: 48px;">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                @endif
+                            </div>
+                            <h5 class="fw-bold">{{ $bacSi->ho_ten }}</h5>
+                            <p class="text-muted mb-3">{{ $bacSi->chuyen_khoa ?? 'Chưa cập nhật chuyên khoa' }}</p>
+
+                            @php
+                                $totalPatients = \App\Models\LichHen::where('bac_si_id', $bacSi->id)->distinct('user_id')->count('user_id');
+                                $avgRating = \App\Models\DanhGia::where('bac_si_id', $bacSi->id)->where('trang_thai', 'approved')->avg('rating');
+                                $totalReviews = \App\Models\DanhGia::where('bac_si_id', $bacSi->id)->where('trang_thai', 'approved')->count();
+                            @endphp
+
+                            <div class="row text-center mt-4">
+                                <div class="col-6 mb-3">
+                                    <div class="fw-bold fs-4 text-primary">{{ $totalPatients }}</div>
+                                    <small class="text-muted">Bệnh nhân</small>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <div class="fw-bold fs-4 text-warning">{{ number_format($avgRating ?? 0, 1) }} ⭐</div>
+                                    <small class="text-muted">{{ $totalReviews }} đánh giá</small>
+                                </div>
+                                <div class="col-12">
+                                    <div class="fw-bold fs-4 text-success">{{ $bacSi->kinh_nghiem ?? 0 }} năm</div>
+                                    <small class="text-muted">Kinh nghiệm</small>
                                 </div>
                             </div>
+                            @endif
                         </div>
+                    </div>
 
-                        <!-- Medical Information -->
-                        <div class="col-md-8 mb-4">
-                            <div class="card shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title mb-4"><i class="bi bi-heart-pulse me-2"></i>Thông tin y tế</h5>
+                    {{-- Trạng thái --}}
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 pt-3">
+                            <h6 class="fw-bold mb-0">
+                                <i class="fas fa-toggle-on me-2 text-success"></i>Trạng thái
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            @if($bacSi)
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="statusToggle" {{ $bacSi->trang_thai === 'active' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="statusToggle">
+                                    {{ $bacSi->trang_thai === 'active' ? 'Đang hoạt động' : 'Tạm nghỉ' }}
+                                </label>
+                            </div>
+                            <small class="text-muted">Bệnh nhân có thể đặt lịch khi trạng thái là "Đang hoạt động"</small>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
 
-                                    <form action="{{ route('profile.updateMedical') }}" method="POST" id="medicalForm">
-                                        @csrf
-                                        <div class="row">
-                                            <div class="col-md-4 mb-3">
-                                                <label class="form-label">Nhóm máu</label>
-                                                <select name="nhom_mau" class="form-select">
+        @if(auth()->user()->isPatient())
+        {{-- TAB 2: MEDICAL PROFILE --}}
+        <div class="tab-pane fade" id="medical" role="tabpanel">
+            <div class="row g-4">
+                {{-- Avatar Upload --}}
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 pt-4">
+                            <h5 class="fw-bold mb-0 text-center">
+                                <i class="fas fa-camera me-2 text-primary"></i>Ảnh đại diện
+                            </h5>
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <img src="{{ $profile && $profile->avatar ? asset('storage/' . $profile->avatar) : asset('images/default-avatar.svg') }}"
+                                 alt="Avatar" class="rounded-circle mb-3 border border-3 border-primary shadow"
+                                 width="150" height="150" id="avatarPreview" style="object-fit: cover;">
+
+                            <form action="{{ route('profile.uploadAvatar') }}" method="POST" enctype="multipart/form-data" id="avatarForm">
+                                @csrf
+                                <div class="mb-3">
+                                    <input type="file" class="form-control" name="avatar" accept="image/*" id="avatarInput" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-upload me-2"></i>Tải lên
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Medical Information --}}
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 pt-4">
+                            <h5 class="fw-bold mb-0">
+                                <i class="fas fa-heartbeat me-2 text-danger"></i>Thông tin y tế
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form action="{{ route('profile.updateMedical') }}" method="POST" id="medicalForm">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-semibold">
+                                            <i class="fas fa-tint me-1"></i>Nhóm máu
+                                        </label>
+                                        <select name="nhom_mau" class="form-select">
                                                     <option value="">-- Chọn --</option>
                                                     @foreach(['A', 'B', 'AB', 'O'] as $group)
                                                         <option value="{{ $group }}" {{ $profile->nhom_mau == $group ? 'selected' : '' }}>{{ $group }}</option>
@@ -190,117 +396,156 @@
                                         </button>
                                     </form>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 3: NOTIFICATIONS -->
-                <div class="tab-pane fade" id="notifications" role="tabpanel">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4"><i class="bi bi-bell-fill me-2"></i>Cài đặt thông báo</h5>
-
-                            <form action="{{ route('profile.updateNotifications') }}" method="POST">
-                                @csrf
-
-                                <h6 class="mb-3">Thông báo qua Email</h6>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="email_reminder" value="1"
-                                           id="emailReminder" {{ $preferences->email_reminder ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="emailReminder">
-                                        Nhắc lịch hẹn sắp tới
-                                    </label>
-                                </div>
-
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="email_confirmed" value="1"
-                                           id="emailConfirmed" {{ $preferences->email_confirmed ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="emailConfirmed">
-                                        Xác nhận lịch hẹn
-                                    </label>
-                                </div>
-
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="email_cancelled" value="1"
-                                           id="emailCancelled" {{ $preferences->email_cancelled ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="emailCancelled">
-                                        Hủy lịch hẹn
-                                    </label>
-                                </div>
-
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="email_test_results" value="1"
-                                           id="emailTestResults" {{ $preferences->email_test_results ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="emailTestResults">
-                                        Kết quả xét nghiệm
-                                    </label>
-                                </div>
-
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" name="email_promotions" value="1"
-                                           id="emailPromotions" {{ $preferences->email_promotions ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="emailPromotions">
-                                        Khuyến mãi và tin tức
-                                    </label>
-                                </div>
-
-                                <hr class="my-4">
-
-                                <h6 class="mb-3">Thông báo qua SMS</h6>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="sms_reminder" value="1"
-                                           id="smsReminder" {{ $preferences->sms_reminder ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="smsReminder">
-                                        Nhắc lịch hẹn sắp tới
-                                    </label>
-                                </div>
-
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="sms_confirmed" value="1"
-                                           id="smsConfirmed" {{ $preferences->sms_confirmed ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="smsConfirmed">
-                                        Xác nhận lịch hẹn
-                                    </label>
-                                </div>
-
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" name="sms_cancelled" value="1"
-                                           id="smsCancelled" {{ $preferences->sms_cancelled ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="smsCancelled">
-                                        Hủy lịch hẹn
-                                    </label>
-                                </div>
-
-                                <hr class="my-4">
-
-                                <h6 class="mb-3">Cài đặt nhắc nhở</h6>
-                                <div class="mb-3">
-                                    <label class="form-label">Gửi nhắc nhở trước lịch hẹn (giờ)</label>
-                                    <select name="reminder_hours_before" class="form-select" style="max-width: 200px;">
-                                        <option value="2" {{ $preferences->reminder_hours_before == 2 ? 'selected' : '' }}>2 giờ</option>
-                                        <option value="6" {{ $preferences->reminder_hours_before == 6 ? 'selected' : '' }}>6 giờ</option>
-                                        <option value="12" {{ $preferences->reminder_hours_before == 12 ? 'selected' : '' }}>12 giờ</option>
-                                        <option value="24" {{ $preferences->reminder_hours_before == 24 ? 'selected' : '' }}>24 giờ</option>
-                                        <option value="48" {{ $preferences->reminder_hours_before == 48 ? 'selected' : '' }}>48 giờ</option>
-                                    </select>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-check-circle me-1"></i>Lưu cài đặt
-                                </button>
                             </form>
                         </div>
                     </div>
                 </div>
-                @endif
-
             </div>
-
         </div>
-    </div>
 
-    @push('scripts')
+        {{-- TAB 3: NOTIFICATIONS --}}
+        <div class="tab-pane fade" id="notifications" role="tabpanel">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pt-4">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-bell me-2 text-warning"></i>Cài đặt thông báo
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ route('profile.updateNotifications') }}" method="POST">
+                        @csrf
+
+                        <h6 class="mb-3 fw-bold">
+                            <i class="fas fa-envelope me-2 text-primary"></i>Thông báo qua Email
+                        </h6>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="email_appointment_reminder" value="1"
+                                   id="emailReminder" {{ $preferences->email_appointment_reminder ? 'checked' : '' }}>
+                            <label class="form-check-label" for="emailReminder">
+                                Nhắc lịch hẹn sắp tới
+                            </label>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="email_appointment_confirmed" value="1"
+                                   id="emailConfirmed" {{ $preferences->email_appointment_confirmed ? 'checked' : '' }}>
+                            <label class="form-check-label" for="emailConfirmed">
+                                Xác nhận lịch hẹn
+                            </label>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="email_appointment_cancelled" value="1"
+                                   id="emailCancelled" {{ $preferences->email_appointment_cancelled ? 'checked' : '' }}>
+                            <label class="form-check-label" for="emailCancelled">
+                                Hủy lịch hẹn
+                            </label>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="email_test_results" value="1"
+                                   id="emailTestResults" {{ $preferences->email_test_results ? 'checked' : '' }}>
+                            <label class="form-check-label" for="emailTestResults">
+                                Kết quả xét nghiệm
+                            </label>
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            <input class="form-check-input" type="checkbox" name="email_promotions" value="1"
+                                   id="emailPromotions" {{ $preferences->email_promotions ? 'checked' : '' }}>
+                            <label class="form-check-label" for="emailPromotions">
+                                Khuyến mãi và tin tức
+                            </label>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h6 class="mb-3 fw-bold">
+                            <i class="fas fa-sms me-2 text-success"></i>Thông báo qua SMS
+                        </h6>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="sms_appointment_reminder" value="1"
+                                   id="smsReminder" {{ $preferences->sms_appointment_reminder ? 'checked' : '' }}>
+                            <label class="form-check-label" for="smsReminder">
+                                Nhắc lịch hẹn sắp tới
+                            </label>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="sms_appointment_confirmed" value="1"
+                                   id="smsConfirmed" {{ $preferences->sms_appointment_confirmed ? 'checked' : '' }}>
+                            <label class="form-check-label" for="smsConfirmed">
+                                Xác nhận lịch hẹn
+                            </label>
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            <input class="form-check-input" type="checkbox" name="sms_appointment_cancelled" value="1"
+                                   id="smsCancelled" {{ ($preferences->sms_appointment_cancelled ?? false) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="smsCancelled">
+                                Hủy lịch hẹn
+                            </label>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h6 class="mb-3 fw-bold">
+                            <i class="fas fa-clock me-2 text-info"></i>Cài đặt nhắc nhở
+                        </h6>
+                        <div class="mb-4">
+                            <label class="form-label">Gửi nhắc nhở trước lịch hẹn</label>
+                            <select name="reminder_hours_before" class="form-select" style="max-width: 250px;">
+                                <option value="2" {{ $preferences->reminder_hours_before == 2 ? 'selected' : '' }}>2 giờ trước</option>
+                                <option value="6" {{ $preferences->reminder_hours_before == 6 ? 'selected' : '' }}>6 giờ trước</option>
+                                <option value="12" {{ $preferences->reminder_hours_before == 12 ? 'selected' : '' }}>12 giờ trước</option>
+                                <option value="24" {{ $preferences->reminder_hours_before == 24 ? 'selected' : '' }}>1 ngày trước</option>
+                                <option value="48" {{ $preferences->reminder_hours_before == 48 ? 'selected' : '' }}>2 ngày trước</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i>Lưu cài đặt
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+</div>
+
+@push('styles')
+<style>
+    .nav-tabs .nav-link {
+        color: #6c757d;
+        font-weight: 500;
+        border: none;
+        transition: all 0.3s;
+    }
+    .nav-tabs .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #0d6efd;
+    }
+    .nav-tabs .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+    }
+    .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+</style>
+@endpush
+
+@push('scripts')
     <script>
         // Avatar preview
         document.getElementById('avatarInput')?.addEventListener('change', function(e) {
@@ -396,4 +641,5 @@
         });
     </script>
     @endpush
-</x-app-layout>
+</div>
+@endsection

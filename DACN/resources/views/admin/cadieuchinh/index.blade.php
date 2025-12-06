@@ -135,7 +135,7 @@
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-hover mb-0 align-middle">
+            <table id="cadieuchinhTable" class="table table-hover mb-0 align-middle">
                 <thead class="table-light">
                     <tr>
                         <th width="15%">Ngày</th>
@@ -221,3 +221,6 @@
 </style>
 
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="cadieuchinhTable" />

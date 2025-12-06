@@ -60,6 +60,10 @@
                             <x-nav-link :href="route('patient.benhan.index')" :active="request()->routeIs('patient.benhan.*')">
                                 Bệnh án của tôi
                             </x-nav-link>
+
+                            <x-nav-link :href="route('patient.chat.index')" :active="request()->routeIs('patient.chat.*')">
+                                Tin nhắn
+                            </x-nav-link>
                         @endif
                     @endauth
 

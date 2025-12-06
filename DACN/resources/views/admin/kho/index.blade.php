@@ -36,7 +36,7 @@
             <div class="card-body">
 
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered align-middle">
+                    <table id="khoTable" class="table table-striped table-bordered align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th width="60">#</th>
@@ -80,3 +80,6 @@
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="khoTable" />

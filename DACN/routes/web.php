@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Admin\BacSiController as AdminBacSiController;
 use App\Http\Controllers\Doctor\CalendarController as DoctorCalendarController;
+use App\Http\Controllers\Doctor\DashboardController as DoctorDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BacSiController;
 use App\Http\Controllers\DichVuController;
@@ -28,8 +29,28 @@ use App\Http\Controllers\PatientDashboardController;
 |--------------------------------------------------------------------------
 */
 
-// Route cho trang chủ
+// Route cho trang chủ công khai
 Route::get('/', function () {
+    // Nếu đã đăng nhập, redirect theo role
+    if (auth()->check()) {
+        $user = auth()->user();
+        $role = strtolower($user->role ?? '');
+
+        return match ($role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'doctor' => redirect()->route('doctor.dashboard'),
+            'patient' => redirect()->route('public.bacsi.index'),
+            'staff' => redirect()->route('staff.dashboard'),
+            default => redirect()->route('dashboard'),
+        };
+    }
+
+    // Chưa đăng nhập, hiển thị homepage công khai
+    return view('home');
+})->name('homepage');
+
+// Route /home cho user đã đăng nhập
+Route::get('/home', function () {
     if (!auth()->check()) {
         return redirect()->route('login');
     }
@@ -39,7 +60,7 @@ Route::get('/', function () {
 
     return match ($role) {
         'admin' => redirect()->route('admin.dashboard'),
-        'doctor' => redirect()->route('doctor.calendar.index'),
+        'doctor' => redirect()->route('doctor.dashboard'),
         'patient' => redirect()->route('public.bacsi.index'),
         'staff' => redirect()->route('staff.dashboard'),
         default => redirect()->route('dashboard'),
@@ -59,10 +80,31 @@ Route::post('/payment/momo-ipn', [PaymentController::class, 'momoIpn'])->name('m
 // Nhóm tất cả các route yêu cầu xác thực (đăng nhập)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/api/bac-si/{bacSi}/thoi-gian-trong/{ngay}', [LichHenController::class, 'getAvailableTimeSlots'])->name('api.bacsi.slots');
-    Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
+
+    // Dashboard - Tự động chuyển theo role
+    Route::get('/dashboard', function () {
+        $user = auth()->user();
+        $role = strtolower($user->role ?? '');
+
+        return match ($role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'doctor' => redirect()->route('doctor.dashboard'),
+            'patient' => redirect()->route('patient.dashboard'),
+            'staff' => redirect()->route('staff.dashboard'),
+            default => view('dashboard'),
+        };
+    })->name('dashboard');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Profile routes cho các roles khác nhau (File mẹ: routes/web.php)
+    Route::put('/profile/doctor', [ProfileController::class, 'updateDoctor'])->name('profile.updateDoctor');
+    Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.uploadAvatar');
+    Route::post('/profile/medical', [ProfileController::class, 'updateMedical'])->name('profile.updateMedical');
+    Route::post('/profile/notifications', [ProfileController::class, 'updateNotifications'])->name('profile.updateNotifications');
+
     Route::get('/lich-hen-cua-toi', [LichHenController::class, 'myAppointments'])->name('lichhen.my');
     Route::get('/danh-sach-bac-si', [BacSiController::class, 'publicIndex'])->name('public.bacsi.index');
     Route::get('/danh-sach-dich-vu', [DichVuController::class, 'publicIndex'])->name('public.dichvu.index');
@@ -149,6 +191,13 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         ]);
     });
 
+    // 4.1. NHÓM QUẢN LÝ MÃ GIẢM GIÁ (Cần quyền view-medicines - quản lý cửa hàng thuốc)
+    Route::middleware(['permission:view-medicines'])->group(function () {
+        Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class)->names([
+            'index' => 'coupons.index', 'create' => 'coupons.create', 'store' => 'coupons.store', 'show' => 'coupons.show', 'edit' => 'coupons.edit', 'update' => 'coupons.update', 'destroy' => 'coupons.destroy',
+        ]);
+    });
+
     // 5. NHÓM QUẢN LÝ LỊCH HẸN & BỆNH ÁN (Cần quyền view-appointments hoặc view-medical-records)
     // Tạm thời dùng view-invoices cho Lễ tân xem lịch hẹn nếu cần, hoặc để admin
     Route::middleware(['permission:view-appointments'])->group(function(){
@@ -156,6 +205,24 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::patch('/lich-hen/{lichHen}/status', [LichHenController::class, 'updateStatus'])->name('lichhen.updateStatus');
         Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
         Route::get('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
+    });
+
+    // 5.1. QUẢN LÝ ĐÁNH GIÁ (Admin)
+    Route::middleware(['permission:view-appointments'])->prefix('danhgia')->name('danhgia.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\DanhGiaController::class, 'index'])->name('index');
+        Route::get('/{danhGia}', [\App\Http\Controllers\Admin\DanhGiaController::class, 'show'])->name('show');
+        Route::patch('/{danhGia}/approve', [\App\Http\Controllers\Admin\DanhGiaController::class, 'approve'])->name('approve');
+        Route::patch('/{danhGia}/reject', [\App\Http\Controllers\Admin\DanhGiaController::class, 'reject'])->name('reject');
+        Route::delete('/{danhGia}', [\App\Http\Controllers\Admin\DanhGiaController::class, 'destroy'])->name('destroy');
+    });
+
+    // 5.2. QUẢN LÝ CHAT (Admin)
+    Route::middleware(['permission:view-appointments'])->prefix('chat')->name('chat.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ChatController::class, 'index'])->name('index');
+        Route::get('/{conversation}', [\App\Http\Controllers\Admin\ChatController::class, 'show'])->name('show');
+        Route::get('/{conversation}/messages', [\App\Http\Controllers\Admin\ChatController::class, 'getMessages'])->name('messages');
+        Route::patch('/{conversation}/status', [\App\Http\Controllers\Admin\ChatController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{conversation}', [\App\Http\Controllers\Admin\ChatController::class, 'destroy'])->name('destroy');
     });
 
     Route::middleware(['permission:view-medical-records'])->group(function(){
@@ -296,8 +363,14 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('staff')->name(
 
 // Doctor
 Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->group(function () {
+    // Dashboard cho Doctor (File mẹ: routes/web.php)
+    Route::get('/dashboard', [DoctorDashboardController::class, 'index'])->name('dashboard');
+
+    // Calendar - Lịch làm việc (File mẹ: routes/web.php)
     Route::get('/calendar', [DoctorCalendarController::class, 'index'])->name('calendar.index');
     Route::get('/api/calendar/events', [DoctorCalendarController::class, 'events'])->name('calendar.events');
+
+    // Bệnh án (File mẹ: routes/web.php)
     Route::resource('benh-an', BenhAnController::class)->names([
         'index' => 'benhan.index', 'create' => 'benhan.create', 'store' => 'benhan.store', 'show' => 'benhan.show', 'edit' => 'benhan.edit', 'update' => 'benhan.update', 'destroy' => 'benhan.destroy',
     ]);
@@ -307,19 +380,75 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::get('benh-an/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('benhan.exportPdf');
     Route::get('benh-an/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('benhan.files.download')->middleware('signed');
     Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
+
+    // Doctor Chat Routes (File mẹ: routes/web.php)
+    Route::prefix('chat')->name('chat.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\ChatController::class, 'index'])->name('index');
+        Route::get('/{conversation}', [\App\Http\Controllers\Doctor\ChatController::class, 'show'])->name('show');
+        Route::post('/{conversation}/send', [\App\Http\Controllers\Doctor\ChatController::class, 'sendMessage'])->name('send');
+        Route::get('/{conversation}/messages', [\App\Http\Controllers\Doctor\ChatController::class, 'getMessages'])->name('messages');
+    });
 });
 
 // Patient
 Route::middleware(['auth', 'role:patient'])->group(function () {
+    Route::get('/patient/dashboard', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
     Route::get('/dashboard/health', [PatientDashboardController::class, 'index'])->name('patient.dashboard.health');
-    Route::get('/lich-hen/create', [LichHenController::class, 'create'])->name('lichhen.create');
-    Route::post('/lich-hen', [LichHenController::class, 'store'])->name('lichhen.store');
+
+    // Patient Lich Hen Routes (RESTful)
+    Route::prefix('lich-hen')->name('patient.lichhen.')->group(function () {
+        Route::get('/', [LichHenController::class, 'myAppointments'])->name('index');
+        Route::get('/create', [LichHenController::class, 'create'])->name('create');
+        Route::post('/', [LichHenController::class, 'store'])->name('store');
+        Route::get('/{lichHen}/edit', [LichHenController::class, 'edit'])->name('edit');
+        Route::put('/{lichHen}', [LichHenController::class, 'update'])->name('update');
+        Route::delete('/{lichHen}', [LichHenController::class, 'destroy'])->name('destroy');
+        Route::patch('/{lichHen}/cancel', [LichHenController::class, 'cancel'])->name('cancel');
+    });
+
+    // Legacy routes (backwards compatibility) - different paths to avoid conflicts
     Route::get('/lich-hen-cua-toi', [LichHenController::class, 'myAppointments'])->name('lichhen.my');
-    Route::get('/lich-hen/{lichHen}/edit', [LichHenController::class, 'edit'])->name('lichhen.edit');
-    Route::put('/lich-hen/{lichHen}', [LichHenController::class, 'update'])->name('lichhen.update');
-    Route::delete('/lich-hen/{lichHen}', [LichHenController::class, 'destroy'])->name('lichhen.destroy');
     Route::get('/ajax/chuyen-khoa/{chuyenKhoa}/bac-si', [LichHenController::class, 'getBacSiByChuyenKhoa'])->name('ajax.chuyenkhoa');
     Route::get('/ajax/bac-si/{bacSi}/lich-lam-viec', [LichHenController::class, 'getLichLamViec'])->name('ajax.lichlamviec');
+
+    // Patient Reviews Routes
+    Route::prefix('danhgia')->name('patient.danhgia.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\DanhGiaController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Patient\DanhGiaController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Patient\DanhGiaController::class, 'store'])->name('store');
+        Route::get('/{danhGia}/edit', [\App\Http\Controllers\Patient\DanhGiaController::class, 'edit'])->name('edit');
+        Route::put('/{danhGia}', [\App\Http\Controllers\Patient\DanhGiaController::class, 'update'])->name('update');
+        Route::delete('/{danhGia}', [\App\Http\Controllers\Patient\DanhGiaController::class, 'destroy'])->name('destroy');
+    });
+
+    // Patient Coupon Routes
+    Route::prefix('coupons')->name('patient.coupons.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\CouponController::class, 'index'])->name('index');
+        Route::get('/{coupon}', [\App\Http\Controllers\Patient\CouponController::class, 'show'])->name('show');
+        Route::post('/check', [\App\Http\Controllers\Patient\CouponController::class, 'check'])->name('check');
+    });
+
+    // Patient Shop Routes (mua thuốc)
+    Route::prefix('shop')->name('patient.shop.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\ShopController::class, 'index'])->name('index');
+        Route::get('/cart', [\App\Http\Controllers\Patient\ShopController::class, 'cart'])->name('cart');
+        Route::post('/cart/add/{id}', [\App\Http\Controllers\Patient\ShopController::class, 'addToCart'])->name('cart.add');
+        Route::post('/cart/update', [\App\Http\Controllers\Patient\ShopController::class, 'updateCart'])->name('cart.update');
+        Route::delete('/cart/remove/{id}', [\App\Http\Controllers\Patient\ShopController::class, 'removeFromCart'])->name('cart.remove');
+        Route::get('/checkout', [\App\Http\Controllers\Patient\ShopController::class, 'checkout'])->name('checkout');
+        Route::post('/checkout', [\App\Http\Controllers\Patient\ShopController::class, 'placeOrder'])->name('place-order');
+        Route::get('/order-success/{id}', [\App\Http\Controllers\Patient\ShopController::class, 'orderSuccess'])->name('order-success');
+    });
+
+    // Patient Chat Routes
+    Route::prefix('chat')->name('patient.chat.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\ChatController::class, 'index'])->name('index');
+        Route::get('/create/{bacSi}', [\App\Http\Controllers\Patient\ChatController::class, 'create'])->name('create');
+        Route::get('/{conversation}', [\App\Http\Controllers\Patient\ChatController::class, 'show'])->name('show');
+        Route::post('/{conversation}/send', [\App\Http\Controllers\Patient\ChatController::class, 'sendMessage'])->name('send');
+        Route::get('/{conversation}/messages', [\App\Http\Controllers\Patient\ChatController::class, 'getMessages'])->name('messages');
+    });
+
     Route::prefix('benh-an')->name('patient.benhan.')->group(function () {
         Route::get('/', [BenhAnController::class, 'index'])->name('index');
         Route::get('/{benh_an}', [BenhAnController::class, 'show'])->name('show');
@@ -327,6 +456,51 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::get('/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('files.download')->middleware('signed');
         Route::get('/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('xetnghiem.download')->middleware('signed');
     });
+
+    // Patient Invoice/HoaDon Routes (File mẹ: routes/web.php)
+    Route::prefix('hoa-don')->name('patient.hoadon.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\HoaDonController::class, 'index'])->name('index');
+        Route::get('/{hoaDon}', [\App\Http\Controllers\Patient\HoaDonController::class, 'show'])->name('show');
+    });
+
+    // Patient Shop Orders Routes (File mẹ: routes/web.php)
+    Route::prefix('shop')->name('patient.shop.')->group(function () {
+        Route::get('/orders', [\App\Http\Controllers\Patient\ShopController::class, 'orders'])->name('orders');
+        Route::get('/orders/{donHang}', [\App\Http\Controllers\Patient\ShopController::class, 'orderDetail'])->name('order-detail');
+        Route::delete('/orders/{donHang}/cancel', [\App\Http\Controllers\Patient\ShopController::class, 'cancelOrder'])->name('order-cancel');
+    });
+
+    // Patient Prescription Routes (File mẹ: routes/web.php)
+    Route::prefix('don-thuoc')->name('patient.donthuoc.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\DonThuocController::class, 'index'])->name('index');
+        Route::get('/{donThuoc}', [\App\Http\Controllers\Patient\DonThuocController::class, 'show'])->name('show');
+    });
+
+    // Patient Test Results Routes (File mẹ: routes/web.php)
+    Route::prefix('xet-nghiem')->name('patient.xetnghiem.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\XetNghiemController::class, 'index'])->name('index');
+        Route::get('/{xetNghiem}', [\App\Http\Controllers\Patient\XetNghiemController::class, 'show'])->name('show');
+    });
+
+    // Patient Notifications Routes (File mẹ: routes/web.php)
+    Route::get('/thong-bao', [\App\Http\Controllers\Patient\NotificationController::class, 'index'])->name('patient.notifications');
+    Route::post('/thong-bao/mark-all-read', [\App\Http\Controllers\Patient\NotificationController::class, 'markAllRead'])->name('patient.notifications.mark-all-read');
+    Route::post('/thong-bao/{notification}/mark-read', [\App\Http\Controllers\Patient\NotificationController::class, 'markRead'])->name('patient.notifications.mark-read');
+    Route::delete('/thong-bao/{notification}', [\App\Http\Controllers\Patient\NotificationController::class, 'delete'])->name('patient.notifications.delete');
+
+    // Patient Medical History Routes (File mẹ: routes/web.php)
+    Route::get('/lich-su-kham', [\App\Http\Controllers\Patient\LichSuKhamController::class, 'index'])->name('patient.lich-su-kham');
+
+    // Patient Family Members Routes (File mẹ: routes/web.php)
+    Route::prefix('thanh-vien-gia-dinh')->name('patient.family.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\FamilyController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Patient\FamilyController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Patient\FamilyController::class, 'store'])->name('store');
+        Route::get('/{member}/edit', [\App\Http\Controllers\Patient\FamilyController::class, 'edit'])->name('edit');
+        Route::put('/{member}', [\App\Http\Controllers\Patient\FamilyController::class, 'update'])->name('update');
+        Route::delete('/{member}', [\App\Http\Controllers\Patient\FamilyController::class, 'destroy'])->name('destroy');
+    });
+
     Route::get('/lich-hen/{lichHen}/thanh-toan', [PatientPaymentController::class, 'show'])->name('patient.payment');
     Route::post('/lich-hen/{lichHen}/thanh-toan/skip', [PatientPaymentController::class, 'skip'])->name('patient.payment.skip');
 });

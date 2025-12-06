@@ -8,6 +8,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles; // ✅ Giữ dòng này
 
+/**
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $unreadNotifications
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -99,6 +103,41 @@ class User extends Authenticatable
     public function notificationPreference()
     {
         return $this->hasOne(\App\Models\NotificationPreference::class);
+    }
+
+    public function danhGias()
+    {
+        return $this->hasMany(DanhGia::class);
+    }
+
+    public function conversationsAsBenhNhan()
+    {
+        return $this->hasMany(Conversation::class, 'benh_nhan_id');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function familyMembers()
+    {
+        return $this->hasMany(FamilyMember::class);
+    }
+
+    public function lichHens()
+    {
+        return $this->hasMany(\App\Models\LichHen::class, 'user_id');
+    }
+
+    public function benhAns()
+    {
+        return $this->hasMany(\App\Models\BenhAn::class, 'user_id');
+    }
+
+    public function hoaDons()
+    {
+        return $this->hasMany(\App\Models\HoaDon::class, 'user_id');
     }
 
     // --- LOGIC KHÓA TÀI KHOẢN GIỮ NGUYÊN ---

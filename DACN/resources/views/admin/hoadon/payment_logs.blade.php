@@ -42,7 +42,7 @@
                     </div>
                 @else
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover align-middle">
+                        <table id="paymentLogsTable" class="table table-bordered table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th width="60">ID</th>
@@ -158,3 +158,9 @@
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="paymentLogsTable" />
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="paymentLogsTable" />

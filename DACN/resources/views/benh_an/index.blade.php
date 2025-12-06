@@ -6,7 +6,7 @@
         'admin' => 'layouts.admin',
         'doctor' => 'layouts.doctor',
         'staff' => 'layouts.staff',
-        'patient' => 'layouts.patient',
+        'patient' => 'layouts.patient-modern',
         default => 'layouts.app',
     };
 @endphp
@@ -71,7 +71,7 @@
         {{-- TABLE --}}
         <div class="card shadow-sm">
             <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
+                <table id="benhAnTable" class="table table-striped table-hover mb-0">
                     <thead class="table-light">
                         <tr>
                             <th>Ngày khám</th>
@@ -128,3 +128,6 @@
 
     </div>
 @endsection
+
+{{-- DataTables Script --}}
+<x-datatable-script tableId="benhAnTable" />

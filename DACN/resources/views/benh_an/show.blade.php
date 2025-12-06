@@ -6,7 +6,7 @@
         'admin' => 'layouts.admin',
         'doctor' => 'layouts.doctor',
         'staff' => 'layouts.staff',
-        'patient' => 'layouts.patient',
+        'patient' => 'layouts.patient-modern',
         default => 'layouts.app',
     };
 @endphp
