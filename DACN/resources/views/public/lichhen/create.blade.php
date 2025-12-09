@@ -11,12 +11,17 @@
 
     @section('content')
 @else
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Đặt Lịch Hẹn') }}
-        </h2>
-    </x-slot>
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Đặt Lịch Hẹn - VietCare</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body>
 @endif
 
     <div class="py-12">
@@ -39,6 +44,45 @@
 
                 {{-- ✅ FORM BODY --}}
                 <div class="p-8">
+                    {{-- ENHANCED: Step Indicator (Parent: public/lichhen/create.blade.php) --}}
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between relative">
+                            <div class="absolute top-5 left-0 right-0 h-1 bg-gray-200" style="z-index: 0;">
+                                <div id="progressBar" class="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+
+                            <div class="flex justify-between w-full relative" style="z-index: 1;">
+                                <div class="flex flex-col items-center step-item active" data-step="1">
+                                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shadow-lg step-circle">
+                                        <i class="fas fa-stethoscope"></i>
+                                    </div>
+                                    <span class="text-xs mt-2 font-semibold text-blue-600">Chọn Dịch Vụ</span>
+                                </div>
+
+                                <div class="flex flex-col items-center step-item" data-step="2">
+                                    <div class="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold shadow step-circle">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <span class="text-xs mt-2 font-medium text-gray-500">Chọn Ngày</span>
+                                </div>
+
+                                <div class="flex flex-col items-center step-item" data-step="3">
+                                    <div class="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold shadow step-circle">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <span class="text-xs mt-2 font-medium text-gray-500">Chọn Giờ</span>
+                                </div>
+
+                                <div class="flex flex-col items-center step-item" data-step="4">
+                                    <div class="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold shadow step-circle">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span class="text-xs mt-2 font-medium text-gray-500">Xác Nhận</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     @if ($errors->any())
                     <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded">
                         <div class="flex items-center mb-2">
@@ -59,31 +103,61 @@
                         @csrf
                         <input type="hidden" name="bac_si_id" value="{{ $bacSi->id }}">
 
-                        {{-- ✅ CHUYÊN KHOA (Optional - nếu muốn cho user đổi bác sĩ) --}}
-                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-                                </svg>
-                                Chuyên khoa
-                            </label>
-                            <select id="chuyen-khoa-select" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
-                                <option value="">Chọn chuyên khoa</option>
-                            </select>
-                        </div>
-
-                        {{-- ✅ BÁC SĨ --}}
-                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
-                                </svg>
-                                Bác sĩ
-                            </label>
-                            <select id="bac-si-select" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
-                                <option value="{{ $bacSi->id }}" selected>{{ $bacSi->ho_ten }}</option>
-                            </select>
+                        {{-- ✅ THÔNG TIN BÁC SĨ ĐÃ CHỌN --}}
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-xl border-2 border-blue-200 shadow-sm">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-shrink-0">
+                                    @if($bacSi->hinh_anh)
+                                        <img src="{{ asset('storage/' . $bacSi->hinh_anh) }}"
+                                             alt="{{ $bacSi->ho_ten }}"
+                                             class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md">
+                                    @else
+                                        <div class="w-20 h-20 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl font-bold border-4 border-white shadow-md">
+                                            {{ strtoupper(substr($bacSi->ho_ten, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2 mb-1">
+                                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                                        </svg>
+                                        <h3 class="text-xl font-bold text-gray-800">{{ $bacSi->ho_ten }}</h3>
+                                    </div>
+                                    @if($bacSi->chuyenKhoas && $bacSi->chuyenKhoas->isNotEmpty())
+                                        <p class="text-sm text-gray-600 mb-2">
+                                            <svg class="w-4 h-4 inline mr-1 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            {{ $bacSi->chuyenKhoas->pluck('ten_chuyen_khoa')->join(', ') }}
+                                        </p>
+                                    @endif
+                                    <div class="flex items-center space-x-4 text-sm">
+                                        @php
+                                            $avgRating = $bacSi->danhGias()->avg('rating') ?? 0;
+                                            $totalReviews = $bacSi->danhGias()->count();
+                                        @endphp
+                                        @if($totalReviews > 0)
+                                            <div class="flex items-center text-yellow-500">
+                                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                </svg>
+                                                <span class="ml-1 font-semibold">{{ number_format($avgRating, 1) }}</span>
+                                                <span class="ml-1 text-gray-500">({{ $totalReviews }} đánh giá)</span>
+                                            </div>
+                                        @endif
+                                        @if($bacSi->kinh_nghiem)
+                                            <span class="text-gray-600">
+                                                <svg class="w-4 h-4 inline text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                {{ $bacSi->kinh_nghiem }} năm kinh nghiệm
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {{-- ✅ DỊCH VỤ --}}
@@ -119,6 +193,7 @@
                         </div>
 
                         {{-- ✅ KHUNG GIỜ TRỐNG --}}
+                        {{-- ENHANCED: Visual improvements with loading and animations (Parent: public/lichhen/create.blade.php) --}}
                         <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
                             <label class="block text-sm font-semibold text-gray-700 mb-3">
                                 <svg class="w-4 h-4 inline mr-1 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
@@ -127,10 +202,9 @@
                                 Chọn khung giờ <span class="text-red-500">*</span>
                             </label>
                             <div id="slotsContainer" class="text-sm text-gray-600">
-                                <div class="flex items-center space-x-2 text-gray-500">
-                                    <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                <div class="flex items-center justify-center space-x-2 text-gray-500 py-8">
+                                    <svg class="animate-pulse h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                                     </svg>
                                     <span>Vui lòng chọn dịch vụ và ngày hẹn để xem khung giờ trống...</span>
                                 </div>
@@ -171,33 +245,103 @@
     </div>
 
     {{-- ✅ STYLES --}}
+    {{-- ENHANCED: Modern styles with gradients and animations (Parent: public/lichhen/create.blade.php) --}}
     <style>
+        /* Step Indicator Styles */
+        .step-item.active .step-circle {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .step-item.completed .step-circle {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .step-item.active span {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .step-item.completed span {
+            color: #059669;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Slot Button Styles */
         .slot-btn {
             cursor: pointer;
             border: 2px solid #e5e7eb;
-            padding: 10px 16px;
+            padding: 12px 20px;
             margin: 6px;
-            border-radius: 8px;
+            border-radius: 12px;
             background: #ffffff;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 500;
             display: inline-block;
-            min-width: 120px;
+            min-width: 130px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slot-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .slot-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .slot-btn:hover {
             border-color: #3b82f6;
             background: #eff6ff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.2);
         }
 
         .slot-btn.selected {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: #ffffff;
             border-color: #2563eb;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .slot-btn.selected::after {
+            content: '✓';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
         }
 
         .slot-btn.disabled {
@@ -206,18 +350,53 @@
             background: #f3f4f6;
         }
 
+        .slot-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Loading Animation */
+        @keyframes shimmer {
+            0% {
+                background-position: -468px 0;
+            }
+            100% {
+                background-position: 468px 0;
+            }
+        }
+
+        .loading-slots {
+            animation: shimmer 1.5s infinite;
+            background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+            background-size: 800px 104px;
+        }
+
+        /* Message Styles */
         .error-msg {
             color: #dc2626;
             font-weight: 500;
+            animation: shake 0.5s;
         }
 
         .success-msg {
             color: #16a34a;
             font-weight: 500;
         }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Smooth transitions */
+        * {
+            transition: all 0.2s ease;
+        }
     </style>
 
     {{-- ✅ JAVASCRIPT --}}
+    {{-- ENHANCED: Step tracking and better UX (Parent: public/lichhen/create.blade.php) --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('bookingForm');
@@ -226,17 +405,44 @@
             const slotsContainer = document.getElementById('slotsContainer');
             const bacSiId = "{{ $bacSi->id }}";
             const submitBtn = document.getElementById('submitBtn');
+            let currentStep = 1;
+
+            // Step management
+            function updateStep(step) {
+                currentStep = step;
+                const progressBar = document.getElementById('progressBar');
+                const progressPercent = ((step - 1) / 3) * 100;
+                progressBar.style.width = progressPercent + '%';
+
+                document.querySelectorAll('.step-item').forEach((item, index) => {
+                    const itemStep = index + 1;
+                    item.classList.remove('active', 'completed');
+
+                    if (itemStep < step) {
+                        item.classList.add('completed');
+                        item.querySelector('.step-circle').style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                        item.querySelector('.step-circle').innerHTML = '<i class="fas fa-check"></i>';
+                    } else if (itemStep === step) {
+                        item.classList.add('active');
+                    } else {
+                        item.querySelector('.step-circle').style.background = '#d1d5db';
+                        const icons = ['fa-stethoscope', 'fa-calendar-alt', 'fa-clock', 'fa-check'];
+                        item.querySelector('.step-circle').innerHTML = `<i class="fas ${icons[itemStep - 1]}"></i>`;
+                    }
+                });
+            }
 
             function showMessage(msg, type = 'info') {
                 const icons = {
                     error: '<svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>',
                     success: '<svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>',
-                    info: '<svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>'
+                    info: '<svg class="w-5 h-5 text-blue-500 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>',
+                    loading: '<svg class="animate-spin h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>'
                 };
                 slotsContainer.innerHTML = `
-                    <div class="flex items-center space-x-2 ${type === 'error' ? 'error-msg' : type === 'success' ? 'success-msg' : ''}">
+                    <div class="flex items-center justify-center space-x-3 py-8 ${type === 'error' ? 'error-msg' : type === 'success' ? 'success-msg' : ''}">
                         ${icons[type] || icons.info}
-                        <span>${msg}</span>
+                        <span class="text-base">${msg}</span>
                     </div>
                 `;
             }
@@ -250,7 +456,8 @@
                     return;
                 }
 
-                showMessage('Đang tải khung giờ trống...', 'info');
+                showMessage('Đang tải khung giờ trống...', 'loading');
+                updateStep(3);
 
                 try {
                     const url = `/api/bac-si/${bacSiId}/thoi-gian-trong/${ngayHen}?dich_vu_id=${dichVuId}`;
@@ -266,21 +473,23 @@
                     console.log('✅ Data received:', data);
 
                     if (!data.slots || data.slots.length === 0) {
-                        showMessage('Không có khung giờ trống trong ngày này. Vui lòng chọn ngày khác.', 'error');
+                        showMessage('❌ Không có khung giờ trống trong ngày này. Vui lòng chọn ngày khác.', 'error');
+                        updateStep(2);
                         return;
                     }
 
-                    // Hiển thị slots
-                    let html = '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">';
-                    data.slots.forEach(slot => {
+                    // Hiển thị slots với animation
+                    let html = '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 animate-fade-in">';
+                    data.slots.forEach((slot, index) => {
                         html += `
-                            <button type="button" class="slot-btn" data-time="${slot.time}">
-                                <div class="text-sm font-semibold">${slot.time}</div>
-                                <div class="text-xs opacity-75">${slot.label}</div>
+                            <button type="button" class="slot-btn" data-time="${slot.time}" style="animation-delay: ${index * 0.05}s;">
+                                <div class="text-base font-bold">${slot.time}</div>
+                                <div class="text-xs opacity-75 mt-1">${slot.label}</div>
                             </button>
                         `;
                     });
                     html += '</div>';
+                    html += '<p class="text-center text-sm text-gray-500 mt-4"><i class="fas fa-info-circle mr-1"></i>Có ' + data.slots.length + ' khung giờ khả dụng</p>';
 
                     slotsContainer.innerHTML = html;
 
@@ -299,12 +508,14 @@
                             }
                             hiddenInput.value = this.dataset.time;
                             console.log('✅ Đã chọn:', this.dataset.time);
+                            updateStep(4);
                         });
                     });
 
                 } catch (error) {
                     console.error('❌ Slots fetch error:', error);
-                    showMessage('Có lỗi xảy ra khi tải khung giờ. Vui lòng thử lại.', 'error');
+                    showMessage('❌ Có lỗi xảy ra khi tải khung giờ. Vui lòng thử lại.', 'error');
+                    updateStep(2);
                 }
             }
 
@@ -313,87 +524,48 @@
                 const chosen = form.querySelector('input[name="thoi_gian_hen"]');
                 if (!chosen || !chosen.value) {
                     e.preventDefault();
-                    showMessage('Vui lòng chọn khung giờ trước khi gửi.', 'error');
+                    showMessage('⚠️ Vui lòng chọn khung giờ trước khi gửi.', 'error');
                     slotsContainer.scrollIntoView({
                         behavior: 'smooth',
                         block: 'center'
                     });
+                    return false;
+                }
+
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Đang xử lý...';
+            });
+
+            // Event listeners with step tracking
+            dichVuSelect.addEventListener('change', function() {
+                if (this.value) {
+                    updateStep(2);
+                    if (dateInput.value) {
+                        fetchSlots();
+                    }
+                } else {
+                    updateStep(1);
                 }
             });
 
-            dichVuSelect.addEventListener('change', fetchSlots);
-            dateInput.addEventListener('change', fetchSlots);
+            dateInput.addEventListener('change', function() {
+                if (this.value && dichVuSelect.value) {
+                    fetchSlots();
+                }
+            });
 
             // Auto load nếu có sẵn giá trị
             if (dichVuSelect.value && dateInput.value) {
+                updateStep(2);
                 fetchSlots();
             }
         });
     </script>
 
-    {{-- ✅ AJAX CHUYÊN KHOA & BÁC SĨ --}}
-    @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ckSel = document.getElementById('chuyen-khoa-select');
-            const bsSel = document.getElementById('bac-si-select');
-
-            // ✅ BƯỚC 1: Định nghĩa ID bác sĩ đang xem
-            // Dùng ' ' để đảm bảo nó là chuỗi, so sánh an toàn với this.value
-            const currentBacSiId = '{{ $bacSi->id }}';
-
-            // Tải danh sách chuyên khoa
-            fetch('{{ route("ajax.chuyenkhoa") }}')
-                .then(r => r.json())
-                .then(list => {
-                    list.forEach(ck => {
-                        const opt = document.createElement('option');
-                        opt.value = ck;
-                        opt.textContent = ck;
-                        ckSel.appendChild(opt);
-                    });
-                    ckSel.value = '{{ $bacSi->chuyen_khoa }}';
-                });
-
-            // Khi chọn chuyên khoa -> tải bác sĩ
-            ckSel.addEventListener('change', () => {
-                const ck = ckSel.value;
-                bsSel.innerHTML = '<option value="">-- Chọn bác sĩ --</option>';
-                if (!ck) return;
-
-                const url = new URL('{{ route("ajax.bacsi.byChuyenKhoa") }}', window.location.origin);
-                url.searchParams.set('ck', ck);
-
-                fetch(url)
-                    .then(r => r.json())
-                    .then(doctors => {
-                        doctors.forEach(d => {
-                            const opt = document.createElement('option');
-                            opt.value = d.id;
-                            opt.textContent = d.ho_ten;
-
-                            // ✅ BƯỚC 2: Dùng biến JS để so sánh
-                            if (d.id == currentBacSiId) {
-                                opt.selected = true;
-                            }
-
-                            bsSel.appendChild(opt);
-                        });
-                    });
-            });
-
-            // Khi đổi bác sĩ -> chuyển trang
-            bsSel.addEventListener('change', function() {
-                // ✅ BƯỚC 3: Dùng biến JS để so sánh
-                if (this.value && this.value != currentBacSiId) {
-                    window.location.href = `/dat-lich/${this.value}`;
-                }
-        });
-    });
-</script>
-@endpush
-
-@if(!$isPatient ?? false)
-</x-app-layout>
+@if($isPatient)
+    @endsection
+@else
+    </body>
+    </html>
 @endif
-@endsection

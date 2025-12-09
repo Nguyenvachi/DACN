@@ -26,6 +26,13 @@ class BenhAn extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    // Alias cho benhNhan để thuận tiện
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function bacSi()
     {
         return $this->belongsTo(BacSi::class, 'bac_si_id');

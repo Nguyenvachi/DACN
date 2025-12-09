@@ -10,102 +10,184 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
+    {{-- Google Fonts Inter (VietCare Standard) --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    {{-- VietCare + Doctor Layout CSS --}}
+    <link rel="stylesheet" href="{{ asset('css/vietcare.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/doctor-layout.css') }}">
+
     @stack('meta')
     @stack('styles')
-
-    <style>
-        body {
-            background: #f5f6fa;
-            font-family: "Segoe UI", sans-serif;
-        }
-
-        /* Sidebar bác sĩ */
-        .doctor-sidebar {
-            width: 220px;
-            height: 100vh;
-            background: #ffffff;
-            border-right: 1px solid #ddd;
-            padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            overflow-y: auto;
-        }
-
-        .doctor-sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .doctor-sidebar li {
-            margin-bottom: 10px;
-        }
-
-        .doctor-sidebar a {
-            display: block;
-            padding: 9px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .doctor-sidebar a:hover {
-            background: #e9ecef;
-        }
-
-        .doctor-sidebar a.active {
-            background: #0d6efd;
-            color: #fff;
-        }
-
-        /* Nội dung */
-        main {
-            margin-left: 240px;
-            padding: 20px;
-        }
-    </style>
 </head>
 
 <body>
 
     {{-- SIDEBAR --}}
     <nav class="doctor-sidebar">
-        <h5 class="fw-bold mb-3"><i class="fas fa-user-md me-2"></i>Bác sĩ</h5>
+        {{-- Sidebar Header --}}
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <div>
+                <div class="sidebar-brand">VietCare</div>
+                <small style="opacity: 0.9; font-size: 0.8rem;">Bác Sĩ</small>
+            </div>
+        </div>
 
         <ul>
-            <li><a href="{{ route('doctor.dashboard') }}">📊 Tổng quan</a></li>
-            <li><a href="{{ route('doctor.calendar.index') }}">📅 Lịch làm việc</a></li>
-            <li><a href="{{ route('doctor.benhan.index') }}">📋 Bệnh án</a></li>
-            <li><a href="{{ route('doctor.chat.index') }}">💬 Tin nhắn bệnh nhân</a></li>
-            <li><a href="{{ route('profile.edit') }}">⚙️ Hồ sơ</a></li>
-
-            <hr>
-
-            <li><a href="{{ route('home') }}">🏠 Trang chủ</a></li>
-
+            {{-- 1. DASHBOARD --}}
             <li>
-                <form method="POST" action="{{ route('logout') }}">
+                <a href="{{ route('doctor.dashboard') }}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Tổng quan</span>
+                </a>
+            </li>
+
+            {{-- 2. QUẢN LÝ LỊCH HẸN --}}
+            <li>
+                <a href="{{ route('doctor.lichhen.pending') }}">
+                    <i class="fas fa-clock"></i>
+                    <span>Lịch chờ xác nhận</span>
+                    @php
+                        $pendingCount = auth()->user()->bacSi
+                            ? \App\Models\LichHen::where('bac_si_id', auth()->user()->bacSi->id)
+                                ->where('trang_thai', 'Chờ xác nhận')
+                                ->count()
+                            : 0;
+                    @endphp
+                    @if($pendingCount > 0)
+                        <span class="sidebar-badge sidebar-badge-pulse">{{ $pendingCount }}</span>
+                    @endif
+                </a>
+            </li>
+
+            {{-- 3. HÀNG ĐỢI KHÁM - Quy trình chính --}}
+            <li>
+                <a href="{{ route('doctor.queue.index') }}">
+                    <i class="fas fa-users"></i>
+                    <span>Hàng đợi khám</span>
+                    @php
+                        $queueCount = auth()->user()->bacSi
+                            ? \App\Models\LichHen::where('bac_si_id', auth()->user()->bacSi->id)
+                                ->whereIn('trang_thai', ['Đã check-in', 'Đang khám'])
+                                ->whereDate('ngay_hen', today())
+                                ->count()
+                            : 0;
+                    @endphp
+                    @if($queueCount > 0)
+                        <span class="sidebar-badge">{{ $queueCount }}</span>
+                    @endif
+                </a>
+            </li>
+
+            {{-- 4. BỆNH ÁN - Hồ sơ y khoa --}}
+            <li>
+                <a href="{{ route('doctor.benhan.index') }}">
+                    <i class="fas fa-folder-open"></i>
+                    <span>Bệnh án</span>
+                    @php
+                        $todayRecordsCount = auth()->user()->bacSi
+                            ? \App\Models\BenhAn::where('bac_si_id', auth()->user()->bacSi->id)
+                                ->whereDate('created_at', today())
+                                ->count()
+                            : 0;
+                    @endphp
+                    @if($todayRecordsCount > 0)
+                        <span class="sidebar-badge">{{ $todayRecordsCount }}</span>
+                    @endif
+                </a>
+            </li>
+
+            {{-- 5. XÉT NGHIỆM - Quản lý kết quả --}}
+            <li>
+                <a href="{{ route('doctor.xetnghiem.index') }}">
+                    <i class="fas fa-flask"></i>
+                    <span>Xét nghiệm</span>
+                </a>
+            </li>
+
+            {{-- 6. LỊCH LÀM VIỆC --}}
+            <li>
+                <a href="{{ route('doctor.calendar.index') }}">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Lịch làm việc</span>
+                </a>
+            </li>
+
+            {{-- 7. TIN NHẮN --}}
+            <li>
+                <a href="{{ route('doctor.chat.index') }}">
+                    <i class="fas fa-comments"></i>
+                    <span>Tin nhắn</span>
+                    @php
+                        $unreadMessages = 0; // TODO: implement unread count
+                    @endphp
+                    @if($unreadMessages > 0)
+                        <span class="sidebar-badge">{{ $unreadMessages }}</span>
+                    @endif
+                </a>
+            </li>
+
+            <hr style="opacity: 0.1; margin: 1rem 0;">
+
+            {{-- HỒ SƠ CÁ NHÂN --}}
+            <li>
+                <a href="{{ route('profile.edit') }}">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Hồ sơ</span>
+                </a>
+            </li>
+
+            {{-- TRANG CHỦ --}}
+            <li>
+                <a href="{{ route('home') }}">
+                    <i class="fas fa-home"></i>
+                    <span>Trang chủ</span>
+                </a>
+            </li>
+
+            {{-- ĐĂNG XUẤT --}}
+            <li>
+                <form method="POST" action="{{ route('logout') }}" class="m-0">
                     @csrf
-                    <button class="btn btn-link p-0" type="submit">🔒 Đăng xuất</button>
+                    <button type="submit">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Đăng xuất</span>
+                    </button>
                 </form>
             </li>
         </ul>
     </nav>
 
-    {{-- HEADER GIỐNG ADMIN + PATIENT --}}
+    {{-- HEADER (Optional) --}}
     @if (View::hasSection('header'))
-        <header class="bg-white shadow-sm mb-3">
-            <div class="max-w-7xl mx-auto py-3 px-4">
+        <header class="bg-white shadow-sm mb-3" style="margin-left: 260px;">
+            <div class="container-fluid py-3 px-4">
                 @yield('header')
             </div>
         </header>
     @endif
 
     {{-- MAIN CONTENT --}}
-    <main>
-        <div class="max-w-7xl mx-auto">
+    <main class="doctor-main">
+        <div class="container-fluid">
+            {{-- Flash Messages --}}
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </main>
@@ -116,13 +198,13 @@
 
     @stack('scripts')
 
-    {{-- Active menu --}}
+    {{-- Active menu highlighting --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.querySelector('.doctor-sidebar');
             if (!sidebar) return;
 
-            const links = sidebar.querySelectorAll('a');
+            const links = sidebar.querySelectorAll('a[href]');
             const normalize = href => {
                 const a = document.createElement('a');
                 a.href = href;
@@ -132,11 +214,28 @@
 
             links.forEach(link => {
                 const path = normalize(link.href);
-                if (current === path || current.startsWith(path + '/')) {
+                if (current === path || (current.startsWith(path + '/') && path !== '/')) {
                     link.classList.add('active');
                 }
             });
+
+            // Mobile sidebar toggle (optional)
+            const toggleBtn = document.getElementById('sidebarToggle');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                });
+            }
         });
+
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
     </script>
 
     {{-- DataTables Scripts Stack (removed duplicate scripts stack to avoid double-binding events) --}}

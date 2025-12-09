@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use App\Models\LoginAudit;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -24,7 +25,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse|JsonResponse
     {
         // Lấy email từ request để ghi audit
         $email = $request->input('email');
@@ -45,9 +46,17 @@ class AuthenticatedSessionController extends Controller
                 ]);
 
                 $lockedUntil = $user->locked_until ? $user->locked_until->format('H:i d/m/Y') : 'vĩnh viễn';
-                return back()->withErrors([
-                    'email' => "Tài khoản đã bị khóa đến {$lockedUntil}. Vui lòng liên hệ quản trị viên.",
-                ])->onlyInput('email');
+                $errorMsg = "Tài khoản đã bị khóa đến {$lockedUntil}. Vui lòng liên hệ quản trị viên.";
+
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $errorMsg,
+                        'errors' => ['email' => [$errorMsg]]
+                    ], 422);
+                }
+
+                return back()->withErrors(['email' => $errorMsg])->onlyInput('email');
             }
 
             // Thử authenticate
@@ -56,7 +65,7 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerate();
 
             // Đăng nhập thành công
-            /** @var \App\Models\User $authenticatedUser */ // <--- Thêm dòng này
+            /** @var \App\Models\User $authenticatedUser */
             $authenticatedUser = Auth::user();
             $authenticatedUser->resetLoginAttempts();
 
@@ -72,25 +81,46 @@ class AuthenticatedSessionController extends Controller
 
             // Kiểm tra bắt buộc đổi mật khẩu
             if ($authenticatedUser->must_change_password) {
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'redirect' => route('password.request'),
+                        'message' => 'Bạn cần đặt lại mật khẩu trước khi tiếp tục.'
+                    ]);
+                }
                 return redirect()->route('password.request')->with('status', 'Bạn cần đặt lại mật khẩu trước khi tiếp tục.');
             }
 
             // Redirect theo role
             $intendedUrl = redirect()->intended()->getTargetUrl();
+            $redirectUrl = null;
 
             if ($intendedUrl === url('/dashboard') || $intendedUrl === url('/')) {
                 if ($authenticatedUser->role === 'admin') {
-                    return redirect()->route('admin.dashboard');
+                    $redirectUrl = route('admin.dashboard');
                 } elseif ($authenticatedUser->role === 'doctor') {
-                    return redirect()->route('doctor.calendar.index');
+                    $redirectUrl = route('doctor.calendar.index');
                 } elseif ($authenticatedUser->role === 'staff') {
-                    return redirect()->route('staff.dashboard');
+                    $redirectUrl = route('staff.dashboard');
                 } elseif ($authenticatedUser->role === 'patient') {
-                    return redirect()->route('dashboard');
+                    $redirectUrl = route('dashboard');
                 }
             }
 
-            return redirect()->intended(RouteServiceProvider::HOME);
+            if (!$redirectUrl) {
+                $redirectUrl = RouteServiceProvider::HOME;
+            }
+
+            // Return JSON for AJAX requests
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đăng nhập thành công!',
+                    'redirect' => $redirectUrl
+                ]);
+            }
+
+            return redirect($redirectUrl);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Đăng nhập thất bại - tăng login attempts
             if ($user) {
@@ -105,6 +135,15 @@ class AuthenticatedSessionController extends Controller
                 'status' => 'failed',
                 'reason' => 'invalid_credentials',
             ]);
+
+            // Return JSON for AJAX requests
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email hoặc mật khẩu không đúng.',
+                    'errors' => $e->errors()
+                ], 422);
+            }
 
             throw $e;
         }

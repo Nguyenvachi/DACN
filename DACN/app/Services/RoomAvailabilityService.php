@@ -24,6 +24,7 @@ class RoomAvailabilityService
      * @param Carbon $end
      * @param int|null $ignoreLichHenId - Bỏ qua lịch hẹn này (khi update)
      * @param int|null $ignoreLichLamViecId - Bỏ qua lịch làm việc này (khi update)
+     * @param int|null $ignoreBacSiId - Bỏ qua bác sĩ này (đang đặt lịch)
      * @return array ['conflict' => bool, 'details' => array]
      */
     public function checkRoomConflict(
@@ -31,16 +32,20 @@ class RoomAvailabilityService
         Carbon $start,
         Carbon $end,
         ?int $ignoreLichHenId = null,
-        ?int $ignoreLichLamViecId = null
+        ?int $ignoreLichLamViecId = null,
+        ?int $ignoreBacSiId = null
     ): array {
         $conflicts = [];
 
-        // 1. Kiểm tra lịch làm việc đang sử dụng phòng này
+        // 1. Kiểm tra lịch làm việc đang sử dụng phòng này (loại trừ bác sĩ đang đặt)
         $dayOfWeek = $start->dayOfWeek;
         $conflictShifts = LichLamViec::where('phong_id', $phongId)
             ->where('ngay_trong_tuan', $dayOfWeek)
             ->when($ignoreLichLamViecId, function ($q) use ($ignoreLichLamViecId) {
                 $q->where('id', '!=', $ignoreLichLamViecId);
+            })
+            ->when($ignoreBacSiId, function ($q) use ($ignoreBacSiId) {
+                $q->where('bac_si_id', '!=', $ignoreBacSiId);
             })
             ->get();
 
@@ -56,9 +61,7 @@ class RoomAvailabilityService
                     $shift->thoi_gian_ket_thuc
                 );
             }
-        }
-
-        // 2. Kiểm tra lịch hẹn đã đặt trong phòng này (thông qua bác sĩ)
+        }        // 2. Kiểm tra lịch hẹn đã đặt trong phòng này (thông qua bác sĩ)
         $dateString = $start->toDateString();
         $conflictAppointments = LichHen::whereDate('ngay_hen', $dateString)
             ->whereHas('bacSi.lichLamViecs', function ($q) use ($phongId, $dayOfWeek) {
@@ -71,7 +74,9 @@ class RoomAvailabilityService
             ->get();
 
         foreach ($conflictAppointments as $appt) {
-            $apptStart = Carbon::parse($appt->ngay_hen . ' ' . $appt->thoi_gian_hen);
+            // Chỉ lấy date part để tránh double time
+            $dateOnly = Carbon::parse($appt->ngay_hen)->toDateString();
+            $apptStart = Carbon::parse($dateOnly . ' ' . $appt->thoi_gian_hen);
             $duration = $appt->dichVu->thoi_gian_uoc_tinh ?? 30;
             $apptEnd = $apptStart->copy()->addMinutes($duration);
 
@@ -83,9 +88,7 @@ class RoomAvailabilityService
                     $appt->thoi_gian_hen
                 );
             }
-        }
-
-        // 3. Kiểm tra ca điều chỉnh
+        }        // 3. Kiểm tra ca điều chỉnh
         $conflictAdjustments = CaDieuChinhBacSi::whereDate('ngay', $dateString)
             ->whereHas('bacSi.lichLamViecs', function ($q) use ($phongId, $dayOfWeek) {
                 $q->where('phong_id', $phongId)
@@ -94,8 +97,9 @@ class RoomAvailabilityService
             ->get();
 
         foreach ($conflictAdjustments as $adj) {
-            $adjStart = Carbon::parse($adj->ngay . ' ' . $adj->gio_bat_dau);
-            $adjEnd = Carbon::parse($adj->ngay . ' ' . $adj->gio_ket_thuc);
+            $dateOnly = Carbon::parse($adj->ngay)->toDateString();
+            $adjStart = Carbon::parse($dateOnly . ' ' . $adj->gio_bat_dau);
+            $adjEnd = Carbon::parse($dateOnly . ' ' . $adj->gio_ket_thuc);
 
             if ($this->timeOverlaps($start, $end, $adjStart, $adjEnd)) {
                 $conflicts[] = sprintf(
@@ -105,9 +109,7 @@ class RoomAvailabilityService
                     $adj->gio_ket_thuc
                 );
             }
-        }
-
-        return [
+        }        return [
             'conflict' => !empty($conflicts),
             'details' => $conflicts
         ];

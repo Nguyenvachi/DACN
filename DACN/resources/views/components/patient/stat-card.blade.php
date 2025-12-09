@@ -7,47 +7,64 @@
 ])
 
 @php
+    // ENHANCED: Modern gradient configs with VietCare design (Parent: components/patient/stat-card.blade.php)
     $colorConfig = [
-        'primary' => ['bg' => 'bg-primary', 'text' => 'text-primary'],
-        'success' => ['bg' => 'bg-success', 'text' => 'text-success'],
-        'warning' => ['bg' => 'bg-warning', 'text' => 'text-warning'],
-        'danger' => ['bg' => 'bg-danger', 'text' => 'text-danger'],
-        'info' => ['bg' => 'bg-info', 'text' => 'text-info'],
+        'primary' => [
+            'gradient' => 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'shadow' => 'rgba(102, 126, 234, 0.4)'
+        ],
+        'success' => [
+            'gradient' => 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            'shadow' => 'rgba(16, 185, 129, 0.4)'
+        ],
+        'warning' => [
+            'gradient' => 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+            'shadow' => 'rgba(245, 158, 11, 0.4)'
+        ],
+        'danger' => [
+            'gradient' => 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+            'shadow' => 'rgba(239, 68, 68, 0.4)'
+        ],
+        'info' => [
+            'gradient' => 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+            'shadow' => 'rgba(59, 130, 246, 0.4)'
+        ],
     ];
 
     $config = $colorConfig[$color] ?? $colorConfig['primary'];
 @endphp
 
-<div class="stat-card card border-0 shadow-sm h-100">
-    <div class="card-body">
+<div class="stat-card-modern card border-0 h-100"
+     style="background: {{ $config['gradient'] }}; box-shadow: 0 4px 15px {{ $config['shadow'] }};">
+    <div class="card-body text-white p-4">
         <div class="d-flex align-items-center">
             <div class="flex-shrink-0">
-                <div class="stat-icon rounded-circle {{ $config['bg'] }} bg-opacity-10 p-3">
-                    <i class="fas {{ $icon }} fa-2x {{ $config['text'] }}"></i>
+                <div class="p-3 rounded-circle bg-white bg-opacity-25 backdrop-blur">
+                    <i class="fas {{ $icon }} fa-2x text-white"></i>
                 </div>
             </div>
             <div class="flex-grow-1 ms-3">
-                <h6 class="stat-title text-muted mb-1">{{ $title }}</h6>
-                <h3 class="stat-value mb-0">{{ $value }}</h3>
+                <p class="text-white text-opacity-75 mb-1 small fw-medium">{{ $title }}</p>
+                <h3 class="mb-0 fw-bold text-white">{{ $value }}</h3>
             </div>
         </div>
 
         @if($route)
-        <a href="{{ $route }}" class="stretched-link"></a>
+        <a href="{{ $route }}" class="stretched-link text-decoration-none"></a>
         @endif
     </div>
 </div>
 
 <style>
-.stat-card {
+.stat-card-modern {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
 
-.stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+.stat-card-modern:hover {
+    transform: translateY(-5px);
+}
 }
 
 .stat-icon {

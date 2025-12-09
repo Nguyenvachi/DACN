@@ -29,7 +29,8 @@ class Kernel extends ConsoleKernel
                 ->whereDate('ngay_hen', $targetDate)
                 ->get();
             foreach ($candidates as $lh) {
-                $appt = Carbon::parse($lh->ngay_hen.' '.$lh->thoi_gian_hen);
+                $dateOnly = $lh->ngay_hen instanceof \Carbon\Carbon ? $lh->ngay_hen->format('Y-m-d') : (string)$lh->ngay_hen;
+                $appt = Carbon::parse($dateOnly . ' ' . ($lh->thoi_gian_hen ?? '00:00:00'));
                 $mins = $now->diffInMinutes($appt, false); // phút đến lịch hẹn
                 if ($mins <= 1440 && $mins >= 1420) { // cửa sổ ~20 phút quanh 24h
                     $key = 'reminder:lich_hen:'.$lh->id.':24h';
@@ -49,7 +50,8 @@ class Kernel extends ConsoleKernel
                 ->whereDate('ngay_hen', $targetDate)
                 ->get();
             foreach ($candidates as $lh) {
-                $appt = Carbon::parse($lh->ngay_hen.' '.$lh->thoi_gian_hen);
+                $dateOnly = $lh->ngay_hen instanceof \Carbon\Carbon ? $lh->ngay_hen->format('Y-m-d') : (string)$lh->ngay_hen;
+                $appt = Carbon::parse($dateOnly . ' ' . ($lh->thoi_gian_hen ?? '00:00:00'));
                 $mins = $now->diffInMinutes($appt, false);
                 if ($mins <= 180 && $mins >= 160) { // cửa sổ ~20 phút quanh 3h
                     $key = 'reminder:lich_hen:'.$lh->id.':3h';

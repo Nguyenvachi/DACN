@@ -31,34 +31,27 @@
         </div>
 
         <!-- Quick Stats -->
-        <div class="row mb-4">
+        {{-- ENHANCED: Modern gradient stat cards (Parent: patient/dashboard-modern.blade.php) --}}
+        <div class="row mb-4 g-4">
 
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-card">
-                    <x-patient.stat-card title="Lịch Hẹn Sắp Tới" :value="$statistics['upcoming_appointments']" icon="fa-calendar-check" color="primary"
-                        :route="route('patient.lichhen.index')" />
-                </div>
+            <div class="col-lg-3 col-md-6">
+                <x-patient.stat-card title="Lịch Hẹn Sắp Tới" :value="$statistics['upcoming_appointments']"
+                    icon="fa-calendar-check" color="primary" :route="route('patient.lichhen.index')" />
             </div>
 
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-card">
-                    <x-patient.stat-card title="Hồ Sơ Bệnh Án" :value="$statistics['total_medical_records']" icon="fa-file-medical" color="success"
-                        :route="route('patient.benhan.index')" />
-                </div>
+            <div class="col-lg-3 col-md-6">
+                <x-patient.stat-card title="Hồ Sơ Bệnh Án" :value="$statistics['total_medical_records']"
+                    icon="fa-file-medical" color="success" :route="route('patient.benhan.index')" />
             </div>
 
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-card">
-                    <x-patient.stat-card title="Hóa Đơn Chưa Thanh Toán" :value="$statistics['unpaid_invoices']" icon="fa-file-invoice-dollar"
-                        color="warning" :route="route('patient.hoadon.index')" />
-                </div>
+            <div class="col-lg-3 col-md-6">
+                <x-patient.stat-card title="Hóa Đơn Chưa Thanh Toán" :value="$statistics['unpaid_invoices']"
+                    icon="fa-file-invoice-dollar" color="warning" :route="route('patient.hoadon.index')" />
             </div>
 
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-card">
-                    <x-patient.stat-card title="Xét Nghiệm" :value="$statistics['total_tests']" icon="fa-flask" color="info"
-                        :route="route('patient.xetnghiem.index')" />
-                </div>
+            <div class="col-lg-3 col-md-6">
+                <x-patient.stat-card title="Xét Nghiệm" :value="$statistics['total_tests']"
+                    icon="fa-flask" color="info" :route="route('patient.xetnghiem.index')" />
             </div>
 
         </div>
@@ -104,9 +97,7 @@
                                 </div>
 
                                 <div class="text-end">
-                                    <span class="badge bg-success px-3 py-2">
-                                        {{ ucfirst($appointment->trang_thai) }}
-                                    </span>
+                                    <x-appointment-status-badge :status="$appointment->trang_thai" class="px-3 py-2" />
                                 </div>
                             </div>
 
@@ -161,12 +152,11 @@
                                     <div class="flex-grow-1 ms-3">
                                         <div class="d-flex justify-content-between">
                                             <div>
-                                                <h6 class="mb-1">{{ $record->dichVu->ten_dich_vu }}</h6>
-                                                <p class="mb-1 text-muted small">BS. {{ $record->bacSi->ho_ten }}</p>
+                                                <h6 class="mb-1">{{ $record->dichVu->ten_dich_vu ?? 'Khám tổng quát' }}</h6>
+                                                <p class="mb-1 text-muted small">BS. {{ $record->bacSi->ho_ten ?? 'N/A' }}</p>
                                                 <p class="mb-0 small text-truncate">
-                                                    {{ Str::limit($record->chuan_doan, 100) }}</p>
+                                                    {{ Str::limit($record->chuan_doan ?? 'Chưa có chẩn đoán', 100) }}</p>
                                             </div>
-
                                             <div class="text-end ms-3">
                                                 <small class="text-muted d-block mb-2">
                                                     {{ \Carbon\Carbon::parse($record->ngay_kham)->format('d/m/Y') }}
@@ -444,61 +434,64 @@
 
     @push('styles')
         <style>
-            /* -------------------------------------
-           PREMIUM UI FOR PATIENT DASHBOARD
-        --------------------------------------*/
+            /* ======================================================
+                VIETCARE PATIENT DASHBOARD — PREMIUM MEDICAL UI 2025
+            ======================================================= */
 
-            /* Welcome Card */
+            /* ----------------------------------------
+                WELCOME CARD
+            ---------------------------------------- */
             .welcome-card {
-                background: linear-gradient(135deg, #10b981 0%, #0d946a 100%);
-                color: #fff;
-                border-radius: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                border-radius: 22px;
+                padding: 1.8rem 2rem;
+                box-shadow: var(--vc-shadow-lg);
                 position: relative;
                 overflow: hidden;
             }
 
-            .welcome-card::before {
-                content: '';
+            .welcome-card::before,
+            .welcome-card::after {
+                content: "";
                 position: absolute;
-                top: -20%;
-                right: -15%;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, .15);
+                filter: blur(18px);
+            }
+
+            .welcome-card::before {
                 width: 260px;
                 height: 260px;
-                background: rgba(255, 255, 255, 0.15);
-                border-radius: 50%;
-                filter: blur(12px);
+                top: -20%;
+                right: -10%;
             }
 
             .welcome-card::after {
-                content: '';
-                position: absolute;
-                bottom: -20%;
-                left: -15%;
                 width: 200px;
                 height: 200px;
-                background: rgba(255, 255, 255, 0.08);
-                border-radius: 50%;
+                bottom: -18%;
+                left: -15%;
+                opacity: .6;
             }
 
             .welcome-title {
-                font-size: 1.9rem;
-                font-weight: 700;
+                font-size: 2rem;
+                font-weight: 800;
             }
 
             .welcome-text {
-                opacity: .95;
                 font-size: 1.05rem;
+                opacity: .95;
             }
 
             .wave-emoji {
                 display: inline-block;
-                animation: wave 1s infinite;
+                animation: wave 1.4s infinite ease-in-out;
+                transform-origin: 70% 70%;
             }
 
             @keyframes wave {
-
-                0%,
-                100% {
+                0% {
                     transform: rotate(0);
                 }
 
@@ -506,54 +499,85 @@
                     transform: rotate(15deg);
                 }
 
-                75% {
+                50% {
                     transform: rotate(-10deg);
+                }
+
+                75% {
+                    transform: rotate(12deg);
+                }
+
+                100% {
+                    transform: rotate(0);
                 }
             }
 
-            /* Stat Cards */
+
+            /* ----------------------------------------
+                STAT CARDS
+            ---------------------------------------- */
             .stat-card {
                 border-radius: 18px !important;
-                transition: all .25s ease;
+                transition: .25s ease;
+                box-shadow: var(--vc-shadow-sm);
+                overflow: hidden;
             }
 
             .stat-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 8px 24px rgba(0, 0, 0, .08) !important;
+                transform: translateY(-6px);
+                box-shadow: var(--vc-shadow-md);
             }
 
-            /* Section Cards */
+
+            /* ----------------------------------------
+                SECTION CARD
+            ---------------------------------------- */
             .section-card {
-                border-radius: 18px !important;
+                border-radius: 20px !important;
+                box-shadow: var(--vc-shadow-sm);
+                overflow: hidden;
             }
 
             .section-header {
-                background: white;
-                border-bottom: 0 !important;
-                padding: 1rem 1rem !important;
+                background: #ffffff;
+                padding: 1rem 1.1rem !important;
+                border-bottom: 1px solid #f1f5f9 !important;
             }
 
             .section-title {
-                font-weight: 600;
+                margin: 0;
+                font-weight: 700;
+                font-size: 1.1rem;
+                display: flex;
+                align-items: center;
+                gap: 6px;
             }
 
-            /* List Hover */
+
+            /* ----------------------------------------
+                LIST ELEMENTS — hover styles
+            ---------------------------------------- */
             .list-item-hover {
-                transition: all .25s ease;
-                border-radius: 12px;
+                border-radius: 14px;
+                transition: .25s ease;
+                background: #fff;
             }
 
             .list-item-hover:hover {
-                background: #f1f5f9 !important;
+                background: #f8fafc;
                 transform: translateY(-3px);
             }
 
-            /* Health Box */
+
+            /* ----------------------------------------
+                HEALTH BOXES
+            ---------------------------------------- */
             .health-box {
-                background: #f8fafc;
-                border-radius: 12px;
                 padding: 1rem;
-                transition: .25s;
+                border-radius: 14px;
+                background: #f9fafb;
+                transition: .25s ease;
+                box-shadow: var(--vc-shadow-sm);
             }
 
             .health-box:hover {
@@ -561,53 +585,79 @@
                 transform: translateY(-3px);
             }
 
-            /* BMI Box */
             .bmi-box {
                 background: #e0f2fe;
                 padding: 12px;
                 border-radius: 12px;
+                font-weight: 600;
             }
 
-            /* Invoices */
+
+            /* ----------------------------------------
+                INVOICE CARD
+            ---------------------------------------- */
             .invoice-card .price {
-                font-size: 1.25rem;
-                font-weight: 700;
+                font-size: 1.3rem;
+                font-weight: 800;
+                color: #eab308;
             }
 
-            /* Quick Actions */
+            .invoice-card .btn-warning {
+                border-radius: 10px;
+                font-weight: 600;
+            }
+
+
+            /* ----------------------------------------
+                QUICK ACTIONS
+            ---------------------------------------- */
             .quick-actions .btn {
-                border-radius: 12px;
-                padding: 10px 14px;
-                font-weight: 500;
-                transition: .25s;
+                border-radius: 14px;
+                padding: 11px 16px;
+                font-weight: 600;
+                transition: .25s ease;
+                box-shadow: var(--vc-shadow-sm);
             }
 
             .quick-actions .btn:hover {
                 transform: translateY(-3px);
+                box-shadow: var(--vc-shadow-md);
             }
 
-            /* Notifications */
+
+            /* ----------------------------------------
+                NOTIFICATIONS
+            ---------------------------------------- */
             .notification-item {
-                transition: .25s;
+                transition: .25s ease;
             }
 
             .notification-item:hover {
                 background: #eef6ff !important;
             }
 
-            /* Chart Card */
+
+            /* ----------------------------------------
+                CHART CARD
+            ---------------------------------------- */
             .chart-card {
                 border-radius: 20px !important;
-                overflow: hidden;
+                box-shadow: var(--vc-shadow-sm);
             }
 
-            /* Empty block */
+            #appointmentChart {
+                max-height: 300px;
+            }
+
+
+            /* ----------------------------------------
+                EMPTY BLOCKS
+            ---------------------------------------- */
             .empty-block i {
                 opacity: .4;
             }
         </style>
     @endpush
-
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

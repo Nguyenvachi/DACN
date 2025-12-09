@@ -357,8 +357,20 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
 
 // Nhóm role STAFF (Dashboard riêng)
 // Sửa thành check quyền: Ai có vé view-dashboard thì được vào Dashboard nhân viên
+// ENHANCED: Added check-in and queue management routes (Parent: routes/web.php)
 Route::middleware(['auth', 'permission:view-dashboard'])->prefix('staff')->name('staff.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Staff\DashboardController::class, 'index'])->name('dashboard');
+
+    // Check-in Management (Parent: routes/web.php)
+    Route::get('/checkin', [\App\Http\Controllers\Staff\CheckInController::class, 'index'])->name('checkin.index');
+    Route::post('/checkin/checkin/{lichhen}', [\App\Http\Controllers\Staff\CheckInController::class, 'checkIn'])->name('checkin.checkin');
+    Route::get('/checkin/quick-search', [\App\Http\Controllers\Staff\CheckInController::class, 'quickSearch'])->name('checkin.quick_search');
+    Route::post('/checkin/bulk', [\App\Http\Controllers\Staff\CheckInController::class, 'bulkCheckIn'])->name('checkin.bulk');
+
+    // Queue Management (Parent: routes/web.php)
+    Route::get('/queue', [\App\Http\Controllers\Staff\QueueController::class, 'index'])->name('queue.index');
+    Route::post('/queue/call-next/{lichhen}', [\App\Http\Controllers\Staff\QueueController::class, 'callNext'])->name('queue.call_next');
+    Route::get('/queue/realtime-data', [\App\Http\Controllers\Staff\QueueController::class, 'realtimeData'])->name('queue.realtime');
 });
 
 // Doctor
@@ -388,6 +400,44 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
         Route::post('/{conversation}/send', [\App\Http\Controllers\Doctor\ChatController::class, 'sendMessage'])->name('send');
         Route::get('/{conversation}/messages', [\App\Http\Controllers\Doctor\ChatController::class, 'getMessages'])->name('messages');
     });
+
+    // Lịch hẹn - Appointment Management (File mẹ: routes/web.php)
+    Route::prefix('lich-hen')->name('lichhen.')->group(function () {
+        Route::get('/pending', [\App\Http\Controllers\Doctor\LichHenController::class, 'pending'])->name('pending');
+        Route::post('/{lichHen}/confirm', [\App\Http\Controllers\Doctor\LichHenController::class, 'confirm'])->name('confirm');
+        Route::post('/{lichHen}/reject', [\App\Http\Controllers\Doctor\LichHenController::class, 'reject'])->name('reject');
+        Route::post('/{lichHen}/complete', [\App\Http\Controllers\Doctor\LichHenController::class, 'complete'])->name('complete');
+        Route::get('/{lichHen}', [\App\Http\Controllers\Doctor\LichHenController::class, 'show'])->name('show');
+        Route::get('/confirmed/list', [\App\Http\Controllers\Doctor\LichHenController::class, 'confirmed'])->name('confirmed');
+    });
+
+    // Hàng đợi - Queue Management (File mẹ: routes/web.php)
+    Route::prefix('queue')->name('queue.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\QueueController::class, 'index'])->name('index');
+        Route::post('/{lichHen}/start', [\App\Http\Controllers\Doctor\QueueController::class, 'startExamination'])->name('start');
+        Route::post('/{lichHen}/checkin', [\App\Http\Controllers\Doctor\QueueController::class, 'checkIn'])->name('checkin');
+        Route::get('/count', [\App\Http\Controllers\Doctor\QueueController::class, 'getQueueCount'])->name('count');
+    });
+
+    // Đơn thuốc - Prescription Management (File mẹ: routes/web.php)
+    Route::prefix('don-thuoc')->name('donthuoc.')->group(function () {
+        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\DonThuocController::class, 'create'])->name('create');
+        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\DonThuocController::class, 'store'])->name('store');
+        Route::get('/{donThuoc}', [\App\Http\Controllers\Doctor\DonThuocController::class, 'show'])->name('show');
+        Route::delete('/{donThuoc}', [\App\Http\Controllers\Doctor\DonThuocController::class, 'destroy'])->name('destroy');
+        Route::get('/thuoc/{thuoc}/info', [\App\Http\Controllers\Doctor\DonThuocController::class, 'getThuocInfo'])->name('thuoc.info');
+    });
+
+    // Xét nghiệm - Lab Test Management (File mẹ: routes/web.php)
+    Route::prefix('xet-nghiem')->name('xetnghiem.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'index'])->name('index');
+        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'create'])->name('create');
+        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'store'])->name('store');
+        Route::get('/{xetNghiem}/show', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'show'])->name('show');
+        Route::post('/{xetNghiem}/upload', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'uploadResult'])->name('upload');
+        Route::get('/{xetNghiem}/download', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'download'])->name('download');
+        Route::delete('/{xetNghiem}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // Patient
@@ -397,18 +447,25 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
 
     // Patient Lich Hen Routes (RESTful)
     Route::prefix('lich-hen')->name('patient.lichhen.')->group(function () {
+        // ⚠️ QUAN TRỌNG: Route cụ thể phải đặt TRƯỚC route có param {lichHen}
+        Route::get('/cua-toi', [LichHenController::class, 'myAppointments'])->name('my');
+
         Route::get('/', [LichHenController::class, 'myAppointments'])->name('index');
         Route::get('/create', [LichHenController::class, 'create'])->name('create');
         Route::post('/', [LichHenController::class, 'store'])->name('store');
+        Route::get('/{lichHen}', [LichHenController::class, 'show'])->name('show');
         Route::get('/{lichHen}/edit', [LichHenController::class, 'edit'])->name('edit');
         Route::put('/{lichHen}', [LichHenController::class, 'update'])->name('update');
         Route::delete('/{lichHen}', [LichHenController::class, 'destroy'])->name('destroy');
         Route::patch('/{lichHen}/cancel', [LichHenController::class, 'cancel'])->name('cancel');
+
+        // Workflow endpoints - Theo quy trình nghiệp vụ y tế
+        Route::post('/{lichHen}/check-in', [LichHenController::class, 'checkIn'])->name('check-in');
     });
 
     // Legacy routes (backwards compatibility) - different paths to avoid conflicts
     Route::get('/lich-hen-cua-toi', [LichHenController::class, 'myAppointments'])->name('lichhen.my');
-    Route::get('/ajax/chuyen-khoa/{chuyenKhoa}/bac-si', [LichHenController::class, 'getBacSiByChuyenKhoa'])->name('ajax.chuyenkhoa');
+    // Route ajax.chuyenkhoa đã được định nghĩa ở dưới (dòng 539)
     Route::get('/ajax/bac-si/{bacSi}/lich-lam-viec', [LichHenController::class, 'getLichLamViec'])->name('ajax.lichlamviec');
 
     // Patient Reviews Routes
@@ -428,7 +485,7 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::post('/check', [\App\Http\Controllers\Patient\CouponController::class, 'check'])->name('check');
     });
 
-    // Patient Shop Routes (mua thuốc)
+    // Patient Shop Routes (mua thuốc) - CONSOLIDATED
     Route::prefix('shop')->name('patient.shop.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Patient\ShopController::class, 'index'])->name('index');
         Route::get('/cart', [\App\Http\Controllers\Patient\ShopController::class, 'cart'])->name('cart');
@@ -438,6 +495,10 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::get('/checkout', [\App\Http\Controllers\Patient\ShopController::class, 'checkout'])->name('checkout');
         Route::post('/checkout', [\App\Http\Controllers\Patient\ShopController::class, 'placeOrder'])->name('place-order');
         Route::get('/order-success/{id}', [\App\Http\Controllers\Patient\ShopController::class, 'orderSuccess'])->name('order-success');
+        // Orders management
+        Route::get('/orders', [\App\Http\Controllers\Patient\ShopController::class, 'orders'])->name('orders');
+        Route::get('/orders/{donHang}', [\App\Http\Controllers\Patient\ShopController::class, 'orderDetail'])->name('order-detail');
+        Route::delete('/orders/{donHang}/cancel', [\App\Http\Controllers\Patient\ShopController::class, 'cancelOrder'])->name('order-cancel');
     });
 
     // Patient Chat Routes
@@ -449,6 +510,7 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::get('/{conversation}/messages', [\App\Http\Controllers\Patient\ChatController::class, 'getMessages'])->name('messages');
     });
 
+    // Patient Medical Records Routes
     Route::prefix('benh-an')->name('patient.benhan.')->group(function () {
         Route::get('/', [BenhAnController::class, 'index'])->name('index');
         Route::get('/{benh_an}', [BenhAnController::class, 'show'])->name('show');
@@ -457,17 +519,10 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::get('/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('xetnghiem.download')->middleware('signed');
     });
 
-    // Patient Invoice/HoaDon Routes (File mẹ: routes/web.php)
+    // Patient Invoice/HoaDon Routes
     Route::prefix('hoa-don')->name('patient.hoadon.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Patient\HoaDonController::class, 'index'])->name('index');
         Route::get('/{hoaDon}', [\App\Http\Controllers\Patient\HoaDonController::class, 'show'])->name('show');
-    });
-
-    // Patient Shop Orders Routes (File mẹ: routes/web.php)
-    Route::prefix('shop')->name('patient.shop.')->group(function () {
-        Route::get('/orders', [\App\Http\Controllers\Patient\ShopController::class, 'orders'])->name('orders');
-        Route::get('/orders/{donHang}', [\App\Http\Controllers\Patient\ShopController::class, 'orderDetail'])->name('order-detail');
-        Route::delete('/orders/{donHang}/cancel', [\App\Http\Controllers\Patient\ShopController::class, 'cancelOrder'])->name('order-cancel');
     });
 
     // Patient Prescription Routes (File mẹ: routes/web.php)
@@ -517,7 +572,8 @@ Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->grou
 
 Route::get('/doctor/{id}/schedule', function (int $id) { return view('doctor.schedule'); })->middleware(['auth', 'can:view-doctor-schedule,id'])->name('doctor.schedule');
 Route::middleware('auth')->group(function () {
-    Route::get('/lich-hen/cua-toi', [LichHenController::class, 'myAppointments'])->name('lichhen.my');
+    // Route /lich-hen/cua-toi đã được định nghĩa trong patient group ở trên
+    // Giữ lại các route khác
     Route::put('/lich-hen/{id}', [LichHenController::class, 'update'])->name('lichhen.update');
     Route::patch('/lich-hen/{id}/huy', [LichHenController::class, 'cancel'])->name('lichhen.cancel');
     Route::get('/benh-an/{benhAn}/don-thuoc/create', [BenhAnController::class, 'createPrescription'])->name('benhan.donthuoc.create');

@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Nhân viên - {{ config('app.name') }}</title>
 
     {{-- Bootstrap + Icons --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     {{-- Vite: đồng bộ toàn hệ thống --}}
@@ -16,142 +18,386 @@
     @stack('styles')
 
     <style>
+        /* ENHANCED: Modern VietCare Design System for Staff (Parent: layouts/staff.blade.php) */
+        :root {
+            --vietcare-green: #10b981;
+            --vietcare-green-dark: #059669;
+            --primary-purple: #667eea;
+            --primary-blue: #3b82f6;
+            --warning-orange: #f59e0b;
+            --sidebar-width: 260px;
+        }
+
         body {
             background: #f5f6fa;
-            font-family: "Segoe UI", sans-serif;
+            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        /* Navbar nâng cấp */
-        .staff-navbar {
-            background: #ffffff !important;
-            border-bottom: 1px solid #e5e7eb;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        /* Sidebar with VietCare styling */
+        .staff-sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+            border-right: 1px solid #e5e7eb;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
         }
 
-        .staff-navbar .nav-link {
-            color: #333 !important;
+        .staff-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .staff-sidebar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--vietcare-green) 0%, var(--vietcare-green-dark) 100%);
+            border-radius: 10px;
+        }
+
+        /* Brand Header */
+        .sidebar-brand {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--vietcare-green) 0%, var(--vietcare-green-dark) 100%);
+            color: white;
+            text-align: center;
+            border-bottom: 3px solid var(--vietcare-green-dark);
+        }
+
+        .sidebar-brand h4 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .sidebar-brand small {
+            opacity: 0.9;
+            font-size: 0.85rem;
+        }
+
+        /* Menu Groups */
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-group-title {
+            padding: 0.75rem 1.5rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #6b7280;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.3s ease;
             font-weight: 500;
-            padding-left: 12px !important;
-            padding-right: 12px !important;
+            position: relative;
         }
 
-        .staff-navbar .nav-link.active {
-            color: #0d6efd !important;
+        .menu-item i {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%);
+            color: var(--vietcare-green);
+            transform: translateX(5px);
+        }
+
+        .menu-item:hover i {
+            transform: scale(1.15);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: var(--vietcare-green);
             font-weight: 600;
+            border-left: 4px solid var(--vietcare-green);
         }
 
-        footer {
-            font-size: 14px;
+        .menu-item.active::before {
+            content: '';
+            position: absolute;
+            right: 1.5rem;
+            width: 8px;
+            height: 8px;
+            background: var(--vietcare-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--vietcare-green);
+        }
+
+        /* Main Content */
+        .staff-main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navbar */
+        .staff-topbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--vietcare-green) 0%, var(--vietcare-green-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 0.75rem;
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        /* Footer */
+        .staff-footer {
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .staff-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .staff-sidebar.show {
+                transform: translateX(0);
+            }
+
+            .staff-main-content {
+                margin-left: 0;
+            }
+
+            .mobile-toggle {
+                display: block !important;
+            }
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: var(--vietcare-green);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
 
-    {{-- TOP NAV --}}
-    <nav class="navbar navbar-expand-lg staff-navbar">
-        <div class="container-fluid">
+    {{-- ENHANCED: Modern Sidebar Layout (Parent: layouts/staff.blade.php) --}}
+    {{-- SIDEBAR --}}
+    <aside class="staff-sidebar" id="staffSidebar">
+        {{-- Brand --}}
+        <div class="sidebar-brand">
+            <i class="fas fa-hospital fs-3 mb-2"></i>
+            <h4>VietCare</h4>
+            <small>Hệ thống Nhân viên</small>
+        </div>
 
-            {{-- Brand --}}
-            <a class="navbar-brand fw-bold" href="{{ route('staff.dashboard') }}">
-                <i class="fa-solid fa-user-tie me-1"></i> Nhân viên Phòng khám
+        {{-- Menu --}}
+        <nav class="sidebar-menu">
+            {{-- Dashboard Section --}}
+            <div class="menu-group-title">
+                <i class="bi bi-grid-fill me-1"></i> Dashboard
+            </div>
+            <a href="{{ route('staff.dashboard') }}"
+               class="menu-item {{ request()->routeIs('staff.dashboard') ? 'active' : '' }}">
+                <i class="bi bi-speedometer2"></i>
+                <span>Tổng quan</span>
             </a>
 
-            {{-- Toggle --}}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            {{-- Menu --}}
-            <div class="collapse navbar-collapse" id="navbarNav">
-
-                <ul class="navbar-nav me-auto">
-
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('staff.dashboard') ? 'active' : '' }}"
-                            href="{{ route('staff.dashboard') }}">
-                            <i class="fa-solid fa-chart-line me-1"></i> Dashboard
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('staff.schedule') ? 'active' : '' }}"
-                            href="{{ route('staff.dashboard') }}#lich">
-                            <i class="fa-solid fa-calendar-days me-1"></i> Lịch của tôi
-                        </a>
-                    </li>
-
-                </ul>
-
-                {{-- USER DROPDOWN --}}
-                <ul class="navbar-nav">
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                            data-bs-toggle="dropdown">
-                            <i class="fa-solid fa-circle-user me-1"></i>
-                            {{ auth()->user()->name }}
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-end shadow">
-
-                            <li>
-                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                    <i class="fa-solid fa-user-gear me-1"></i> Hồ sơ của tôi
-                                </a>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger fw-semibold">
-                                        <i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất
-                                    </button>
-                                </form>
-                            </li>
-
-                        </ul>
-                    </li>
-
-                </ul>
-
+            {{-- Reception Section --}}
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-person-badge-fill me-1"></i> Tiếp tân
             </div>
+            <a href="{{ route('staff.checkin.index') }}"
+               class="menu-item {{ request()->routeIs('staff.checkin.*') ? 'active' : '' }}">
+                <i class="bi bi-person-check-fill"></i>
+                <span>Check-in Bệnh nhân</span>
+            </a>
+            <a href="{{ route('staff.queue.index') }}"
+               class="menu-item {{ request()->routeIs('staff.queue.*') ? 'active' : '' }}">
+                <i class="bi bi-people-fill"></i>
+                <span>Quản lý Hàng đợi</span>
+            </a>
 
-        </div>
-    </nav>
+            {{-- Schedule Section --}}
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-calendar-week-fill me-1"></i> Lịch làm việc
+            </div>
+            <a href="{{ route('staff.dashboard') }}#lich"
+               class="menu-item">
+                <i class="bi bi-calendar3"></i>
+                <span>Lịch của tôi</span>
+            </a>
+
+            {{-- Profile Section --}}
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-person-fill me-1"></i> Cá nhân
+            </div>
+            <a href="{{ route('profile.edit') }}"
+               class="menu-item">
+                <i class="bi bi-person-gear"></i>
+                <span>Hồ sơ của tôi</span>
+            </a>
+        </nav>
+    </aside>
 
     {{-- MAIN CONTENT --}}
-    <main class="py-4">
+    <div class="staff-main-content">
+        {{-- TOP BAR --}}
+        <header class="staff-topbar">
+            <div class="d-flex align-items-center">
+                <button class="mobile-toggle me-3" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                </button>
+                <h1 class="topbar-title">@yield('page-title', 'Dashboard')</h1>
+            </div>
 
-        @if (session('status'))
-            <div class="container">
-                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-                    {{ session('status') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="topbar-user">
+                <div class="dropdown">
+                    <button class="btn btn-link text-decoration-none d-flex align-items-center gap-2"
+                            type="button"
+                            data-bs-toggle="dropdown">
+                        <div class="user-avatar">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        </div>
+                        <div class="text-start d-none d-md-block">
+                            <div class="fw-semibold text-dark">{{ auth()->user()->name }}</div>
+                            <small class="text-muted">Nhân viên</small>
+                        </div>
+                        <i class="bi bi-chevron-down text-muted"></i>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                <i class="bi bi-person-gear me-2"></i>Hồ sơ của tôi
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        @endif
+        </header>
 
-        @yield('content')
+        {{-- CONTENT --}}
+        <main class="content-wrapper">
+            @if (session('status'))
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>{{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
 
-    </main>
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
 
-    {{-- FOOTER --}}
-    <footer class="bg-white text-center py-3 mt-4 border-top">
-        <p class="mb-0 text-muted">
-            © {{ date('Y') }} Phòng khám — Staff Portal
-        </p>
-    </footer>
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @yield('content')
+        </main>
+
+        {{-- FOOTER --}}
+        <footer class="staff-footer">
+            <p class="mb-0">&copy; {{ date('Y') }} VietCare Healthcare System. All rights reserved.</p>
+        </footer>
+    </div>
 
     {{-- Scripts --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    {{-- DataTables Scripts Stack --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
+
+    <script>
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('staffSidebar').classList.toggle('show');
+        }
+
+        // Close sidebar on outside click (mobile)
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('staffSidebar');
+            const toggle = document.querySelector('.mobile-toggle');
+
+            if (window.innerWidth <= 768 &&
+                !sidebar.contains(event.target) &&
+                !toggle.contains(event.target) &&
+                sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+            }
+        });
+    </script>
 
 </body>
 

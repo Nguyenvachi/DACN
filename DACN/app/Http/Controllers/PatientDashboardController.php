@@ -27,13 +27,18 @@ class PatientDashboardController extends Controller
             'total_appointments' => LichHen::where('user_id', $user->id)->count(),
             'upcoming_appointments' => LichHen::where('user_id', $user->id)
                 ->where('ngay_hen', '>=', Carbon::today())
-                ->whereIn('trang_thai', ['pending', 'confirmed'])
+                ->whereIn('trang_thai', [
+                    'Chờ xác nhận',
+                    'Đã xác nhận',
+                    'Đã check-in',
+                    'Đang khám'
+                ])
                 ->count(),
             'completed_appointments' => LichHen::where('user_id', $user->id)
-                ->where('trang_thai', 'completed')
+                ->where('trang_thai', 'Hoàn thành')
                 ->count(),
             'pending_appointments' => LichHen::where('user_id', $user->id)
-                ->where('trang_thai', 'pending')
+                ->where('trang_thai', 'Chờ xác nhận')
                 ->count(),
             'total_medical_records' => BenhAn::where('user_id', $user->id)->count(),
             'unpaid_invoices' => HoaDon::where('user_id', $user->id)
@@ -48,7 +53,12 @@ class PatientDashboardController extends Controller
         // === LỊCH HẸN SẮP TỚI (5 gần nhất) ===
         $upcomingAppointments = LichHen::where('user_id', $user->id)
             ->where('ngay_hen', '>=', Carbon::today())
-            ->whereIn('trang_thai', ['pending', 'confirmed'])
+            ->whereIn('trang_thai', [
+                'Chờ xác nhận',
+                'Đã xác nhận',
+                'Đã check-in',
+                'Đang khám'
+            ])
             ->orderBy('ngay_hen')
             ->orderBy('thoi_gian_hen')
             ->take(5)
@@ -133,13 +143,13 @@ class PatientDashboardController extends Controller
             $completedCount = LichHen::where('user_id', $userId)
                 ->whereYear('ngay_hen', $month->year)
                 ->whereMonth('ngay_hen', $month->month)
-                ->where('trang_thai', 'completed')
+                ->where('trang_thai', LichHen::STATUS_COMPLETED)
                 ->count();
 
             $cancelledCount = LichHen::where('user_id', $userId)
                 ->whereYear('ngay_hen', $month->year)
                 ->whereMonth('ngay_hen', $month->month)
-                ->where('trang_thai', 'cancelled')
+                ->where('trang_thai', LichHen::STATUS_CANCELLED)
                 ->count();
 
             $completed[] = $completedCount;

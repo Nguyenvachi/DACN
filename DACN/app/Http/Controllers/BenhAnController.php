@@ -63,11 +63,24 @@ class BenhAnController extends Controller
     {
         $this->authorize('create', BenhAn::class);
 
-        $patients = User::where('role', 'patient')->orderBy('name')->get(['id', 'name']);
-        $doctorId = optional($request->user()->bacSi)->id;
-        $appointments = LichHen::when($doctorId, fn($q) => $q->where('bac_si_id', $doctorId))
-            ->orderByDesc('ngay_hen')->limit(50)->get(['id', 'ngay_hen', 'thoi_gian_hen']);
+        $patients = User::where('role', 'patient')
+            ->select('id', 'name', 'email', 'so_dien_thoai', 'ngay_sinh', 'gioi_tinh')
+            ->orderBy('name')
+            ->get();
 
+        $doctorId = optional($request->user()->bacSi)->id;
+
+        // Lấy lịch hẹn với thông tin đầy đủ
+        $appointments = LichHen::with('dichVu')
+            ->when($doctorId, fn($q) => $q->where('bac_si_id', $doctorId))
+            ->whereIn('trang_thai', ['Đã xác nhận', 'Đã check-in', 'Đang khám'])
+            ->whereDate('ngay_hen', '>=', now()->subDays(7)) // Trong 7 ngày gần đây
+            ->orderByDesc('ngay_hen')
+            ->orderByDesc('thoi_gian_hen')
+            ->limit(50)
+            ->get();
+
+        // Sử dụng view enhanced (đã kích hoạt)
         return view('benh_an.create', compact('patients', 'appointments', 'doctorId'));
     }
 
@@ -122,9 +135,19 @@ class BenhAnController extends Controller
 
     public function edit(BenhAn $benh_an)
     {
+        $role = $this->getCurrentRole();
+
+        // Load relationships cần thiết
+        $benh_an->load(['user', 'bacSi', 'lichHen.dichVu', 'files', 'xetNghiems', 'donThuocs.items.thuoc']);
+
+        // Nếu là doctor, dùng view mới với enhanced features
+        if ($role === 'doctor') {
+            return view('doctor.benh-an.edit', ['record' => $benh_an]);
+        }
+
+        // Admin/Staff dùng view cũ
         $patients = User::where('role', 'patient')->orderBy('name')->get(['id', 'name']);
         $appointments = LichHen::orderByDesc('ngay_hen')->limit(50)->get(['id', 'ngay_hen', 'thoi_gian_hen']);
-        $role = $this->getCurrentRole(); // Thêm method này
         return view('benh_an.edit', ['record' => $benh_an, 'patients' => $patients, 'appointments' => $appointments, 'role' => $role]);
     }
 

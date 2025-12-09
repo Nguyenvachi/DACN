@@ -1,0 +1,443 @@
+/* =========================================================
+   DOCTOR DASHBOARD - VIETCARE DESIGN SYSTEM
+   Đồng bộ với trang chủ VietCare - Màu xanh #10b981
+   ========================================================= */
+
+:root {
+  --vc-green-500: #10b981;
+  --vc-green-600: #059669;
+  --vc-green-400: #34d399;
+  --vc-dark: #1f2937;
+  --vc-muted: #6b7280;
+  --vc-bg: #f9fafb;
+  --vc-white: #ffffff;
+  --vc-radius: 16px;
+  --vc-shadow-sm: 0 4px 14px rgba(0,0,0,0.07);
+  --vc-shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+  --vc-shadow-lg: 0 18px 40px rgba(0,0,0,0.12);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--vc-bg);
+  color: var(--vc-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* -----------------------------------------
+   DOCTOR SIDEBAR
+-------------------------------------------- */
+.doctor-sidebar {
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+  border-right: 1px solid #e5e7eb;
+  padding: 1.5rem 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.03);
+  z-index: 1000;
+}
+
+/* Scrollbar style */
+.doctor-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.doctor-sidebar::-webkit-scrollbar-thumb {
+  background: var(--vc-green-400);
+  border-radius: 10px;
+}
+
+/* Sidebar Header */
+.doctor-sidebar .sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--vc-green-500), var(--vc-green-600));
+  border-radius: 12px;
+  color: white;
+}
+
+.doctor-sidebar .sidebar-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.doctor-sidebar .sidebar-brand {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+/* Menu Items */
+.doctor-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.doctor-sidebar li {
+  margin-bottom: 0.4rem;
+}
+
+.doctor-sidebar a,
+.doctor-sidebar button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--vc-dark);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+}
+
+.doctor-sidebar a i,
+.doctor-sidebar button i {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+  color: var(--vc-muted);
+  transition: color 0.2s ease;
+}
+
+.doctor-sidebar a:hover,
+.doctor-sidebar button:hover {
+  background: #f0fdf4;
+  color: var(--vc-green-600);
+  transform: translateX(3px);
+}
+
+.doctor-sidebar a:hover i,
+.doctor-sidebar button:hover i {
+  color: var(--vc-green-600);
+}
+
+.doctor-sidebar a.active {
+  background: linear-gradient(135deg, var(--vc-green-500), var(--vc-green-600));
+  color: white;
+  box-shadow: var(--vc-shadow-sm);
+}
+
+.doctor-sidebar a.active i {
+  color: white;
+}
+
+/* Notification Badge */
+.sidebar-badge {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Divider */
+.doctor-sidebar hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 1rem 0;
+}
+
+/* -----------------------------------------
+   MAIN CONTENT AREA
+-------------------------------------------- */
+main.doctor-main {
+  margin-left: 260px;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .doctor-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .doctor-sidebar.show {
+    transform: translateX(0);
+  }
+
+  main.doctor-main {
+    margin-left: 0;
+  }
+}
+
+/* -----------------------------------------
+   DOCTOR CARDS (VietCare Style)
+-------------------------------------------- */
+.vc-card {
+  background: white;
+  border-radius: var(--vc-radius);
+  box-shadow: var(--vc-shadow-sm);
+  border: 1px solid #f1f5f9;
+  transition: all 0.25s ease;
+}
+
+.vc-card:hover {
+  box-shadow: var(--vc-shadow-md);
+  border-color: var(--vc-green-400);
+}
+
+/* -----------------------------------------
+   STATUS BADGES (Chuẩn Y Tế)
+-------------------------------------------- */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge i {
+  font-size: 0.75rem;
+}
+
+/* Chờ xác nhận - Vàng */
+.status-pending,
+.status-cho-xac-nhan {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+/* Đã xác nhận - Xanh dương */
+.status-confirmed,
+.status-da-xac-nhan {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+/* Đã check-in - Xanh đậm */
+.status-checked-in,
+.status-da-check-in {
+  background: #e0f2fe;
+  color: #0c4a6e;
+  border: 1px solid #bae6fd;
+}
+
+/* Đang khám - Xanh lá */
+.status-in-progress,
+.status-dang-kham {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+/* Hoàn thành - Xám */
+.status-completed,
+.status-hoan-thanh {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+/* Đã hủy - Đỏ */
+.status-cancelled,
+.status-da-huy {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* -----------------------------------------
+   QUICK ACTIONS BAR
+-------------------------------------------- */
+.quick-actions-bar {
+  background: white;
+  border-radius: var(--vc-radius);
+  padding: 1.5rem;
+  box-shadow: var(--vc-shadow-sm);
+  margin-bottom: 1.5rem;
+  border: 1px solid #f1f5f9;
+}
+
+.quick-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.quick-action-btn.primary {
+  background: linear-gradient(135deg, var(--vc-green-500), var(--vc-green-600));
+  color: white;
+}
+
+.quick-action-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vc-shadow-md);
+}
+
+.quick-action-btn.outline {
+  background: white;
+  color: var(--vc-green-600);
+  border: 2px solid var(--vc-green-500);
+}
+
+.quick-action-btn.outline:hover {
+  background: #f0fdf4;
+  transform: translateY(-2px);
+}
+
+/* -----------------------------------------
+   APPOINTMENT TODAY TABLE
+-------------------------------------------- */
+.appointment-today-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.appointment-today-table thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.appointment-today-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 700;
+  color: var(--vc-dark);
+  font-size: 0.9rem;
+}
+
+.appointment-today-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.appointment-today-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* -----------------------------------------
+   BUTTONS (VietCare Style)
+-------------------------------------------- */
+.vc-btn-primary {
+  background: linear-gradient(135deg, var(--vc-green-500), var(--vc-green-600));
+  color: white;
+  border-radius: 10px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vc-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vc-shadow-md);
+}
+
+.vc-btn-outline {
+  background: white;
+  color: var(--vc-green-600);
+  border: 2px solid var(--vc-green-500);
+  border-radius: 10px;
+  padding: 0.55rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vc-btn-outline:hover {
+  background: #f0fdf4;
+  transform: translateY(-2px);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+/* -----------------------------------------
+   UTILITY CLASSES
+-------------------------------------------- */
+.text-success-vc {
+  color: var(--vc-green-600);
+}
+
+.bg-success-vc {
+  background: var(--vc-green-500);
+}
+
+.border-success-vc {
+  border-color: var(--vc-green-500);
+}
+
+/* -----------------------------------------
+   ANIMATIONS
+-------------------------------------------- */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.5s ease;
+}
+
+/* -----------------------------------------
+   RESPONSIVE
+-------------------------------------------- */
+@media (max-width: 768px) {
+  .quick-actions-bar {
+    overflow-x: auto;
+  }
+
+  .quick-action-btn {
+    white-space: nowrap;
+  }
+}

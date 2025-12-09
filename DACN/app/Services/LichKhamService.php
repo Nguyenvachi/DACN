@@ -187,7 +187,8 @@ class LichKhamService
      */
     public function hasConflictForDoctor(int $bacSiId, string $ngay_hen, string $thoi_gian_hen, int $durationMinutes = self::DEFAULT_APPT_MINUTES, ?int $ignoreLichHenId = null): array
     {
-        $start = Carbon::parse($ngay_hen . ' ' . $thoi_gian_hen);
+        $dateOnly = Carbon::parse($ngay_hen)->format('Y-m-d');
+        $start = Carbon::parse($dateOnly . ' ' . $thoi_gian_hen);
         $end = $start->copy()->addMinutes($durationMinutes);
         return $this->checkConflictDoctorV2($bacSiId, $start, $end, $ignoreLichHenId);
     }
@@ -197,7 +198,8 @@ class LichKhamService
      */
     public function hasPatientConflict(int $userId, string $ngay_hen, string $thoi_gian_hen, int $durationMinutes = self::DEFAULT_APPT_MINUTES, ?int $ignoreLichHenId = null): array
     {
-        $start = Carbon::parse($ngay_hen . ' ' . $thoi_gian_hen);
+        $dateOnly = Carbon::parse($ngay_hen)->format('Y-m-d');
+        $start = Carbon::parse($dateOnly . ' ' . $thoi_gian_hen);
         $end = $start->copy()->addMinutes($durationMinutes);
 
         $rows = \App\Models\LichHen::query()
@@ -208,7 +210,8 @@ class LichKhamService
             ->get(['id','thoi_gian_hen','dich_vu_id']);
 
         foreach ($rows as $row) {
-            $existStart = Carbon::parse($ngay_hen . ' ' . $row->thoi_gian_hen);
+            $existDateOnly = Carbon::parse($ngay_hen)->format('Y-m-d');
+            $existStart = Carbon::parse($existDateOnly . ' ' . $row->thoi_gian_hen);
             $existDur = $row->dichVu ? ((int)($row->dichVu->thoi_gian_uoc_tinh ?? self::DEFAULT_APPT_MINUTES)) : self::DEFAULT_APPT_MINUTES;
             $existEnd = $existStart->copy()->addMinutes($existDur);
             if ($start->lt($existEnd) && $end->gt($existStart)) {

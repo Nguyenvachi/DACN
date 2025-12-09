@@ -1,11 +1,46 @@
 @php
     $isPatient = auth()->check() && auth()->user()->role === 'patient';
-    $layout = $isPatient ? 'layouts.patient-modern' : 'layouts.app';
 @endphp
 
-@extends($layout)
+@if($isPatient)
+    @extends('layouts.patient-modern')
 
-@section('content')
+    @section('title', 'Danh Sách Bác Sĩ')
+    @section('page-title', 'Đội ngũ Bác sĩ')
+    @section('page-subtitle', 'Chọn bác sĩ để đặt lịch khám')
+
+    @section('content')
+@else
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Danh Sách Bác Sĩ - VietCare</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    </head>
+    <body>
+        {{-- Simple Navigation --}}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="{{ route('homepage') }}">
+                    <i class="fas fa-hospital me-2"></i>VietCare
+                </a>
+                <div class="ms-auto">
+                    <a href="{{ route('homepage') }}" class="btn btn-outline-light btn-sm">
+                        <i class="fas fa-home me-1"></i>Trang Chủ
+                    </a>
+                    @guest
+                        <button class="btn btn-light btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#authModal">
+                            <i class="fas fa-sign-in-alt me-1"></i>Đăng Nhập
+                        </button>
+                    @endguest
+                </div>
+            </div>
+        </nav>
+@endif
     <style>
         /* CSS RIÊNG CHO TRANG DANH SÁCH BÁC SĨ */
         .doctor-card {
@@ -243,4 +278,14 @@
         @endif
 
     </div>
-@endsection
+
+@if($isPatient)
+    @endsection
+@else
+    {{-- Include Auth Modal for Guest Users --}}
+    @include('components.auth-modal')
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>
+@endif

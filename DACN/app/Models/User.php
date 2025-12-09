@@ -22,6 +22,9 @@ class User extends Authenticatable
         'email',
         'password',
         'role', // Vẫn giữ cột role để lưu legacy nếu cần
+        'so_dien_thoai',
+        'ngay_sinh',
+        'gioi_tinh',
         'locked_at',
         'locked_until',
         'must_change_password',
@@ -41,6 +44,7 @@ class User extends Authenticatable
         'locked_until' => 'datetime',
         'last_login_at' => 'datetime',
         'must_change_password' => 'boolean',
+        'ngay_sinh' => 'date',
     ];
 
     // --- ❌ XÓA HOẶC COMMENT ĐOẠN NÀY (Vì Spatie đã có sẵn) ---

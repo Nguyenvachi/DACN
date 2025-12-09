@@ -79,6 +79,11 @@ class DashboardController extends Controller
             ->orderBy('thoi_gian_hen')
             ->get();
 
+        // === LỊCH HẸN CHỜ XÁC NHẬN ===
+        $pendingAppointments = LichHen::where('bac_si_id', $bacSi->id)
+            ->where('trang_thai', 'Chờ xác nhận')
+            ->count();
+
         // === BIỂU ĐỒ LỊCH HẸN 7 NGÀY QUA ===
         $appointmentsChart = [];
         for ($i = 6; $i >= 0; $i--) {
@@ -170,6 +175,7 @@ class DashboardController extends Controller
             'totalPatients',
             'avgRating',
             'totalReviews',
+            'pendingAppointments',
             'upcomingAppointments',
             'todayAppointments',
             'appointmentsChart',

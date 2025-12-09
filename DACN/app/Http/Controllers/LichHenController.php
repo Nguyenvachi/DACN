@@ -13,14 +13,19 @@ use Illuminate\Support\Facades\DB;
 use App\Services\LichKhamService;
 use App\Models\HoaDon;
 use App\Services\RoomAvailabilityService;
+use App\Services\MedicalWorkflowService;
 
 class LichHenController extends Controller
 {
     protected $roomService;
+    protected $workflowService;
 
-    public function __construct(RoomAvailabilityService $roomService)
-    {
+    public function __construct(
+        RoomAvailabilityService $roomService,
+        MedicalWorkflowService $workflowService
+    ) {
         $this->roomService = $roomService;
+        $this->workflowService = $workflowService;
     }
     public function create(BacSi $bacSi)
     {
@@ -85,40 +90,48 @@ class LichHenController extends Controller
             return redirect()->back()->withErrors(['thoi_gian_hen' => 'Khung giờ đã bị đặt bởi người khác, vui lòng chọn khung giờ khác'])->withInput();
         }
 
-        // Bổ sung lớp service để kiểm tra xung đột nâng cao (lịch nghỉ, ca điều chỉnh, và chính bệnh nhân)
+        // ✅ KIỂM TRA XUNG ĐỘT BÁC SĨ (lịch nghỉ, ca điều chỉnh, lịch hẹn khác)
         $svc = app(LichKhamService::class);
         $doctorCheck = $svc->hasConflictForDoctor($bacSiId, $date, $validatedData['thoi_gian_hen'], $duration, null);
         if ($doctorCheck['conflict']) {
             return redirect()->back()->withErrors(['thoi_gian_hen' => $doctorCheck['details'][0] ?? 'Khung giờ không khả dụng'])->withInput();
         }
+
+        // ✅ KIỂM TRA XUNG ĐỘT BỆNH NHÂN (không cho đặt 2 lịch trùng giờ)
         $patientCheck = $svc->hasPatientConflict(Auth::id(), $date, $validatedData['thoi_gian_hen'], $duration, null);
         if ($patientCheck['conflict']) {
-            return redirect()->back()->withErrors(['thoi_gian_hen' => $patCheck['details'][0] ?? 'Bạn đã có lịch trong khung giờ này'])->withInput();
+            return redirect()->back()->withErrors(['thoi_gian_hen' => $patientCheck['details'][0] ?? 'Bạn đã có lịch trong khung giờ này'])->withInput();
         }
 
         // ✅ KIỂM TRA XUNG ĐỘT PHÒNG
-        $lichLamViec = LichLamViec::where('bac_si_id', $bacSiId)
+        $lichLamViecPhong = LichLamViec::where('bac_si_id', $bacSiId)
             ->where('ngay_trong_tuan', $weekday)
             ->first();
 
-        if ($lichLamViec && $lichLamViec->phong_id) {
+        if ($lichLamViecPhong && $lichLamViecPhong->phong_id) {
             $timeStart = Carbon::parse($date . ' ' . $validatedData['thoi_gian_hen']);
             $timeEnd = $timeStart->copy()->addMinutes($duration);
 
             $roomConflict = $this->roomService->checkRoomConflict(
-                $lichLamViec->phong_id,
+                $lichLamViecPhong->phong_id,
                 $timeStart,
-                $timeEnd
+                $timeEnd,
+                null, // ignoreLichHenId
+                null, // ignoreLichLamViecId
+                $bacSiId // ignoreBacSiId - Loại trừ bác sĩ đang đặt lịch
             );
 
             if ($roomConflict['conflict']) {
-                $message = 'Phòng "' . ($lichLamViec->phong->ten ?? '') . '" đã bị đặt trong khung giờ này';
+                $message = 'Phòng "' . ($lichLamViecPhong->phong->ten ?? 'N/A') . '" đã bị đặt trong khung giờ này';
                 if (!empty($roomConflict['details'])) {
                     $message .= ': ' . $roomConflict['details'][0];
                 }
                 return redirect()->back()->withErrors(['thoi_gian_hen' => $message])->withInput();
             }
-        }        $lichHen = null; // THÊM: Declare variable
+        }
+
+        // ✅ TẠO LỊCH HẸN TRONG TRANSACTION
+        $lichHen = null;
         DB::transaction(function () use ($validatedData, &$lichHen) {
             // THÊM: Lấy giá dịch vụ để lưu vào tong_tien
             $dichVu = DichVu::find($validatedData['dich_vu_id']);
@@ -132,8 +145,7 @@ class LichHenController extends Controller
                 'ngay_hen' => $validatedData['ngay_hen'],
                 'thoi_gian_hen' => $validatedData['thoi_gian_hen'],
                 'ghi_chu' => $validatedData['ghi_chu'] ?? null,
-                // Đổi 'pending' thành 'Chờ xác nhận' để thống nhất với migration
-                'trang_thai' => 'Chờ xác nhận',
+                'trang_thai' => 'Chờ xác nhận', // Trạng thái ban đầu
             ]);
 
             // THÊM: Tự động tạo hóa đơn luôn
@@ -173,7 +185,7 @@ class LichHenController extends Controller
     public function edit(LichHen $lichHen)
     {
         abort_unless($lichHen->user_id === Auth::id(), 403);
-        abort_unless(in_array($lichHen->trang_thai, ['pending', 'confirmed']), 403);
+        abort_unless(in_array($lichHen->trang_thai, ['Chờ xác nhận', 'Đã xác nhận']), 403);
 
         return view('public.lichhen.edit', compact('lichHen'));
     }
@@ -218,7 +230,8 @@ class LichHenController extends Controller
             ->first();
 
         if ($lichLamViec && $lichLamViec->phong_id) {
-            $timeStart = Carbon::parse($request->ngay_hen . ' ' . $request->thoi_gian_hen);
+            $dateOnly = $request->ngay_hen instanceof \Carbon\Carbon ? $request->ngay_hen->format('Y-m-d') : (string)$request->ngay_hen;
+            $timeStart = Carbon::parse($dateOnly . ' ' . ($request->thoi_gian_hen ?? '00:00:00'));
             $timeEnd = $timeStart->copy()->addMinutes($duration);
 
             $roomConflict = $this->roomService->checkRoomConflict(
@@ -487,4 +500,51 @@ class LichHenController extends Controller
         $dichVus = DichVu::orderBy('ten')->get(['id','ten','thoi_gian_uoc_tinh']);
         return view('public.lichhen.calendar', compact('bacSis','dichVus'));
     }
+
+    /**
+     * =====================================================
+     * WORKFLOW METHODS - Theo quy trình nghiệp vụ y tế
+     * =====================================================
+     */
+
+    /**
+     * Bước 4: Bệnh nhân check-in khi đến phòng khám
+     */
+    public function checkIn(LichHen $lichHen)
+    {
+        // Kiểm tra quyền
+        if ($lichHen->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Không có quyền'], 403);
+        }
+
+        $result = $this->workflowService->checkInAppointment($lichHen);
+
+        if ($result) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Check-in thành công! Vui lòng chờ bác sĩ gọi khám.',
+                'status' => $lichHen->fresh()->trang_thai,
+            ]);
+        }
+
+        return response()->json([
+            'error' => 'Không thể check-in. Lịch hẹn chưa được xác nhận.',
+        ], 400);
+    }
+
+    /**
+     * Xem chi tiết lịch hẹn
+     */
+    public function show(LichHen $lichHen)
+    {
+        // Kiểm tra quyền
+        if ($lichHen->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $lichHen->load(['bacSi.user', 'dichVu', 'hoaDon', 'benhAn']);
+
+        return view('patient.lichhen.show', compact('lichHen'));
+    }
 }
+

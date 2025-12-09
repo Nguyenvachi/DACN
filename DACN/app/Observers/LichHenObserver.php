@@ -14,8 +14,8 @@ class LichHenObserver
     {
         if ($lichHen->wasChanged('trang_thai')) {
             $newStatus = $lichHen->trang_thai;
-            
-            // Tạo hóa đơn khi xác nhận (nếu chưa có)
+
+            // Tạo hóa đơn khi xác nhận (nếu chưa có) - GIỮ NGUYÊN TIẾNG VIỆT
             if ($newStatus === 'Đã xác nhận') {
                 if (! $lichHen->hoaDon) {
                     HoaDon::create([
@@ -31,21 +31,27 @@ class LichHenObserver
                     $lichHen->payment_status = 'Chưa thanh toán';
                     $lichHen->saveQuietly();
                 }
-                
-                // THÊM: Gửi email xác nhận
+
+                // ✅ Gửi email xác nhận (đồng bộ để tránh lỗi hiển thị)
                 if ($lichHen->user && $lichHen->user->email) {
-                    // SỬA: Eager load dichVu và bacSi trước khi gửi email
-                    $lichHen->load(['dichVu', 'bacSi']);
-                    Mail::to($lichHen->user->email)->queue(new LichHenDaXacNhan($lichHen));
+                    try {
+                        $lichHen->load(['dichVu', 'bacSi', 'bacSi.chuyenKhoas']);
+                        Mail::to($lichHen->user->email)->send(new LichHenDaXacNhan($lichHen));
+                    } catch (\Exception $e) {
+                        \Log::warning('Failed to send confirmation email: ' . $e->getMessage());
+                    }
                 }
             }
-            
-            // THÊM: Gửi email khi hủy
+
+            // ✅ Gửi email khi hủy (đồng bộ để tránh lỗi hiển thị)
             if ($newStatus === 'Đã hủy') {
                 if ($lichHen->user && $lichHen->user->email) {
-                    // SỬA: Eager load dichVu và bacSi trước khi gửi email
-                    $lichHen->load(['dichVu', 'bacSi']);
-                    Mail::to($lichHen->user->email)->queue(new LichHenBiHuy($lichHen, 'Lịch hẹn đã bị hủy'));
+                    try {
+                        $lichHen->load(['dichVu', 'bacSi', 'bacSi.chuyenKhoas']);
+                        Mail::to($lichHen->user->email)->send(new LichHenBiHuy($lichHen, 'Lịch hẹn đã bị hủy'));
+                    } catch (\Exception $e) {
+                        \Log::warning('Failed to send cancellation email: ' . $e->getMessage());
+                    }
                 }
             }
         }

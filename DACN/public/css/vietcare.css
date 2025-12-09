@@ -1,0 +1,399 @@
+/* =========================================================
+   VIETCARE DESIGN SYSTEM 2025
+   Tối ưu hóa giao diện – đồng bộ – hiện đại – chuẩn Medical UI
+   ========================================================= */
+
+:root {
+  --vc-green-500: #10b981;
+  --vc-green-600: #059669;
+  --vc-green-400: #34d399;
+  --vc-dark: #1f2937;
+  --vc-muted: #6b7280;
+  --vc-bg: #f9fafb;
+  --vc-white: #ffffff;
+
+  --vc-radius: 16px;
+  --vc-shadow-sm: 0 4px 14px rgba(0,0,0,0.07);
+  --vc-shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+  --vc-shadow-lg: 0 18px 40px rgba(0,0,0,0.12);
+}
+
+/* -----------------------------------------
+   GLOBAL
+-------------------------------------------- */
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+  color: var(--vc-dark);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* -----------------------------------------
+   NAVBAR
+-------------------------------------------- */
+.vc-navbar {
+  background: rgba(255,255,255,0.96);
+  box-shadow: var(--vc-shadow-sm);
+  padding: 1rem 0;
+  backdrop-filter: blur(10px);
+}
+
+.vc-brand {
+  color: var(--vc-green-500);
+  font-weight: 800;
+  font-size: 1.45rem;
+}
+
+.vc-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg,var(--vc-green-500),var(--vc-green-600));
+  color: white;
+  font-size: 1.1rem;
+}
+
+/* -----------------------------------------
+   BUTTONS
+-------------------------------------------- */
+.vc-btn-primary {
+  background: linear-gradient(135deg,var(--vc-green-500),var(--vc-green-600));
+  color: white;
+  border-radius: 12px;
+  padding: .6rem 1.2rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  transition: 0.25s ease;
+}
+.vc-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vc-shadow-md);
+}
+
+.vc-btn-white-lg {
+  background: white;
+  color: var(--vc-green-600);
+  padding: .9rem 2rem;
+  border-radius: 14px;
+  font-size: 1rem;
+  border: 1px solid #e5e7eb;
+  font-weight: 700;
+  transition: .25s;
+}
+.vc-btn-white-lg:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vc-shadow-md);
+}
+
+/* Added: Outline large button */
+.vc-btn-outline-lg {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: .85rem 2rem;
+  border-radius: 14px;
+  font-weight: 700;
+  transition: 0.25s ease;
+}
+.vc-btn-outline-lg:hover {
+  background: white;
+  color: var(--vc-green-600);
+  box-shadow: var(--vc-shadow-md);
+  transform: translateY(-2px);
+}
+
+/* -----------------------------------------
+   HERO SECTION
+-------------------------------------------- */
+.vc-hero {
+  background: linear-gradient(135deg,var(--vc-green-500),var(--vc-green-600));
+  padding: 110px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.vc-hero-title {
+  font-size: 3.4rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1.07;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+  animation: fadeUp .6s ease;
+}
+
+.vc-hero-sub {
+  color: rgba(255,255,255,0.95);
+  font-size: 1.15rem;
+  max-width: 540px;
+  margin-bottom: 2rem;
+}
+
+.vc-hero-illustration {
+  font-size: 20rem;
+  opacity: .15;
+  color: white;
+}
+
+/* HERO STATS */
+.vc-hero-stats {
+  display: flex;
+  gap: 3rem;
+  margin-top: 2.2rem;
+}
+.vc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.vc-stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  display: block;
+}
+.vc-stat-label {
+  opacity: 0.9;
+  color: rgba(255,255,255,0.95);
+  font-size: 0.95rem;
+}
+
+/* -----------------------------------------
+   FEATURE CARDS
+-------------------------------------------- */
+.feature-card {
+  background: white;
+  border-radius: var(--vc-radius);
+  padding: 2rem;
+  box-shadow: var(--vc-shadow-sm);
+  transition: .25s ease;
+  border: 1px solid #f1f5f9;
+}
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--vc-shadow-md);
+  border-color: var(--vc-green-400);
+}
+
+.vc-feature-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  color: white;
+  background: linear-gradient(135deg,var(--vc-green-500),var(--vc-green-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 1rem;
+}
+
+/* -----------------------------------------
+   SECTION TITLES
+-------------------------------------------- */
+.vc-section-title {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: .4rem;
+}
+
+.vc-section-sub {
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--vc-muted);
+  margin-bottom: 3rem;
+}
+
+/* -----------------------------------------
+   PROCESS (NEW)
+-------------------------------------------- */
+.vc-process-item {
+  text-align: center;
+  padding: 1rem;
+}
+
+.vc-process-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,var(--vc-green-500),var(--vc-green-600));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin: 0 auto;
+  box-shadow: var(--vc-shadow-sm);
+}
+
+/* -----------------------------------------
+   ACHIEVEMENTS
+-------------------------------------------- */
+.vc-achieve-number {
+  color: var(--vc-green-600);
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+/* NEW */
+.vc-achieve-icon {
+  font-size: 3rem;
+  color: var(--vc-green-600);
+}
+
+/* -----------------------------------------
+   DOCTOR CARD
+-------------------------------------------- */
+.doctor-card {
+  border-radius: var(--vc-radius);
+  overflow:hidden;
+  box-shadow: var(--vc-shadow-sm);
+  transition:.25s;
+  border:1px solid #e5e7eb;
+}
+.doctor-card:hover {
+  transform:translateY(-10px);
+  box-shadow:var(--vc-shadow-md);
+}
+.doctor-card .doctor-image{
+  height:240px;
+  background:linear-gradient(135deg,var(--vc-green-500),var(--vc-green-600));
+}
+
+/* -----------------------------------------
+   SERVICE CARD
+-------------------------------------------- */
+.service-card {
+  border-radius: var(--vc-radius);
+  padding: 1.6rem;
+  border-left: 5px solid var(--vc-green-500);
+  background: white;
+  transition: .25s;
+}
+.service-card:hover {
+  transform: translateX(8px);
+  box-shadow: var(--vc-shadow-md);
+}
+
+/* NEW: service icon */
+.service-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 14px;
+  background: #f0fdf4;
+  color: var(--vc-green-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--vc-shadow-sm);
+}
+
+/* -----------------------------------------
+   CTA
+-------------------------------------------- */
+.vc-cta {
+  background: linear-gradient(135deg,var(--vc-green-500),var(--vc-green-600));
+  color: white;
+  padding: 70px 0;
+  text-align:center;
+}
+.vc-cta-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+
+/* ============================
+      BEAUTIFUL FOOTER UI
+   ============================ */
+.vc-footer {
+  background: #0d1525;
+  color: #e2e8f0;
+  padding: 70px 0 35px;
+  font-size: 0.97rem;
+}
+
+.vc-footer-brand {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--vc-green-500);
+}
+
+.vc-footer-title {
+  color: var(--vc-green-500);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-size: 1.15rem;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 0.55rem;
+  line-height: 1.4;
+}
+
+.footer-column a {
+  color: #d1d5db !important;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.footer-column a:hover {
+  color: var(--vc-green-400) !important;
+  padding-left: 4px;
+}
+
+.vc-footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 45px;
+  padding-top: 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: .9rem;
+}
+
+/* Icons */
+.footer-column li i {
+  color: var(--vc-green-500);
+}
+
+/* -----------------------------------------
+   ANIMATIONS
+-------------------------------------------- */
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* -----------------------------------------
+   RESPONSIVE FIXES
+-------------------------------------------- */
+@media (max-width:992px){
+  .vc-hero-title{ font-size:2.4rem; }
+  .vc-hero-illustration{ font-size:12rem; }
+  .vc-hero-stats{
+    flex-direction:column;
+    gap:1.2rem;
+  }
+}
+
+/* Extra: Fix large icon on mobile */
+@media (max-width:768px){
+  .vc-hero .fa-stethoscope {
+    font-size: 8rem !important;
+    opacity: 0.1;
+    margin-top: 40px;
+  }
+}

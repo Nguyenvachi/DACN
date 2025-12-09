@@ -15,7 +15,7 @@
 
         {{-- ============================
          🔥 BỘ LỌC NGÀY
-    ============================= --}} 
+    ============================= --}}
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
                 <form id="rangeForm" class="row g-3 align-items-end">
@@ -73,78 +73,119 @@
         {{-- ============================
          🔥 KPI CARDS (MỞ RỘNG: Hiển thị % thay đổi thực - Parent: resources/views/admin/dashboard/index.blade.php)
     ============================= --}}
+        {{-- ENHANCED: Modern gradient stat cards with VietCare design (Parent: resources/views/admin/dashboard/index.blade.php) --}}
         <div class="row g-4 mb-4">
 
             {{-- Tổng lịch hẹn --}}
             <div class="col-lg-4 col-md-6">
-                <div class="card border-0 shadow-sm h-100 card-hover">
-                    <div class="card-body d-flex">
-                        <div class="avatar bg-primary bg-opacity-10 text-primary me-3 rounded-3">
-                            <i class="bi bi-calendar-check fs-3"></i>
+                <div class="card border-0 h-100 stat-card-modern"
+                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                    <div class="card-body text-white p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="p-3 rounded-circle bg-white bg-opacity-25 backdrop-blur">
+                                    <i class="bi bi-calendar-check fs-2 text-white"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Tổng lịch hẹn</p>
+                                <h3 class="mb-0 fw-bold text-white">{{ number_format($summary['appointments']) }}</h3>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-muted small mb-1">Tổng lịch hẹn</h6>
-                            <h3 class="fw-bold">{{ number_format($summary['appointments']) }}</h3>
-                            @php
-                                $change = $comparison['changes']['appointments'] ?? 0;
-                                $color = $change >= 0 ? 'success' : 'danger';
-                                $icon = $change >= 0 ? 'arrow-up' : 'arrow-down';
-                            @endphp
-                            <small class="text-{{ $color }}">
-                                <i class="bi bi-{{ $icon }}"></i> {{ abs($change) }}% so với kỳ trước
-                            </small>
-                        </div>
+                        @php
+                            $change = $comparison['changes']['appointments'] ?? 0;
+                        @endphp
+                        @if ($change != 0)
+                            <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
+                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center">
+                                    <i class="bi {{ $change > 0 ? 'bi-arrow-up' : 'bi-arrow-down' }} me-1"></i>
+                                    <span class="small fw-bold">{{ abs($change) }}%</span>
+                                </div>
+                                <span class="text-white text-opacity-75 small ms-2">so với kỳ trước</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
 
             {{-- Doanh thu --}}
             <div class="col-lg-4 col-md-6">
-                <div class="card border-0 shadow-sm h-100 card-hover">
-                    <div class="card-body d-flex">
-                        <div class="avatar bg-success bg-opacity-10 text-success me-3 rounded-3">
-                            <i class="bi bi-currency-dollar fs-3"></i>
+                <div class="card border-0 h-100 stat-card-modern"
+                     style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                    <div class="card-body text-white p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="p-3 rounded-circle bg-white bg-opacity-25 backdrop-blur">
+                                    <i class="bi bi-currency-dollar fs-2 text-white"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Doanh thu</p>
+                                <h3 class="mb-0 fw-bold text-white">{{ number_format($summary['revenue'], 0, ',', '.') }}đ</h3>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-muted small mb-1">Doanh thu</h6>
-                            <h3 class="fw-bold">{{ number_format($summary['revenue'], 0, ',', '.') }}đ</h3>
-                            @php
-                                $change = $comparison['changes']['revenue'] ?? 0;
-                                $color = $change >= 0 ? 'success' : 'danger';
-                                $icon = $change >= 0 ? 'arrow-up' : 'arrow-down';
-                            @endphp
-                            <small class="text-{{ $color }}">
-                                <i class="bi bi-{{ $icon }}"></i> {{ abs($change) }}% so với kỳ trước
-                            </small>
-                        </div>
+                        @php
+                            $change = $comparison['changes']['revenue'] ?? 0;
+                        @endphp
+                        @if ($change != 0)
+                            <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
+                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center">
+                                    <i class="bi {{ $change > 0 ? 'bi-arrow-up' : 'bi-arrow-down' }} me-1"></i>
+                                    <span class="small fw-bold">{{ abs($change) }}%</span>
+                                </div>
+                                <span class="text-white text-opacity-75 small ms-2">so với kỳ trước</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
 
             {{-- Hóa đơn --}}
             <div class="col-lg-4 col-md-6">
-                <div class="card border-0 shadow-sm h-100 card-hover">
-                    <div class="card-body d-flex">
-                        <div class="avatar bg-info bg-opacity-10 text-info me-3 rounded-3">
-                            <i class="bi bi-receipt fs-3"></i>
+                <div class="card border-0 h-100 stat-card-modern"
+                     style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
+                    <div class="card-body text-white p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="p-3 rounded-circle bg-white bg-opacity-25 backdrop-blur">
+                                    <i class="bi bi-receipt fs-2 text-white"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Hóa đơn đã thanh toán</p>
+                                <h3 class="mb-0 fw-bold text-white">{{ number_format($summary['paid_invoices']) }}</h3>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="text-muted small mb-1">Hóa đơn đã thanh toán</h6>
-                            <h3 class="fw-bold">{{ number_format($summary['paid_invoices']) }}</h3>
-                            @php
-                                $change = $comparison['changes']['paid_invoices'] ?? 0;
-                                $color = $change >= 0 ? 'success' : 'danger';
-                                $icon = $change >= 0 ? 'arrow-up' : 'arrow-down';
-                            @endphp
-                            <small class="text-{{ $color }}">
-                                <i class="bi bi-{{ $icon }}"></i> {{ abs($change) }}% so với kỳ trước
-                            </small>
-                        </div>
+                        @php
+                            $change = $comparison['changes']['paid_invoices'] ?? 0;
+                        @endphp
+                        @if ($change != 0)
+                            <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
+                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center">
+                                    <i class="bi {{ $change > 0 ? 'bi-arrow-up' : 'bi-arrow-down' }} me-1"></i>
+                                    <span class="small fw-bold">{{ abs($change) }}%</span>
+                                </div>
+                                <span class="text-white text-opacity-75 small ms-2">so với kỳ trước</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
 
         </div>
+
+        {{-- Hover effect for stat cards --}}
+        <style>
+            .stat-card-modern {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .stat-card-modern:hover {
+                transform: translateY(-5px);
+            }
+            .backdrop-blur {
+                backdrop-filter: blur(10px);
+            }
+        </style>
 
 
         {{-- ============================

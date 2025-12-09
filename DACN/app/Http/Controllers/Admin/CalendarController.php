@@ -261,9 +261,10 @@ class CalendarController extends Controller
 
         foreach ($appointments as $a) {
             try {
-                $s = \Carbon\Carbon::parse($a->ngay_hen.' '.($a->thoi_gian_hen ?: '00:00'));
+                $dateOnly = $a->ngay_hen instanceof \Carbon\Carbon ? $a->ngay_hen->format('Y-m-d') : (string)$a->ngay_hen;
+                $s = \Carbon\Carbon::parse($dateOnly . ' ' . ($a->thoi_gian_hen ?: '00:00'));
             } catch (\Throwable) {
-                $s = \Carbon\Carbon::parse($a->ngay_hen.' 00:00');
+                $s = \Carbon\Carbon::parse((string)$a->ngay_hen . ' 00:00');
             }
             $e = (clone $s)->addMinutes(\App\Services\LichKhamService::DEFAULT_APPT_MINUTES);
 
