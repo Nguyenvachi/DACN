@@ -45,7 +45,7 @@
                                 <tr>
                                     <td class="fw-semibold">
                                         <i class="fas fa-id-badge text-primary me-1"></i>
-                                        {{ $role->name }}
+                                        {{ \Illuminate\Support\Facades\Lang::has('roles.' . $role->name) ? __('roles.' . $role->name) : $role->name }}
                                     </td>
 
                                     <td>

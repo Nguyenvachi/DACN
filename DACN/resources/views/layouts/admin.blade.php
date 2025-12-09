@@ -16,6 +16,9 @@
     @stack('meta')
     @stack('styles')
 
+    <!-- ADDED: Unified design system (keeps and extends existing styles) -->
+    <link rel="stylesheet" href="{{ asset('css/design-system-unified.css') }}">
+
     <style>
         html {
             scroll-behavior: auto;

@@ -200,7 +200,7 @@ class MedicalWorkflowService
                 'lich_hen_id' => $lichHen->id,
                 'user_id' => $lichHen->user_id,
                 'tong_tien' => $tongTien,
-                'trang_thai' => 'Chưa thanh toán',
+                'trang_thai' => HoaDon::STATUS_UNPAID_VN,
             ]);
         }
 

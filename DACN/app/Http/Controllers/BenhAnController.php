@@ -73,7 +73,7 @@ class BenhAnController extends Controller
         // Lấy lịch hẹn với thông tin đầy đủ
         $appointments = LichHen::with('dichVu')
             ->when($doctorId, fn($q) => $q->where('bac_si_id', $doctorId))
-            ->whereIn('trang_thai', ['Đã xác nhận', 'Đã check-in', 'Đang khám'])
+            ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_CHECKED_IN_VN, \App\Models\LichHen::STATUS_IN_PROGRESS_VN])
             ->whereDate('ngay_hen', '>=', now()->subDays(7)) // Trong 7 ngày gần đây
             ->orderByDesc('ngay_hen')
             ->orderByDesc('thoi_gian_hen')

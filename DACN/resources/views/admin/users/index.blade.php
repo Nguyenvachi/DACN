@@ -38,7 +38,7 @@
                             <option value="">Tất cả vai trò</option>
                             @foreach ($roles as $role)
                                 <option value="{{ $role->name }}" {{ request('role') === $role->name ? 'selected' : '' }}>
-                                    {{ $role->name }}
+                                    {{ \Illuminate\Support\Facades\Lang::has('roles.' . $role->name) ? __('roles.' . $role->name) : $role->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -93,7 +93,7 @@
                                     {{-- Roles --}}
                                     <td>
                                         @forelse ($user->roles as $role)
-                                            <span class="badge bg-primary">{{ $role->name }}</span>
+                                            <span class="badge bg-primary">{{ \Illuminate\Support\Facades\Lang::has('roles.' . $role->name) ? __('roles.' . $role->name) : $role->name }}</span>
                                         @empty
                                             <span class="text-muted">Chưa gán</span>
                                         @endforelse

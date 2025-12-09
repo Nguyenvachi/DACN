@@ -17,6 +17,9 @@
 
     @stack('styles')
 
+    <!-- ADDED: Unified design system -->
+    <link rel="stylesheet" href="{{ asset('css/design-system-unified.css') }}">
+
     <style>
         /* ENHANCED: Modern VietCare Design System for Staff (Parent: layouts/staff.blade.php) */
         :root {

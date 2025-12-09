@@ -42,27 +42,27 @@
                         <div class="col-md-6">
                             <label class="text-muted small mb-1">Trạng thái</label>
                             <div>
-                                @if($lichHen->trang_thai === 'Chờ xác nhận')
+                                @if($lichHen->trang_thai === \App\Models\LichHen::STATUS_PENDING_VN)
                                     <span class="badge bg-warning fs-6">
                                         <i class="fas fa-clock me-1"></i>{{ $lichHen->trang_thai }}
                                     </span>
-                                @elseif($lichHen->trang_thai === 'Đã xác nhận')
+                                @elseif($lichHen->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
                                     <span class="badge bg-success fs-6">
                                         <i class="fas fa-check-circle me-1"></i>{{ $lichHen->trang_thai }}
                                     </span>
-                                @elseif($lichHen->trang_thai === 'Đã check-in')
+                                @elseif($lichHen->trang_thai === \App\Models\LichHen::STATUS_CHECKED_IN_VN)
                                     <span class="badge bg-info fs-6">
                                         <i class="fas fa-user-check me-1"></i>{{ $lichHen->trang_thai }}
                                     </span>
-                                @elseif($lichHen->trang_thai === 'Đang khám')
+                                @elseif($lichHen->trang_thai === \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
                                     <span class="badge bg-primary fs-6">
                                         <i class="fas fa-stethoscope me-1"></i>{{ $lichHen->trang_thai }}
                                     </span>
-                                @elseif($lichHen->trang_thai === 'Hoàn thành')
+                                @elseif($lichHen->trang_thai === \App\Models\LichHen::STATUS_COMPLETED_VN)
                                     <span class="badge bg-success fs-6">
                                         <i class="fas fa-check-double me-1"></i>{{ $lichHen->trang_thai }}
                                     </span>
-                                @elseif($lichHen->trang_thai === 'Đã hủy')
+                                @elseif($lichHen->trang_thai === \App\Models\LichHen::STATUS_CANCELLED_VN)
                                     <span class="badge bg-danger fs-6">
                                         <i class="fas fa-times-circle me-1"></i>{{ $lichHen->trang_thai }}
                                     </span>
@@ -225,7 +225,7 @@
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        @if($lichHen->trang_thai === 'Chờ xác nhận')
+                        @if($lichHen->trang_thai === \App\Models\LichHen::STATUS_PENDING_VN)
                         <form action="{{ route('doctor.lichhen.confirm', $lichHen->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
@@ -242,7 +242,7 @@
                         </form>
                         @endif
 
-                        @if($lichHen->trang_thai === 'Đã xác nhận')
+                        @if($lichHen->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
                         <a href="{{ route('doctor.benhan.create', ['lich_hen_id' => $lichHen->id, 'user_id' => $lichHen->user_id]) }}"
                            class="btn btn-primary w-100">
                             <i class="fas fa-file-medical me-2"></i>Tạo bệnh án

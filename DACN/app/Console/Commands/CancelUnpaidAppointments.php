@@ -26,7 +26,7 @@ class CancelUnpaidAppointments extends Command
             $unpaidAppointments = LichHen::where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)
             ->where('created_at', '<=', $timeout)
             ->whereHas('hoaDon', function($query) {
-                $query->where('trang_thai', 'Chưa thanh toán');
+                $query->where('trang_thai', \App\Models\HoaDon::STATUS_UNPAID_VN);
             })
             ->get();
 
@@ -39,7 +39,7 @@ class CancelUnpaidAppointments extends Command
 
                 // Hủy hóa đơn
                 if ($lichHen->hoaDon) {
-                    $lichHen->hoaDon->update(['trang_thai' => 'Đã hủy']);
+                    $lichHen->hoaDon->update(['trang_thai' => \App\Models\HoaDon::STATUS_CANCELLED_VN]);
                 }
 
                 $canceledCount++;

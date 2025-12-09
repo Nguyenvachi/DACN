@@ -14,6 +14,9 @@
     <!-- VietCare site css (tách riêng để đồng bộ) -->
     <link rel="stylesheet" href="{{ asset('css/vietcare.css') }}">
 
+    <!-- ADDED: Unified design system for consistent pages -->
+    <link rel="stylesheet" href="{{ asset('css/design-system-unified.css') }}">
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 

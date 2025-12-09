@@ -26,10 +26,10 @@ class ReportService
             'appointments' => LichHen::whereBetween('ngay_hen', [$from, $to])->count(),
             // SỮA: Dùng updated_at thay vì created_at để bắt được thanh toán
             'revenue' => HoaDon::whereBetween('updated_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
-                ->where('trang_thai', 'Đã thanh toán')
+                ->where('trang_thai', HoaDon::STATUS_PAID_VN)
                 ->sum('tong_tien'),
             'paid_invoices' => HoaDon::whereBetween('updated_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
-                ->where('trang_thai', 'Đã thanh toán')
+                ->where('trang_thai', HoaDon::STATUS_PAID_VN)
                 ->count(),
         ];
     }
@@ -68,7 +68,7 @@ class ReportService
             ->join('dich_vus', 'lich_hens.dich_vu_id', '=', 'dich_vus.id')
             // SỮA: Dùng updated_at thay vì created_at
             ->whereBetween('hoa_dons.updated_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
-            ->where('hoa_dons.trang_thai', 'Đã thanh toán')
+            ->where('hoa_dons.trang_thai', HoaDon::STATUS_PAID_VN)
             ->selectRaw('dich_vus.ten_dich_vu as label, SUM(hoa_dons.tong_tien) as total')
             ->groupBy('dich_vus.id', 'dich_vus.ten_dich_vu')
             ->get()
@@ -84,7 +84,7 @@ class ReportService
             ->join('bac_sis', 'lich_hens.bac_si_id', '=', 'bac_sis.id')
             // SỮA: Dùng updated_at thay vì created_at
             ->whereBetween('hoa_dons.updated_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
-            ->where('hoa_dons.trang_thai', 'Đã thanh toán')
+            ->where('hoa_dons.trang_thai', HoaDon::STATUS_PAID_VN)
             ->selectRaw('bac_sis.ho_ten as label, SUM(hoa_dons.tong_tien) as total')
             ->groupBy('bac_sis.id', 'bac_sis.ho_ten')
             ->get()
@@ -98,7 +98,7 @@ class ReportService
 
         // SỬA: Dùng updated_at thay vì created_at
         return HoaDon::whereBetween('updated_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
-            ->where('trang_thai', 'Đã thanh toán')
+            ->where('trang_thai', HoaDon::STATUS_PAID_VN)
             ->selectRaw('phuong_thuc as label, SUM(tong_tien) as total')
             ->groupBy('phuong_thuc')
             ->get()
@@ -206,16 +206,16 @@ class ReportService
         $cacheKey = "report_medicine_sales_{$from}_{$to}_{$limit}";
 
         return Cache::remember($cacheKey, 300, function () use ($from, $to, $limit) {
-            // Tổng doanh thu thuốc
+            // Tổng doanh thu thuốc (chỉ tính các đơn "Hoàn thành")
             $totalRevenue = DonHang::whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
-                ->where('trang_thai', 'Hoàn thành')
+                ->where('trang_thai', DonHang::STATUS_COMPLETED_VN)
                 ->sum('tong_tien');
 
             // Top thuốc bán chạy
             $topMedicines = DonHangItem::join('don_hangs', 'don_hang_items.don_hang_id', '=', 'don_hangs.id')
                 ->join('thuocs', 'don_hang_items.thuoc_id', '=', 'thuocs.id')
                 ->whereBetween('don_hangs.created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
-                ->where('don_hangs.trang_thai', 'Hoàn thành')
+                ->where('don_hangs.trang_thai', DonHang::STATUS_COMPLETED_VN)
                 ->selectRaw('
                     thuocs.ten as label,
                     SUM(don_hang_items.so_luong) as quantity,

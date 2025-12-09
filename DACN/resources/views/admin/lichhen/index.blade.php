@@ -85,10 +85,10 @@
                             <label class="form-label"><i class="bi bi-info-circle"></i> Trạng thái</label>
                             <select name="trang_thai" class="form-select">
                                 <option value="">-- Tất cả trạng thái --</option>
-                                <option value="Chờ xác nhận" {{ request('trang_thai') == 'Chờ xác nhận' ? 'selected' : '' }}>Chờ xác nhận</option>
-                                <option value="Đã xác nhận" {{ request('trang_thai') == 'Đã xác nhận' ? 'selected' : '' }}>Đã xác nhận</option>
-                                <option value="Đã hủy" {{ request('trang_thai') == 'Đã hủy' ? 'selected' : '' }}>Đã hủy</option>
-                                <option value="Hoàn thành" {{ request('trang_thai') == 'Hoàn thành' ? 'selected' : '' }}>Hoàn thành</option>
+                                <option value="{{ \App\Models\LichHen::STATUS_PENDING_VN }}" {{ request('trang_thai') == \App\Models\LichHen::STATUS_PENDING_VN ? 'selected' : '' }}>{{ \App\Models\LichHen::STATUS_PENDING_VN }}</option>
+                                <option value="{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}" {{ request('trang_thai') == \App\Models\LichHen::STATUS_CONFIRMED_VN ? 'selected' : '' }}>{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}</option>
+                                <option value="{{ \App\Models\LichHen::STATUS_CANCELLED_VN }}" {{ request('trang_thai') == \App\Models\LichHen::STATUS_CANCELLED_VN ? 'selected' : '' }}>{{ \App\Models\LichHen::STATUS_CANCELLED_VN }}</option>
+                                <option value="{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}" {{ request('trang_thai') == \App\Models\LichHen::STATUS_COMPLETED_VN ? 'selected' : '' }}>{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}</option>
                             </select>
                         </div>
 
@@ -177,24 +177,24 @@
                                             <select name="trang_thai" class="form-select form-select-sm"
                                                 onchange="this.form.submit()">
 
-                                                <option value="Chờ xác nhận" class="text-warning fw-bold"
-                                                    @selected($lichHen->trang_thai == 'Chờ xác nhận')>
-                                                    Chờ xác nhận
+                                                <option value="{{ \App\Models\LichHen::STATUS_PENDING_VN }}" class="text-warning fw-bold"
+                                                    @selected($lichHen->trang_thai == \App\Models\LichHen::STATUS_PENDING_VN)>
+                                                    {{ \App\Models\LichHen::STATUS_PENDING_VN }}
                                                 </option>
 
-                                                <option value="Đã xác nhận" class="text-primary fw-bold"
-                                                    @selected($lichHen->trang_thai == 'Đã xác nhận')>
-                                                    Đã xác nhận
+                                                <option value="{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}" class="text-primary fw-bold"
+                                                    @selected($lichHen->trang_thai == \App\Models\LichHen::STATUS_CONFIRMED_VN)>
+                                                    {{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}
                                                 </option>
 
-                                                <option value="Đã hủy" class="text-danger fw-bold"
-                                                    @selected($lichHen->trang_thai == 'Đã hủy')>
-                                                    Đã hủy
+                                                <option value="{{ \App\Models\LichHen::STATUS_CANCELLED_VN }}" class="text-danger fw-bold"
+                                                    @selected($lichHen->trang_thai == \App\Models\LichHen::STATUS_CANCELLED_VN)>
+                                                    {{ \App\Models\LichHen::STATUS_CANCELLED_VN }}
                                                 </option>
 
-                                                <option value="Hoàn thành" class="text-success fw-bold"
-                                                    @selected($lichHen->trang_thai == 'Hoàn thành')>
-                                                    Hoàn thành
+                                                <option value="{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}" class="text-success fw-bold"
+                                                    @selected($lichHen->trang_thai == \App\Models\LichHen::STATUS_COMPLETED_VN)>
+                                                    {{ \App\Models\LichHen::STATUS_COMPLETED_VN }}
                                                 </option>
 
                                             </select>

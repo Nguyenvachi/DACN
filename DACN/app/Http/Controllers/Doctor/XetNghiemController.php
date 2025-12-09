@@ -36,7 +36,7 @@ class XetNghiemController extends Controller
 
         // Kiểm tra trạng thái lịch hẹn
         $lichHen = $benhAn->lichHen;
-        if (!$lichHen || !in_array($lichHen->trang_thai, ['Đang khám', 'Hoàn thành'])) {
+        if (!$lichHen || !in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_IN_PROGRESS_VN, \App\Models\LichHen::STATUS_COMPLETED_VN])) {
             return redirect()->back()->with('error', 'Chỉ chỉ định xét nghiệm khi đang khám hoặc đã hoàn thành');
         }
 

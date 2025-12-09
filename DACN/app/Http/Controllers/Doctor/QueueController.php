@@ -81,7 +81,10 @@ class QueueController extends Controller
         }
 
         // Check trạng thái (phải đã check-in hoặc đã xác nhận)
-        if (!in_array($lichHen->trang_thai, ['Đã check-in', 'Đã xác nhận'])) {
+        if (!in_array($lichHen->trang_thai, [
+            LichHen::STATUS_CHECKED_IN_VN,
+            LichHen::STATUS_CONFIRMED_VN
+        ])) {
             return back()->with('error', 'Bệnh nhân chưa check-in hoặc lịch hẹn không hợp lệ.');
         }
 
@@ -120,7 +123,7 @@ class QueueController extends Controller
             return back()->with('error', 'Bạn không có quyền check-in cho bệnh nhân này.');
         }
 
-        if ($lichHen->trang_thai !== 'Đã xác nhận') {
+        if ($lichHen->trang_thai !== LichHen::STATUS_CONFIRMED_VN) {
             return back()->with('error', 'Lịch hẹn chưa được xác nhận hoặc đã được xử lý.');
         }
 

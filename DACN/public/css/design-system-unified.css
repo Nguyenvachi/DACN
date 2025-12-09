@@ -1,0 +1,40 @@
+/* DESIGN SYSTEM UNIFIED - bổ sung để đồng bộ giao diện giữa các layout */
+:root{
+  --vc-primary: #10b981;
+  --vc-primary-dark: #059669;
+  --vc-secondary: #3b82f6;
+  --vc-radius-sm: 8px;
+  --vc-radius-md: 12px;
+  --vc-radius-lg: 16px;
+  --vc-shadow-sm: 0 6px 18px rgba(0,0,0,0.06);
+  --vc-shadow-md: 0 10px 28px rgba(0,0,0,0.08);
+  --vc-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Base */
+body { font-family: var(--vc-font); color: #1f2937; }
+
+/* Cards */
+.vc-card{ border-radius:var(--vc-radius-lg); box-shadow:var(--vc-shadow-sm); background:#fff; }
+
+/* Buttons */
+.vc-btn { border-radius: 12px; padding: .55rem 1rem; font-weight:700; display:inline-flex; align-items:center; gap:.5rem; }
+.vc-btn-primary { background: linear-gradient(135deg,var(--vc-primary),var(--vc-primary-dark)); color:#fff; border:none; }
+.vc-btn-outline { background:transparent; border:1px solid #e5e7eb; color:var(--vc-primary); }
+
+/* Form */
+.form-control-lg { padding: .65rem .9rem; border-radius: 10px; }
+
+/* Section title */
+.vc-section-title { font-size: 1.8rem; font-weight:800; color:var(--vc-primary); }
+
+/* Utility */
+.text-muted-vc{ color:#6b7280; }
+
+/* Small responsive helpers */
+@media (max-width:768px){
+  .vc-card{ border-radius:12px; }
+  .vc-section-title{ font-size:1.4rem; }
+}
+
+/* End design-system-unified.css */

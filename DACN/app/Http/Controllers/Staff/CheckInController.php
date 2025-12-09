@@ -65,13 +65,13 @@ class CheckInController extends Controller
             return back()->with('error', 'Lịch hẹn này không thể check-in. Trạng thái hiện tại: ' . $lichhen->trang_thai);
         }
 
-        // Check if appointment is today or within next 7 days
+        // Ensure appointment is for today — queue only shows today's checked-in appointments
+        // (Keeping pre-checkin for future dates caused confusion: staff check-in should apply on appointment date)
         $appointmentDate = Carbon::parse($lichhen->ngay_hen);
         $today = Carbon::today();
-        $maxDate = $today->copy()->addDays(7);
 
-        if ($appointmentDate->lt($today) || $appointmentDate->gt($maxDate)) {
-            return back()->with('error', 'Chỉ có thể check-in lịch hẹn từ hôm nay đến 7 ngày tới.');
+        if (! $appointmentDate->isToday()) {
+            return back()->with('error', 'Chỉ có thể check-in vào đúng ngày hẹn (hôm nay).');
         }
 
         // Update status to checked-in
@@ -80,12 +80,20 @@ class CheckInController extends Controller
             'checked_in_at' => now()
         ]);
 
-        // Log activity (use global helper with root namespace)
-        \activity()
-            ->performedOn($lichhen)
-            ->causedBy(auth()->user())
-            ->withProperties(['old_status' => \App\Models\LichHen::STATUS_CONFIRMED_VN, 'new_status' => \App\Models\LichHen::STATUS_CHECKED_IN_VN])
-            ->log('Nhân viên check-in bệnh nhân');
+        // Log activity (use global helper if available). Wrap in guard to avoid uncaught exceptions
+        if (function_exists('activity')) {
+            try {
+                activity()
+                    ->performedOn($lichhen)
+                    ->causedBy(auth()->user())
+                    ->withProperties(['old_status' => \App\Models\LichHen::STATUS_CONFIRMED_VN, 'new_status' => \App\Models\LichHen::STATUS_CHECKED_IN_VN])
+                    ->log('Nhân viên check-in bệnh nhân');
+            } catch (\Throwable $e) {
+                \Log::warning('Activity logging failed on check-in: ' . $e->getMessage());
+            }
+        } else {
+            \Log::warning('Activity helper not available; skipping activity log for check-in.');
+        }
 
         return back()->with('success', "Đã check-in thành công cho bệnh nhân {$lichhen->user->name}");
     }

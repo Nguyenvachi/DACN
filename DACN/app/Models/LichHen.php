@@ -140,7 +140,7 @@ class LichHen extends Model
 
     public function getThanhToanTrangThaiAttribute()
     {
-        return optional($this->hoaDon)->trang_thai ?? 'Chưa thanh toán';
+        return optional($this->hoaDon)->trang_thai ?? \App\Models\HoaDon::STATUS_UNPAID_VN;
     }
 
     /** Gợi ý tổng tiền nếu chưa có hóa đơn (dựa theo dịch vụ) */
@@ -151,13 +151,13 @@ class LichHen extends Model
 
     public function getIsPaidAttribute(): bool
     {
-        return ($this->payment_status === 'Đã thanh toán')
-            || (optional($this->hoaDon)->trang_thai === 'Đã thanh toán');
+        return ($this->payment_status === \App\Models\HoaDon::STATUS_PAID_VN)
+            || (optional($this->hoaDon)->trang_thai === \App\Models\HoaDon::STATUS_PAID_VN);
     }
 
     public function getPaymentLabelAttribute(): string
     {
         return $this->payment_status
-            ?? (optional($this->hoaDon)->trang_thai ?? 'Chưa thanh toán');
+            ?? (optional($this->hoaDon)->trang_thai ?? \App\Models\HoaDon::STATUS_UNPAID_VN);
     }
 }

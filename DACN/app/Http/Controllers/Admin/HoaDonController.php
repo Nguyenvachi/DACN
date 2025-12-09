@@ -37,7 +37,7 @@ class HoaDonController extends Controller
             [
                 'user_id'    => $lichHen->user_id ?? ($lichHen->benh_nhan_id ?? auth()->id()),
                 'tong_tien'  => $tongTien, // SỬA: Dùng giá từ lịch hẹn
-                'trang_thai' => 'Chưa thanh toán',
+                'trang_thai' => \App\Models\HoaDon::STATUS_UNPAID_VN,
                 'phuong_thuc' => null,
                 'ghi_chu'    => null,
             ]

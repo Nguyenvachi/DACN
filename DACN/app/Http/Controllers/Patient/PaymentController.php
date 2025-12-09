@@ -24,10 +24,10 @@ class PaymentController extends Controller
 
         // SỬA: Eager load dichVu và bacSi để hiển thị đầy đủ thông tin
         $lichHen->load(['dichVu', 'bacSi', 'hoaDon']);
-        
+
         // Lấy hóa đơn
         $hoaDon = $lichHen->hoaDon;
-        
+
         if (!$hoaDon) {
             return redirect()->route('lichhen.my')->with('error', 'Không tìm thấy hóa đơn cho lịch hẹn này');
         }
@@ -44,10 +44,10 @@ class PaymentController extends Controller
         abort_unless($lichHen->user_id === auth()->id(), 403);
 
         // THÊM: Hủy lịch hẹn và hóa đơn khi bỏ qua thanh toán
-        $lichHen->update(['trang_thai' => 'Đã hủy']);
-        
+        $lichHen->update(['trang_thai' => \App\Models\LichHen::STATUS_CANCELLED_VN]);
+
         if ($lichHen->hoaDon) {
-            $lichHen->hoaDon->update(['trang_thai' => 'Đã hủy']);
+            $lichHen->hoaDon->update(['trang_thai' => \App\Models\HoaDon::STATUS_CANCELLED_VN]);
         }
 
         return redirect()->route('lichhen.my')->with('warning', 'Lịch hẹn đã bị hủy do chưa hoàn tất thanh toán. Vui lòng đặt lại lịch nếu cần.');

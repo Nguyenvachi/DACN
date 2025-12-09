@@ -28,21 +28,21 @@ class PatientDashboardController extends Controller
             'upcoming_appointments' => LichHen::where('user_id', $user->id)
                 ->where('ngay_hen', '>=', Carbon::today())
                 ->whereIn('trang_thai', [
-                    'Chờ xác nhận',
-                    'Đã xác nhận',
-                    'Đã check-in',
-                    'Đang khám'
+                    \App\Models\LichHen::STATUS_PENDING_VN,
+                    \App\Models\LichHen::STATUS_CONFIRMED_VN,
+                    \App\Models\LichHen::STATUS_CHECKED_IN_VN,
+                    \App\Models\LichHen::STATUS_IN_PROGRESS_VN
                 ])
                 ->count(),
             'completed_appointments' => LichHen::where('user_id', $user->id)
-                ->where('trang_thai', 'Hoàn thành')
+                ->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)
                 ->count(),
             'pending_appointments' => LichHen::where('user_id', $user->id)
-                ->where('trang_thai', 'Chờ xác nhận')
+                ->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)
                 ->count(),
             'total_medical_records' => BenhAn::where('user_id', $user->id)->count(),
             'unpaid_invoices' => HoaDon::where('user_id', $user->id)
-                ->where('trang_thai', '!=', 'Đã thanh toán')
+                ->where('trang_thai', '!=', \App\Models\HoaDon::STATUS_PAID_VN)
                 ->count(),
             'total_prescriptions' => DonThuoc::whereHas('benhAn', function($q) use ($user) {
                 $q->where('user_id', $user->id);
@@ -54,10 +54,10 @@ class PatientDashboardController extends Controller
         $upcomingAppointments = LichHen::where('user_id', $user->id)
             ->where('ngay_hen', '>=', Carbon::today())
             ->whereIn('trang_thai', [
-                'Chờ xác nhận',
-                'Đã xác nhận',
-                'Đã check-in',
-                'Đang khám'
+                \App\Models\LichHen::STATUS_PENDING_VN,
+                \App\Models\LichHen::STATUS_CONFIRMED_VN,
+                \App\Models\LichHen::STATUS_CHECKED_IN_VN,
+                \App\Models\LichHen::STATUS_IN_PROGRESS_VN
             ])
             ->orderBy('ngay_hen')
             ->orderBy('thoi_gian_hen')

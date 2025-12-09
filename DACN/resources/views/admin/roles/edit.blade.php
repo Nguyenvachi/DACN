@@ -59,7 +59,24 @@
                                                 {{ in_array($permission->id, old('permissions', $rolePermissionIds)) ? 'checked' : '' }}>
 
                                             <label class="form-check-label" for="perm_{{ $permission->id }}">
-                                                {{ $permission->name }}
+                                                @php
+                                                    $pname = $permission->name;
+                                                    $candidates = [
+                                                        'permissions.' . $pname,
+                                                        'permissions.' . strtolower($pname),
+                                                        'permissions.' . str_replace(' ', '-', strtolower($pname)),
+                                                        'permissions.' . str_replace([' ', '-'], '_', strtolower($pname)),
+                                                    ];
+                                                    $label = null;
+                                                    foreach ($candidates as $k) {
+                                                        if (\Illuminate\Support\Facades\Lang::has($k)) {
+                                                            $label = __($k);
+                                                            break;
+                                                        }
+                                                    }
+                                                    $label = $label ?: ucwords(str_replace(['-','_'], ' ', $pname));
+                                                @endphp
+                                                {{ $label }}
                                             </label>
                                         </div>
                                     </div>

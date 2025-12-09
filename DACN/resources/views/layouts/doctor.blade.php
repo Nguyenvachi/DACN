@@ -19,6 +19,9 @@
 
     @stack('meta')
     @stack('styles')
+
+    <!-- ADDED: Unified design system -->
+    <link rel="stylesheet" href="{{ asset('css/design-system-unified.css') }}">
 </head>
 
 <body>
@@ -53,7 +56,7 @@
                     @php
                         $pendingCount = auth()->user()->bacSi
                             ? \App\Models\LichHen::where('bac_si_id', auth()->user()->bacSi->id)
-                                ->where('trang_thai', 'Chờ xác nhận')
+                                ->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)
                                 ->count()
                             : 0;
                     @endphp
@@ -71,7 +74,7 @@
                     @php
                         $queueCount = auth()->user()->bacSi
                             ? \App\Models\LichHen::where('bac_si_id', auth()->user()->bacSi->id)
-                                ->whereIn('trang_thai', ['Đã check-in', 'Đang khám'])
+                                ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_CHECKED_IN_VN, \App\Models\LichHen::STATUS_IN_PROGRESS_VN])
                                 ->whereDate('ngay_hen', today())
                                 ->count()
                             : 0;

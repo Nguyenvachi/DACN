@@ -74,7 +74,24 @@
 
                             @forelse ($permissions as $permission)
                                 <tr>
-                                    <td>{{ $permission->name }}</td>
+                                    @php
+                                        $pname = $permission->name;
+                                        $candidates = [
+                                            'permissions.' . $pname,
+                                            'permissions.' . strtolower($pname),
+                                            'permissions.' . str_replace(' ', '-', strtolower($pname)),
+                                            'permissions.' . str_replace([' ', '-'], '_', strtolower($pname)),
+                                        ];
+                                        $label = null;
+                                        foreach ($candidates as $k) {
+                                            if (\Illuminate\Support\Facades\Lang::has($k)) {
+                                                $label = __($k);
+                                                break;
+                                            }
+                                        }
+                                        $label = $label ?: ucwords(str_replace(['-','_'], ' ', $pname));
+                                    @endphp
+                                    <td>{{ $label }}</td>
                                     <td>{{ $permission->guard_name }}</td>
                                     <td>{{ $permission->created_at->format('d/m/Y') }}</td>
 

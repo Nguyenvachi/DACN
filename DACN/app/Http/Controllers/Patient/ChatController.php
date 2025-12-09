@@ -46,7 +46,7 @@ class ChatController extends Controller
         // Kiểm tra xem bệnh nhân có lịch hẹn với bác sĩ không
         $lichHen = LichHen::where('user_id', $userId)
                           ->where('bac_si_id', $bacSiId)
-                          ->whereIn('trang_thai', ['Đã xác nhận', 'Hoàn thành'])
+                          ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_COMPLETED_VN])
                           ->first();
 
         if (!$lichHen) {

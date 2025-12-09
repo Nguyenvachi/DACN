@@ -14,6 +14,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('meta')
     @stack('styles')
+
+    <!-- ADDED: Unified design system -->
+    <link rel="stylesheet" href="{{ asset('css/design-system-unified.css') }}">
 </head>
 
 <body class="font-sans antialiased">

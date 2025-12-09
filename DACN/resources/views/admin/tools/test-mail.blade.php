@@ -79,8 +79,8 @@
                                         <td>
                                             <span
                                                 class="badge
-                                            @if ($lh->trang_thai == 'Đã xác nhận') bg-success
-                                            @elseif($lh->trang_thai == 'Chờ xác nhận') bg-warning
+                                            @if ($lh->trang_thai == \App\Models\LichHen::STATUS_CONFIRMED_VN) bg-success
+                                            @elseif($lh->trang_thai == \App\Models\LichHen::STATUS_PENDING_VN) bg-warning
                                             @else bg-secondary @endif">
                                                 {{ $lh->trang_thai }}
                                             </span>

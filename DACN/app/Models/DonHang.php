@@ -9,6 +9,9 @@ class DonHang extends Model
 {
     use HasFactory;
 
+    // Trạng thái đơn hàng (nhãn tiếng Việt)
+    public const STATUS_COMPLETED_VN = 'Hoàn thành';
+
     protected $fillable = [
         'ma_don_hang', 'user_id', 'coupon_id', 'tong_tien', 'giam_gia', 'thanh_toan',
         'trang_thai', 'trang_thai_thanh_toan', 'dia_chi_giao', 'sdt_nguoi_nhan', 'ghi_chu',

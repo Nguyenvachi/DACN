@@ -22,13 +22,13 @@ class LichHenObserver
                         'lich_hen_id' => $lichHen->id,
                         'user_id' => $lichHen->user_id,
                         'tong_tien' => $lichHen->tong_tien ?? $lichHen->tongTienDeXuat,
-                        'trang_thai' => 'Chưa thanh toán',
+                        'trang_thai' => HoaDon::STATUS_UNPAID_VN,
                         'phuong_thuc' => null,
                         'ghi_chu' => 'Tự động tạo khi lịch hẹn được xác nhận',
                     ]);
                 }
                 if (is_null($lichHen->payment_status)) {
-                    $lichHen->payment_status = 'Chưa thanh toán';
+                    $lichHen->payment_status = HoaDon::STATUS_UNPAID_VN;
                     $lichHen->saveQuietly();
                 }
 

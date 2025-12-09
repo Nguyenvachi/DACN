@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\TestSendReminder::class,
         \App\Console\Commands\CancelUnpaidAppointments::class, // THÊM: Command tự động hủy lịch chưa thanh toán
         \App\Console\Commands\PublishScheduledPosts::class, // THÊM: Command tự động publish bài viết
+        \App\Console\Commands\SyncPermissionsLang::class, // THÊM: Sync permissions -> resources/lang/vi
     ];
 
     protected function schedule(Schedule $schedule): void

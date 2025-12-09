@@ -42,7 +42,7 @@ class LichHenController extends Controller
         // Query lịch hẹn chờ xác nhận
         $query = LichHen::with(['user', 'dichVu'])
             ->where('bac_si_id', $bacSi->id)
-            ->where('trang_thai', 'Chờ xác nhận')
+            ->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)
             ->orderBy('ngay_hen')
             ->orderBy('thoi_gian_hen');
 
@@ -64,14 +64,14 @@ class LichHenController extends Controller
         // Thống kê
         $stats = [
             'total_pending' => LichHen::where('bac_si_id', $bacSi->id)
-                ->where('trang_thai', 'Chờ xác nhận')
+                ->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)
                 ->count(),
             'today_pending' => LichHen::where('bac_si_id', $bacSi->id)
-                ->where('trang_thai', 'Chờ xác nhận')
+                ->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)
                 ->whereDate('ngay_hen', today())
                 ->count(),
             'this_week' => LichHen::where('bac_si_id', $bacSi->id)
-                ->where('trang_thai', 'Chờ xác nhận')
+                ->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)
                 ->whereBetween('ngay_hen', [
                     Carbon::now()->startOfWeek(),
                     Carbon::now()->endOfWeek()
@@ -100,7 +100,7 @@ class LichHenController extends Controller
         }
 
         // Check trạng thái
-        if ($lichHen->trang_thai !== 'Chờ xác nhận') {
+        if ($lichHen->trang_thai !== \App\Models\LichHen::STATUS_PENDING_VN) {
             if ($request->wantsJson()) {
                 return response()->json(['success' => false, 'message' => 'Lịch hẹn này đã được xử lý rồi.'], 400);
             }
@@ -161,7 +161,7 @@ class LichHenController extends Controller
         }
 
         // Check trạng thái
-        if ($lichHen->trang_thai !== 'Chờ xác nhận') {
+        if ($lichHen->trang_thai !== \App\Models\LichHen::STATUS_PENDING_VN) {
             return back()->with('error', 'Lịch hẹn này đã được xử lý rồi.');
         }
 
@@ -239,7 +239,7 @@ class LichHenController extends Controller
 
         $query = LichHen::with(['user', 'dichVu'])
             ->where('bac_si_id', $bacSi->id)
-            ->where('trang_thai', 'Đã xác nhận');
+            ->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN);
 
         if ($view === 'today') {
             $query->whereDate('ngay_hen', today());
@@ -268,7 +268,7 @@ class LichHenController extends Controller
             return back()->with('error', 'Bạn không có quyền');
         }
 
-        if ($lichHen->trang_thai !== 'Đang khám') {
+        if ($lichHen->trang_thai !== \App\Models\LichHen::STATUS_IN_PROGRESS_VN) {
             return back()->with('error', 'Chỉ có thể hoàn thành lịch hẹn đang khám');
         }
 

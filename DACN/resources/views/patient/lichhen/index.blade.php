@@ -23,13 +23,13 @@
                 <x-patient.stat-card title="Tổng lịch hẹn" :value="$danhSachLichHen->count()" icon="fa-calendar-check" color="primary" />
             </div>
             <div class="col-md-3">
-                <x-patient.stat-card title="Chờ xác nhận" :value="$danhSachLichHen->where('trang_thai', 'Chờ xác nhận')->count()" icon="fa-clock" color="warning" />
+                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_PENDING_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)->count()" icon="fa-clock" color="warning" />
             </div>
             <div class="col-md-3">
-                <x-patient.stat-card title="Đã xác nhận" :value="$danhSachLichHen->where('trang_thai', 'Đã xác nhận')->count()" icon="fa-check-circle" color="success" />
+                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count()" icon="fa-check-circle" color="success" />
             </div>
             <div class="col-md-3">
-                <x-patient.stat-card title="Hoàn thành" :value="$danhSachLichHen->whereIn('trang_thai', ['Hoàn thành', 'Đã hoàn thành'])->count()" icon="fa-check-double" color="info" />
+                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)->count()" icon="fa-check-double" color="info" />
             </div>
         </div>
 
@@ -42,25 +42,25 @@
                     'id' => 'pending',
                     'label' => 'Chờ xác nhận',
                     'icon' => 'fa-clock',
-                    'count' => $danhSachLichHen->where('trang_thai', 'Chờ xác nhận')->count(),
+                    'count' => $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)->count(),
                 ],
                 [
                     'id' => 'confirmed',
                     'label' => 'Đã xác nhận',
                     'icon' => 'fa-check',
-                    'count' => $danhSachLichHen->where('trang_thai', 'Đã xác nhận')->count(),
+                    'count' => $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count(),
                 ],
                 [
                     'id' => 'completed',
-                    'label' => 'Hoàn thành',
+                    'label' => \App\Models\LichHen::STATUS_COMPLETED_VN,
                     'icon' => 'fa-check-double',
-                    'count' => $danhSachLichHen->whereIn('trang_thai', ['Hoàn thành', 'Đã hoàn thành'])->count(),
+                    'count' => $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)->count(),
                 ],
                 [
                     'id' => 'cancelled',
                     'label' => 'Đã hủy',
                     'icon' => 'fa-times',
-                    'count' => $danhSachLichHen->where('trang_thai', 'Đã hủy')->count(),
+                    'count' => $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_CANCELLED_VN)->count(),
                 ],
             ]" />
 
@@ -125,10 +125,10 @@
                                     <!-- TRẠNG THÁI -->
                                     <td>
                                         <x-patient.status-badge :status="$lichHen->trang_thai" :type="match ($lichHen->trang_thai) {
-                                            'Chờ xác nhận' => 'warning',
-                                            'Đã xác nhận' => 'success',
-                                            'Đã hủy' => 'danger',
-                                            'Hoàn thành', 'Đã hoàn thành' => 'info',
+                                                \App\Models\LichHen::STATUS_PENDING_VN => 'warning',
+                                                \App\Models\LichHen::STATUS_CONFIRMED_VN => 'success',
+                                                \App\Models\LichHen::STATUS_CANCELLED_VN => 'danger',
+                                                \App\Models\LichHen::STATUS_COMPLETED_VN => 'info',
                                             default => 'default',
                                         }" />
                                     </td>
@@ -163,7 +163,7 @@
                                             </button>
 
                                             <!-- SỬA -->
-                                            @if (in_array($lichHen->trang_thai, ['Chờ xác nhận', 'Đã xác nhận']))
+                                            @if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN]))
                                                 <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal"
                                                     data-bs-target="#editModal{{ $lichHen->id }}">
                                                     <i class="fas fa-edit"></i>
@@ -171,7 +171,7 @@
                                             @endif
 
                                             <!-- CHAT -->
-                                            @if (in_array($lichHen->trang_thai, ['Đã xác nhận', 'Hoàn thành', 'Đã hoàn thành']))
+                                            @if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_COMPLETED_VN]))
                                                 <a href="{{ route('patient.chat.create', $lichHen->bac_si_id) }}"
                                                     class="btn btn-sm btn-outline-info">
                                                     <i class="fas fa-comment-medical"></i>
@@ -179,7 +179,7 @@
                                             @endif
 
                                             <!-- HỦY -->
-                                            @if (in_array($lichHen->trang_thai, ['Chờ xác nhận', 'Đã xác nhận']))
+                                            @if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN]))
                                                 <button class="btn btn-sm btn-outline-danger"
                                                     onclick="if(confirm('Xác nhận hủy lịch hẹn?')) document.getElementById('delete{{ $lichHen->id }}').submit();">
                                                     <i class="fas fa-times-circle"></i>
@@ -199,7 +199,7 @@
                                 </tr>
 
                                 <!-- Modal SỬA GIỮ NGUYÊN NHƯ CŨ -->
-                                @if (in_array($lichHen->trang_thai, ['Chờ xác nhận', 'Đã xác nhận']))
+                                @if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN]))
                                     <div class="modal fade" id="editModal{{ $lichHen->id }}" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">

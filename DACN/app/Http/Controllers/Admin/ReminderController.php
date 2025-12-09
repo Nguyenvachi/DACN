@@ -18,7 +18,7 @@ class ReminderController extends Controller
         $force = $request->boolean('force', false);
 
         $candidates = LichHen::with(['user','bacSi','dichVu'])
-            ->whereIn('trang_thai', ['Chờ xác nhận','Đã xác nhận'])
+            ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN])
             ->whereDate('ngay_hen', $tomorrow)
             ->get();
 
@@ -48,7 +48,7 @@ class ReminderController extends Controller
 
         // Lấy các lịch từ hôm nay đến ngày mai để bắt trường hợp qua 0h
         $candidates = LichHen::with(['user','bacSi','dichVu'])
-            ->whereIn('trang_thai', ['Chờ xác nhận','Đã xác nhận'])
+            ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN])
             ->whereDate('ngay_hen', '>=', $now->toDateString())
             ->whereDate('ngay_hen', '<=', $end->toDateString())
             ->get();

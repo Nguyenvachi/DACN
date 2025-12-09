@@ -69,9 +69,8 @@
                                                     id="role_{{ $role->id }}" name="roles[]" value="{{ $role->id }}"
                                                     {{ in_array($role->id, old('roles', $userRoleIds)) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="role_{{ $role->id }}">
-                                                    <strong>{{ $role->name }}</strong><br>
-                                                    <small class="text-muted">{{ $role->permissions->count() }}
-                                                        quyền</small>
+                                                    <strong>{{ \Illuminate\Support\Facades\Lang::has('roles.' . $role->name) ? __('roles.' . $role->name) : $role->name }}</strong><br>
+                                                    <small class="text-muted">{{ $role->permissions->count() }} quyền</small>
                                                 </label>
                                             </div>
                                         </div>
@@ -99,7 +98,24 @@
                                                     value="{{ $permission->id }}"
                                                     {{ in_array($permission->id, old('permissions', $userPermissionIds)) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="perm_{{ $permission->id }}">
-                                                    {{ $permission->name }}
+                                                    @php
+                                                        $pname = $permission->name;
+                                                        $candidates = [
+                                                            'permissions.' . $pname,
+                                                            'permissions.' . strtolower($pname),
+                                                            'permissions.' . str_replace(' ', '-', strtolower($pname)),
+                                                            'permissions.' . str_replace([' ', '-'], '_', strtolower($pname)),
+                                                        ];
+                                                        $label = null;
+                                                        foreach ($candidates as $k) {
+                                                            if (\Illuminate\Support\Facades\Lang::has($k)) {
+                                                                $label = __($k);
+                                                                break;
+                                                            }
+                                                        }
+                                                        $label = $label ?: ucwords(str_replace(['-','_'], ' ', $pname));
+                                                    @endphp
+                                                    {{ $label }}
                                                 </label>
                                             </div>
                                         </div>

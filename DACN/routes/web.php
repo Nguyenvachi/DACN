@@ -596,6 +596,28 @@ Route::middleware(['auth','permission:view-dashboard'])->prefix('admin/calendar'
     Route::get('stats', [\App\Http\Controllers\Admin\CalendarController::class,'apiStats'])->name('admin.calendar.stats');
 });
 
+// Add alias routes so role-prefixed view route names resolve correctly
+Route::get('/doctor/benh-an/xet-nghiem/{xetNghiem}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXetNghiem'])
+    ->name('doctor.benhan.xetnghiem.download')
+    ->middleware('signed');
+
+Route::get('/patient/benh-an/xet-nghiem/{xetNghiem}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXetNghiem'])
+    ->name('patient.benhan.xetnghiem.download')
+    ->middleware('signed');
+
+// Alias routes for file downloads so role-prefixed temporary signed routes resolve
+Route::get('/doctor/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadFile'])
+    ->name('doctor.benhan.files.download')
+    ->middleware('signed');
+
+Route::get('/patient/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadFile'])
+    ->name('patient.benhan.files.download')
+    ->middleware('signed');
+
+Route::get('/staff/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadFile'])
+    ->name('staff.benhan.files.download')
+    ->middleware('signed');
+
 require __DIR__ . '/auth.php';
 
 // CMS Public

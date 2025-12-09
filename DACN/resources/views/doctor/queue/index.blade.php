@@ -296,7 +296,7 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    @if($appt->trang_thai === 'Đã xác nhận')
+                                    @if($appt->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
                                         <form action="{{ route('doctor.queue.checkin', $appt->id) }}"
                                               method="POST"
                                               class="d-inline checkin-form">
@@ -305,9 +305,9 @@
                                                 <i class="fas fa-sign-in-alt me-1"></i>Check-in
                                             </button>
                                         </form>
-                                    @elseif($appt->trang_thai === 'Đã check-in')
+                                    @elseif($appt->trang_thai === \App\Models\LichHen::STATUS_CHECKED_IN_VN)
                                         <span class="badge bg-warning">Đang chờ</span>
-                                    @elseif($appt->trang_thai === 'Đang khám')
+                                    @elseif($appt->trang_thai === \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
                                         @if($appt->benhAn)
                                             <a href="{{ route('doctor.benhan.edit', $appt->benhAn->id) }}"
                                                class="btn btn-sm btn-outline-success">

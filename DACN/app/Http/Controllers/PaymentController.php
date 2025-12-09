@@ -78,9 +78,9 @@ class PaymentController extends Controller
 
         if ($hoaDon && $responseCode == '00') {
             // Kiểm tra xem đã thanh toán chưa
-            if ($hoaDon->trang_thai != 'Đã thanh toán') {
+            if ($hoaDon->trang_thai != \App\Models\HoaDon::STATUS_PAID_VN) {
                 // Cập nhật trạng thái
-                $hoaDon->trang_thai = 'Đã thanh toán';
+                $hoaDon->trang_thai = \App\Models\HoaDon::STATUS_PAID_VN;
                 $hoaDon->phuong_thuc = 'VNPAY';
                 $hoaDon->save();
 
@@ -97,7 +97,7 @@ class PaymentController extends Controller
                 // THÊM: đồng bộ sang Lịch hẹn + gửi email biên lai
                 if ($hoaDon->lichHen) {
                     $lh = $hoaDon->lichHen;
-                    $lh->payment_status = 'Đã thanh toán';
+                    $lh->payment_status = \App\Models\HoaDon::STATUS_PAID_VN;
                     $lh->payment_method = 'VNPAY';
                     $lh->paid_at = now();
                     $lh->save();
@@ -115,7 +115,7 @@ class PaymentController extends Controller
                     ->route('lichhen.my')
                     ->with('success', 'Thanh toán thành công qua VNPay! Số tiền: ' . number_format($amount) . ' VNĐ');
             }
-            
+
             return redirect()
                 ->route('admin.hoadon.show', $hoaDon)
                 ->with('success', 'Thanh toán thành công qua VNPay! Số tiền: ' . number_format($amount) . ' VNĐ');
@@ -165,18 +165,18 @@ class PaymentController extends Controller
             // THÊM: Idempotency check - tránh xử lý duplicate IPN
             $idempotencyKey = $hoaDonId . '_' . $transactionRef;
             $existingPayment = ThanhToan::where('idempotency_key', $idempotencyKey)->first();
-            
+
             if ($existingPayment) {
                 // Đã xử lý rồi, trả về success
                 return response()->json(['RspCode' => '00', 'Message' => 'Order already confirmed']);
             }
 
             // Kiểm tra xem hóa đơn đã được thanh toán chưa
-            if ($hoaDon->trang_thai != 'Đã thanh toán') {
+            if ($hoaDon->trang_thai != \App\Models\HoaDon::STATUS_PAID_VN) {
                 if ($responseCode == '00') {
                     // Giao dịch thành công
                     // Cập nhật trạng thái hóa đơn
-                    $hoaDon->trang_thai = 'Đã thanh toán';
+                    $hoaDon->trang_thai = \App\Models\HoaDon::STATUS_PAID_VN;
                     $hoaDon->phuong_thuc = 'VNPAY';
                     $hoaDon->save();
 
@@ -194,7 +194,7 @@ class PaymentController extends Controller
                     // THÊM: đồng bộ sang Lịch hẹn + gửi email biên lai
                     if ($hoaDon->lichHen) {
                         $lh = $hoaDon->lichHen;
-                        $lh->payment_status = 'Đã thanh toán';
+                        $lh->payment_status = \App\Models\HoaDon::STATUS_PAID_VN;
                         $lh->payment_method = 'VNPAY';
                         $lh->paid_at = now();
                         $lh->save();
@@ -296,8 +296,8 @@ class PaymentController extends Controller
 
         // THÊM: Log return callback
         $orderId = $data['orderId'] ?? '';
-        $hoaDonId = strpos((string)$orderId, '_') !== false 
-            ? (int)explode('_', (string)$orderId)[0] 
+        $hoaDonId = strpos((string)$orderId, '_') !== false
+            ? (int)explode('_', (string)$orderId)[0]
             : $orderId;
         PaymentLog::logReturn('momo', $data, $hoaDonId);
 
@@ -320,9 +320,9 @@ class PaymentController extends Controller
 
         if ($hoaDon && $resultCode == '0') {
             // Kiểm tra xem đã thanh toán chưa
-            if ($hoaDon->trang_thai != 'Đã thanh toán') {
+            if ($hoaDon->trang_thai != \App\Models\HoaDon::STATUS_PAID_VN) {
                 // Cập nhật trạng thái
-                $hoaDon->trang_thai = 'Đã thanh toán';
+                $hoaDon->trang_thai = \App\Models\HoaDon::STATUS_PAID_VN;
                 $hoaDon->phuong_thuc = 'MOMO';
                 $hoaDon->save();
 
@@ -339,7 +339,7 @@ class PaymentController extends Controller
                 // THÊM: đồng bộ sang Lịch hẹn + gửi email biên lai
                 if ($hoaDon->lichHen) {
                     $lh = $hoaDon->lichHen;
-                    $lh->payment_status = 'Đã thanh toán';
+                    $lh->payment_status = \App\Models\HoaDon::STATUS_PAID_VN;
                     $lh->payment_method = 'MOMO';
                     $lh->paid_at = now();
                     $lh->save();
@@ -356,7 +356,7 @@ class PaymentController extends Controller
                     ->route('lichhen.my')
                     ->with('success', 'Thanh toán thành công qua MoMo! Số tiền: ' . number_format($amount) . ' VNĐ');
             }
-            
+
             return redirect()
                 ->route('admin.hoadon.show', $hoaDon)
                 ->with('success', 'Thanh toán thành công qua MoMo! Số tiền: ' . number_format($amount) . ' VNĐ');
@@ -375,14 +375,14 @@ class PaymentController extends Controller
         try {
             $data = $request->all();
             $signature = $data['signature'] ?? '';
-            
+
             // Đảm bảo amount là string
             $data['amount'] = (string)(int)($data['amount'] ?? 0);
 
             // THÊM: Log IPN callback
             $orderId = $data['orderId'] ?? '';
-            $hoaDonId = strpos((string)$orderId, '_') !== false 
-                ? (int)explode('_', (string)$orderId)[0] 
+            $hoaDonId = strpos((string)$orderId, '_') !== false
+                ? (int)explode('_', (string)$orderId)[0]
                 : $orderId;
             PaymentLog::logIPN('momo', $data, $hoaDonId);
 
@@ -412,18 +412,18 @@ class PaymentController extends Controller
             // THÊM: Idempotency check - tránh xử lý duplicate IPN
             $idempotencyKey = $hoaDon->id . '_' . $transId;
             $existingPayment = ThanhToan::where('idempotency_key', $idempotencyKey)->first();
-            
+
             if ($existingPayment) {
                 // Đã xử lý rồi, trả về success
                 return response()->json(['resultCode' => 0, 'message' => 'Order already confirmed'], 200);
             }
 
-            if ($hoaDon->trang_thai === 'Đã thanh toán') {
+            if ($hoaDon->trang_thai === \App\Models\HoaDon::STATUS_PAID_VN) {
                 return response()->json(['resultCode' => 0, 'message' => 'Order already confirmed'], 200);
             }
 
             if ($resultCode === '0') {
-                $hoaDon->trang_thai = 'Đã thanh toán';
+                $hoaDon->trang_thai = \App\Models\HoaDon::STATUS_PAID_VN;
                 $hoaDon->phuong_thuc = 'MOMO';
                 $hoaDon->save();
 
@@ -439,7 +439,7 @@ class PaymentController extends Controller
 
                 if ($hoaDon->lichHen) {
                     $lh = $hoaDon->lichHen;
-                    $lh->payment_status = 'Đã thanh toán';
+                    $lh->payment_status = \App\Models\HoaDon::STATUS_PAID_VN;
                     $lh->payment_method = 'MOMO';
                     $lh->paid_at = now();
                     $lh->save();

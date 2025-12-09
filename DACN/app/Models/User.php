@@ -180,4 +180,19 @@ class User extends Authenticatable
         }
         $this->update($data);
     }
+
+    // Ensure Spatie role is assigned when a user is created (fallback to legacy `role` column)
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            try {
+                if (! $user->roles()->exists()) {
+                    $roleToAssign = $user->role ?: 'patient';
+                    $user->assignRole($roleToAssign);
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('Failed to assign role to user #' . ($user->id ?? 'unknown') . ': ' . $e->getMessage());
+            }
+        });
+    }
 }

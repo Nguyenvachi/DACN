@@ -54,7 +54,7 @@ class DanhGiaController extends Controller
         }
 
         // Kiểm tra lịch hẹn đã hoàn thành chưa
-        if ($lichHen->trang_thai !== 'Đã hoàn thành' && $lichHen->trang_thai !== 'Hoàn thành') {
+        if ($lichHen->trang_thai !== \App\Models\LichHen::STATUS_COMPLETED_VN) {
             return redirect()->back()->with('error', 'Chỉ có thể đánh giá sau khi hoàn thành lịch hẹn!');
         }
 

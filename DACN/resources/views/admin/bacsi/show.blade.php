@@ -221,12 +221,12 @@
                                             <td>{{ $lich->user->name }}</td>
                                             <td>{{ $lich->dichVu->ten_dich_vu ?? 'N/A' }}</td>
                                             <td>
-                                                @if ($lich->trang_thai === 'Chờ xác nhận')
-                                                    <span class="badge bg-warning text-dark">Chờ xác nhận</span>
-                                                @elseif ($lich->trang_thai === 'Đã xác nhận')
-                                                    <span class="badge bg-success">Đã xác nhận</span>
-                                                @elseif ($lich->trang_thai === 'Hoàn thành')
-                                                    <span class="badge bg-info">Hoàn thành</span>
+                                                @if ($lich->trang_thai === \App\Models\LichHen::STATUS_PENDING_VN)
+                                                    <span class="badge bg-warning text-dark">{{ \App\Models\LichHen::STATUS_PENDING_VN }}</span>
+                                                @elseif ($lich->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
+                                                    <span class="badge bg-success">{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}</span>
+                                                @elseif ($lich->trang_thai === \App\Models\LichHen::STATUS_COMPLETED_VN)
+                                                    <span class="badge bg-info">{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}</span>
                                                 @else
                                                     <span class="badge bg-danger">{{ $lich->trang_thai }}</span>
                                                 @endif

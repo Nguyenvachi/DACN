@@ -145,7 +145,7 @@ class LichHenController extends Controller
                 'ngay_hen' => $validatedData['ngay_hen'],
                 'thoi_gian_hen' => $validatedData['thoi_gian_hen'],
                 'ghi_chu' => $validatedData['ghi_chu'] ?? null,
-                'trang_thai' => 'Chờ xác nhận', // Trạng thái ban đầu
+                'trang_thai' => \App\Models\LichHen::STATUS_PENDING_VN, // Trạng thái ban đầu
             ]);
 
             // THÊM: Tự động tạo hóa đơn luôn
@@ -153,7 +153,7 @@ class LichHenController extends Controller
                 'lich_hen_id' => $lichHen->id,
                 'user_id' => auth()->id(),
                 'tong_tien' => $tongTien,
-                'trang_thai' => 'Chưa thanh toán',
+                'trang_thai' => \App\Models\HoaDon::STATUS_UNPAID_VN,
             ]);
         });
 
@@ -185,7 +185,7 @@ class LichHenController extends Controller
     public function edit(LichHen $lichHen)
     {
         abort_unless($lichHen->user_id === Auth::id(), 403);
-        abort_unless(in_array($lichHen->trang_thai, ['Chờ xác nhận', 'Đã xác nhận']), 403);
+        abort_unless(in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN]), 403);
 
         return view('public.lichhen.edit', compact('lichHen'));
     }
@@ -201,7 +201,7 @@ class LichHenController extends Controller
         }
 
         // Chỉ cho phép sửa nếu trạng thái phù hợp
-        if (!in_array($lichHen->trang_thai, ['Chờ xác nhận', 'Đã xác nhận'])) {
+        if (!in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN])) {
             return back()->with('error', 'Không thể sửa lịch hẹn này');
         }
 
@@ -252,7 +252,7 @@ class LichHenController extends Controller
             'ngay_hen' => $request->ngay_hen,
             'thoi_gian_hen' => $request->thoi_gian_hen,
             'ghi_chu' => $request->ghi_chu,
-            'trang_thai' => 'Chờ xác nhận' // Reset về chờ xác nhận
+            'trang_thai' => \App\Models\LichHen::STATUS_PENDING_VN // Reset về chờ xác nhận
         ]);
 
         return back()->with('success', 'Cập nhật lịch hẹn thành công');
@@ -267,11 +267,11 @@ class LichHenController extends Controller
         }
 
         // Chỉ cho phép hủy nếu chưa hoàn thành
-        if (in_array($lichHen->trang_thai, ['Đã hủy', 'Hoàn thành'])) {
+        if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_CANCELLED_VN, \App\Models\LichHen::STATUS_COMPLETED_VN])) {
             return back()->with('error', 'Không thể hủy lịch hẹn này');
         }
 
-        $lichHen->update(['trang_thai' => 'Đã hủy']);
+        $lichHen->update(['trang_thai' => \App\Models\LichHen::STATUS_CANCELLED_VN]);
 
         return redirect()->route('patient.lichhen.index')->with('success', 'Đã hủy lịch hẹn thành công');
     }
@@ -287,11 +287,11 @@ class LichHenController extends Controller
         }
 
         // Chỉ cho phép hủy nếu chưa hoàn thành
-        if (in_array($lichHen->trang_thai, ['Đã hủy', 'Hoàn thành'])) {
+        if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_CANCELLED_VN, \App\Models\LichHen::STATUS_COMPLETED_VN])) {
             return back()->with('error', 'Không thể hủy lịch hẹn này');
         }
 
-        $lichHen->update(['trang_thai' => 'Đã hủy']);
+        $lichHen->update(['trang_thai' => \App\Models\LichHen::STATUS_CANCELLED_VN]);
 
         return back()->with('success', 'Đã hủy lịch hẹn');
     }
@@ -442,7 +442,7 @@ class LichHenController extends Controller
         // Lấy danh sách lịch hẹn đã đặt trong ngày
         $bookedAppointments = LichHen::where('bac_si_id', $bacSi->id)
             ->where('ngay_hen', $date->format('Y-m-d'))
-            ->whereIn('trang_thai', ['Chờ xác nhận', 'Đã xác nhận'])
+            ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN])
             ->get();
 
         // Tạo danh sách khung giờ trống (mỗi 30 phút)

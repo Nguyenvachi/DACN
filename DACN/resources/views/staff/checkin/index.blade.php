@@ -179,7 +179,7 @@
                                         @elseif($apt->trang_thai === \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
                                             <span class="badge bg-info">{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }}</span>
                                         @else
-                                            <span class="badge bg-warning">Chờ check-in</span>
+                                            <span class="badge bg-warning">{{ \App\Models\LichHen::STATUS_PENDING_VN }}</span>
                                         @endif
                                     </td>
                                     <td>
@@ -201,7 +201,7 @@
                                                 </form>
                                             </div>
                                         @else
-                                            <span class="text-muted">{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }}</span>
+                                            <span class="text-muted">{{ \App\Models\LichHen::STATUS_PENDING_VN }}</span>
                                         @endif
                                     </td>
                                 </tr>

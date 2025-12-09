@@ -67,11 +67,20 @@ class QueueController extends Controller
             'thoi_gian_bat_dau_kham' => now()
         ]);
 
-        activity()
-            ->performedOn($lichhen)
-            ->causedBy(auth()->user())
-            ->withProperties(['action' => 'call_next'])
-            ->log('Nhân viên gọi bệnh nhân vào khám');
+        // Safe activity log: skip if helper not available to avoid fatal errors
+        if (function_exists('activity')) {
+            try {
+                activity()
+                    ->performedOn($lichhen)
+                    ->causedBy(auth()->user())
+                    ->withProperties(['action' => 'call_next'])
+                    ->log('Nhân viên gọi bệnh nhân vào khám');
+            } catch (\Throwable $e) {
+                \Log::warning('Activity logging failed on callNext: ' . $e->getMessage());
+            }
+        } else {
+            \Log::warning('Activity helper not available; skipping activity log for callNext.');
+        }
 
         return back()->with('success', "Đã gọi bệnh nhân {$lichhen->user->name} vào khám với BS. {$lichhen->bacSi->ho_ten}");
     }

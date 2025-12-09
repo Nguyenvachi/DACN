@@ -22,6 +22,9 @@
     @stack('meta')
     @stack('styles')
 
+    <!-- ADDED: Unified design system -->
+    <link rel="stylesheet" href="{{ asset('css/design-system-unified.css') }}">
+
     <style>
         body {
             background: #f0f2f5;

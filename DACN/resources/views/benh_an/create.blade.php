@@ -595,12 +595,12 @@ VD:
 
         function getStatusColor(status) {
             const colors = {
-                'Chờ xác nhận': 'warning',
-                'Đã xác nhận': 'info',
-                'Đã check-in': 'primary',
-                'Đang khám': 'success',
-                'Hoàn thành': 'success',
-                'Đã hủy': 'danger'
+                '{{ \App\Models\LichHen::STATUS_PENDING_VN }}': 'warning',
+                '{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}': 'info',
+                '{{ \App\Models\LichHen::STATUS_CHECKED_IN_VN }}': 'primary',
+                '{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }}': 'success',
+                '{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}': 'success',
+                '{{ \App\Models\LichHen::STATUS_CANCELLED_VN }}': 'danger'
             };
             return colors[status] || 'secondary';
         }

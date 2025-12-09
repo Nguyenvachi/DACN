@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class HoaDon extends Model
 {
+    // Trạng thái hiển thị (tiếng Việt)
+    public const STATUS_PAID_VN = 'Đã thanh toán';
+    public const STATUS_UNPAID_VN = 'Chưa thanh toán';
+    public const STATUS_REFUNDED_VN = 'Hoàn tiền';
+    public const STATUS_PARTIAL_REFUND_VN = 'Hoàn một phần';
+    public const STATUS_PARTIAL_VN = 'Thanh toán một phần';
+    public const STATUS_CANCELLED_VN = 'Đã hủy';
     protected $fillable = [
         'lich_hen_id',
         'user_id',
@@ -87,19 +94,19 @@ class HoaDon extends Model
         // Xác định status dựa trên số tiền thực
         if ($daHoan >= $daThanh && $daHoan > 0) {
             $this->status = 'refunded'; // Đã hoàn toàn bộ
-            $this->trang_thai = 'Hoàn tiền';
+            $this->trang_thai = self::STATUS_REFUNDED_VN;
         } elseif ($daHoan > 0 && $tienThuc > 0) {
             $this->status = 'partial_refund'; // Hoàn một phần, còn tiền thực
-            $this->trang_thai = 'Hoàn một phần';
+            $this->trang_thai = self::STATUS_PARTIAL_REFUND_VN;
         } elseif ($tienThuc >= $tongTien && $tongTien > 0) {
             $this->status = 'paid'; // Đã thanh toán đủ
-            $this->trang_thai = 'Đã thanh toán';
+            $this->trang_thai = self::STATUS_PAID_VN;
         } elseif ($tienThuc > 0 && $tienThuc < $tongTien) {
             $this->status = 'partial'; // Thanh toán một phần
-            $this->trang_thai = 'Thanh toán một phần';
+            $this->trang_thai = self::STATUS_PARTIAL_VN;
         } else {
             $this->status = 'unpaid'; // Chưa thanh toán
-            $this->trang_thai = 'Chưa thanh toán';
+            $this->trang_thai = self::STATUS_UNPAID_VN;
         }
     }
 
