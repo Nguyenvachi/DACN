@@ -22,8 +22,8 @@ class CancelUnpaidAppointments extends Command
     {
         // Lấy các lịch hẹn: Chờ xác nhận + created > 15 phút + hóa đơn chưa thanh toán
         $timeout = Carbon::now()->subMinutes(15);
-        
-        $unpaidAppointments = LichHen::where('trang_thai', 'Chờ xác nhận')
+
+            $unpaidAppointments = LichHen::where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)
             ->where('created_at', '<=', $timeout)
             ->whereHas('hoaDon', function($query) {
                 $query->where('trang_thai', 'Chưa thanh toán');
@@ -35,24 +35,24 @@ class CancelUnpaidAppointments extends Command
         foreach ($unpaidAppointments as $lichHen) {
             try {
                 // Hủy lịch hẹn
-                $lichHen->update(['trang_thai' => 'Đã hủy']);
-                
+                    $lichHen->update(['trang_thai' => \App\Models\LichHen::STATUS_CANCELLED_VN]);
+
                 // Hủy hóa đơn
                 if ($lichHen->hoaDon) {
                     $lichHen->hoaDon->update(['trang_thai' => 'Đã hủy']);
                 }
-                
+
                 $canceledCount++;
-                
+
                 Log::info("Tự động hủy lịch hẹn #{$lichHen->id} do quá thời gian thanh toán");
-                
+
             } catch (\Exception $e) {
                 Log::error("Lỗi khi hủy lịch hẹn #{$lichHen->id}: " . $e->getMessage());
             }
         }
 
         $this->info("Đã hủy {$canceledCount} lịch hẹn chưa thanh toán");
-        
+
         return 0;
     }
 }

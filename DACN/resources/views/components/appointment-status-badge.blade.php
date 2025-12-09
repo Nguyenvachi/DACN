@@ -4,33 +4,33 @@
 @php
     // Map status tiếng Việt (database) với config hiển thị
     $statusConfig = [
-        'Chờ xác nhận' => [
-            'label' => 'Chờ xác nhận',
+        \App\Models\LichHen::STATUS_PENDING_VN => [
+            'label' => \App\Models\LichHen::STATUS_PENDING_VN,
             'color' => 'warning',
             'icon' => 'clock'
         ],
-        'Đã xác nhận' => [
-            'label' => 'Đã xác nhận',
+        \App\Models\LichHen::STATUS_CONFIRMED_VN => [
+            'label' => \App\Models\LichHen::STATUS_CONFIRMED_VN,
             'color' => 'info',
             'icon' => 'check-circle'
         ],
-        'Đã check-in' => [
-            'label' => 'Đã check-in',
+        \App\Models\LichHen::STATUS_CHECKED_IN_VN => [
+            'label' => \App\Models\LichHen::STATUS_CHECKED_IN_VN,
             'color' => 'primary',
             'icon' => 'user-check'
         ],
-        'Đang khám' => [
-            'label' => 'Đang khám',
+        \App\Models\LichHen::STATUS_IN_PROGRESS_VN => [
+            'label' => \App\Models\LichHen::STATUS_IN_PROGRESS_VN,
             'color' => 'secondary',
             'icon' => 'stethoscope'
         ],
-        'Hoàn thành' => [
-            'label' => 'Hoàn thành',
+        \App\Models\LichHen::STATUS_COMPLETED_VN => [
+            'label' => \App\Models\LichHen::STATUS_COMPLETED_VN,
             'color' => 'success',
             'icon' => 'check-double'
         ],
-        'Đã hủy' => [
-            'label' => 'Đã hủy',
+        \App\Models\LichHen::STATUS_CANCELLED_VN => [
+            'label' => \App\Models\LichHen::STATUS_CANCELLED_VN,
             'color' => 'danger',
             'icon' => 'times-circle'
         ],

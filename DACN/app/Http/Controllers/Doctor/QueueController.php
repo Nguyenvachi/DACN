@@ -42,7 +42,11 @@ class QueueController extends Controller
         // Lấy danh sách bệnh nhân đã check-in (chờ khám hoặc đang khám)
         $queueQuery = LichHen::with(['user.patientProfile', 'dichVu'])
             ->where('bac_si_id', $bacSi->id)
-            ->whereIn('trang_thai', ['Đã check-in', 'Đang khám', 'Đã xác nhận'])
+            ->whereIn('trang_thai', [
+                LichHen::STATUS_CHECKED_IN_VN,
+                LichHen::STATUS_IN_PROGRESS_VN,
+                LichHen::STATUS_CONFIRMED_VN,
+            ])
             ->whereDate('ngay_hen', today()) // Chỉ lấy hôm nay
             ->orderBy('checked_in_at')
             ->orderBy('thoi_gian_hen');
@@ -50,9 +54,9 @@ class QueueController extends Controller
         $queue = $queueQuery->get();
 
         // Phân loại
-        $waitingQueue = $queue->where('trang_thai', 'Đã check-in'); // Chờ khám
-        $inProgressQueue = $queue->where('trang_thai', 'Đang khám'); // Đang khám
-        $confirmedToday = $queue->where('trang_thai', 'Đã xác nhận'); // Chưa check-in nhưng đã xác nhận
+        $waitingQueue = $queue->where('trang_thai', LichHen::STATUS_CHECKED_IN_VN); // Chờ khám
+        $inProgressQueue = $queue->where('trang_thai', LichHen::STATUS_IN_PROGRESS_VN); // Đang khám
+        $confirmedToday = $queue->where('trang_thai', LichHen::STATUS_CONFIRMED_VN); // Chưa check-in nhưng đã xác nhận
 
         // Thống kê
         $stats = [
@@ -142,7 +146,7 @@ class QueueController extends Controller
     {
         $completedToday = LichHen::where('bac_si_id', $bacSiId)
             ->whereDate('ngay_hen', today())
-            ->where('trang_thai', 'Hoàn thành')
+            ->where('trang_thai', LichHen::STATUS_COMPLETED_VN)
             ->whereNotNull('checked_in_at')
             ->whereNotNull('completed_at')
             ->get();
@@ -173,7 +177,7 @@ class QueueController extends Controller
         }
 
         $count = LichHen::where('bac_si_id', $bacSi->id)
-            ->where('trang_thai', 'Đã check-in')
+            ->where('trang_thai', LichHen::STATUS_CHECKED_IN_VN)
             ->whereDate('ngay_hen', today())
             ->count();
 

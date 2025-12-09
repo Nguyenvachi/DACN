@@ -47,7 +47,7 @@
                             <i class="bi bi-person-hearts fs-2"></i>
                         </div>
                         <div class="ms-3">
-                            <p class="text-white text-opacity-75 mb-1 small">Đang khám</p>
+                            <p class="text-white text-opacity-75 mb-1 small">{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }}</p>
                             <h3 class="mb-0 fw-bold" id="stat-progress">{{ $statistics['in_progress'] }}</h3>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                             <i class="bi bi-check-circle fs-2"></i>
                         </div>
                         <div class="ms-3">
-                            <p class="text-white text-opacity-75 mb-1 small">Hoàn thành</p>
+                            <p class="text-white text-opacity-75 mb-1 small">{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}</p>
                             <h3 class="mb-0 fw-bold" id="stat-completed">{{ $statistics['completed_today'] }}</h3>
                         </div>
                     </div>
@@ -166,7 +166,7 @@
         <div class="col-lg-6 mb-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-primary text-white border-0">
-                    <h5 class="mb-0 fw-bold"><i class="bi bi-person-hearts me-2"></i>Đang Khám ({{ $inProgress->count() }})</h5>
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-person-hearts me-2"></i>{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }} ({{ $inProgress->count() }})</h5>
                 </div>
                 <div class="card-body p-0" style="max-height: 600px; overflow-y: auto;">
                     @forelse($inProgress as $apt)
@@ -195,7 +195,7 @@
                                     @endif
                                 </div>
                                 <div>
-                                    <span class="badge bg-primary">Đang khám</span>
+                                    <span class="badge bg-primary">{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }}</span>
                                 </div>
                             </div>
                         </div>

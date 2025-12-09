@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
             $now = Carbon::now();
             $targetDate = $now->copy()->addDay()->toDateString();
             $candidates = LichHen::with(['user','bacSi','dichVu'])
-                ->whereIn('trang_thai', ['Chờ xác nhận','Đã xác nhận'])
+                ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN])
                 ->whereDate('ngay_hen', $targetDate)
                 ->get();
             foreach ($candidates as $lh) {
@@ -46,7 +46,7 @@ class Kernel extends ConsoleKernel
             $now = Carbon::now();
             $targetDate = $now->copy()->addHours(3)->toDateString();
             $candidates = LichHen::with(['user','bacSi','dichVu'])
-                ->whereIn('trang_thai', ['Chờ xác nhận','Đã xác nhận'])
+                ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN])
                 ->whereDate('ngay_hen', $targetDate)
                 ->get();
             foreach ($candidates as $lh) {

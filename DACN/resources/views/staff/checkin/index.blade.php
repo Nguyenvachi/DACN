@@ -158,7 +158,7 @@
                             @forelse($appointments as $apt)
                                 <tr>
                                     <td>
-                                        @if($apt->trang_thai === 'Đã xác nhận')
+                                        @if($apt->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
                                             <input type="checkbox" name="appointment_ids[]" value="{{ $apt->id }}" class="form-check-input appointment-checkbox">
                                         @endif
                                     </td>
@@ -174,25 +174,25 @@
                                     <td>{{ $apt->dichVu->ten_dich_vu }}</td>
                                     <td><i class="bi bi-clock me-1"></i>{{ $apt->thoi_gian_hen }}</td>
                                     <td>
-                                        @if($apt->trang_thai === 'Đã check-in')
-                                            <span class="badge bg-success">Đã check-in</span>
-                                        @elseif($apt->trang_thai === 'Đang khám')
-                                            <span class="badge bg-info">Đang khám</span>
+                                        @if($apt->trang_thai === \App\Models\LichHen::STATUS_CHECKED_IN_VN)
+                                            <span class="badge bg-success">{{ \App\Models\LichHen::STATUS_CHECKED_IN_VN }}</span>
+                                        @elseif($apt->trang_thai === \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
+                                            <span class="badge bg-info">{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }}</span>
                                         @else
                                             <span class="badge bg-warning">Chờ check-in</span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if($apt->trang_thai === 'Đã xác nhận')
+                                        @if($apt->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
                                             <form method="POST" action="{{ route('staff.checkin.checkin', $apt->id) }}" class="d-inline checkin-form-{{ $apt->id }}">
                                                 @csrf
                                                 <button type="submit" class="btn btn-sm btn-primary checkin-btn-{{ $apt->id }}">
                                                     <i class="bi bi-check-circle me-1"></i>Check-in
                                                 </button>
                                             </form>
-                                        @elseif($apt->trang_thai === 'Đã check-in')
+                                        @elseif($apt->trang_thai === \App\Models\LichHen::STATUS_CHECKED_IN_VN)
                                             <div class="d-flex align-items-center gap-2">
-                                                <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i>Đã check-in</span>
+                                                <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i>{{ \App\Models\LichHen::STATUS_CHECKED_IN_VN }}</span>
                                                 <form method="POST" action="{{ route('staff.queue.call_next', $apt->id) }}" class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Gọi {{ $apt->user->name }} vào khám?')">
@@ -201,7 +201,7 @@
                                                 </form>
                                             </div>
                                         @else
-                                            <span class="text-muted">Đang khám</span>
+                                            <span class="text-muted">{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }}</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -360,7 +360,7 @@ function performQuickSearch() {
                                         <i class="bi bi-check-circle me-1"></i>Check-in Ngay
                                     </button>
                                 </form>
-                            ` : '<span class="badge bg-success">Đã check-in</span>'}
+                                        ` : '<span class="badge bg-success">{{ \App\Models\LichHen::STATUS_CHECKED_IN_VN }}</span>'}
                         </div>
                     </div>
                 `;

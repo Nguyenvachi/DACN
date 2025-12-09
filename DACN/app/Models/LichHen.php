@@ -35,6 +35,48 @@ class LichHen extends Model
     const STATUS_COMPLETED = 'completed';       // Hoàn thành
     const STATUS_CANCELLED = 'cancelled';       // Đã hủy
 
+    // Vietnamese display labels (kept for consistency with existing DB values)
+    const STATUS_PENDING_VN = 'Chờ xác nhận';
+    const STATUS_CONFIRMED_VN = 'Đã xác nhận';
+    const STATUS_CHECKED_IN_VN = 'Đã check-in';
+    const STATUS_IN_PROGRESS_VN = 'Đang khám';
+    const STATUS_COMPLETED_VN = 'Hoàn thành';
+    const STATUS_CANCELLED_VN = 'Đã hủy';
+
+    /**
+     * Map internal keys (english) to Vietnamese labels.
+     * Use this when you need a canonical VN label for a given internal key.
+     */
+    public static function statusLabelMap(): array
+    {
+        return [
+            self::STATUS_PENDING => self::STATUS_PENDING_VN,
+            self::STATUS_CONFIRMED => self::STATUS_CONFIRMED_VN,
+            self::STATUS_CHECKED_IN => self::STATUS_CHECKED_IN_VN,
+            self::STATUS_IN_PROGRESS => self::STATUS_IN_PROGRESS_VN,
+            self::STATUS_COMPLETED => self::STATUS_COMPLETED_VN,
+            self::STATUS_CANCELLED => self::STATUS_CANCELLED_VN,
+        ];
+    }
+
+    /**
+     * Normalize a status value (english or VN) to VN label.
+     */
+    public static function toVnLabel(string $value): string
+    {
+        $value = trim((string)$value);
+        // If already a VN label, return as-is
+        $vnValues = array_values(self::statusLabelMap());
+        if (in_array($value, $vnValues, true)) {
+            return $value;
+        }
+
+        // Otherwise try to map by english key
+        $key = mb_strtolower($value);
+        $map = array_change_key_case(self::statusLabelMap(), CASE_LOWER);
+        return $map[$key] ?? $value;
+    }
+
     protected $casts = [
         'ngay_hen' => 'date',
         'tong_tien' => 'decimal:2',

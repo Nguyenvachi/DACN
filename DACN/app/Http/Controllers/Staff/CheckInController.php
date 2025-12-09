@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LichHen;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use function activity;
 
 class CheckInController extends Controller
 {
@@ -24,7 +25,7 @@ class CheckInController extends Controller
         $query = LichHen::with(['user', 'bacSi', 'dichVu'])
             ->whereDate('ngay_hen', '>=', $today)
             ->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))
-            ->whereIn('trang_thai', ['Đã xác nhận', 'Đang khám', 'Đã check-in']);
+            ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_IN_PROGRESS_VN, \App\Models\LichHen::STATUS_CHECKED_IN_VN]);
 
         if ($search) {
             $query->whereHas('user', function($subQ) use ($search) {
@@ -37,10 +38,10 @@ class CheckInController extends Controller
         $appointments = $query->orderBy('ngay_hen', 'asc')->orderBy('thoi_gian_hen', 'asc')->paginate(20);
 
         $statistics = [
-            'total' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->whereIn('trang_thai', ['Đã xác nhận', 'Đang khám', 'Đã check-in'])->count(),
-            'checked_in' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->where('trang_thai', 'Đã check-in')->count(),
-            'waiting' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->where('trang_thai', 'Đã xác nhận')->count(),
-            'in_progress' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->where('trang_thai', 'Đang khám')->count(),
+            'total' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->whereIn('trang_thai', [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_IN_PROGRESS_VN, \App\Models\LichHen::STATUS_CHECKED_IN_VN])->count(),
+            'checked_in' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->where('trang_thai', \App\Models\LichHen::STATUS_CHECKED_IN_VN)->count(),
+            'waiting' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count(),
+            'in_progress' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->where('trang_thai', \App\Models\LichHen::STATUS_IN_PROGRESS_VN)->count(),
         ];
 
         return view('staff.checkin.index', compact('appointments', 'statistics', 'search'));
@@ -59,7 +60,7 @@ class CheckInController extends Controller
         ]);
 
         // Validate appointment can be checked in
-        if ($lichhen->trang_thai !== 'Đã xác nhận') {
+        if ($lichhen->trang_thai !== \App\Models\LichHen::STATUS_CONFIRMED_VN) {
             \Log::warning('CheckIn failed - Invalid status', ['status' => $lichhen->trang_thai]);
             return back()->with('error', 'Lịch hẹn này không thể check-in. Trạng thái hiện tại: ' . $lichhen->trang_thai);
         }
@@ -75,15 +76,15 @@ class CheckInController extends Controller
 
         // Update status to checked-in
         $lichhen->update([
-            'trang_thai' => 'Đã check-in',
+            'trang_thai' => \App\Models\LichHen::STATUS_CHECKED_IN_VN,
             'checked_in_at' => now()
         ]);
 
-        // Log activity
-        activity()
+        // Log activity (use global helper with root namespace)
+        \activity()
             ->performedOn($lichhen)
             ->causedBy(auth()->user())
-            ->withProperties(['old_status' => 'Đã xác nhận', 'new_status' => 'Đã check-in'])
+            ->withProperties(['old_status' => \App\Models\LichHen::STATUS_CONFIRMED_VN, 'new_status' => \App\Models\LichHen::STATUS_CHECKED_IN_VN])
             ->log('Nhân viên check-in bệnh nhân');
 
         return back()->with('success', "Đã check-in thành công cho bệnh nhân {$lichhen->user->name}");
@@ -106,7 +107,7 @@ class CheckInController extends Controller
             })
             ->whereDate('ngay_hen', '>=', Carbon::today())
             ->whereDate('ngay_hen', '<=', Carbon::today()->addDays(7))
-            ->whereIn('trang_thai', ['Đã xác nhận', 'Đã check-in'])
+            ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_CHECKED_IN_VN])
             ->first();
 
         if (!$appointment) {
@@ -123,7 +124,7 @@ class CheckInController extends Controller
                 'service_name' => $appointment->dichVu->ten_dich_vu,
                 'time' => $appointment->thoi_gian_hen,
                 'status' => $appointment->trang_thai,
-                'can_checkin' => $appointment->trang_thai === 'Đã xác nhận'
+                'can_checkin' => $appointment->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN
             ]
         ]);
     }
@@ -144,14 +145,13 @@ class CheckInController extends Controller
         foreach ($request->appointment_ids as $id) {
             $lichhen = LichHen::find($id);
 
-            if ($lichhen && $lichhen->trang_thai === 'Đã xác nhận' && Carbon::parse($lichhen->ngay_hen)->isToday()) {
+            if ($lichhen && $lichhen->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN && Carbon::parse($lichhen->ngay_hen)->isToday()) {
                 $lichhen->update([
-                    'trang_thai' => 'Đã check-in',
+                    'trang_thai' => \App\Models\LichHen::STATUS_CHECKED_IN_VN,
                     'checked_in_at' => now()
                 ]);
                 $updated++;
-
-                activity()
+                \activity()
                     ->performedOn($lichhen)
                     ->causedBy(auth()->user())
                     ->withProperties(['type' => 'bulk_checkin'])

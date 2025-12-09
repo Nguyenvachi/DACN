@@ -16,7 +16,7 @@ class LichHenObserver
             $newStatus = $lichHen->trang_thai;
 
             // Tạo hóa đơn khi xác nhận (nếu chưa có) - GIỮ NGUYÊN TIẾNG VIỆT
-            if ($newStatus === 'Đã xác nhận') {
+                if ($newStatus === \App\Models\LichHen::STATUS_CONFIRMED_VN) {
                 if (! $lichHen->hoaDon) {
                     HoaDon::create([
                         'lich_hen_id' => $lichHen->id,
@@ -44,7 +44,7 @@ class LichHenObserver
             }
 
             // ✅ Gửi email khi hủy (đồng bộ để tránh lỗi hiển thị)
-            if ($newStatus === 'Đã hủy') {
+                if ($newStatus === \App\Models\LichHen::STATUS_CANCELLED_VN) {
                 if ($lichHen->user && $lichHen->user->email) {
                     try {
                         $lichHen->load(['dichVu', 'bacSi', 'bacSi.chuyenKhoas']);

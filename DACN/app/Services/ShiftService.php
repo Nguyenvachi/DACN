@@ -375,7 +375,7 @@ class ShiftService
     {
         $bookedAppointments = \App\Models\LichHen::where('bac_si_id', $bacSiId)
             ->whereDate('ngay_hen', $slotStart->toDateString())
-            ->whereNotIn('trang_thai', ['Đã hủy', 'Hoàn thành'])
+            ->whereNotIn('trang_thai', [\App\Models\LichHen::STATUS_CANCELLED_VN, \App\Models\LichHen::STATUS_COMPLETED_VN])
             ->get();
 
         foreach ($bookedAppointments as $appointment) {

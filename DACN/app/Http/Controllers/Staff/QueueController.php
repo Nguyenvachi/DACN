@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LichHen;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use function activity;
 
 class QueueController extends Controller
 {
@@ -22,7 +23,7 @@ class QueueController extends Controller
         // Get checked-in appointments waiting for examination
         $queue = LichHen::with(['user', 'bacSi', 'dichVu'])
             ->whereDate('ngay_hen', $today)
-            ->where('trang_thai', 'Đã check-in')
+            ->where('trang_thai', \App\Models\LichHen::STATUS_CHECKED_IN_VN)
             ->orderBy('thoi_gian_hen', 'asc')
             ->orderBy('checked_in_at', 'asc')
             ->get();
@@ -30,14 +31,14 @@ class QueueController extends Controller
         // Get in-progress appointments
         $inProgress = LichHen::with(['user', 'bacSi', 'dichVu'])
             ->whereDate('ngay_hen', $today)
-            ->where('trang_thai', 'Đang khám')
+            ->where('trang_thai', \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
             ->orderBy('thoi_gian_hen', 'asc')
             ->get();
 
         // Get completed today
         $completed = LichHen::with(['user', 'bacSi', 'dichVu'])
             ->whereDate('ngay_hen', $today)
-            ->where('trang_thai', 'Hoàn thành')
+            ->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)
             ->orderByDesc('updated_at')
             ->limit(10)
             ->get();
@@ -45,7 +46,7 @@ class QueueController extends Controller
         $statistics = [
             'waiting' => $queue->count(),
             'in_progress' => $inProgress->count(),
-            'completed_today' => LichHen::whereDate('ngay_hen', $today)->where('trang_thai', 'Hoàn thành')->count(),
+            'completed_today' => LichHen::whereDate('ngay_hen', $today)->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)->count(),
             'avg_wait_time' => $this->calculateAverageWaitTime($today)
         ];
 
@@ -57,12 +58,12 @@ class QueueController extends Controller
      */
     public function callNext(LichHen $lichhen)
     {
-        if ($lichhen->trang_thai !== 'Đã check-in') {
+        if ($lichhen->trang_thai !== \App\Models\LichHen::STATUS_CHECKED_IN_VN) {
             return back()->with('error', 'Chỉ có thể gọi bệnh nhân đã check-in vào khám.');
         }
 
         $lichhen->update([
-            'trang_thai' => 'Đang khám',
+            'trang_thai' => \App\Models\LichHen::STATUS_IN_PROGRESS_VN,
             'thoi_gian_bat_dau_kham' => now()
         ]);
 
@@ -83,21 +84,21 @@ class QueueController extends Controller
         $today = Carbon::today();
 
         $waiting = LichHen::whereDate('ngay_hen', $today)
-            ->where('trang_thai', 'Đã check-in')
+            ->where('trang_thai', \App\Models\LichHen::STATUS_CHECKED_IN_VN)
             ->count();
 
         $inProgress = LichHen::whereDate('ngay_hen', $today)
-            ->where('trang_thai', 'Đang khám')
+            ->where('trang_thai', \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
             ->count();
 
         $completed = LichHen::whereDate('ngay_hen', $today)
-            ->where('trang_thai', 'Hoàn thành')
+            ->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)
             ->count();
 
         // Get latest queue list
         $queue = LichHen::with(['user', 'bacSi'])
             ->whereDate('ngay_hen', $today)
-            ->where('trang_thai', 'Đã check-in')
+            ->where('trang_thai', \App\Models\LichHen::STATUS_CHECKED_IN_VN)
             ->orderBy('thoi_gian_hen', 'asc')
             ->orderBy('checked_in_at', 'asc')
             ->get()
@@ -129,7 +130,7 @@ class QueueController extends Controller
     private function calculateAverageWaitTime($date)
     {
         $completed = LichHen::whereDate('ngay_hen', $date)
-            ->where('trang_thai', 'Hoàn thành')
+            ->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)
             ->whereNotNull('checked_in_at')
             ->whereNotNull('completed_at')
             ->get();

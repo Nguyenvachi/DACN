@@ -24,12 +24,12 @@ class MedicalWorkflowService
      */
     public function confirmAppointment(LichHen $lichHen, $confirmedBy = null): bool
     {
-        if ($lichHen->trang_thai !== 'Chờ xác nhận') {
+        if ($lichHen->trang_thai !== LichHen::STATUS_PENDING_VN) {
             return false;
         }
 
         $lichHen->update([
-            'trang_thai' => 'Đã xác nhận',
+            'trang_thai' => LichHen::STATUS_CONFIRMED_VN,
         ]);
 
         // ✅ Email sẽ được gửi tự động qua LichHenObserver khi status thay đổi
@@ -45,12 +45,12 @@ class MedicalWorkflowService
      */
     public function checkInAppointment(LichHen $lichHen): bool
     {
-        if ($lichHen->trang_thai !== 'Đã xác nhận') {
+        if ($lichHen->trang_thai !== LichHen::STATUS_CONFIRMED_VN) {
             return false;
         }
 
         $lichHen->update([
-            'trang_thai' => 'Đã check-in',
+            'trang_thai' => LichHen::STATUS_CHECKED_IN_VN,
             'checked_in_at' => now(),
         ]);
 
@@ -66,14 +66,14 @@ class MedicalWorkflowService
      */
     public function startExamination(LichHen $lichHen, array $benhAnData): BenhAn
     {
-        if (!in_array($lichHen->trang_thai, ['Đã check-in', 'Đã xác nhận'])) {
+        if (!in_array($lichHen->trang_thai, [LichHen::STATUS_CHECKED_IN_VN, LichHen::STATUS_CONFIRMED_VN])) {
             throw new \Exception("Lịch hẹn chưa được check-in");
         }
 
         return DB::transaction(function () use ($lichHen, $benhAnData) {
             // Chuyển trạng thái sang "đang khám"
             $lichHen->update([
-                'trang_thai' => 'Đang khám',
+                'trang_thai' => LichHen::STATUS_IN_PROGRESS_VN,
             ]);
 
             // Tạo bệnh án
@@ -138,7 +138,7 @@ class MedicalWorkflowService
      */
     public function completeExamination(LichHen $lichHen, array $finalData): bool
     {
-        if ($lichHen->trang_thai !== 'Đang khám') {
+        if ($lichHen->trang_thai !== LichHen::STATUS_IN_PROGRESS_VN) {
             return false;
         }
 
@@ -155,7 +155,7 @@ class MedicalWorkflowService
 
             // Chuyển trạng thái lịch hẹn sang hoàn thành
             $lichHen->update([
-                'trang_thai' => 'Hoàn thành',
+                'trang_thai' => LichHen::STATUS_COMPLETED_VN,
                 'completed_at' => now(),
             ]);
 
