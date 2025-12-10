@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 05, 2025 lúc 06:13 AM
+-- Thời gian đã tạo: Th12 10, 2025 lúc 06:49 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.0.30
 
@@ -20,6 +20,38 @@ SET time_zone = "+00:00";
 --
 -- Cơ sở dữ liệu: `duan`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `activity_log`
+--
+
+CREATE TABLE `activity_log` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `log_name` varchar(255) DEFAULT NULL,
+  `description` text NOT NULL,
+  `subject_type` varchar(255) DEFAULT NULL,
+  `event` varchar(255) DEFAULT NULL,
+  `subject_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `causer_type` varchar(255) DEFAULT NULL,
+  `causer_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`properties`)),
+  `batch_uuid` char(36) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `activity_log`
+--
+
+INSERT INTO `activity_log` (`id`, `log_name`, `description`, `subject_type`, `event`, `subject_id`, `causer_type`, `causer_id`, `properties`, `batch_uuid`, `created_at`, `updated_at`) VALUES
+(1, 'default', 'Nhân viên gọi bệnh nhân vào khám', 'App\\Models\\LichHen', NULL, 27, 'App\\Models\\User', 37, '{\"action\":\"call_next\"}', NULL, '2025-12-09 06:13:49', '2025-12-09 06:13:49'),
+(2, 'default', 'Nhân viên check-in bệnh nhân', 'App\\Models\\LichHen', NULL, 34, 'App\\Models\\User', 37, '{\"old_status\":\"\\u0110\\u00e3 x\\u00e1c nh\\u1eadn\",\"new_status\":\"\\u0110\\u00e3 check-in\"}', NULL, '2025-12-09 06:36:46', '2025-12-09 06:36:46'),
+(3, 'default', 'Nhân viên gọi bệnh nhân vào khám', 'App\\Models\\LichHen', NULL, 34, 'App\\Models\\User', 37, '{\"action\":\"call_next\"}', NULL, '2025-12-09 06:37:24', '2025-12-09 06:37:24'),
+(4, 'default', 'Nhân viên check-in bệnh nhân', 'App\\Models\\LichHen', NULL, 34, 'App\\Models\\User', 37, '{\"old_status\":\"\\u0110\\u00e3 x\\u00e1c nh\\u1eadn\",\"new_status\":\"\\u0110\\u00e3 check-in\"}', NULL, '2025-12-09 07:40:25', '2025-12-09 07:40:25'),
+(5, 'default', 'Nhân viên gọi bệnh nhân vào khám', 'App\\Models\\LichHen', NULL, 34, 'App\\Models\\User', 37, '{\"action\":\"call_next\"}', NULL, '2025-12-09 07:40:30', '2025-12-09 07:40:30');
 
 -- --------------------------------------------------------
 
@@ -51,7 +83,8 @@ INSERT INTO `bac_sis` (`id`, `user_id`, `ho_ten`, `email`, `chuyen_khoa`, `kinh_
 (2, NULL, 'Bùi Thanh Phước', 'Buiphuoc@gmail.com', 'Sản', 0, NULL, 'Đang hoạt động', '0123456789', 'avatars/oq6ESFOlzpOgPh3CySyyEbenBOrvmTBG3GujRFuE.jpg', NULL, '2025-10-27 08:33:39', '2025-11-30 04:06:13'),
 (4, NULL, 'Nguyễn Chí Thanh', 'Chithanh@gmail.com', 'Phụ Khoa', 0, NULL, 'Đang hoạt động', '0398219340', 'avatars/TPxydOFdRODVNgKWa7GLBzt0xlVtYZRCIE8GWhFn.jpg', NULL, '2025-10-27 08:33:53', '2025-11-30 04:06:37'),
 (10, 30, 'Võ Thị Diễm Hằng', 'vo-thi-diem-hang.10@gmail.com', 'Phụ Khoa', 4, NULL, 'Đang hoạt động', '0968177630', 'avatars/muu5syjIJSvXUaUALyjdmoto4LUlxP9ey2ught0l.jpg', NULL, '2025-11-04 02:37:58', '2025-11-30 04:04:48'),
-(11, 34, 'Bác sĩ 2', 'bac-si-2.11@gmail.com', 'Sản Khoa', 5, NULL, 'Đang hoạt động', '0987654321', 'avatars/B5EDFU6EMMBZkQuoCEIenV5IeCxXc4jSeptkzd7D.jpg', NULL, '2025-11-04 03:19:00', '2025-11-30 04:04:27');
+(11, 34, 'Bác sĩ 2', 'bac-si-2.11@gmail.com', 'Sản Khoa', 5, NULL, 'Đang hoạt động', '0987654321', 'avatars/B5EDFU6EMMBZkQuoCEIenV5IeCxXc4jSeptkzd7D.jpg', NULL, '2025-11-04 03:19:00', '2025-11-30 04:04:27'),
+(12, 41, 'BS. Bùi Thanh Phước', 'doctor1@example.test', 'Tổng quát', 0, NULL, 'Đang hoạt động', '0900000000', NULL, NULL, '2025-12-09 16:37:49', '2025-12-09 16:37:49');
 
 -- --------------------------------------------------------
 
@@ -91,8 +124,8 @@ CREATE TABLE `bac_si_phong` (
 INSERT INTO `bac_si_phong` (`bac_si_id`, `phong_id`) VALUES
 (2, 2),
 (2, 4),
+(10, 1),
 (10, 3),
-(11, 1),
 (11, 4);
 
 -- --------------------------------------------------------
@@ -183,7 +216,14 @@ INSERT INTO `benh_ans` (`id`, `user_id`, `bac_si_id`, `lich_hen_id`, `ngay_kham`
 (5, 35, 10, 9, '2025-11-21', 'Testt', 'Testt', 'Testt', 'Testt', 'Testt', '2025-11-20 00:36:12', '2025-11-20 00:36:12'),
 (6, 35, 11, 12, '2025-11-22', '3:12 20/11/2025', '3:12 20/11/2025', '3:12 20/11/2025', '3:12 20/11/2025', '3:12 20/11/2025', '2025-11-20 01:13:05', '2025-11-20 01:13:05'),
 (7, 38, 11, NULL, '2025-11-28', 'Testt', 'Testt', 'Testt', 'Testt', 'Testt', '2025-11-27 11:35:10', '2025-11-27 11:35:10'),
-(8, 36, 2, 18, '2025-12-04', 'Hoàn tiền', 'Hoàn tiền', 'Hoàn tiền', 'Hoàn tiền', 'Hoàn tiền', '2025-12-04 07:39:08', '2025-12-04 07:39:08');
+(8, 36, 2, 18, '2025-12-04', 'Hoàn tiền', 'Hoàn tiền', 'Hoàn tiền', 'Hoàn tiền', 'Hoàn tiền', '2025-12-04 07:39:08', '2025-12-04 07:39:08'),
+(9, 36, 10, 19, '2025-12-07', 'Khám Siêu Âm', 'Thai 12 tuan', 'Thai 12 tuan phat trien tot', 'Tai kham sau 4 tuan', 'Me can bo sung vitamin', '2025-12-07 08:48:58', '2025-12-07 08:52:09'),
+(10, 31, 10, 20, '2025-12-08', 'Khám tổng quát - Test Workflow', 'Đau đầu, mệt mỏi, sốt nhẹ', 'Cảm cúm thông thường (đã khám xong)', 'Đã kê đơn thuốc, hướng dẫn chăm sóc tại nhà', 'Tái khám sau 3 ngày nếu không cải thiện', '2025-12-08 03:19:38', '2025-12-08 03:19:40'),
+(11, 31, 10, 22, '2025-12-08', 'Khám tổng quát - Test Workflow', 'Đau đầu, mệt mỏi, sốt nhẹ', 'Cảm cúm thông thường (đã khám xong)', 'Đã kê đơn thuốc, hướng dẫn chăm sóc tại nhà', 'Tái khám sau 3 ngày nếu không cải thiện', '2025-12-08 03:21:10', '2025-12-08 03:21:12'),
+(12, 31, 10, 23, '2025-12-08', 'Khám tổng quát - Test Workflow', 'Đau đầu, mệt mỏi, sốt nhẹ', 'Cảm cúm thông thường (đã khám xong)', 'Đã kê đơn thuốc, hướng dẫn chăm sóc tại nhà', 'Tái khám sau 3 ngày nếu không cải thiện', '2025-12-08 03:22:24', '2025-12-08 03:22:26'),
+(13, 36, 2, 24, '2025-12-08', 'Khám tổng quát - Test workflow', 'Đau đầu, sốt nhẹ, mệt mỏi', 'Cảm cúm thông thường', 'Kê đơn thuốc hạ sốt, nghỉ ngơi', 'Tái khám sau 3 ngày nếu không khỏi', '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(14, 36, 2, 25, '2025-12-08', 'Khám tổng quát - Test workflow', 'Đau đầu, sốt nhẹ, mệt mỏi', 'Cảm cúm thông thường', 'Kê đơn thuốc hạ sốt, nghỉ ngơi', 'Tái khám sau 3 ngày nếu không khỏi', '2025-12-08 03:51:23', '2025-12-08 03:51:23'),
+(15, 36, 10, NULL, '2025-12-08', 'Testt', 'Testt', 'Testt', 'Testt', 'Testt', '2025-12-08 10:42:24', '2025-12-08 10:42:24');
 
 -- --------------------------------------------------------
 
@@ -216,7 +256,21 @@ INSERT INTO `benh_an_audits` (`id`, `benh_an_id`, `user_id`, `action`, `old_valu
 (5, 5, 21, 'test_uploaded', NULL, '{\"description\":\"Upload k\\u1ebft qu\\u1ea3 x\\u00e9t nghi\\u1ec7m: N\\u1ee9ng kh\\u1ea9n\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-20 00:38:58', '2025-11-20 00:38:58'),
 (6, 6, 21, 'created', NULL, '{\"user_id\":\"35\",\"bac_si_id\":\"11\",\"lich_hen_id\":\"12\",\"ngay_kham\":\"2025-11-22 00:00:00\",\"tieu_de\":\"3:12 20\\/11\\/2025\",\"trieu_chung\":\"3:12 20\\/11\\/2025\",\"chuan_doan\":\"3:12 20\\/11\\/2025\",\"dieu_tri\":\"3:12 20\\/11\\/2025\",\"ghi_chu\":\"3:12 20\\/11\\/2025\",\"updated_at\":\"2025-11-20 08:13:05\",\"created_at\":\"2025-11-20 08:13:05\",\"id\":6}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-20 01:13:05', '2025-11-20 01:13:05'),
 (7, 7, 21, 'created', NULL, '{\"user_id\":\"38\",\"bac_si_id\":\"11\",\"lich_hen_id\":null,\"ngay_kham\":\"2025-11-28 00:00:00\",\"tieu_de\":\"Testt\",\"trieu_chung\":\"Testt\",\"chuan_doan\":\"Testt\",\"dieu_tri\":\"Testt\",\"ghi_chu\":\"Testt\",\"updated_at\":\"2025-11-27 18:35:10\",\"created_at\":\"2025-11-27 18:35:10\",\"id\":7}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-11-27 11:35:10', '2025-11-27 11:35:10'),
-(8, 8, 21, 'created', NULL, '{\"user_id\":\"36\",\"bac_si_id\":\"2\",\"lich_hen_id\":\"18\",\"ngay_kham\":\"2025-12-04 00:00:00\",\"tieu_de\":\"Ho\\u00e0n ti\\u1ec1n\",\"trieu_chung\":\"Ho\\u00e0n ti\\u1ec1n\",\"chuan_doan\":\"Ho\\u00e0n ti\\u1ec1n\",\"dieu_tri\":\"Ho\\u00e0n ti\\u1ec1n\",\"ghi_chu\":\"Ho\\u00e0n ti\\u1ec1n\",\"updated_at\":\"2025-12-04 14:39:08\",\"created_at\":\"2025-12-04 14:39:08\",\"id\":8}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-12-04 07:39:08', '2025-12-04 07:39:08');
+(8, 8, 21, 'created', NULL, '{\"user_id\":\"36\",\"bac_si_id\":\"2\",\"lich_hen_id\":\"18\",\"ngay_kham\":\"2025-12-04 00:00:00\",\"tieu_de\":\"Ho\\u00e0n ti\\u1ec1n\",\"trieu_chung\":\"Ho\\u00e0n ti\\u1ec1n\",\"chuan_doan\":\"Ho\\u00e0n ti\\u1ec1n\",\"dieu_tri\":\"Ho\\u00e0n ti\\u1ec1n\",\"ghi_chu\":\"Ho\\u00e0n ti\\u1ec1n\",\"updated_at\":\"2025-12-04 14:39:08\",\"created_at\":\"2025-12-04 14:39:08\",\"id\":8}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '2025-12-04 07:39:08', '2025-12-04 07:39:08'),
+(9, 9, NULL, 'created', NULL, '{\"user_id\":36,\"bac_si_id\":10,\"lich_hen_id\":19,\"ngay_kham\":\"2025-12-07 15:48:58\",\"tieu_de\":\"Kh\\u00e1m Si\\u00eau \\u00c2m\",\"trieu_chung\":\"Thai 12 tuan\",\"chuan_doan\":\"Thai nghen binh thuong\",\"dieu_tri\":\"Theo doi dinh ky\",\"ghi_chu\":\"Thai phat trien tot\",\"updated_at\":\"2025-12-07 15:48:58\",\"created_at\":\"2025-12-07 15:48:58\",\"id\":9}', '127.0.0.1', 'Symfony', '2025-12-07 08:48:58', '2025-12-07 08:48:58'),
+(10, 9, NULL, 'updated', '{\"id\":9,\"user_id\":36,\"bac_si_id\":10,\"lich_hen_id\":19,\"ngay_kham\":\"2025-12-06T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m Si\\u00eau \\u00c2m\",\"trieu_chung\":\"Thai 12 tuan\",\"chuan_doan\":\"Thai nghen binh thuong\",\"dieu_tri\":\"Theo doi dinh ky\",\"ghi_chu\":\"Thai phat trien tot\",\"created_at\":\"2025-12-07T08:48:58.000000Z\",\"updated_at\":\"2025-12-07T08:48:58.000000Z\"}', '{\"id\":9,\"user_id\":36,\"bac_si_id\":10,\"lich_hen_id\":19,\"ngay_kham\":\"2025-12-07\",\"tieu_de\":\"Kh\\u00e1m Si\\u00eau \\u00c2m\",\"trieu_chung\":\"Thai 12 tuan\",\"chuan_doan\":\"Thai 12 tuan phat trien tot\",\"dieu_tri\":\"Tai kham sau 4 tuan\",\"ghi_chu\":\"Me can bo sung vitamin\",\"created_at\":\"2025-12-07 15:48:58\",\"updated_at\":\"2025-12-07 15:52:09\"}', '127.0.0.1', 'Symfony', '2025-12-07 08:52:09', '2025-12-07 08:52:09'),
+(11, 10, NULL, 'created', NULL, '{\"user_id\":31,\"bac_si_id\":10,\"lich_hen_id\":20,\"ngay_kham\":\"2025-12-08 10:19:38\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test Workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, m\\u1ec7t m\\u1ecfi, s\\u1ed1t nh\\u1eb9\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng\",\"dieu_tri\":\"Ngh\\u1ec9 ng\\u01a1i, u\\u1ed1ng \\u0111\\u1ee7 n\\u01b0\\u1edbc, d\\u00f9ng thu\\u1ed1c h\\u1ea1 s\\u1ed1t khi c\\u1ea7n\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng c\\u1ea3i thi\\u1ec7n\",\"updated_at\":\"2025-12-08 10:19:38\",\"created_at\":\"2025-12-08 10:19:38\",\"id\":10}', '127.0.0.1', 'Symfony', '2025-12-08 03:19:38', '2025-12-08 03:19:38'),
+(12, 10, NULL, 'updated', '{\"id\":10,\"user_id\":31,\"bac_si_id\":10,\"lich_hen_id\":20,\"ngay_kham\":\"2025-12-07T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test Workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, m\\u1ec7t m\\u1ecfi, s\\u1ed1t nh\\u1eb9\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng\",\"dieu_tri\":\"Ngh\\u1ec9 ng\\u01a1i, u\\u1ed1ng \\u0111\\u1ee7 n\\u01b0\\u1edbc, d\\u00f9ng thu\\u1ed1c h\\u1ea1 s\\u1ed1t khi c\\u1ea7n\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng c\\u1ea3i thi\\u1ec7n\",\"created_at\":\"2025-12-08T03:19:38.000000Z\",\"updated_at\":\"2025-12-08T03:19:38.000000Z\"}', '{\"id\":10,\"user_id\":31,\"bac_si_id\":10,\"lich_hen_id\":20,\"ngay_kham\":\"2025-12-08\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test Workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, m\\u1ec7t m\\u1ecfi, s\\u1ed1t nh\\u1eb9\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng (\\u0111\\u00e3 kh\\u00e1m xong)\",\"dieu_tri\":\"\\u0110\\u00e3 k\\u00ea \\u0111\\u01a1n thu\\u1ed1c, h\\u01b0\\u1edbng d\\u1eabn ch\\u0103m s\\u00f3c t\\u1ea1i nh\\u00e0\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng c\\u1ea3i thi\\u1ec7n\",\"created_at\":\"2025-12-08 10:19:38\",\"updated_at\":\"2025-12-08 10:19:40\"}', '127.0.0.1', 'Symfony', '2025-12-08 03:19:40', '2025-12-08 03:19:40'),
+(13, 11, NULL, 'created', NULL, '{\"user_id\":31,\"bac_si_id\":10,\"lich_hen_id\":22,\"ngay_kham\":\"2025-12-08 10:21:10\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test Workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, m\\u1ec7t m\\u1ecfi, s\\u1ed1t nh\\u1eb9\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng\",\"dieu_tri\":\"Ngh\\u1ec9 ng\\u01a1i, u\\u1ed1ng \\u0111\\u1ee7 n\\u01b0\\u1edbc, d\\u00f9ng thu\\u1ed1c h\\u1ea1 s\\u1ed1t khi c\\u1ea7n\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng c\\u1ea3i thi\\u1ec7n\",\"updated_at\":\"2025-12-08 10:21:10\",\"created_at\":\"2025-12-08 10:21:10\",\"id\":11}', '127.0.0.1', 'Symfony', '2025-12-08 03:21:10', '2025-12-08 03:21:10'),
+(14, 11, NULL, 'updated', '{\"id\":11,\"user_id\":31,\"bac_si_id\":10,\"lich_hen_id\":22,\"ngay_kham\":\"2025-12-07T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test Workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, m\\u1ec7t m\\u1ecfi, s\\u1ed1t nh\\u1eb9\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng\",\"dieu_tri\":\"Ngh\\u1ec9 ng\\u01a1i, u\\u1ed1ng \\u0111\\u1ee7 n\\u01b0\\u1edbc, d\\u00f9ng thu\\u1ed1c h\\u1ea1 s\\u1ed1t khi c\\u1ea7n\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng c\\u1ea3i thi\\u1ec7n\",\"created_at\":\"2025-12-08T03:21:10.000000Z\",\"updated_at\":\"2025-12-08T03:21:10.000000Z\"}', '{\"id\":11,\"user_id\":31,\"bac_si_id\":10,\"lich_hen_id\":22,\"ngay_kham\":\"2025-12-08\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test Workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, m\\u1ec7t m\\u1ecfi, s\\u1ed1t nh\\u1eb9\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng (\\u0111\\u00e3 kh\\u00e1m xong)\",\"dieu_tri\":\"\\u0110\\u00e3 k\\u00ea \\u0111\\u01a1n thu\\u1ed1c, h\\u01b0\\u1edbng d\\u1eabn ch\\u0103m s\\u00f3c t\\u1ea1i nh\\u00e0\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng c\\u1ea3i thi\\u1ec7n\",\"created_at\":\"2025-12-08 10:21:10\",\"updated_at\":\"2025-12-08 10:21:12\"}', '127.0.0.1', 'Symfony', '2025-12-08 03:21:12', '2025-12-08 03:21:12'),
+(15, 12, NULL, 'created', NULL, '{\"user_id\":31,\"bac_si_id\":10,\"lich_hen_id\":23,\"ngay_kham\":\"2025-12-08 10:22:24\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test Workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, m\\u1ec7t m\\u1ecfi, s\\u1ed1t nh\\u1eb9\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng\",\"dieu_tri\":\"Ngh\\u1ec9 ng\\u01a1i, u\\u1ed1ng \\u0111\\u1ee7 n\\u01b0\\u1edbc, d\\u00f9ng thu\\u1ed1c h\\u1ea1 s\\u1ed1t khi c\\u1ea7n\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng c\\u1ea3i thi\\u1ec7n\",\"updated_at\":\"2025-12-08 10:22:24\",\"created_at\":\"2025-12-08 10:22:24\",\"id\":12}', '127.0.0.1', 'Symfony', '2025-12-08 03:22:24', '2025-12-08 03:22:24'),
+(16, 12, NULL, 'updated', '{\"id\":12,\"user_id\":31,\"bac_si_id\":10,\"lich_hen_id\":23,\"ngay_kham\":\"2025-12-07T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test Workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, m\\u1ec7t m\\u1ecfi, s\\u1ed1t nh\\u1eb9\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng\",\"dieu_tri\":\"Ngh\\u1ec9 ng\\u01a1i, u\\u1ed1ng \\u0111\\u1ee7 n\\u01b0\\u1edbc, d\\u00f9ng thu\\u1ed1c h\\u1ea1 s\\u1ed1t khi c\\u1ea7n\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng c\\u1ea3i thi\\u1ec7n\",\"created_at\":\"2025-12-08T03:22:24.000000Z\",\"updated_at\":\"2025-12-08T03:22:24.000000Z\"}', '{\"id\":12,\"user_id\":31,\"bac_si_id\":10,\"lich_hen_id\":23,\"ngay_kham\":\"2025-12-08\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test Workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, m\\u1ec7t m\\u1ecfi, s\\u1ed1t nh\\u1eb9\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng (\\u0111\\u00e3 kh\\u00e1m xong)\",\"dieu_tri\":\"\\u0110\\u00e3 k\\u00ea \\u0111\\u01a1n thu\\u1ed1c, h\\u01b0\\u1edbng d\\u1eabn ch\\u0103m s\\u00f3c t\\u1ea1i nh\\u00e0\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng c\\u1ea3i thi\\u1ec7n\",\"created_at\":\"2025-12-08 10:22:24\",\"updated_at\":\"2025-12-08 10:22:26\"}', '127.0.0.1', 'Symfony', '2025-12-08 03:22:26', '2025-12-08 03:22:26'),
+(17, 13, NULL, 'created', NULL, '{\"user_id\":36,\"bac_si_id\":2,\"lich_hen_id\":24,\"ngay_kham\":\"2025-12-08 10:50:52\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, s\\u1ed1t nh\\u1eb9, m\\u1ec7t m\\u1ecfi\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng\",\"dieu_tri\":\"K\\u00ea \\u0111\\u01a1n thu\\u1ed1c h\\u1ea1 s\\u1ed1t, ngh\\u1ec9 ng\\u01a1i\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng kh\\u1ecfi\",\"updated_at\":\"2025-12-08 10:50:52\",\"created_at\":\"2025-12-08 10:50:52\",\"id\":13}', '127.0.0.1', 'Symfony', '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(18, 14, NULL, 'created', NULL, '{\"user_id\":36,\"bac_si_id\":2,\"lich_hen_id\":25,\"ngay_kham\":\"2025-12-08 10:51:23\",\"tieu_de\":\"Kh\\u00e1m t\\u1ed5ng qu\\u00e1t - Test workflow\",\"trieu_chung\":\"\\u0110au \\u0111\\u1ea7u, s\\u1ed1t nh\\u1eb9, m\\u1ec7t m\\u1ecfi\",\"chuan_doan\":\"C\\u1ea3m c\\u00fam th\\u00f4ng th\\u01b0\\u1eddng\",\"dieu_tri\":\"K\\u00ea \\u0111\\u01a1n thu\\u1ed1c h\\u1ea1 s\\u1ed1t, ngh\\u1ec9 ng\\u01a1i\",\"ghi_chu\":\"T\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y n\\u1ebfu kh\\u00f4ng kh\\u1ecfi\",\"updated_at\":\"2025-12-08 10:51:23\",\"created_at\":\"2025-12-08 10:51:23\",\"id\":14}', '127.0.0.1', 'Symfony', '2025-12-08 03:51:23', '2025-12-08 03:51:23'),
+(19, 15, 30, 'created', NULL, '{\"user_id\":\"36\",\"bac_si_id\":\"10\",\"lich_hen_id\":null,\"ngay_kham\":\"2025-12-08 00:00:00\",\"tieu_de\":\"Testt\",\"trieu_chung\":\"Testt\",\"chuan_doan\":\"Testt\",\"dieu_tri\":\"Testt\",\"ghi_chu\":\"Testt\",\"updated_at\":\"2025-12-08 17:42:24\",\"created_at\":\"2025-12-08 17:42:24\",\"id\":15}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-08 10:42:24', '2025-12-08 10:42:24'),
+(20, 15, 30, 'prescription_created', NULL, '{\"description\":\"K\\u00ea \\u0111\\u01a1n thu\\u1ed1c #10 v\\u1edbi 3 lo\\u1ea1i thu\\u1ed1c\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-08 10:43:27', '2025-12-08 10:43:27'),
+(21, 15, 30, 'test_uploaded', NULL, '{\"description\":\"Upload k\\u1ebft qu\\u1ea3 x\\u00e9t nghi\\u1ec7m: Testt\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-08 10:43:58', '2025-12-08 10:43:58'),
+(22, 15, 30, 'file_deleted', NULL, '{\"description\":\"X\\u00f3a t\\u1ec7p \\u0111\\u00ednh k\\u00e8m: WIN_20251208_13_59_51_Pro.jpg\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-08 11:31:46', '2025-12-08 11:31:46');
 
 -- --------------------------------------------------------
 
@@ -337,6 +391,32 @@ INSERT INTO `chuyen_khoas` (`id`, `ten`, `slug`, `mo_ta`, `created_at`, `updated
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `conversations`
+--
+
+CREATE TABLE `conversations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `benh_nhan_id` bigint(20) UNSIGNED NOT NULL,
+  `bac_si_id` bigint(20) UNSIGNED NOT NULL,
+  `lich_hen_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `tieu_de` varchar(255) DEFAULT NULL,
+  `trang_thai` enum('Đang hoạt động','Đã đóng','Bị khóa') NOT NULL DEFAULT 'Đang hoạt động',
+  `last_message_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `conversations`
+--
+
+INSERT INTO `conversations` (`id`, `benh_nhan_id`, `bac_si_id`, `lich_hen_id`, `tieu_de`, `trang_thai`, `last_message_at`, `created_at`, `updated_at`) VALUES
+(1, 36, 10, 14, 'Tư vấn với Võ Thị Diễm Hằng', 'Đang hoạt động', '2025-12-06 08:29:01', '2025-12-05 08:50:18', '2025-12-06 08:29:01'),
+(2, 36, 2, 16, 'Tư vấn với Bùi Thanh Phước', 'Đang hoạt động', '2025-12-05 14:22:49', '2025-12-05 14:22:49', '2025-12-05 14:22:49');
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `coupons`
 --
 
@@ -357,6 +437,38 @@ CREATE TABLE `coupons` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `coupons`
+--
+
+INSERT INTO `coupons` (`id`, `ma_giam_gia`, `ten`, `mo_ta`, `loai`, `gia_tri`, `giam_toi_da`, `don_toi_thieu`, `ngay_bat_dau`, `ngay_ket_thuc`, `so_lan_su_dung_toi_da`, `so_lan_da_su_dung`, `kich_hoat`, `created_at`, `updated_at`) VALUES
+(1, 'TETANKHANG25', 'Khuyến mãi Tết Ất Tỵ', 'Giảm giá các gói khám sức khỏe tổng quát nhân dịp năm mới.', 'phan_tram', 20.00, 200000.00, 500000.00, '2025-12-05', '2026-01-05', 100, 0, 1, '2025-12-05 12:18:57', '2025-12-05 12:18:57');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `danh_gias`
+--
+
+CREATE TABLE `danh_gias` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `bac_si_id` bigint(20) UNSIGNED NOT NULL,
+  `lich_hen_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `rating` tinyint(3) UNSIGNED NOT NULL,
+  `noi_dung` text DEFAULT NULL,
+  `trang_thai` enum('pending','approved','rejected') NOT NULL DEFAULT 'approved',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `danh_gias`
+--
+
+INSERT INTO `danh_gias` (`id`, `user_id`, `bac_si_id`, `lich_hen_id`, `rating`, `noi_dung`, `trang_thai`, `created_at`, `updated_at`) VALUES
+(1, 36, 2, 16, 5, 'Khám không có tâm', 'approved', '2025-12-05 08:12:16', '2025-12-05 08:22:38');
 
 -- --------------------------------------------------------
 
@@ -436,6 +548,16 @@ CREATE TABLE `don_hangs` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `don_hangs`
+--
+
+INSERT INTO `don_hangs` (`id`, `ma_don_hang`, `user_id`, `coupon_id`, `tong_tien`, `giam_gia`, `thanh_toan`, `trang_thai`, `trang_thai_thanh_toan`, `dia_chi_giao`, `sdt_nguoi_nhan`, `ghi_chu`, `ngay_dat`, `ngay_giao_du_kien`, `created_at`, `updated_at`) VALUES
+(1, 'DH-20251208102113-9511', 31, NULL, 50000.00, 0.00, 50000.00, 'Hoàn thành', 'Đã thanh toán', NULL, NULL, NULL, '2025-12-08 03:21:13', NULL, '2025-12-08 03:21:13', '2025-12-08 03:21:13'),
+(2, 'DH-20251208102227-6155', 31, NULL, 50000.00, 0.00, 50000.00, 'Hoàn thành', 'Đã thanh toán', NULL, NULL, NULL, '2025-12-08 03:22:27', NULL, '2025-12-08 03:22:27', '2025-12-08 03:22:27'),
+(3, 'DH-20251208105052-6369', 36, NULL, 50000.00, 0.00, 50000.00, 'Chờ xử lý', 'Chưa thanh toán', NULL, NULL, NULL, '2025-12-08 03:50:52', NULL, '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(4, 'DH-20251208105123-8952', 36, NULL, 50000.00, 0.00, 50000.00, 'Hoàn thành', 'Đã thanh toán', NULL, NULL, NULL, '2025-12-08 03:51:23', NULL, '2025-12-08 03:51:23', '2025-12-08 03:51:23');
+
 -- --------------------------------------------------------
 
 --
@@ -481,7 +603,10 @@ INSERT INTO `don_thuocs` (`id`, `benh_an_id`, `user_id`, `bac_si_id`, `lich_hen_
 (4, 2, 33, 11, 5, NULL, '2025-11-17 00:36:16', '2025-11-17 00:36:16'),
 (5, 1, 31, 10, NULL, NULL, '2025-11-17 00:46:09', '2025-11-17 00:46:09'),
 (6, 4, 35, 11, 11, NULL, '2025-11-19 23:12:14', '2025-11-19 23:12:14'),
-(7, 5, 35, 10, 9, NULL, '2025-11-20 00:38:42', '2025-11-20 00:38:42');
+(7, 5, 35, 10, 9, NULL, '2025-11-20 00:38:42', '2025-11-20 00:38:42'),
+(8, 13, 36, 2, 24, 'Uống đủ liều, không tự ý ngừng thuốc', '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(9, 14, 36, 2, 25, 'Uống đủ liều, không tự ý ngừng thuốc', '2025-12-08 03:51:23', '2025-12-08 03:51:23'),
+(10, 15, 36, 10, NULL, NULL, '2025-12-08 10:43:27', '2025-12-08 10:43:27');
 
 -- --------------------------------------------------------
 
@@ -500,6 +625,21 @@ CREATE TABLE `don_thuoc_items` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `don_thuoc_items`
+--
+
+INSERT INTO `don_thuoc_items` (`id`, `don_thuoc_id`, `thuoc_id`, `so_luong`, `lieu_dung`, `cach_dung`, `created_at`, `updated_at`) VALUES
+(8, 8, 5, 1, '2 viên/lần, 2 lần/ngày', 'Uống sau ăn', '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(9, 8, 6, 2, '2 viên/lần, 3 lần/ngày', 'Uống trước ăn', '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(10, 8, 7, 2, '2 viên/lần, 4 lần/ngày', 'Uống trước ăn', '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(11, 9, 5, 2, '2 viên/lần, 2 lần/ngày', 'Uống sau ăn', '2025-12-08 03:51:23', '2025-12-08 03:51:23'),
+(12, 9, 6, 1, '2 viên/lần, 3 lần/ngày', 'Uống trước ăn', '2025-12-08 03:51:23', '2025-12-08 03:51:23'),
+(13, 9, 7, 2, '2 viên/lần, 4 lần/ngày', 'Uống trước ăn', '2025-12-08 03:51:23', '2025-12-08 03:51:23'),
+(14, 10, 6, 1, '1 viên x 2 lần/ngày', 'Sau ăn', '2025-12-08 10:43:27', '2025-12-08 10:43:27'),
+(15, 10, 7, 1, '1', 'sau', '2025-12-08 10:43:27', '2025-12-08 10:43:27'),
+(16, 10, 5, 1, '1', '1', '2025-12-08 10:43:27', '2025-12-08 10:43:27');
+
 -- --------------------------------------------------------
 
 --
@@ -514,6 +654,34 @@ CREATE TABLE `failed_jobs` (
   `payload` longtext NOT NULL,
   `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `family_members`
+--
+
+CREATE TABLE `family_members` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `ho_ten` varchar(255) NOT NULL,
+  `quan_he` enum('vo','chong','con','cha','me','anh','chi','em','ong','ba','chau','khac') NOT NULL,
+  `ngay_sinh` date NOT NULL,
+  `gioi_tinh` enum('Nam','Nữ','Khác') NOT NULL,
+  `so_dien_thoai` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `dia_chi` text DEFAULT NULL,
+  `nhom_mau` varchar(255) DEFAULT NULL,
+  `chieu_cao` decimal(5,2) DEFAULT NULL COMMENT 'cm',
+  `can_nang` decimal(5,2) DEFAULT NULL COMMENT 'kg',
+  `tien_su_benh` text DEFAULT NULL,
+  `bhyt_ma_so` varchar(255) DEFAULT NULL,
+  `bhyt_ngay_het_han` date DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -583,7 +751,18 @@ INSERT INTO `hoa_dons` (`id`, `ma_hoa_don`, `lich_hen_id`, `user_id`, `tong_tien
 (23, NULL, 15, 36, 600000.00, 0.00, 0.00, 0.00, 'Đã thanh toán', 'unpaid', 'MOMO', NULL, '2025-11-20 02:08:32', '2025-11-20 02:09:23'),
 (24, NULL, 16, 36, 60000.00, 0.00, 0.00, 0.00, 'Đã thanh toán', 'unpaid', 'MOMO', NULL, '2025-11-20 02:25:53', '2025-11-20 02:29:50'),
 (25, NULL, 17, 36, 600000.00, 0.00, 0.00, 0.00, 'Đã thanh toán', 'unpaid', 'VNPAY', '', '2025-11-20 02:46:31', '2025-11-28 06:48:56'),
-(26, 'INV-20251204-00001', 18, 36, 600000.00, 1200000.00, 0.00, 600000.00, 'Hoàn một phần', 'partial_refund', 'Tiền mặt', '', '2025-12-04 07:12:40', '2025-12-04 07:35:19');
+(26, 'INV-20251204-00001', 18, 36, 600000.00, 1200000.00, 0.00, 600000.00, 'Hoàn một phần', 'partial_refund', 'Tiền mặt', '', '2025-12-04 07:12:40', '2025-12-04 07:35:19'),
+(27, 'INV-20251207-00001', 19, 36, 600000.00, 1200000.00, 0.00, 0.00, 'Đã thanh toán', 'paid', 'VNPAY', NULL, '2025-12-07 07:34:12', '2025-12-07 08:55:42'),
+(28, 'INV-20251208-00001', 20, 31, 50000.00, 0.00, 50000.00, 0.00, 'Chưa thanh toán', 'unpaid', NULL, 'Tự động tạo khi lịch hẹn được xác nhận', '2025-12-08 03:19:36', '2025-12-08 03:19:36'),
+(29, 'INV-20251208-00002', 22, 31, 50000.00, 0.00, 50000.00, 0.00, 'Chưa thanh toán', 'unpaid', NULL, 'Tự động tạo khi lịch hẹn được xác nhận', '2025-12-08 03:21:08', '2025-12-08 03:21:08'),
+(30, 'INV-20251208-00003', 23, 31, 50000.00, 0.00, 50000.00, 0.00, 'Chưa thanh toán', 'unpaid', NULL, 'Tự động tạo khi lịch hẹn được xác nhận', '2025-12-08 03:22:21', '2025-12-08 03:22:21'),
+(31, 'INV-20251208-00004', 24, 36, 50000.00, 0.00, 50000.00, 0.00, 'Chưa thanh toán', 'unpaid', NULL, 'Tự động tạo khi lịch hẹn được xác nhận', '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(32, 'INV-20251208-00005', 25, 36, 50000.00, 0.00, 50000.00, 0.00, 'Chưa thanh toán', 'unpaid', NULL, 'Tự động tạo khi lịch hẹn được xác nhận', '2025-12-08 03:51:23', '2025-12-08 03:51:23'),
+(33, 'INV-20251208-00006', 26, 36, 1800000.00, 0.00, 1800000.00, 0.00, 'Chưa thanh toán', 'unpaid', NULL, NULL, '2025-12-08 12:11:37', '2025-12-08 12:11:37'),
+(34, 'INV-20251209-00001', 27, 36, 1800000.00, 0.00, 1800000.00, 0.00, 'Chưa thanh toán', 'unpaid', NULL, NULL, '2025-12-08 17:46:58', '2025-12-08 17:46:58'),
+(35, 'INV-20251209-00002', 34, 36, 1800000.00, 3600000.00, 0.00, 0.00, 'Đã thanh toán', 'paid', 'Tiền mặt', '', '2025-12-09 06:36:00', '2025-12-09 17:13:47'),
+(36, 'INV-20251209-00003', 38, 36, 1800000.00, 1800000.00, 0.00, 0.00, 'Đã thanh toán', 'paid', NULL, 'Tự động tạo khi hoàn thành bởi script', '2025-12-09 16:45:13', '2025-12-09 16:45:13'),
+(37, 'INV-20251210-00001', 39, 42, 1800000.00, 0.00, 1800000.00, 0.00, 'Chưa thanh toán', 'unpaid', NULL, NULL, '2025-12-09 18:28:08', '2025-12-09 18:28:08');
 
 -- --------------------------------------------------------
 
@@ -606,8 +785,7 @@ CREATE TABLE `jobs` (
 --
 
 INSERT INTO `jobs` (`id`, `queue`, `payload`, `attempts`, `reserved_at`, `available_at`, `created_at`) VALUES
-(26, 'default', '{\"uuid\":\"316b025a-0e7d-4e24-949c-ecfeec80b92e\",\"displayName\":\"App\\\\Mail\\\\HoaDonDaThanhToan\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Mail\\\\SendQueuedMailable\",\"command\":\"O:34:\\\"Illuminate\\\\Mail\\\\SendQueuedMailable\\\":15:{s:8:\\\"mailable\\\";O:26:\\\"App\\\\Mail\\\\HoaDonDaThanhToan\\\":3:{s:6:\\\"hoaDon\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:17:\\\"App\\\\Models\\\\HoaDon\\\";s:2:\\\"id\\\";i:26;s:9:\\\"relations\\\";a:2:{i:0;s:7:\\\"lichHen\\\";i:1;s:4:\\\"user\\\";}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:2:\\\"to\\\";a:1:{i:0;a:2:{s:4:\\\"name\\\";N;s:7:\\\"address\\\";s:18:\\\"tn822798@gmail.com\\\";}}s:6:\\\"mailer\\\";s:4:\\\"smtp\\\";}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:13:\\\"maxExceptions\\\";N;s:17:\\\"shouldBeEncrypted\\\";b:0;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}s:3:\\\"job\\\";N;}\"}}', 0, NULL, 1764832486, 1764832486),
-(27, 'default', '{\"uuid\":\"cb518a48-e7ca-4cea-95e8-6aa4a6554630\",\"displayName\":\"App\\\\Mail\\\\LichHenDaXacNhan\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Mail\\\\SendQueuedMailable\",\"command\":\"O:34:\\\"Illuminate\\\\Mail\\\\SendQueuedMailable\\\":15:{s:8:\\\"mailable\\\";O:25:\\\"App\\\\Mail\\\\LichHenDaXacNhan\\\":3:{s:7:\\\"lichHen\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:18:\\\"App\\\\Models\\\\LichHen\\\";s:2:\\\"id\\\";i:18;s:9:\\\"relations\\\";a:4:{i:0;s:6:\\\"hoaDon\\\";i:1;s:4:\\\"user\\\";i:2;s:6:\\\"dichVu\\\";i:3;s:5:\\\"bacSi\\\";}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:2:\\\"to\\\";a:1:{i:0;a:2:{s:4:\\\"name\\\";N;s:7:\\\"address\\\";s:18:\\\"tn822798@gmail.com\\\";}}s:6:\\\"mailer\\\";s:4:\\\"smtp\\\";}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:13:\\\"maxExceptions\\\";N;s:17:\\\"shouldBeEncrypted\\\";b:0;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}s:3:\\\"job\\\";N;}\"}}', 0, NULL, 1764832521, 1764832521);
+(44, 'default', '{\"uuid\":\"c465bd19-9088-4f21-ab1a-9e967ffabcb5\",\"displayName\":\"App\\\\Mail\\\\LichHenDaXacNhan\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Mail\\\\SendQueuedMailable\",\"command\":\"O:34:\\\"Illuminate\\\\Mail\\\\SendQueuedMailable\\\":15:{s:8:\\\"mailable\\\";O:25:\\\"App\\\\Mail\\\\LichHenDaXacNhan\\\":3:{s:7:\\\"lichHen\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:18:\\\"App\\\\Models\\\\LichHen\\\";s:2:\\\"id\\\";i:26;s:9:\\\"relations\\\";a:5:{i:0;s:6:\\\"hoaDon\\\";i:1;s:4:\\\"user\\\";i:2;s:6:\\\"dichVu\\\";i:3;s:5:\\\"bacSi\\\";i:4;s:17:\\\"bacSi.chuyenKhoas\\\";}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:2:\\\"to\\\";a:1:{i:0;a:2:{s:4:\\\"name\\\";N;s:7:\\\"address\\\";s:18:\\\"tn822798@gmail.com\\\";}}s:6:\\\"mailer\\\";s:4:\\\"smtp\\\";}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:13:\\\"maxExceptions\\\";N;s:17:\\\"shouldBeEncrypted\\\";b:0;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}s:3:\\\"job\\\";N;}\"}}', 0, NULL, 1765211666, 1765211666);
 
 -- --------------------------------------------------------
 
@@ -625,6 +803,9 @@ CREATE TABLE `lich_hens` (
   `thoi_gian_hen` time NOT NULL,
   `ghi_chu` text DEFAULT NULL,
   `trang_thai` varchar(255) NOT NULL DEFAULT 'Chờ xác nhận',
+  `checked_in_at` timestamp NULL DEFAULT NULL,
+  `thoi_gian_bat_dau_kham` timestamp NULL DEFAULT NULL,
+  `completed_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `payment_status` varchar(255) NOT NULL DEFAULT 'Chưa thanh toán',
@@ -638,22 +819,37 @@ CREATE TABLE `lich_hens` (
 -- Đang đổ dữ liệu cho bảng `lich_hens`
 --
 
-INSERT INTO `lich_hens` (`id`, `user_id`, `bac_si_id`, `dich_vu_id`, `tong_tien`, `ngay_hen`, `thoi_gian_hen`, `ghi_chu`, `trang_thai`, `created_at`, `updated_at`, `payment_status`, `payment_method`, `paid_at`, `cancelled_by`, `cancelled_at`) VALUES
-(2, 31, 11, 2, 0.00, '2025-11-05', '09:00:00', 'test', 'Hoàn thành', '2025-11-04 10:03:28', '2025-11-05 09:48:25', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
-(3, 31, 11, 3, 0.00, '2025-11-05', '12:00:00', 'ssss', 'Đã hủy', '2025-11-04 10:04:46', '2025-11-05 09:48:22', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
-(4, 31, 11, 2, 0.00, '2025-11-05', '11:00:00', 'test lạy Chúa', 'Đã xác nhận', '2025-11-04 10:27:44', '2025-11-04 10:29:49', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
-(5, 31, 4, 2, 0.00, '2025-11-11', '06:00:00', 'tốt', 'Chờ xác nhận', '2025-11-05 19:20:04', '2025-11-11 03:17:18', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
-(6, 31, 2, 3, 0.00, '2025-11-05', '11:00:00', 'Test', 'Đã hủy', '2025-11-05 22:35:08', '2025-11-11 03:17:33', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
-(7, 35, 11, 5, 0.00, '2025-11-10', '09:30:00', 'Thanh toán/Hóa đơn', 'Đã xác nhận', '2025-11-06 21:27:32', '2025-11-07 01:40:31', 'Đã thanh toán', 'MOMO', '2025-11-07 01:40:31', NULL, NULL),
-(9, 35, 11, 5, 0.00, '2025-11-21', '12:15:00', 'Xin Chúa', 'Đã xác nhận', '2025-11-07 10:09:07', '2025-11-20 01:14:03', 'Đã thanh toán', 'MOMO', '2025-11-07 10:10:55', NULL, NULL),
-(10, 31, 11, 3, 0.00, '2025-11-15', '15:00:00', 'test 13/11', 'Chờ xác nhận', '2025-11-12 21:48:50', '2025-11-12 21:50:23', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
-(11, 35, 4, 3, 0.00, '2025-11-20', '15:00:00', NULL, 'Đã hủy', '2025-11-17 04:43:49', '2025-11-20 01:13:30', 'Đã thanh toán', 'VNPAY', '2025-11-20 00:54:57', NULL, NULL),
-(12, 35, 11, 4, 1800000.00, '2025-11-22', '08:30:00', '3:12 20/11/2025', 'Hoàn thành', '2025-11-20 01:06:39', '2025-11-20 01:32:40', 'Đã thanh toán', 'MOMO', '2025-11-20 01:18:04', NULL, NULL),
-(14, 36, 10, 4, 1800000.00, '2025-11-24', '10:00:00', '3h56 20/11/2025', 'Đã xác nhận', '2025-11-20 01:56:43', '2025-11-20 02:45:51', 'Đã thanh toán', 'VNPAY', '2025-11-20 02:04:58', NULL, NULL),
-(15, 36, 4, 3, 600000.00, '2025-11-23', '06:00:00', '4h08----20/11/2025', 'Chờ xác nhận', '2025-11-20 02:08:32', '2025-11-20 02:09:23', 'Đã thanh toán', 'MOMO', '2025-11-20 02:09:23', NULL, NULL),
-(16, 36, 2, 5, 60000.00, '2025-11-20', '10:31:00', '4h25----20/11/2025', 'Hoàn thành', '2025-11-20 02:25:53', '2025-11-20 02:44:03', 'Đã thanh toán', 'MOMO', '2025-11-20 02:29:50', NULL, NULL),
-(17, 36, 10, 3, 600000.00, '2025-11-29', '08:00:00', 'tttt', 'Đã xác nhận', '2025-11-20 02:46:31', '2025-11-28 06:58:58', 'Đã thanh toán', 'VNPAY', '2025-11-28 06:48:56', NULL, NULL),
-(18, 36, 2, 3, 600000.00, '2025-12-04', '16:01:00', 'hoàn tiền', 'Chờ xác nhận', '2025-12-04 07:12:40', '2025-12-04 07:35:19', 'Hoàn một phần', 'Tiền mặt', '2025-12-04 07:25:48', NULL, NULL);
+INSERT INTO `lich_hens` (`id`, `user_id`, `bac_si_id`, `dich_vu_id`, `tong_tien`, `ngay_hen`, `thoi_gian_hen`, `ghi_chu`, `trang_thai`, `checked_in_at`, `thoi_gian_bat_dau_kham`, `completed_at`, `created_at`, `updated_at`, `payment_status`, `payment_method`, `paid_at`, `cancelled_by`, `cancelled_at`) VALUES
+(2, 31, 11, 2, 0.00, '2025-11-05', '09:00:00', 'test', 'completed', NULL, NULL, NULL, '2025-11-04 10:03:28', '2025-11-05 09:48:25', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(3, 31, 11, 3, 0.00, '2025-11-05', '12:00:00', 'ssss', 'Đã hủy', NULL, NULL, NULL, '2025-11-04 10:04:46', '2025-11-05 09:48:22', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(4, 31, 11, 2, 0.00, '2025-11-05', '11:00:00', 'test lạy Chúa', 'Đã xác nhận', NULL, NULL, NULL, '2025-11-04 10:27:44', '2025-11-04 10:29:49', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(5, 31, 4, 2, 0.00, '2025-11-11', '06:00:00', 'tốt', 'Chờ xác nhận', NULL, NULL, NULL, '2025-11-05 19:20:04', '2025-11-11 03:17:18', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(6, 31, 2, 3, 0.00, '2025-11-05', '11:00:00', 'Test', 'Đã hủy', NULL, NULL, NULL, '2025-11-05 22:35:08', '2025-11-11 03:17:33', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(7, 35, 11, 5, 0.00, '2025-11-10', '09:30:00', 'Thanh toán/Hóa đơn', 'Đã xác nhận', NULL, NULL, NULL, '2025-11-06 21:27:32', '2025-11-07 01:40:31', 'Đã thanh toán', 'MOMO', '2025-11-07 01:40:31', NULL, NULL),
+(9, 35, 11, 5, 0.00, '2025-11-21', '12:15:00', 'Xin Chúa', 'Đã xác nhận', NULL, NULL, NULL, '2025-11-07 10:09:07', '2025-11-20 01:14:03', 'Đã thanh toán', 'MOMO', '2025-11-07 10:10:55', NULL, NULL),
+(10, 31, 11, 3, 0.00, '2025-11-15', '15:00:00', 'test 13/11', 'Chờ xác nhận', NULL, NULL, NULL, '2025-11-12 21:48:50', '2025-11-12 21:50:23', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(11, 35, 4, 3, 0.00, '2025-11-20', '15:00:00', NULL, 'Đã hủy', NULL, NULL, NULL, '2025-11-17 04:43:49', '2025-11-20 01:13:30', 'Đã thanh toán', 'VNPAY', '2025-11-20 00:54:57', NULL, NULL),
+(12, 35, 11, 4, 1800000.00, '2025-11-22', '08:30:00', '3:12 20/11/2025', 'completed', NULL, NULL, NULL, '2025-11-20 01:06:39', '2025-11-20 01:32:40', 'Đã thanh toán', 'MOMO', '2025-11-20 01:18:04', NULL, NULL),
+(14, 36, 10, 4, 1800000.00, '2025-11-24', '10:00:00', '3h56 20/11/2025', 'Đã xác nhận', NULL, NULL, NULL, '2025-11-20 01:56:43', '2025-11-20 02:45:51', 'Đã thanh toán', 'VNPAY', '2025-11-20 02:04:58', NULL, NULL),
+(15, 36, 4, 3, 600000.00, '2025-11-23', '06:00:00', '4h08----20/11/2025', 'Chờ xác nhận', NULL, NULL, NULL, '2025-11-20 02:08:32', '2025-11-20 02:09:23', 'Đã thanh toán', 'MOMO', '2025-11-20 02:09:23', NULL, NULL),
+(16, 36, 2, 5, 60000.00, '2025-11-20', '10:31:00', '4h25----20/11/2025', 'completed', NULL, NULL, NULL, '2025-11-20 02:25:53', '2025-11-20 02:44:03', 'Đã thanh toán', 'MOMO', '2025-11-20 02:29:50', NULL, NULL),
+(17, 36, 10, 3, 600000.00, '2025-11-29', '08:00:00', 'tttt', 'Đã xác nhận', NULL, NULL, NULL, '2025-11-20 02:46:31', '2025-11-28 06:58:58', 'Đã thanh toán', 'VNPAY', '2025-11-28 06:48:56', NULL, NULL),
+(18, 36, 2, 3, 600000.00, '2025-12-04', '16:01:00', 'hoàn tiền', 'Đã hủy', NULL, NULL, NULL, '2025-12-04 07:12:40', '2025-12-06 11:02:36', 'Hoàn một phần', 'Tiền mặt', '2025-12-04 07:25:48', NULL, NULL),
+(19, 36, 10, 3, 600000.00, '2025-12-12', '10:30:00', NULL, 'Hoàn thành', '2025-12-07 08:44:56', NULL, '2025-12-07 08:52:09', '2025-12-07 07:34:12', '2025-12-07 08:56:13', 'Đã thanh toán', 'VNPAY', '2025-12-07 08:56:13', NULL, NULL),
+(20, 31, 10, 2, 50000.00, '2025-12-08', '10:00:00', 'Test workflow - Khám tổng quát', 'Hoàn thành', '2025-12-08 03:19:37', NULL, '2025-12-08 03:19:40', '2025-12-08 03:19:35', '2025-12-08 03:19:40', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(22, 31, 10, 2, 50000.00, '2025-12-08', '12:21:07', 'Test workflow - Khám tổng quát', 'Hoàn thành', '2025-12-08 03:21:09', NULL, '2025-12-08 03:21:12', '2025-12-08 03:21:07', '2025-12-08 03:21:13', 'paid', NULL, '2025-12-08 03:21:13', NULL, NULL),
+(23, 31, 10, 2, 50000.00, '2025-12-08', '12:22:20', 'Test workflow - Khám tổng quát', 'Hoàn thành', '2025-12-08 03:22:22', NULL, '2025-12-08 03:22:26', '2025-12-08 03:22:20', '2025-12-08 03:22:27', 'paid', NULL, '2025-12-08 03:22:27', NULL, NULL),
+(24, 36, 2, 2, 50000.00, '2025-12-09', '12:50:52', 'Test workflow extended - 2025-12-08 10:50:52', 'Hoàn thành', '2025-12-08 03:50:52', NULL, '2025-12-08 03:50:52', '2025-12-08 03:50:52', '2025-12-08 03:50:52', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(25, 36, 2, 2, 50000.00, '2025-12-09', '12:51:23', 'Test workflow extended - 2025-12-08 10:51:23', 'Hoàn thành', '2025-12-08 03:51:23', NULL, '2025-12-08 03:51:23', '2025-12-08 03:51:23', '2025-12-08 03:51:23', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(26, 36, 10, 4, 1800000.00, '2025-12-12', '14:00:00', '1', 'Đã check-in', '2025-12-08 19:03:11', NULL, NULL, '2025-12-08 12:11:37', '2025-12-08 19:03:11', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(27, 36, 10, 4, 1800000.00, '2025-12-10', '11:00:00', 'Được đi mà', 'Đang khám', '2025-12-09 05:32:23', '2025-12-09 06:13:49', NULL, '2025-12-08 17:46:58', '2025-12-09 06:13:49', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(32, 36, 2, 4, 1800000.00, '2025-12-09', '11:00:00', NULL, 'Đang khám', '2025-12-09 05:59:55', '2025-12-09 06:02:01', NULL, '2025-12-09 05:59:55', '2025-12-09 06:02:01', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(33, 36, 2, 4, 1800000.00, '2025-12-09', '14:00:00', NULL, 'Đã xác nhận', NULL, NULL, NULL, '2025-12-09 05:59:55', '2025-12-09 05:59:55', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(34, 36, 10, 4, 1800000.00, '2025-12-12', '08:00:00', NULL, 'Đang khám', '2025-12-09 07:40:25', '2025-12-09 07:40:30', NULL, '2025-12-09 06:36:00', '2025-12-09 17:12:59', 'Đã thanh toán', 'Tiền mặt', '2025-12-09 17:12:59', NULL, NULL),
+(35, 36, 12, 4, 1800000.00, '2025-12-09', '23:42:00', 'Tạo tự động bởi script kiểm thử', 'Hoàn thành', '2025-12-09 16:37:49', '2025-12-09 16:37:49', '2025-12-09 16:37:49', '2025-12-09 16:37:49', '2025-12-09 16:37:49', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(36, 36, 12, 4, 1800000.00, '2025-12-09', '23:49:00', 'Tạo tự động bởi script kiểm thử', 'Hoàn thành', '2025-12-09 16:44:00', '2025-12-09 16:44:00', '2025-12-09 16:44:00', '2025-12-09 16:44:00', '2025-12-09 16:44:00', 'Chưa thanh toán', NULL, NULL, NULL, NULL),
+(38, 36, 12, 4, 1800000.00, '2025-12-09', '23:50:00', 'Tạo tự động bởi script kiểm thử', 'Hoàn thành', '2025-12-09 16:45:13', '2025-12-09 16:45:13', '2025-12-09 16:45:13', '2025-12-09 16:45:13', '2025-12-09 16:45:13', 'Đã thanh toán', NULL, '2025-12-09 16:45:13', NULL, NULL),
+(39, 42, 10, 4, 1800000.00, '2025-12-10', '08:30:00', 'TestUser', 'Đã xác nhận', NULL, NULL, NULL, '2025-12-09 18:28:08', '2025-12-09 18:28:29', 'Chưa thanh toán', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -688,10 +884,9 @@ INSERT INTO `lich_lam_viecs` (`id`, `bac_si_id`, `phong_id`, `ngay_trong_tuan`, 
 (15, 11, NULL, 2, '08:00:00', '17:00:00', '2025-11-04 03:22:06', '2025-11-04 03:22:06'),
 (16, 11, NULL, 3, '09:00:00', '18:00:00', '2025-11-04 03:22:25', '2025-11-04 03:22:25'),
 (17, 11, NULL, 6, '08:00:00', '17:00:00', '2025-11-11 04:35:10', '2025-11-11 04:35:10'),
-(18, 2, 1, 1, '08:00:00', '17:00:00', '2025-11-17 00:30:26', '2025-11-17 00:30:26'),
-(19, 10, 1, 1, '08:00:00', '17:00:00', '2025-11-20 01:56:07', '2025-11-20 01:56:07'),
 (20, 11, 1, 4, '08:00:00', '17:00:00', '2025-11-27 06:23:43', '2025-11-27 06:23:43'),
-(21, 10, 3, 5, '08:00:00', '17:00:00', '2025-12-04 06:29:16', '2025-12-04 06:29:16');
+(21, 10, 3, 5, '08:00:00', '17:00:00', '2025-12-04 06:29:16', '2025-12-04 06:29:16'),
+(22, 10, NULL, 3, '08:00:00', '17:00:00', '2025-12-08 17:46:18', '2025-12-08 17:46:18');
 
 -- --------------------------------------------------------
 
@@ -821,7 +1016,154 @@ INSERT INTO `login_audits` (`id`, `user_id`, `email`, `ip`, `user_agent`, `statu
 (78, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 03:23:02', '2025-12-05 03:23:02'),
 (79, 38, 'Patient3@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 03:45:22', '2025-12-05 03:45:22'),
 (80, 38, 'Patient3@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 04:10:52', '2025-12-05 04:10:52'),
-(81, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 04:16:17', '2025-12-05 04:16:17');
+(81, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 04:16:17', '2025-12-05 04:16:17'),
+(82, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 06:20:41', '2025-12-05 06:20:41'),
+(83, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 08:06:29', '2025-12-05 08:06:29'),
+(84, 34, 'bac-si-2.11@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 08:48:54', '2025-12-05 08:48:54'),
+(85, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 'success', NULL, '2025-12-05 08:49:57', '2025-12-05 08:49:57'),
+(86, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 08:50:51', '2025-12-05 08:50:51'),
+(87, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 08:58:31', '2025-12-05 08:58:31'),
+(88, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 09:04:56', '2025-12-05 09:04:56'),
+(89, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 09:18:17', '2025-12-05 09:18:17'),
+(90, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 09:18:46', '2025-12-05 09:18:46'),
+(91, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 'success', NULL, '2025-12-05 09:25:17', '2025-12-05 09:25:17'),
+(92, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 10:05:56', '2025-12-05 10:05:56'),
+(93, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 11:15:26', '2025-12-05 11:15:26'),
+(94, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 11:46:41', '2025-12-05 11:46:41'),
+(95, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 11:52:20', '2025-12-05 11:52:20'),
+(96, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 11:59:14', '2025-12-05 11:59:14'),
+(97, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 12:20:50', '2025-12-05 12:20:50'),
+(98, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 'success', NULL, '2025-12-05 12:50:55', '2025-12-05 12:50:55'),
+(99, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 12:51:06', '2025-12-05 12:51:06'),
+(100, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 13:30:39', '2025-12-05 13:30:39'),
+(101, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-05 13:34:02', '2025-12-05 13:34:02'),
+(102, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 13:34:07', '2025-12-05 13:34:07'),
+(103, 38, 'Patient3@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 13:34:44', '2025-12-05 13:34:44'),
+(104, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 13:37:08', '2025-12-05 13:37:08'),
+(105, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'success', NULL, '2025-12-05 15:02:01', '2025-12-05 15:02:01'),
+(106, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-06 08:28:22', '2025-12-06 08:28:22'),
+(107, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-06 08:56:49', '2025-12-06 08:56:49'),
+(108, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-06 08:59:14', '2025-12-06 08:59:14'),
+(109, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-07 03:55:42', '2025-12-07 03:55:42'),
+(110, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-07 03:56:46', '2025-12-07 03:56:46'),
+(111, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-07 04:44:38', '2025-12-07 04:44:38'),
+(112, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-07 04:45:28', '2025-12-07 04:45:28'),
+(113, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-07 04:54:56', '2025-12-07 04:54:56'),
+(114, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-07 05:00:49', '2025-12-07 05:00:49'),
+(115, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-07 06:39:01', '2025-12-07 06:39:01'),
+(116, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-07 06:55:08', '2025-12-07 06:55:08'),
+(117, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-07 07:17:15', '2025-12-07 07:17:15'),
+(118, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 00:54:24', '2025-12-08 00:54:24'),
+(119, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 00:57:46', '2025-12-08 00:57:46'),
+(120, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-08 00:58:43', '2025-12-08 00:58:43'),
+(121, 37, 'Vothidiemhang2020qng@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-08 01:00:17', '2025-12-08 01:00:17'),
+(122, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 01:01:20', '2025-12-08 01:01:20'),
+(123, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-08 10:32:06', '2025-12-08 10:32:06'),
+(124, 37, 'Vothidiemhang2020qng@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-08 10:32:36', '2025-12-08 10:32:36'),
+(125, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 10:32:56', '2025-12-08 10:32:56'),
+(126, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 10:33:18', '2025-12-08 10:33:18'),
+(127, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 11:02:30', '2025-12-08 11:02:30'),
+(128, 37, 'Vothidiemhang2020qng@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-08 15:14:16', '2025-12-08 15:14:16'),
+(129, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 15:14:32', '2025-12-08 15:14:32'),
+(130, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-08 15:15:14', '2025-12-08 15:15:14'),
+(131, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 15:15:34', '2025-12-08 15:15:34'),
+(132, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 15:42:48', '2025-12-08 15:42:48'),
+(133, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-08 15:43:06', '2025-12-08 15:43:06'),
+(134, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-09 05:26:47', '2025-12-09 05:26:47'),
+(135, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-09 05:27:01', '2025-12-09 05:27:01'),
+(136, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-09 05:27:17', '2025-12-09 05:27:17'),
+(137, 37, 'Vothidiemhang2020qng@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-09 05:27:31', '2025-12-09 05:27:31'),
+(138, 37, 'vothidiemhang2020qng@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-09 16:46:01', '2025-12-09 16:46:01'),
+(139, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-09 16:47:21', '2025-12-09 16:47:21'),
+(140, 21, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-09 16:48:44', '2025-12-09 16:48:44'),
+(141, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-09 16:51:24', '2025-12-09 16:51:24'),
+(142, 36, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-09 17:36:02', '2025-12-09 17:36:02'),
+(143, 30, 'vo-thi-diem-hang.10@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-09 17:37:19', '2025-12-09 17:37:19'),
+(144, 37, 'Vothidiemhang2020qng@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-09 17:38:43', '2025-12-09 17:38:43');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `conversation_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `noi_dung` text DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_type` varchar(255) DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `messages`
+--
+
+INSERT INTO `messages` (`id`, `conversation_id`, `user_id`, `noi_dung`, `file_path`, `file_name`, `file_type`, `is_read`, `read_at`, `created_at`, `updated_at`) VALUES
+(1, 1, 36, 'hi', NULL, NULL, NULL, 1, '2025-12-05 08:51:11', '2025-12-05 08:51:05', '2025-12-05 08:51:11'),
+(2, 1, 30, 'có chuyện gì', NULL, NULL, NULL, 1, '2025-12-05 08:51:19', '2025-12-05 08:51:16', '2025-12-05 08:51:19'),
+(3, 1, 36, 'tôi cần tư vấn', 'chat_files/iSNqLc72j1JG0fELNsR1rxLL4J5i9aBApUmytnkh.jpg', 'WIN_20221201_23_47_35_Pro.jpg', 'image', 1, '2025-12-05 08:51:37', '2025-12-05 08:51:36', '2025-12-05 08:51:37'),
+(4, 1, 30, 'có gì không', NULL, NULL, NULL, 1, '2025-12-05 08:51:52', '2025-12-05 08:51:50', '2025-12-05 08:51:52'),
+(5, 1, 30, 'anh', NULL, NULL, NULL, 1, '2025-12-05 08:53:05', '2025-12-05 08:52:54', '2025-12-05 08:53:05'),
+(6, 1, 36, 'gì', NULL, NULL, NULL, 1, '2025-12-05 08:53:17', '2025-12-05 08:53:11', '2025-12-05 08:53:17'),
+(7, 1, 30, 'không', NULL, NULL, NULL, 1, '2025-12-05 08:53:43', '2025-12-05 08:53:21', '2025-12-05 08:53:43'),
+(8, 1, 36, 'ha', NULL, NULL, NULL, 1, '2025-12-05 08:53:52', '2025-12-05 08:53:50', '2025-12-05 08:53:52'),
+(9, 1, 36, 'dưefsf', NULL, NULL, NULL, 1, '2025-12-05 08:57:12', '2025-12-05 08:57:09', '2025-12-05 08:57:12'),
+(10, 1, 30, 'edfsfsfs', NULL, NULL, NULL, 1, '2025-12-05 08:57:23', '2025-12-05 08:57:17', '2025-12-05 08:57:23'),
+(11, 1, 36, 'dadad', NULL, NULL, NULL, 1, '2025-12-05 08:58:41', '2025-12-05 08:58:39', '2025-12-05 08:58:41'),
+(12, 1, 30, 'sadsa', NULL, NULL, NULL, 1, '2025-12-05 08:59:11', '2025-12-05 08:58:52', '2025-12-05 08:59:11'),
+(13, 1, 36, 'q', NULL, NULL, NULL, 1, '2025-12-05 08:59:13', '2025-12-05 08:59:11', '2025-12-05 08:59:13'),
+(14, 1, 30, '1', NULL, NULL, NULL, 1, '2025-12-05 09:19:07', '2025-12-05 09:18:25', '2025-12-05 09:19:07'),
+(15, 1, 36, 'q', NULL, NULL, NULL, 1, '2025-12-05 09:19:31', '2025-12-05 09:19:27', '2025-12-05 09:19:31'),
+(16, 1, 30, '1', NULL, NULL, NULL, 1, '2025-12-05 09:19:42', '2025-12-05 09:19:31', '2025-12-05 09:19:42'),
+(17, 1, 36, '1', NULL, NULL, NULL, 1, '2025-12-05 09:19:51', '2025-12-05 09:19:46', '2025-12-05 09:19:51'),
+(18, 1, 30, '1', NULL, NULL, NULL, 1, '2025-12-05 09:19:59', '2025-12-05 09:19:50', '2025-12-05 09:19:59'),
+(19, 1, 36, 'qqqqqqqqqqqqqqqqq', NULL, NULL, NULL, 1, '2025-12-05 09:20:20', '2025-12-05 09:20:15', '2025-12-05 09:20:20'),
+(20, 1, 30, 'qqqqqqqqqqqqq', NULL, NULL, NULL, 1, '2025-12-05 09:20:29', '2025-12-05 09:20:20', '2025-12-05 09:20:29'),
+(21, 1, 36, '2222222222222', NULL, NULL, NULL, 1, '2025-12-05 09:21:20', '2025-12-05 09:20:41', '2025-12-05 09:21:20'),
+(22, 1, 36, '2', NULL, NULL, NULL, 1, '2025-12-05 09:21:20', '2025-12-05 09:20:55', '2025-12-05 09:21:20'),
+(23, 1, 36, 'e', NULL, NULL, NULL, 1, '2025-12-05 09:21:20', '2025-12-05 09:21:03', '2025-12-05 09:21:20'),
+(24, 1, 30, '1', NULL, NULL, NULL, 1, '2025-12-05 09:21:32', '2025-12-05 09:21:20', '2025-12-05 09:21:32'),
+(25, 1, 36, '2', NULL, NULL, NULL, 1, '2025-12-05 09:40:44', '2025-12-05 09:28:36', '2025-12-05 09:40:44'),
+(26, 1, 30, '2', NULL, NULL, NULL, 1, '2025-12-05 09:40:44', '2025-12-05 09:29:13', '2025-12-05 09:40:44'),
+(27, 1, 30, '2', NULL, NULL, NULL, 1, '2025-12-05 09:40:44', '2025-12-05 09:29:13', '2025-12-05 09:40:44'),
+(28, 1, 30, 'r', NULL, NULL, NULL, 1, '2025-12-05 09:40:44', '2025-12-05 09:29:19', '2025-12-05 09:40:44'),
+(29, 1, 30, 'r', NULL, NULL, NULL, 1, '2025-12-05 09:40:44', '2025-12-05 09:29:19', '2025-12-05 09:40:44'),
+(30, 1, 36, 't', NULL, NULL, NULL, 1, '2025-12-05 09:40:44', '2025-12-05 09:29:31', '2025-12-05 09:40:44'),
+(31, 1, 30, '5', NULL, NULL, NULL, 1, '2025-12-05 09:40:44', '2025-12-05 09:29:37', '2025-12-05 09:40:44'),
+(32, 1, 30, '5', NULL, NULL, NULL, 1, '2025-12-05 09:40:44', '2025-12-05 09:29:37', '2025-12-05 09:40:44'),
+(33, 1, 36, '4', NULL, NULL, NULL, 1, '2025-12-05 09:49:14', '2025-12-05 09:40:53', '2025-12-05 09:49:14'),
+(34, 1, 30, '7', NULL, NULL, NULL, 1, '2025-12-05 09:49:12', '2025-12-05 09:41:50', '2025-12-05 09:49:12'),
+(35, 1, 30, '7', NULL, NULL, NULL, 1, '2025-12-05 09:49:12', '2025-12-05 09:41:50', '2025-12-05 09:49:12'),
+(36, 1, 30, '6', NULL, NULL, NULL, 1, '2025-12-05 09:55:08', '2025-12-05 09:49:53', '2025-12-05 09:55:08'),
+(37, 1, 30, '6', NULL, NULL, NULL, 1, '2025-12-05 09:55:08', '2025-12-05 09:49:53', '2025-12-05 09:55:08'),
+(38, 1, 36, 'h', NULL, NULL, NULL, 1, '2025-12-05 10:06:29', '2025-12-05 09:55:18', '2025-12-05 10:06:29'),
+(39, 1, 30, 'j', NULL, NULL, NULL, 1, '2025-12-05 10:06:30', '2025-12-05 09:55:36', '2025-12-05 10:06:30'),
+(40, 1, 30, 'j', NULL, NULL, NULL, 1, '2025-12-05 10:06:30', '2025-12-05 09:55:36', '2025-12-05 10:06:30'),
+(41, 1, 36, 'k', NULL, NULL, NULL, 1, '2025-12-05 10:06:29', '2025-12-05 09:55:55', '2025-12-05 10:06:29'),
+(42, 1, 30, '2', NULL, NULL, NULL, 1, '2025-12-05 11:15:31', '2025-12-05 10:06:40', '2025-12-05 11:15:31'),
+(43, 1, 30, '2', NULL, NULL, NULL, 1, '2025-12-05 11:15:31', '2025-12-05 10:06:40', '2025-12-05 11:15:31'),
+(44, 1, 36, '2', NULL, NULL, NULL, 1, '2025-12-05 11:13:47', '2025-12-05 10:06:50', '2025-12-05 11:13:47'),
+(45, 1, 36, 'y', NULL, NULL, NULL, 1, '2025-12-05 11:23:25', '2025-12-05 11:15:41', '2025-12-05 11:23:25'),
+(46, 1, 30, 'u', NULL, NULL, NULL, 1, '2025-12-05 11:23:23', '2025-12-05 11:15:54', '2025-12-05 11:23:23'),
+(47, 1, 30, 'u', NULL, NULL, NULL, 1, '2025-12-05 11:23:23', '2025-12-05 11:15:55', '2025-12-05 11:23:23'),
+(48, 1, 30, 'r', NULL, NULL, NULL, 1, '2025-12-05 11:23:23', '2025-12-05 11:16:05', '2025-12-05 11:23:23'),
+(49, 1, 30, 'r', NULL, NULL, NULL, 1, '2025-12-05 11:23:23', '2025-12-05 11:16:05', '2025-12-05 11:23:23'),
+(50, 1, 36, '3', NULL, NULL, NULL, 1, '2025-12-05 11:29:21', '2025-12-05 11:23:38', '2025-12-05 11:29:21'),
+(51, 1, 30, '4', NULL, NULL, NULL, 1, '2025-12-05 11:29:20', '2025-12-05 11:23:47', '2025-12-05 11:29:20'),
+(52, 1, 30, '4', NULL, NULL, NULL, 1, '2025-12-05 11:29:20', '2025-12-05 11:23:47', '2025-12-05 11:29:20'),
+(53, 1, 36, '6', NULL, NULL, NULL, 1, '2025-12-05 11:38:00', '2025-12-05 11:29:32', '2025-12-05 11:38:00'),
+(54, 1, 30, '7', NULL, NULL, NULL, 1, '2025-12-05 11:37:59', '2025-12-05 11:29:44', '2025-12-05 11:37:59'),
+(55, 1, 30, '7', NULL, NULL, NULL, 1, '2025-12-05 11:37:59', '2025-12-05 11:29:44', '2025-12-05 11:37:59'),
+(56, 1, 36, '0', NULL, NULL, NULL, 1, '2025-12-06 08:28:58', '2025-12-05 11:38:07', '2025-12-06 08:28:58'),
+(57, 1, 30, 'p', NULL, NULL, NULL, 1, '2025-12-05 12:37:13', '2025-12-05 11:38:13', '2025-12-05 12:37:13'),
+(58, 1, 30, 'gì', NULL, NULL, NULL, 1, '2025-12-06 08:56:59', '2025-12-06 08:29:01', '2025-12-06 08:56:59');
 
 -- --------------------------------------------------------
 
@@ -909,7 +1251,20 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (70, '2025_12_04_150000_add_status_to_phongs_table', 39),
 (71, '2025_12_05_092931_add_deleted_at_to_bai_viets_table', 40),
 (72, '2025_12_05_101210_create_patient_profiles_table', 41),
-(73, '2025_12_05_101211_create_notification_preferences_table', 41);
+(73, '2025_12_05_101211_create_notification_preferences_table', 41),
+(74, '2025_12_05_144344_create_danh_gias_table', 42),
+(75, '2025_12_05_150000_create_conversations_table', 43),
+(76, '2025_12_05_150001_create_messages_table', 43),
+(77, '2025_12_05_201222_create_family_members_table', 44),
+(78, '2025_12_05_204006_create_notifications_table', 45),
+(79, '2025_12_06_155207_add_sms_appointment_cancelled_to_notification_preferences_table', 46),
+(80, '2025_12_07_133150_add_workflow_status_to_lich_hens_table', 47),
+(81, '2025_12_07_133230_add_status_to_xet_nghiems_table', 47),
+(82, '2025_12_08_174915_add_patient_info_to_users_table', 48),
+(83, '2025_12_09_123000_add_started_at_to_lich_hens_table', 49),
+(84, '2025_12_09_130926_create_activity_log_table', 50),
+(85, '2025_12_09_130927_add_event_column_to_activity_log_table', 50),
+(86, '2025_12_09_130928_add_batch_uuid_column_to_activity_log_table', 50);
 
 -- --------------------------------------------------------
 
@@ -947,6 +1302,8 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 (5, 'App\\Models\\User', 37),
 (6, 'App\\Models\\User', 36),
 (6, 'App\\Models\\User', 38),
+(6, 'App\\Models\\User', 40),
+(6, 'App\\Models\\User', 42),
 (11, 'App\\Models\\User', 37);
 
 -- --------------------------------------------------------
@@ -1068,6 +1425,23 @@ INSERT INTO `nha_cung_cap_thuoc` (`id`, `nha_cung_cap_id`, `thuoc_id`, `gia_nhap
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` char(36) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `notifiable_type` varchar(255) NOT NULL,
+  `notifiable_id` bigint(20) UNSIGNED NOT NULL,
+  `data` text NOT NULL,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `notification_preferences`
 --
 
@@ -1081,6 +1455,7 @@ CREATE TABLE `notification_preferences` (
   `email_promotions` tinyint(1) NOT NULL DEFAULT 0,
   `sms_appointment_reminder` tinyint(1) NOT NULL DEFAULT 0,
   `sms_appointment_confirmed` tinyint(1) NOT NULL DEFAULT 0,
+  `sms_appointment_cancelled` tinyint(1) NOT NULL DEFAULT 0,
   `reminder_hours_before` int(11) NOT NULL DEFAULT 24 COMMENT 'Nhắc trước bao nhiêu giờ',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -1090,8 +1465,8 @@ CREATE TABLE `notification_preferences` (
 -- Đang đổ dữ liệu cho bảng `notification_preferences`
 --
 
-INSERT INTO `notification_preferences` (`id`, `user_id`, `email_appointment_reminder`, `email_appointment_confirmed`, `email_appointment_cancelled`, `email_test_results`, `email_promotions`, `sms_appointment_reminder`, `sms_appointment_confirmed`, `reminder_hours_before`, `created_at`, `updated_at`) VALUES
-(1, 36, 1, 1, 1, 1, 0, 0, 0, 24, '2025-12-05 04:37:24', '2025-12-05 04:37:24');
+INSERT INTO `notification_preferences` (`id`, `user_id`, `email_appointment_reminder`, `email_appointment_confirmed`, `email_appointment_cancelled`, `email_test_results`, `email_promotions`, `sms_appointment_reminder`, `sms_appointment_confirmed`, `sms_appointment_cancelled`, `reminder_hours_before`, `created_at`, `updated_at`) VALUES
+(1, 36, 1, 1, 1, 1, 0, 0, 0, 0, 24, '2025-12-05 04:37:24', '2025-12-05 04:37:24');
 
 -- --------------------------------------------------------
 
@@ -1134,7 +1509,7 @@ CREATE TABLE `patient_profiles` (
 --
 
 INSERT INTO `patient_profiles` (`id`, `user_id`, `nhom_mau`, `chieu_cao`, `can_nang`, `allergies`, `tien_su_benh`, `thuoc_dang_dung`, `benh_man_tinh`, `emergency_contact_name`, `emergency_contact_phone`, `emergency_contact_relation`, `avatar`, `created_at`, `updated_at`) VALUES
-(1, 36, 'A', 170.00, 65.00, '[\"Penicillin\",\"Ph\\u1ea5n hoa\",\"H\\u1ea3i s\\u1ea3n\"]', 'Phẫu thuật ruột thừa 2020', 'Vitamin C', 'Không', 'Nguyễn Văn A', '0398219340', 'Vợ', 'avatars/w3ySyRmzoyXphvU4nPc5tYT6D7QQJuQ4V0DGtIAv.jpg', '2025-12-05 03:23:48', '2025-12-05 04:36:52'),
+(1, 36, 'A', 170.00, 65.00, '[\"Penicillin\",\"Ph\\u1ea5n hoa\",\"H\\u1ea3i s\\u1ea3n\"]', 'Phẫu thuật ruột thừa 2020', 'Vitamin C', 'Không', 'Nguyễn Văn A', '0398219340', 'Vợ', 'avatars/WBFfvXiWwjYWqxwxx7zp2FZHvyqdQ3qotKQ9EN4v.jpg', '2025-12-05 03:23:48', '2025-12-05 08:20:09'),
 (2, 38, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'avatars/qonVp1TTXsRdUyrjTIE7E8ibPneR51vwQpszH6MX.jpg', '2025-12-05 04:11:17', '2025-12-05 04:11:17');
 
 -- --------------------------------------------------------
@@ -1408,9 +1783,9 @@ CREATE TABLE `phongs` (
 --
 
 INSERT INTO `phongs` (`id`, `ten`, `loai`, `mo_ta`, `trang_thai`, `vi_tri`, `dien_tich`, `suc_chua`, `created_at`, `updated_at`) VALUES
-(1, 'P.101 - Khám thai', 'phong_kham', 'Phòng khám tầng 1', 'Tạm ngưng', 'Tầng 1', 25.50, 5, '2025-11-17 00:24:48', '2025-12-04 11:48:52'),
+(1, 'P.101 - Khám thai', 'phong_kham', 'Phòng khám tầng 1', 'Sẵn sàng', 'Tầng 1', 25.50, 20, '2025-11-17 00:24:48', '2025-12-07 07:20:38'),
 (2, 'P.Xét nghiệm máu', 'phong_xet_nghiem', 'Khu cận lâm sàng', 'Đang sử dụng', NULL, NULL, NULL, '2025-11-17 00:25:48', '2025-12-04 11:38:41'),
-(3, 'P.Siêu âm 4D', 'phong_chuc_nang', 'Máy siêu âm màu', 'Bảo trì', NULL, NULL, NULL, '2025-11-17 00:26:08', '2025-12-04 11:39:34'),
+(3, 'P.Siêu âm 4D', 'phong_chuc_nang', 'Máy siêu âm màu', 'Sẵn sàng', NULL, NULL, NULL, '2025-11-17 00:26:08', '2025-12-07 07:26:07'),
 (4, 'Phòng Khám Tổng Quát 1', 'kham_benh', 'Phòng khám tổng quát, có đầy đủ trang thiết bị', 'Sẵn sàng', 'Tầng 1', 25.00, 5, '2025-12-04 11:34:20', '2025-12-04 11:34:20');
 
 -- --------------------------------------------------------
@@ -1662,7 +2037,11 @@ INSERT INTO `thanh_toans` (`id`, `hoa_don_id`, `provider`, `so_tien`, `tien_te`,
 (26, 25, 'cash', 600000.00, 'VND', 'succeeded', 'CASH-20251128134214', NULL, '2025-11-28 06:42:14', '{\"note\":null}', '2025-11-28 06:42:14', '2025-11-28 06:42:14'),
 (27, 25, 'VNPAY', 600000.00, 'VND', 'Thành công', 'VNP15308282', '25_VNP15308282', '2025-11-28 06:48:56', NULL, '2025-11-28 06:48:56', '2025-11-28 06:48:56'),
 (28, 26, 'VNPAY', 600000.00, 'VND', 'Thành công', 'VNP15319472', '26_VNP15319472', '2025-12-04 07:14:45', NULL, '2025-12-04 07:14:45', '2025-12-04 07:14:45'),
-(29, 26, 'cash', 600000.00, 'VND', 'succeeded', 'CASH-20251204142548', NULL, '2025-12-04 07:25:48', '{\"note\":null}', '2025-12-04 07:25:48', '2025-12-04 07:25:48');
+(29, 26, 'cash', 600000.00, 'VND', 'succeeded', 'CASH-20251204142548', NULL, '2025-12-04 07:25:48', '{\"note\":null}', '2025-12-04 07:25:48', '2025-12-04 07:25:48'),
+(30, 27, 'VNPAY', 600000.00, 'VND', 'Thành công', 'VNP1765097695', '27_test_payment', '2025-12-07 08:54:55', NULL, '2025-12-07 08:54:55', '2025-12-07 08:54:55'),
+(31, 27, 'VNPAY', 600000.00, 'VND', 'Thành công', 'VNP1765097742', '27_test_1765097742', '2025-12-07 08:55:42', NULL, '2025-12-07 08:55:42', '2025-12-07 08:55:42'),
+(32, 35, 'cash', 1800000.00, 'VND', 'succeeded', 'CASH-20251210001259', NULL, '2025-12-09 17:12:59', '{\"note\":null}', '2025-12-09 17:12:59', '2025-12-09 17:12:59'),
+(33, 35, 'cash', 1800000.00, 'VND', 'succeeded', 'CASH-20251210001347', NULL, '2025-12-09 17:13:47', '{\"note\":null}', '2025-12-09 17:13:47', '2025-12-09 17:13:47');
 
 -- --------------------------------------------------------
 
@@ -1729,6 +2108,9 @@ CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `so_dien_thoai` varchar(15) DEFAULT NULL COMMENT 'Số điện thoại liên lạc',
+  `ngay_sinh` date DEFAULT NULL COMMENT 'Ngày sinh',
+  `gioi_tinh` enum('Nam','Nữ','Khác') DEFAULT NULL COMMENT 'Giới tính',
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
@@ -1747,17 +2129,19 @@ CREATE TABLE `users` (
 -- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `locked_at`, `locked_until`, `must_change_password`, `last_login_at`, `login_attempts`, `last_login_ip`, `created_at`, `updated_at`, `role`) VALUES
-(21, 'Admin', 'Admin@gmail.com', NULL, '$2y$10$WciFB/wsj9Qvjg8l6iUxsOIjGZm5UFJXjAivamXlwDBAlAZfSZdyC', NULL, NULL, NULL, 0, '2025-12-05 02:18:02', 0, '127.0.0.1', '2025-10-27 08:29:43', '2025-12-05 02:18:02', 'admin'),
-(30, 'Võ Thị Diễm Hằng', 'vo-thi-diem-hang.10@gmail.com', NULL, '$2y$10$b/iOfFWVgth1b.AZxAd0JuEk1hrGJQ9ZHrRZnC1omUUyvcVX1jYKO', NULL, NULL, NULL, 0, '2025-12-04 06:49:40', 0, '127.0.0.1', '2025-11-04 02:37:58', '2025-12-04 06:49:40', 'doctor'),
-(31, 'Bệnh nhân 1', 'Patient1@gmail.com', NULL, '$2y$10$alQbaYP.EqXhC3t07r9fEOC3r8N0NlI5e9QjMoE8rNPIAviWuPS26', NULL, NULL, NULL, 0, '2025-11-28 07:51:08', 0, '127.0.0.1', '2025-11-04 02:49:17', '2025-11-28 07:51:08', 'patient'),
-(32, 'Nhân viên', 'Staff@gmail.com', NULL, '$2y$10$qNgMxPiExJCL96JW7X1oVOmBBiLVF6a8t.BWxtuqOsx9OIZNv7as6', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-11-04 02:53:09', '2025-11-04 02:53:09', 'staff'),
-(33, 'Bệnh nhân 2', 'Patient2@gmail.com', NULL, '$2y$10$Uf82vR0N6c2ZFb6acO6ie.rJPGXPLYV.tvqm4zx7zEWRqcMMDuJ/C', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-11-04 03:17:19', '2025-11-04 03:17:19', 'patient'),
-(34, 'Bác sĩ 2', 'bac-si-2.11@gmail.com', NULL, '$2y$10$j.fLKLmhCgmtZKmqLbZew.1R00lIl/KA9oGMNqjqYT5.cLbnu166W', NULL, NULL, NULL, 0, '2025-11-28 06:08:15', 0, '127.0.0.1', '2025-11-04 03:19:00', '2025-11-28 06:08:15', 'doctor'),
-(35, 'Ngoãnh Chí Thiên', 'henvaemhen@gmail.com', NULL, '$2y$10$VV3v57c1/X0a9q3YwnF1euIdv3ffIQIde9w7REOuggdBQtzHkkDeO', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-11-06 21:13:33', '2025-11-06 21:13:33', 'patient'),
-(36, 'Nguyễn Thích', 'tn822798@gmail.com', NULL, '$2y$10$TOH36mrBmRe.tZwE8XE4KOJVWhUvjSqxZXEN7KNtB7gTD71f.LHQu', NULL, NULL, NULL, 1, '2025-12-05 04:16:17', 0, '127.0.0.1', '2025-11-20 01:49:19', '2025-12-05 04:16:17', 'patient'),
-(37, 'Nhân viên Võ', 'vothidiemhang2020qng@gmail.com', NULL, '$2y$10$wqIVbhQjPtjblosomwkoXubcp0gBAZWEsCBvh.p8Pstzlkz250vJC', 'ruuHtqQYiPJuqUojrAb5G4tTBPsQzbhrnqj9llwhKhaCSNEpUF1U8QYjDZjK', NULL, NULL, 1, '2025-11-28 08:06:12', 0, '127.0.0.1', '2025-11-20 20:41:40', '2025-11-28 08:06:12', 'staff'),
-(38, 'Bệnh nhân 3', 'Patient3@gmail.com', NULL, '$2y$10$Tv8v7lIQi5uTtmIjRYY7.ehH.67ReLaZubDvBkAEQVAFVRw9CMXhe', NULL, NULL, NULL, 0, '2025-12-05 04:10:52', 0, '127.0.0.1', '2025-11-27 11:26:44', '2025-12-05 04:10:52', 'patient');
+INSERT INTO `users` (`id`, `name`, `email`, `so_dien_thoai`, `ngay_sinh`, `gioi_tinh`, `email_verified_at`, `password`, `remember_token`, `locked_at`, `locked_until`, `must_change_password`, `last_login_at`, `login_attempts`, `last_login_ip`, `created_at`, `updated_at`, `role`) VALUES
+(21, 'Admin', 'Admin@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$WciFB/wsj9Qvjg8l6iUxsOIjGZm5UFJXjAivamXlwDBAlAZfSZdyC', NULL, NULL, NULL, 0, '2025-12-09 16:48:44', 0, '127.0.0.1', '2025-10-27 08:29:43', '2025-12-09 16:48:44', 'admin'),
+(30, 'Võ Thị Diễm Hằng', 'vo-thi-diem-hang.10@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$b/iOfFWVgth1b.AZxAd0JuEk1hrGJQ9ZHrRZnC1omUUyvcVX1jYKO', NULL, NULL, NULL, 0, '2025-12-09 17:37:19', 0, '127.0.0.1', '2025-11-04 02:37:58', '2025-12-09 17:37:19', 'doctor'),
+(31, 'Bệnh nhân 1', 'Patient1@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$alQbaYP.EqXhC3t07r9fEOC3r8N0NlI5e9QjMoE8rNPIAviWuPS26', NULL, NULL, NULL, 0, '2025-11-28 07:51:08', 0, '127.0.0.1', '2025-11-04 02:49:17', '2025-11-28 07:51:08', 'patient'),
+(32, 'Nhân viên', 'Staff@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$qNgMxPiExJCL96JW7X1oVOmBBiLVF6a8t.BWxtuqOsx9OIZNv7as6', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-11-04 02:53:09', '2025-11-04 02:53:09', 'staff'),
+(33, 'Bệnh nhân 2', 'Patient2@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$Uf82vR0N6c2ZFb6acO6ie.rJPGXPLYV.tvqm4zx7zEWRqcMMDuJ/C', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-11-04 03:17:19', '2025-11-04 03:17:19', 'patient'),
+(34, 'Bác sĩ 2', 'bac-si-2.11@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$j.fLKLmhCgmtZKmqLbZew.1R00lIl/KA9oGMNqjqYT5.cLbnu166W', NULL, NULL, NULL, 0, '2025-12-05 08:48:54', 0, '127.0.0.1', '2025-11-04 03:19:00', '2025-12-05 08:48:54', 'doctor'),
+(35, 'Ngoãnh Chí Thiên', 'henvaemhen@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$VV3v57c1/X0a9q3YwnF1euIdv3ffIQIde9w7REOuggdBQtzHkkDeO', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-11-06 21:13:33', '2025-11-06 21:13:33', 'patient'),
+(36, 'Nguyễn Thích', 'tn822798@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$TOH36mrBmRe.tZwE8XE4KOJVWhUvjSqxZXEN7KNtB7gTD71f.LHQu', NULL, NULL, NULL, 1, '2025-12-09 17:36:02', 0, '127.0.0.1', '2025-11-20 01:49:19', '2025-12-09 17:36:02', 'patient'),
+(37, 'Nhân viên Võ', 'vothidiemhang2020qng@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$wqIVbhQjPtjblosomwkoXubcp0gBAZWEsCBvh.p8Pstzlkz250vJC', 'tM19Kc6YfimX2W3gMgvBtyJbVbNgCCVdT5beTd7SBgp2t0iAHnEesrQUiq09', NULL, NULL, 1, '2025-12-09 17:38:43', 0, '127.0.0.1', '2025-11-20 20:41:40', '2025-12-09 17:38:43', 'staff'),
+(38, 'Bệnh nhân 3', 'Patient3@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$Tv8v7lIQi5uTtmIjRYY7.ehH.67ReLaZubDvBkAEQVAFVRw9CMXhe', NULL, NULL, NULL, 0, '2025-12-05 13:34:44', 0, '127.0.0.1', '2025-11-27 11:26:44', '2025-12-05 13:34:44', 'patient'),
+(41, 'BS. Bùi Thanh Phước', 'doctor1@example.test', NULL, NULL, NULL, NULL, '$2y$10$ZVs1A3jPp9wYSIxXzqBNCeOo3ynTQu0PdwpA/CZuiL7arg4j9Gzju', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-09 16:36:54', '2025-12-09 16:37:49', 'doctor'),
+(42, 'TestUser', 'TestUser@gmail.com', NULL, NULL, NULL, NULL, '$2y$10$E9fHEEAfPcoBACmvf63O3e4ja/OlBhAz9nSNgEq67jLLdxeqThWZK', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-09 18:27:30', '2025-12-09 18:27:30', 'patient');
 
 -- --------------------------------------------------------
 
@@ -1774,6 +2158,7 @@ CREATE TABLE `xet_nghiems` (
   `file_path` varchar(255) NOT NULL,
   `disk` varchar(50) NOT NULL DEFAULT 'public',
   `mo_ta` varchar(255) DEFAULT NULL,
+  `trang_thai` varchar(255) NOT NULL DEFAULT 'pending',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1782,15 +2167,30 @@ CREATE TABLE `xet_nghiems` (
 -- Đang đổ dữ liệu cho bảng `xet_nghiems`
 --
 
-INSERT INTO `xet_nghiems` (`id`, `benh_an_id`, `user_id`, `bac_si_id`, `loai`, `file_path`, `disk`, `mo_ta`, `created_at`, `updated_at`) VALUES
-(1, 1, 31, 10, 'Nứng khẩn', 'xet_nghiem/w5Nj22m17LA0FehWAj0KCU4UVaxBupQRUSmGflST.jpg', 'public', 'Nhận gấp', '2025-11-12 22:37:00', '2025-11-12 22:37:00'),
-(2, 1, 31, 10, 'Máu đông', 'xet_nghiem/qq6vVviC8Xs8MCVeRAom2CnytutoBG0uaNmox1P9.jpg', 'public', 'Thay máu', '2025-11-17 00:46:44', '2025-11-17 00:46:44'),
-(3, 4, 35, 11, 'Nứng khẩn', 'xet_nghiem/pJeEX92npfsoeTCxOM2DJLe2kkkgGDuxzTnZWHKx.jpg', 'public', 'Nhận gấp', '2025-11-19 23:13:36', '2025-11-19 23:13:36'),
-(4, 5, 35, 10, 'Nứng khẩn', 'xet_nghiem/9vxuAo8b31Gz97Gzv7JSbN2pzZ5CDJt7MV5f3JY1.jpg', 'benh_an_private', 'Nhận gấp', '2025-11-20 00:38:58', '2025-11-20 00:38:58');
+INSERT INTO `xet_nghiems` (`id`, `benh_an_id`, `user_id`, `bac_si_id`, `loai`, `file_path`, `disk`, `mo_ta`, `trang_thai`, `created_at`, `updated_at`) VALUES
+(1, 1, 31, 10, 'Nứng khẩn', 'xet_nghiem/w5Nj22m17LA0FehWAj0KCU4UVaxBupQRUSmGflST.jpg', 'public', 'Nhận gấp', 'pending', '2025-11-12 22:37:00', '2025-11-12 22:37:00'),
+(2, 1, 31, 10, 'Máu đông', 'xet_nghiem/qq6vVviC8Xs8MCVeRAom2CnytutoBG0uaNmox1P9.jpg', 'public', 'Thay máu', 'pending', '2025-11-17 00:46:44', '2025-11-17 00:46:44'),
+(3, 4, 35, 11, 'Nứng khẩn', 'xet_nghiem/pJeEX92npfsoeTCxOM2DJLe2kkkgGDuxzTnZWHKx.jpg', 'public', 'Nhận gấp', 'pending', '2025-11-19 23:13:36', '2025-11-19 23:13:36'),
+(4, 5, 35, 10, 'Nứng khẩn', 'xet_nghiem/9vxuAo8b31Gz97Gzv7JSbN2pzZ5CDJt7MV5f3JY1.jpg', 'benh_an_private', 'Nhận gấp', 'pending', '2025-11-20 00:38:58', '2025-11-20 00:38:58'),
+(5, 9, 36, 10, 'Xet nghiem mau', 'xet-nghiem/ket-qua-hcg-12-2025.pdf', 'public', 'Xet nghiem HCG de xac nhan thai', 'completed', '2025-12-07 08:51:03', '2025-12-07 08:51:17'),
+(6, 13, 36, 2, 'Xét nghiệm máu', '', 'public', 'Kiểm tra công thức máu để xác định nhiễm trùng', 'pending', '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(7, 13, 36, 2, 'Xét nghiệm nước tiểu', '', 'public', 'Loại trừ bệnh thận', 'pending', '2025-12-08 03:50:52', '2025-12-08 03:50:52'),
+(8, 14, 36, 2, 'Xét nghiệm máu', '', 'public', 'Kiểm tra công thức máu để xác định nhiễm trùng', 'pending', '2025-12-08 03:51:23', '2025-12-08 03:51:23'),
+(9, 14, 36, 2, 'Xét nghiệm nước tiểu', '', 'public', 'Loại trừ bệnh thận', 'pending', '2025-12-08 03:51:23', '2025-12-08 03:51:23'),
+(10, 15, 36, 10, 'Testt', 'xet_nghiem/V0w63U7GqWXrO4eyGjM5LQJmGOQJapS5uFIexyWY.jpg', 'benh_an_private', 'Testt', 'pending', '2025-12-08 10:43:58', '2025-12-08 10:43:58');
 
 --
 -- Chỉ mục cho các bảng đã đổ
 --
+
+--
+-- Chỉ mục cho bảng `activity_log`
+--
+ALTER TABLE `activity_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `subject` (`subject_type`,`subject_id`),
+  ADD KEY `causer` (`causer_type`,`causer_id`),
+  ADD KEY `activity_log_log_name_index` (`log_name`);
 
 --
 -- Chỉ mục cho bảng `bac_sis`
@@ -1877,6 +2277,18 @@ ALTER TABLE `chuyen_khoas`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Chỉ mục cho bảng `conversations`
+--
+ALTER TABLE `conversations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `conversations_benh_nhan_id_bac_si_id_unique` (`benh_nhan_id`,`bac_si_id`),
+  ADD KEY `conversations_bac_si_id_foreign` (`bac_si_id`),
+  ADD KEY `conversations_lich_hen_id_foreign` (`lich_hen_id`),
+  ADD KEY `conversations_benh_nhan_id_bac_si_id_index` (`benh_nhan_id`,`bac_si_id`),
+  ADD KEY `conversations_trang_thai_index` (`trang_thai`),
+  ADD KEY `conversations_last_message_at_index` (`last_message_at`);
+
+--
 -- Chỉ mục cho bảng `coupons`
 --
 ALTER TABLE `coupons`
@@ -1884,6 +2296,16 @@ ALTER TABLE `coupons`
   ADD UNIQUE KEY `coupons_ma_giam_gia_unique` (`ma_giam_gia`),
   ADD KEY `coupons_ngay_bat_dau_ngay_ket_thuc_index` (`ngay_bat_dau`,`ngay_ket_thuc`),
   ADD KEY `coupons_kich_hoat_index` (`kich_hoat`);
+
+--
+-- Chỉ mục cho bảng `danh_gias`
+--
+ALTER TABLE `danh_gias`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `danh_gias_user_id_lich_hen_id_unique` (`user_id`,`lich_hen_id`),
+  ADD KEY `danh_gias_lich_hen_id_foreign` (`lich_hen_id`),
+  ADD KEY `danh_gias_bac_si_id_trang_thai_index` (`bac_si_id`,`trang_thai`),
+  ADD KEY `danh_gias_rating_index` (`rating`);
 
 --
 -- Chỉ mục cho bảng `danh_mucs`
@@ -1941,6 +2363,13 @@ ALTER TABLE `don_thuoc_items`
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Chỉ mục cho bảng `family_members`
+--
+ALTER TABLE `family_members`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `family_members_user_id_foreign` (`user_id`);
 
 --
 -- Chỉ mục cho bảng `hoan_tiens`
@@ -2005,6 +2434,15 @@ ALTER TABLE `login_audits`
   ADD KEY `login_audits_status_index` (`status`);
 
 --
+-- Chỉ mục cho bảng `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `messages_conversation_id_index` (`conversation_id`),
+  ADD KEY `messages_conversation_id_created_at_index` (`conversation_id`,`created_at`),
+  ADD KEY `messages_user_id_is_read_index` (`user_id`,`is_read`);
+
+--
 -- Chỉ mục cho bảng `migrations`
 --
 ALTER TABLE `migrations`
@@ -2053,6 +2491,13 @@ ALTER TABLE `nha_cung_cap_thuoc`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nha_cung_cap_thuoc_nha_cung_cap_id_thuoc_id_unique` (`nha_cung_cap_id`,`thuoc_id`),
   ADD KEY `nha_cung_cap_thuoc_thuoc_id_foreign` (`thuoc_id`);
+
+--
+-- Chỉ mục cho bảng `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`);
 
 --
 -- Chỉ mục cho bảng `notification_preferences`
@@ -2205,10 +2650,16 @@ ALTER TABLE `xet_nghiems`
 --
 
 --
+-- AUTO_INCREMENT cho bảng `activity_log`
+--
+ALTER TABLE `activity_log`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT cho bảng `bac_sis`
 --
 ALTER TABLE `bac_sis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT cho bảng `bai_viets`
@@ -2220,19 +2671,19 @@ ALTER TABLE `bai_viets`
 -- AUTO_INCREMENT cho bảng `benh_ans`
 --
 ALTER TABLE `benh_ans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT cho bảng `benh_an_audits`
 --
 ALTER TABLE `benh_an_audits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT cho bảng `benh_an_files`
 --
 ALTER TABLE `benh_an_files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT cho bảng `ca_dieu_chinh_bac_sis`
@@ -2253,10 +2704,22 @@ ALTER TABLE `chuyen_khoas`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT cho bảng `conversations`
+--
+ALTER TABLE `conversations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT cho bảng `coupons`
 --
 ALTER TABLE `coupons`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `danh_gias`
+--
+ALTER TABLE `danh_gias`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `danh_mucs`
@@ -2274,7 +2737,7 @@ ALTER TABLE `dich_vus`
 -- AUTO_INCREMENT cho bảng `don_hangs`
 --
 ALTER TABLE `don_hangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `don_hang_items`
@@ -2286,18 +2749,24 @@ ALTER TABLE `don_hang_items`
 -- AUTO_INCREMENT cho bảng `don_thuocs`
 --
 ALTER TABLE `don_thuocs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT cho bảng `don_thuoc_items`
 --
 ALTER TABLE `don_thuoc_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT cho bảng `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `family_members`
+--
+ALTER TABLE `family_members`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -2310,25 +2779,25 @@ ALTER TABLE `hoan_tiens`
 -- AUTO_INCREMENT cho bảng `hoa_dons`
 --
 ALTER TABLE `hoa_dons`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT cho bảng `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT cho bảng `lich_hens`
 --
 ALTER TABLE `lich_hens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT cho bảng `lich_lam_viecs`
 --
 ALTER TABLE `lich_lam_viecs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT cho bảng `lich_nghis`
@@ -2340,13 +2809,19 @@ ALTER TABLE `lich_nghis`
 -- AUTO_INCREMENT cho bảng `login_audits`
 --
 ALTER TABLE `login_audits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+
+--
+-- AUTO_INCREMENT cho bảng `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT cho bảng `nhan_viens`
@@ -2448,7 +2923,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT cho bảng `thanh_toans`
 --
 ALTER TABLE `thanh_toans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT cho bảng `thuocs`
@@ -2466,13 +2941,13 @@ ALTER TABLE `thuoc_khos`
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT cho bảng `xet_nghiems`
 --
 ALTER TABLE `xet_nghiems`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -2547,6 +3022,22 @@ ALTER TABLE `ca_lam_viec_nhan_viens`
   ADD CONSTRAINT `ca_lam_viec_nhan_viens_nhan_vien_id_foreign` FOREIGN KEY (`nhan_vien_id`) REFERENCES `nhan_viens` (`id`) ON DELETE CASCADE;
 
 --
+-- Các ràng buộc cho bảng `conversations`
+--
+ALTER TABLE `conversations`
+  ADD CONSTRAINT `conversations_bac_si_id_foreign` FOREIGN KEY (`bac_si_id`) REFERENCES `bac_sis` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `conversations_benh_nhan_id_foreign` FOREIGN KEY (`benh_nhan_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `conversations_lich_hen_id_foreign` FOREIGN KEY (`lich_hen_id`) REFERENCES `lich_hens` (`id`) ON DELETE SET NULL;
+
+--
+-- Các ràng buộc cho bảng `danh_gias`
+--
+ALTER TABLE `danh_gias`
+  ADD CONSTRAINT `danh_gias_bac_si_id_foreign` FOREIGN KEY (`bac_si_id`) REFERENCES `bac_sis` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `danh_gias_lich_hen_id_foreign` FOREIGN KEY (`lich_hen_id`) REFERENCES `lich_hens` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `danh_gias_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Các ràng buộc cho bảng `don_hangs`
 --
 ALTER TABLE `don_hangs`
@@ -2575,6 +3066,12 @@ ALTER TABLE `don_thuocs`
 ALTER TABLE `don_thuoc_items`
   ADD CONSTRAINT `don_thuoc_items_don_thuoc_id_foreign` FOREIGN KEY (`don_thuoc_id`) REFERENCES `don_thuocs` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `don_thuoc_items_thuoc_id_foreign` FOREIGN KEY (`thuoc_id`) REFERENCES `thuocs` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `family_members`
+--
+ALTER TABLE `family_members`
+  ADD CONSTRAINT `family_members_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `hoan_tiens`
@@ -2616,6 +3113,13 @@ ALTER TABLE `lich_nghis`
 --
 ALTER TABLE `login_audits`
   ADD CONSTRAINT `login_audits_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Các ràng buộc cho bảng `messages`
+--
+ALTER TABLE `messages`
+  ADD CONSTRAINT `messages_conversation_id_foreign` FOREIGN KEY (`conversation_id`) REFERENCES `conversations` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `messages_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `model_has_permissions`
