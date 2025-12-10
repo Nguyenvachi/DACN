@@ -26,7 +26,7 @@ class BacSiController extends Controller
             $keyword = $request->keyword;
             $query->where(function ($q) use ($keyword) {
                 $q->where('ho_ten', 'like', "%{$keyword}%")
-                  ->orWhere('chuyen_khoa', 'like', "%{$keyword}%");
+                    ->orWhere('chuyen_khoa', 'like', "%{$keyword}%");
             });
         }
 
@@ -59,7 +59,8 @@ class BacSiController extends Controller
      */
     public function create()
     {
-        return view('admin.bacsi.create');
+        $chuyenKhoas = \App\Models\ChuyenKhoa::orderBy('ten')->get();
+        return view('admin.bacsi.create', compact('chuyenKhoas'));
     }
 
     /**
@@ -70,7 +71,7 @@ class BacSiController extends Controller
         $request->validate([
             'ho_ten' => 'required|string|max:255',
             'email' => 'required|email|unique:bac_sis,email|unique:users,email',
-            'chuyen_khoa' => 'required|string|max:255',
+            'chuyen_khoa_id' => 'required|exists:chuyen_khoas,id',
             'so_dien_thoai' => 'required|string|max:20',
             'avatar' => 'nullable|image|max:2048',
             'kinh_nghiem' => 'nullable|integer|min:0|max:50',
@@ -82,11 +83,14 @@ class BacSiController extends Controller
         try {
             DB::beginTransaction();
 
+            // Lấy tên chuyên khoa để lưu vào cột chuyen_khoa
+            $chuyenKhoa = \App\Models\ChuyenKhoa::findOrFail($request->chuyen_khoa_id);
+
             // Tạo bác sĩ với đầy đủ thông tin (xử lý upload avatar nếu có)
             $bacSiData = [
                 'ho_ten' => $request->ho_ten,
                 'email' => $request->email,
-                'chuyen_khoa' => $request->chuyen_khoa,
+                'chuyen_khoa' => $chuyenKhoa->ten,
                 'so_dien_thoai' => $request->so_dien_thoai,
                 'kinh_nghiem' => $request->kinh_nghiem ?? 0,
                 'dia_chi' => $request->dia_chi,
@@ -119,6 +123,9 @@ class BacSiController extends Controller
                 $user->forceFill(['avatar' => $bacSi->avatar])->save();
             }
 
+            // Đồng bộ chuyên khoa (many-to-many) - chỉ 1 chuyên khoa
+            $bacSi->chuyenKhoas()->sync([$request->chuyen_khoa_id]);
+
             DB::commit();
 
             session()->flash('status', "Đã tạo bác sĩ '{$bacSi->ho_ten}' thành công. Email: {$request->email}, Mật khẩu: {$password}");
@@ -144,7 +151,9 @@ class BacSiController extends Controller
      */
     public function edit(BacSi $bacSi)
     {
-        return view('admin.bacsi.edit', compact('bacSi'));
+        $chuyenKhoas = \App\Models\ChuyenKhoa::orderBy('ten')->get();
+        $selectedChuyenKhoaId = $bacSi->chuyenKhoas()->first()->id ?? null;
+        return view('admin.bacsi.edit', compact('bacSi', 'chuyenKhoas', 'selectedChuyenKhoaId'));
     }
 
     /**
@@ -155,7 +164,7 @@ class BacSiController extends Controller
         $request->validate([
             'ho_ten' => 'required|string|max:255',
             'email' => 'required|email|unique:bac_sis,email,' . $bacSi->id,
-            'chuyen_khoa' => 'required|string|max:255',
+            'chuyen_khoa_id' => 'required|exists:chuyen_khoas,id',
             'so_dien_thoai' => 'required|string|max:20',
             'avatar' => 'nullable|image|max:2048',
             'kinh_nghiem' => 'nullable|integer|min:0|max:50',
@@ -167,11 +176,14 @@ class BacSiController extends Controller
         try {
             DB::beginTransaction();
 
+            // Lấy tên chuyên khoa
+            $chuyenKhoa = \App\Models\ChuyenKhoa::findOrFail($request->chuyen_khoa_id);
+
             // Cập nhật thông tin bác sĩ (xử lý avatar)
             $bacSiData = [
                 'ho_ten' => $request->ho_ten,
                 'email' => $request->email,
-                'chuyen_khoa' => $request->chuyen_khoa,
+                'chuyen_khoa' => $chuyenKhoa->ten,
                 'so_dien_thoai' => $request->so_dien_thoai,
                 'kinh_nghiem' => $request->kinh_nghiem ?? 0,
                 'dia_chi' => $request->dia_chi,
@@ -208,6 +220,9 @@ class BacSiController extends Controller
 
                 $bacSi->user->update($userData);
             }
+
+            // Đồng bộ chuyên khoa
+            $bacSi->chuyenKhoas()->sync([$request->chuyen_khoa_id]);
 
             DB::commit();
 

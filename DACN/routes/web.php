@@ -110,7 +110,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/danh-sach-dich-vu', [DichVuController::class, 'publicIndex'])->name('public.dichvu.index');
     Route::get('/dat-lich/{bacSi}', [LichHenController::class, 'create'])->name('lichhen.create');
     Route::post('/luu-lich-hen', [LichHenController::class, 'store'])->name('lichhen.store');
-    Route::get('/dat-lich-thanh-cong', function () { return view('public.lichhen.success'); })->name('lichhen.thanhcong');
+    Route::get('/dat-lich-thanh-cong', function () {
+        return view('public.lichhen.success');
+    })->name('lichhen.thanhcong');
 
     // Lịch rảnh bác sĩ theo tuần
     Route::get('/bac-si/{bacSi}/lich-ranh', [App\Http\Controllers\Public\BacSiScheduleController::class, 'weeklySchedule'])->name('public.bacsi.schedule');
@@ -165,12 +167,24 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
     Route::middleware(['permission:view-services'])->group(function () {
         Route::resource('dich-vu', DichVuController::class)->parameters(['dich-vu' => 'dichVu']);
         Route::resource('chuyen-khoa', \App\Http\Controllers\Admin\ChuyenKhoaController::class)->names([
-            'index' => 'chuyenkhoa.index', 'create' => 'chuyenkhoa.create', 'store' => 'chuyenkhoa.store', 'show' => 'chuyenkhoa.show', 'edit' => 'chuyenkhoa.edit', 'update' => 'chuyenkhoa.update', 'destroy' => 'chuyenkhoa.destroy',
+            'index' => 'chuyenkhoa.index',
+            'create' => 'chuyenkhoa.create',
+            'store' => 'chuyenkhoa.store',
+            'show' => 'chuyenkhoa.show',
+            'edit' => 'chuyenkhoa.edit',
+            'update' => 'chuyenkhoa.update',
+            'destroy' => 'chuyenkhoa.destroy',
         ])->parameters(['chuyen-khoa' => 'chuyenkhoa']);
 
         // MỞ RỘNG: Routes phòng (Parent file: routes/web.php)
         Route::resource('phong', \App\Http\Controllers\Admin\PhongController::class)->names([
-            'index' => 'phong.index', 'create' => 'phong.create', 'store' => 'phong.store', 'show' => 'phong.show', 'edit' => 'phong.edit', 'update' => 'phong.update', 'destroy' => 'phong.destroy',
+            'index' => 'phong.index',
+            'create' => 'phong.create',
+            'store' => 'phong.store',
+            'show' => 'phong.show',
+            'edit' => 'phong.edit',
+            'update' => 'phong.update',
+            'destroy' => 'phong.destroy',
         ]);
 
         // Routes mới cho phòng (Parent file: routes/web.php)
@@ -187,20 +201,32 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
     // Lưu ý: Route 'thuoc' (danh mục) khác với 'kho' (nhập xuất)
     Route::middleware(['permission:view-medicines'])->group(function () {
         Route::resource('thuoc', \App\Http\Controllers\Admin\ThuocController::class)->names([
-            'index' => 'thuoc.index', 'create' => 'thuoc.create', 'store' => 'thuoc.store', 'show' => 'thuoc.show', 'edit' => 'thuoc.edit', 'update' => 'thuoc.update', 'destroy' => 'thuoc.destroy',
+            'index' => 'thuoc.index',
+            'create' => 'thuoc.create',
+            'store' => 'thuoc.store',
+            'show' => 'thuoc.show',
+            'edit' => 'thuoc.edit',
+            'update' => 'thuoc.update',
+            'destroy' => 'thuoc.destroy',
         ]);
     });
 
     // 4.1. NHÓM QUẢN LÝ MÃ GIẢM GIÁ (Cần quyền view-medicines - quản lý cửa hàng thuốc)
     Route::middleware(['permission:view-medicines'])->group(function () {
         Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class)->names([
-            'index' => 'coupons.index', 'create' => 'coupons.create', 'store' => 'coupons.store', 'show' => 'coupons.show', 'edit' => 'coupons.edit', 'update' => 'coupons.update', 'destroy' => 'coupons.destroy',
+            'index' => 'coupons.index',
+            'create' => 'coupons.create',
+            'store' => 'coupons.store',
+            'show' => 'coupons.show',
+            'edit' => 'coupons.edit',
+            'update' => 'coupons.update',
+            'destroy' => 'coupons.destroy',
         ]);
     });
 
     // 5. NHÓM QUẢN LÝ LỊCH HẸN & BỆNH ÁN (Cần quyền view-appointments hoặc view-medical-records)
     // Tạm thời dùng view-invoices cho Lễ tân xem lịch hẹn nếu cần, hoặc để admin
-    Route::middleware(['permission:view-appointments'])->group(function(){
+    Route::middleware(['permission:view-appointments'])->group(function () {
         Route::get('/lich-hen', [LichHenController::class, 'adminIndex'])->name('lichhen.index');
         Route::patch('/lich-hen/{lichHen}/status', [LichHenController::class, 'updateStatus'])->name('lichhen.updateStatus');
         Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
@@ -225,19 +251,30 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::delete('/{conversation}', [\App\Http\Controllers\Admin\ChatController::class, 'destroy'])->name('destroy');
     });
 
-    Route::middleware(['permission:view-medical-records'])->group(function(){
+    Route::middleware(['permission:view-medical-records'])->group(function () {
         Route::resource('benh-an', BenhAnController::class)->names([
-            'index' => 'benhan.index', 'create' => 'benhan.create', 'store' => 'benhan.store', 'show' => 'benhan.show', 'edit' => 'benhan.edit', 'update' => 'benhan.update', 'destroy' => 'benhan.destroy',
+            'index' => 'benhan.index',
+            'create' => 'benhan.create',
+            'store' => 'benhan.store',
+            'show' => 'benhan.show',
+            'edit' => 'benhan.edit',
+            'update' => 'benhan.update',
+            'destroy' => 'benhan.destroy',
         ]);
         Route::post('benh-an/{benh_an}/files', [BenhAnController::class, 'uploadFile'])->name('benhan.files.upload');
         Route::delete('benh-an/{benh_an}/files/{file}', [BenhAnController::class, 'destroyFile'])->name('benhan.files.destroy');
         Route::get('benh-an/{benh_an}/audit', [BenhAnController::class, 'auditLog'])->name('benhan.audit');
         Route::get('benh-an/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('benhan.files.download')->middleware('signed');
         Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
+
+        // Routes cho dịch vụ nâng cao
+        Route::post('benh-an/{benhAn}/dich-vu-nang-cao', [BenhAnController::class, 'chiDinhDichVuNangCao'])->name('benhan.dichvunangcao.create');
+        Route::put('dich-vu-nang-cao/{dichVuNangCao}', [BenhAnController::class, 'capNhatDichVuNangCao'])->name('benhan.dichvunangcao.update');
+        Route::delete('dich-vu-nang-cao/{dichVuNangCao}', [BenhAnController::class, 'huyDichVuNangCao'])->name('benhan.dichvunangcao.destroy');
     });
 
     // 6. NHÓM HÓA ĐƠN (Cần quyền view-invoices)
-    Route::middleware(['permission:view-invoices'])->group(function(){
+    Route::middleware(['permission:view-invoices'])->group(function () {
         Route::get('/hoa-don', [HoaDonController::class, 'index'])->name('hoadon.index');
         Route::get('/hoa-don/{hoaDon}', [HoaDonController::class, 'show'])->name('hoadon.show');
         Route::post('/lich-hen/{lichHen}/hoa-don', [HoaDonController::class, 'createFromAppointment'])->name('hoadon.create_from_appointment');
@@ -263,33 +300,33 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         // API: Load thuốc theo NCC
         Route::get('/api/thuocs-by-ncc', [\App\Http\Controllers\Admin\KhoThuocController::class, 'getThuocsByNCC'])->name('api.thuocs_by_ncc');
 
-        Route::middleware('can:kho-nhap')->group(function(){
+        Route::middleware('can:kho-nhap')->group(function () {
             Route::get('/nhap', [\App\Http\Controllers\Admin\KhoThuocController::class, 'nhapForm'])->name('nhap.form');
             Route::post('/nhap', [\App\Http\Controllers\Admin\KhoThuocController::class, 'nhapStore'])->name('nhap.store');
         });
-        Route::middleware('can:kho-xuat')->group(function(){
+        Route::middleware('can:kho-xuat')->group(function () {
             Route::get('/xuat', [\App\Http\Controllers\Admin\KhoThuocController::class, 'xuatForm'])->name('xuat.form');
             Route::post('/xuat', [\App\Http\Controllers\Admin\KhoThuocController::class, 'xuatStore'])->name('xuat.store');
         });
     });
-    Route::middleware(['permission:view-medicines'])->prefix('ncc')->name('ncc.')->group(function(){
-        Route::get('/', [\App\Http\Controllers\Admin\NhaCungCapController::class,'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Admin\NhaCungCapController::class,'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Admin\NhaCungCapController::class,'store'])->name('store');
-        Route::get('/{ncc}/edit', [\App\Http\Controllers\Admin\NhaCungCapController::class,'edit'])->name('edit');
-        Route::put('/{ncc}', [\App\Http\Controllers\Admin\NhaCungCapController::class,'update'])->name('update');
-        Route::delete('/{ncc}', [\App\Http\Controllers\Admin\NhaCungCapController::class,'destroy'])->name('destroy');
+    Route::middleware(['permission:view-medicines'])->prefix('ncc')->name('ncc.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'store'])->name('store');
+        Route::get('/{ncc}/edit', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'edit'])->name('edit');
+        Route::put('/{ncc}', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'update'])->name('update');
+        Route::delete('/{ncc}', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'destroy'])->name('destroy');
 
         // Quản lý thuốc của NCC
-        Route::get('/{ncc}/thuocs', [\App\Http\Controllers\Admin\NhaCungCapController::class,'thuocs'])->name('thuocs');
-        Route::post('/{ncc}/thuocs', [\App\Http\Controllers\Admin\NhaCungCapController::class,'addThuoc'])->name('thuocs.add');
-        Route::put('/{ncc}/thuocs/{thuoc}', [\App\Http\Controllers\Admin\NhaCungCapController::class,'updateGiaThuoc'])->name('thuocs.update');
-        Route::delete('/{ncc}/thuocs/{thuoc}', [\App\Http\Controllers\Admin\NhaCungCapController::class,'removeThuoc'])->name('thuocs.remove');
+        Route::get('/{ncc}/thuocs', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'thuocs'])->name('thuocs');
+        Route::post('/{ncc}/thuocs', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'addThuoc'])->name('thuocs.add');
+        Route::put('/{ncc}/thuocs/{thuoc}', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'updateGiaThuoc'])->name('thuocs.update');
+        Route::delete('/{ncc}/thuocs/{thuoc}', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'removeThuoc'])->name('thuocs.remove');
     });
 
     // 8. NHÓM NHÂN VIÊN & USER & PHÂN QUYỀN (Cần quyền view-users HOẶC role:admin cho chắc)
     // Ở đây mình dùng permission:view-users
-    Route::middleware(['permission:view-users'])->group(function(){
+    Route::middleware(['permission:view-users'])->group(function () {
         Route::resource('nhanvien', NhanVienController::class);
         // Cập nhật trạng thái nhanh cho nhân viên
         Route::patch('nhanvien/{nhanvien}/status', [\App\Http\Controllers\Admin\NhanVienController::class, 'updateStatus'])->name('nhanvien.updateStatus');
@@ -314,10 +351,22 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
     // Sử dụng middleware 'role_or_permission' để chấp nhận role OR permission
     Route::middleware(['role_or_permission:admin|view-posts'])->group(function () {
         Route::resource('baiviet', \App\Http\Controllers\Admin\BaiVietController::class)->names([
-            'index' => 'baiviet.index', 'create' => 'baiviet.create', 'store' => 'baiviet.store', 'show' => 'baiviet.show', 'edit' => 'baiviet.edit', 'update' => 'baiviet.update', 'destroy' => 'baiviet.destroy',
+            'index' => 'baiviet.index',
+            'create' => 'baiviet.create',
+            'store' => 'baiviet.store',
+            'show' => 'baiviet.show',
+            'edit' => 'baiviet.edit',
+            'update' => 'baiviet.update',
+            'destroy' => 'baiviet.destroy',
         ]);
         Route::resource('danhmuc', \App\Http\Controllers\Admin\DanhMucController::class)->names([
-            'index' => 'danhmuc.index', 'create' => 'danhmuc.create', 'store' => 'danhmuc.store', 'show' => 'danhmuc.show', 'edit' => 'danhmuc.edit', 'update' => 'danhmuc.update', 'destroy' => 'danhmuc.destroy',
+            'index' => 'danhmuc.index',
+            'create' => 'danhmuc.create',
+            'store' => 'danhmuc.store',
+            'show' => 'danhmuc.show',
+            'edit' => 'danhmuc.edit',
+            'update' => 'danhmuc.update',
+            'destroy' => 'danhmuc.destroy',
         ]);
         Route::resource('tag', \App\Http\Controllers\Admin\TagController::class);
 
@@ -384,7 +433,13 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
 
     // Bệnh án (File mẹ: routes/web.php)
     Route::resource('benh-an', BenhAnController::class)->names([
-        'index' => 'benhan.index', 'create' => 'benhan.create', 'store' => 'benhan.store', 'show' => 'benhan.show', 'edit' => 'benhan.edit', 'update' => 'benhan.update', 'destroy' => 'benhan.destroy',
+        'index' => 'benhan.index',
+        'create' => 'benhan.create',
+        'store' => 'benhan.store',
+        'show' => 'benhan.show',
+        'edit' => 'benhan.edit',
+        'update' => 'benhan.update',
+        'destroy' => 'benhan.destroy',
     ]);
     Route::post('benh-an/{benh_an}/files', [BenhAnController::class, 'uploadFile'])->name('benhan.files.upload');
     Route::delete('benh-an/{benh_an}/files/{file}', [BenhAnController::class, 'destroyFile'])->name('benhan.files.destroy');
@@ -392,6 +447,11 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::get('benh-an/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('benhan.exportPdf');
     Route::get('benh-an/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('benhan.files.download')->middleware('signed');
     Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
+
+    // Routes cho dịch vụ nâng cao
+    Route::post('benh-an/{benhAn}/dich-vu-nang-cao', [BenhAnController::class, 'chiDinhDichVuNangCao'])->name('benhan.dichvunangcao.create');
+    Route::put('dich-vu-nang-cao/{dichVuNangCao}', [BenhAnController::class, 'capNhatDichVuNangCao'])->name('benhan.dichvunangcao.update');
+    Route::delete('dich-vu-nang-cao/{dichVuNangCao}', [BenhAnController::class, 'huyDichVuNangCao'])->name('benhan.dichvunangcao.destroy');
 
     // Doctor Chat Routes (File mẹ: routes/web.php)
     Route::prefix('chat')->name('chat.')->group(function () {
@@ -570,7 +630,9 @@ Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->grou
     });
 });
 
-Route::get('/doctor/{id}/schedule', function (int $id) { return view('doctor.schedule'); })->middleware(['auth', 'can:view-doctor-schedule,id'])->name('doctor.schedule');
+Route::get('/doctor/{id}/schedule', function (int $id) {
+    return view('doctor.schedule');
+})->middleware(['auth', 'can:view-doctor-schedule,id'])->name('doctor.schedule');
 Route::middleware('auth')->group(function () {
     // Route /lich-hen/cua-toi đã được định nghĩa trong patient group ở trên
     // Giữ lại các route khác
@@ -590,10 +652,10 @@ Route::get('/ajax/chuyen-khoa', [LichHenController::class, 'ajaxChuyenKhoa'])->n
 Route::get('/ajax/bac-si-by-chuyen-khoa', [LichHenController::class, 'ajaxBacSiByChuyenKhoa'])->name('ajax.bacsi.byChuyenKhoa');
 
 // Legacy routes & UI cho Calendar cũ
-Route::middleware(['auth','permission:view-dashboard'])->prefix('admin/calendar')->group(function () {
+Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin/calendar')->group(function () {
     Route::get('/', [CalendarController::class, 'index'])->name('admin.calendar.index');
-    Route::get('events', [\App\Http\Controllers\Admin\CalendarController::class,'apiEvents'])->name('admin.calendar.events');
-    Route::get('stats', [\App\Http\Controllers\Admin\CalendarController::class,'apiStats'])->name('admin.calendar.stats');
+    Route::get('events', [\App\Http\Controllers\Admin\CalendarController::class, 'apiEvents'])->name('admin.calendar.events');
+    Route::get('stats', [\App\Http\Controllers\Admin\CalendarController::class, 'apiStats'])->name('admin.calendar.stats');
 });
 
 // Add alias routes so role-prefixed view route names resolve correctly
@@ -621,25 +683,31 @@ Route::get('/staff/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnC
 require __DIR__ . '/auth.php';
 
 // CMS Public
-Route::prefix('blog')->name('blog.')->group(function(){
+Route::prefix('blog')->name('blog.')->group(function () {
     Route::get('/', [\App\Http\Controllers\BlogController::class, 'index'])->name('index');
     Route::get('/bai/{baiViet}', [\App\Http\Controllers\BlogController::class, 'show'])->name('show');
     Route::get('/danh-muc/{danhMuc}', [\App\Http\Controllers\BlogController::class, 'category'])->name('category');
     Route::get('/tag/{tag}', [\App\Http\Controllers\BlogController::class, 'tag'])->name('tag');
 });
 
-Route::middleware(['auth','verified'])->get('/lich-hen/lich', [\App\Http\Controllers\LichHenController::class, 'publicCalendar'])->name('public.lichhen.calendar');
-Route::middleware(['auth','verified','signed'])->get('/tools/test-reminder', function(){
-    if (! request()->hasValidSignature()) { abort(403); }
-    $id = (int) request('id'); $type = request('type', '24h');
+Route::middleware(['auth', 'verified'])->get('/lich-hen/lich', [\App\Http\Controllers\LichHenController::class, 'publicCalendar'])->name('public.lichhen.calendar');
+Route::middleware(['auth', 'verified', 'signed'])->get('/tools/test-reminder', function () {
+    if (! request()->hasValidSignature()) {
+        abort(403);
+    }
+    $id = (int) request('id');
+    $type = request('type', '24h');
     $lh = LichHen::with('user')->findOrFail($id);
-    $key = 'reminder:manual:'.$lh->id.':'.$type.':'.date('YmdHi');
-    if (Cache::add($key, 1, now()->addMinutes(10))) { optional($lh->user)->notify(new AppointmentReminder($lh, $type)); }
+    $key = 'reminder:manual:' . $lh->id . ':' . $type . ':' . date('YmdHi');
+    if (Cache::add($key, 1, now()->addMinutes(10))) {
+        optional($lh->user)->notify(new AppointmentReminder($lh, $type));
+    }
     return response()->json(['ok' => true]);
 })->name('tools.test-reminder');
-Route::middleware(['auth','verified'])->get('/tools/make-test-reminder-url', function(){
-    $id = (int) request('id'); $type = request('type', '24h');
-    $url = URL::signedRoute('tools.test-reminder', compact('id','type'));
+Route::middleware(['auth', 'verified'])->get('/tools/make-test-reminder-url', function () {
+    $id = (int) request('id');
+    $type = request('type', '24h');
+    $url = URL::signedRoute('tools.test-reminder', compact('id', 'type'));
     return response()->json(['url' => $url]);
 })->name('tools.make-test-reminder-url');
 Route::get('/tin-tuc', [\App\Http\Controllers\BlogController::class, 'index'])->name('public.blog.index');

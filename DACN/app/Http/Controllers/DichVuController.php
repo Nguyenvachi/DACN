@@ -11,10 +11,27 @@ class DichVuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //Lấy tất cả dịch vụ từ database
-        $danhSachDichVu = DichVu::paginate(15); // THAY ĐỔI: Thêm phân trang
+        //Lấy tất cả dịch vụ từ database với filter
+        $query = DichVu::query();
+
+        // Lọc theo loại nếu có
+        if ($request->filled('loai')) {
+            $query->where('loai', $request->loai);
+        }
+
+        // Lọc theo trạng thái hoạt động
+        if ($request->filled('hoat_dong')) {
+            $query->where('hoat_dong', $request->hoat_dong == 'true');
+        }
+
+        // Tìm kiếm theo tên
+        if ($request->filled('search')) {
+            $query->where('ten_dich_vu', 'like', '%' . $request->search . '%');
+        }
+
+        $danhSachDichVu = $query->orderBy('loai')->orderBy('ten_dich_vu')->paginate(15);
 
         //Trả về view và truyền danh sách dịch vụ ra view
         return view('admin.dichvu.index', ['dsDichVu' => $danhSachDichVu]);
@@ -37,15 +54,21 @@ class DichVuController extends Controller
         //1. Validate dữ liệu (bắt buộc nhập, định dạng...) 
         $request->validate([
             'ten_dich_vu' => 'required|string|max:255',
+            'loai' => 'required|in:Cơ bản,Nâng cao',
             'mo_ta' => 'nullable|string',
             'gia' => 'required|numeric|min:0',
             'thoi_gian_uoc_tinh' => 'required|integer|min:1',
+            'hoat_dong' => 'nullable|boolean',
         ]);
 
-        //2. Lấy tất cả dữ liệu từ form và tạo dịch vụ mới
-        DichVu::create($request->all());
+        //2. Lấy dữ liệu và set mặc định
+        $data = $request->all();
+        $data['hoat_dong'] = $request->has('hoat_dong') ? true : false;
 
-        //3. Chuyển hướng về trang danh sách
+        //3. Tạo dịch vụ mới
+        DichVu::create($data);
+
+        //4. Chuyển hướng về trang danh sách
         return redirect()->route('admin.dich-vu.index')
             ->with('success', 'Thêm dịch vụ mới thành công!');
     }
@@ -74,13 +97,17 @@ class DichVuController extends Controller
         // Validate dữ liệu
         $request->validate([
             'ten_dich_vu' => 'required|string|max:255',
+            'loai' => 'required|in:Cơ bản,Nâng cao',
             'mo_ta' => 'nullable|string',
             'gia' => 'required|numeric|min:0',
             'thoi_gian_uoc_tinh' => 'required|integer|min:1',
+            'hoat_dong' => 'nullable|boolean',
         ]);
 
         // Cập nhật
-        $dichVu->update($request->all());
+        $data = $request->all();
+        $data['hoat_dong'] = $request->has('hoat_dong') ? true : false;
+        $dichVu->update($data);
 
         return redirect()->route('admin.dich-vu.index')
             ->with('success', 'Cập nhật dịch vụ thành công!');
@@ -103,12 +130,15 @@ class DichVuController extends Controller
     }
 
     /**
-     * THÊM MỚI: Hàm hiển thị danh sách cho bệnh nhân
+     * THÊM MỚI: Hàm hiển thị danh sách cho bệnh nhân - CHỈ DỊCH VỤ CƠ BẢN
      */
     public function publicIndex()
     {
-        // Đổi tên biến để khớp với view
-        $dsDichVu = DichVu::all();
+        // Chỉ lấy dịch vụ cơ bản và đang hoạt động
+        $dsDichVu = DichVu::where('loai', 'Cơ bản')
+            ->where('hoat_dong', true)
+            ->orderBy('ten_dich_vu')
+            ->get();
 
         return view('public.dichvu.index', compact('dsDichVu'));
     }

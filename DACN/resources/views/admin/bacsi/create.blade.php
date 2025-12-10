@@ -90,11 +90,18 @@
                                 <!-- Chuyên khoa -->
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Chuyên khoa <span class="text-danger">*</span></label>
-                                    <input type="text" name="chuyen_khoa"
-                                        class="form-control form-control-lg @error('chuyen_khoa') is-invalid @enderror"
-                                        value="{{ old('chuyen_khoa') }}" placeholder="VD: Tim mạch, Nội tiết, Nhi khoa..."
-                                        required>
-                                    @error('chuyen_khoa')
+                                    <select name="chuyen_khoa_id" 
+                                            class="form-control form-control-lg @error('chuyen_khoa_id') is-invalid @enderror"
+                                            required>
+                                        <option value="">-- Chọn chuyên khoa --</option>
+                                        @foreach($chuyenKhoas as $ck)
+                                            <option value="{{ $ck->id }}" 
+                                                {{ old('chuyen_khoa_id') == $ck->id ? 'selected' : '' }}>
+                                                {{ $ck->ten }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('chuyen_khoa_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>

@@ -29,7 +29,11 @@ class LichHenController extends Controller
     }
     public function create(BacSi $bacSi)
     {
-        $danhSachDichVu = DichVu::all();
+        // CHỈ LẤY DỊCH VỤ CÔ BẢN VÀ ĐANG HOẠT ĐỘNG
+        $danhSachDichVu = DichVu::where('loai', 'Cơ bản')
+            ->where('hoat_dong', true)
+            ->orderBy('ten_dich_vu')
+            ->get();
         return view('public.lichhen.create', compact('bacSi', 'danhSachDichVu'));
     }
 
@@ -248,7 +252,8 @@ class LichHenController extends Controller
                 }
                 return back()->withErrors(['thoi_gian_hen' => $message])->withInput();
             }
-        }        $lichHen->update([
+        }
+        $lichHen->update([
             'ngay_hen' => $request->ngay_hen,
             'thoi_gian_hen' => $request->thoi_gian_hen,
             'ghi_chu' => $request->ghi_chu,
@@ -334,7 +339,7 @@ class LichHenController extends Controller
         // Lọc theo Phòng (thông qua lịch làm việc của bác sĩ)
         if ($request->filled('phong_id')) {
             $phongId = $request->phong_id;
-            $query->whereHas('bacSi.lichLamViecs', function($q) use ($phongId) {
+            $query->whereHas('bacSi.lichLamViecs', function ($q) use ($phongId) {
                 $q->where('phong_id', $phongId);
             });
         }
@@ -387,7 +392,7 @@ class LichHenController extends Controller
         $lichLamViecs = $bacSi->lichLamViecs()
             ->orderBy('ngay_trong_tuan')
             ->get()
-            ->map(function($lich) {
+            ->map(function ($lich) {
                 return [
                     'ngay_trong_tuan' => $lich->ngay_trong_tuan,
                     'thoi_gian_bat_dau' => $lich->thoi_gian_bat_dau,
@@ -496,9 +501,9 @@ class LichHenController extends Controller
     // Trang lịch bệnh nhân: chọn bác sĩ, dịch vụ và ngày để xem slot trống
     public function publicCalendar()
     {
-        $bacSis = BacSi::orderBy('ho_ten')->get(['id','ho_ten']);
-        $dichVus = DichVu::orderBy('ten')->get(['id','ten','thoi_gian_uoc_tinh']);
-        return view('public.lichhen.calendar', compact('bacSis','dichVus'));
+        $bacSis = BacSi::orderBy('ho_ten')->get(['id', 'ho_ten']);
+        $dichVus = DichVu::orderBy('ten')->get(['id', 'ten', 'thoi_gian_uoc_tinh']);
+        return view('public.lichhen.calendar', compact('bacSis', 'dichVus'));
     }
 
     /**
@@ -547,4 +552,3 @@ class LichHenController extends Controller
         return view('patient.lichhen.show', compact('lichHen'));
     }
 }
-

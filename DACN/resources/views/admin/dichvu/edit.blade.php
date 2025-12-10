@@ -51,12 +51,30 @@
                             @enderror
                         </div>
 
+                        {{-- Loại dịch vụ --}}
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Loại dịch vụ <span class="text-danger">*</span></label>
+                            <select name="loai" class="form-select form-control-lg @error('loai') is-invalid @enderror" required>
+                                <option value="">-- Chọn loại dịch vụ --</option>
+                                <option value="Cơ bản" {{ old('loai', $dichVu->loai) == 'Cơ bản' ? 'selected' : '' }}>Cơ bản</option>
+                                <option value="Nâng cao" {{ old('loai', $dichVu->loai) == 'Nâng cao' ? 'selected' : '' }}>Nâng cao (Chuyên sâu)</option>
+                            </select>
+                            @error('loai')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Dịch vụ <strong>Cơ bản</strong>: Hiển thị khi bệnh nhân đặt lịch.<br>
+                                Dịch vụ <strong>Nâng cao</strong>: Chỉ bác sĩ mới chỉ định sau khám.
+                            </small>
+                        </div>
+
                         {{-- Giá --}}
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Giá (VNĐ) <span class="text-danger">*</span></label>
                             <input type="number" name="gia"
                                 class="form-control form-control-lg @error('gia') is-invalid @enderror"
-                                value="{{ old('gia', $dichVu->gia) }}" min="0" required>
+                                value="{{ old('gia', $dichVu->gia) }}" min="0" step="1000" required>
                             @error('gia')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -83,6 +101,20 @@
                             @error('mo_ta')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                        </div>
+
+                        {{-- Trạng thái hoạt động --}}
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="hoat_dong" id="hoat_dong" 
+                                       {{ old('hoat_dong', $dichVu->hoat_dong) ? 'checked' : '' }}>
+                                <label class="form-check-label fw-semibold" for="hoat_dong">
+                                    Đang hoạt động
+                                </label>
+                                <small class="text-muted d-block">
+                                    Chỉ dịch vụ đang hoạt động mới được sử dụng
+                                </small>
+                            </div>
                         </div>
 
                     </div>

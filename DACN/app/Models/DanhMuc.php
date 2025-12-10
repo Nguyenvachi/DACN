@@ -10,7 +10,11 @@ class DanhMuc extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'meta_title', 'meta_description', 'description',
+        'name',
+        'slug',
+        'meta_title',
+        'meta_description',
+        'description',
     ];
 
     public function baiViets()

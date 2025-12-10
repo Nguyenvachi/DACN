@@ -168,14 +168,63 @@
                                 </svg>
                                 Chọn dịch vụ <span class="text-red-500">*</span>
                             </label>
-                            <select id="dich_vu_id" name="dich_vu_id" required class="w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            <select id="dich_vu_id" name="dich_vu_id" required 
+                                    class="w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                                 <option value="">-- Chọn dịch vụ --</option>
                                 @foreach($danhSachDichVu as $dv)
-                                <option value="{{ $dv->id }}" {{ old('dich_vu_id') == $dv->id ? 'selected' : '' }}>
-                                    {{ $dv->ten_dich_vu }} ({{ number_format($dv->gia ?? 0) }} VND) - {{ $dv->thoi_gian_uoc_tinh ?? 30 }} phút
+                                <option value="{{ $dv->id }}" 
+                                        data-price="{{ $dv->gia ?? 0 }}"
+                                        data-duration="{{ $dv->thoi_gian_uoc_tinh ?? 30 }}"
+                                        {{ old('dich_vu_id') == $dv->id ? 'selected' : '' }}>
+                                    {{ $dv->ten_dich_vu }}
                                 </option>
                                 @endforeach
                             </select>
+
+                            {{-- Thông tin dịch vụ đã chọn --}}
+                            <div id="serviceInfo" class="hidden mt-4 p-4 bg-white rounded-lg border-2 border-blue-300 shadow-sm animate-fade-in">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-sm font-bold text-gray-700 flex items-center">
+                                        <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Thông tin dịch vụ
+                                    </h4>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {{-- Giá tiền --}}
+                                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-3 rounded-lg border border-green-200">
+                                        <div class="flex items-center space-x-2 mb-1">
+                                            <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span class="text-xs font-semibold text-gray-600">Chi phí dự kiến</span>
+                                        </div>
+                                        <p id="servicePrice" class="text-2xl font-bold text-green-700">0 ₫</p>
+                                    </div>
+
+                                    {{-- Thời gian --}}
+                                    <div class="bg-gradient-to-br from-purple-50 to-indigo-50 p-3 rounded-lg border border-purple-200">
+                                        <div class="flex items-center space-x-2 mb-1">
+                                            <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span class="text-xs font-semibold text-gray-600">Thời gian khám</span>
+                                        </div>
+                                        <p id="serviceDuration" class="text-2xl font-bold text-purple-700">0 phút</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 flex items-start space-x-2 text-xs text-gray-600 bg-blue-50 p-2 rounded">
+                                    <svg class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>Thời gian có thể thay đổi tùy theo tình trạng sức khỏe thực tế</span>
+                                </div>
+                            </div>
                         </div>
 
                         {{-- ✅ NGÀY HẸN --}}
@@ -247,6 +296,22 @@
     {{-- ✅ STYLES --}}
     {{-- ENHANCED: Modern styles with gradients and animations (Parent: public/lichhen/create.blade.php) --}}
     <style>
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
         /* Step Indicator Styles */
         .step-item.active .step-circle {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
@@ -403,9 +468,51 @@
             const dichVuSelect = document.getElementById('dich_vu_id');
             const dateInput = document.getElementById('ngay_hen');
             const slotsContainer = document.getElementById('slotsContainer');
+            const serviceInfo = document.getElementById('serviceInfo');
+            const servicePrice = document.getElementById('servicePrice');
+            const serviceDuration = document.getElementById('serviceDuration');
             const bacSiId = "{{ $bacSi->id }}";
             const submitBtn = document.getElementById('submitBtn');
             let currentStep = 1;
+
+            // Format currency
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(amount);
+            }
+
+            // Handle service selection
+            dichVuSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                
+                if (this.value) {
+                    const price = selectedOption.getAttribute('data-price') || 0;
+                    const duration = selectedOption.getAttribute('data-duration') || 30;
+                    
+                    // Show service info with animation
+                    serviceInfo.classList.remove('hidden');
+                    servicePrice.textContent = formatCurrency(price);
+                    serviceDuration.textContent = duration + ' phút';
+                    
+                    updateStep(2);
+                    
+                    // Auto fetch slots if date is already selected
+                    if (dateInput.value) {
+                        fetchSlots();
+                    }
+                } else {
+                    serviceInfo.classList.add('hidden');
+                    updateStep(1);
+                    showMessage('Vui lòng chọn dịch vụ và ngày hẹn để xem khung giờ trống.', 'info');
+                }
+            });
+
+            // Trigger on page load if service is pre-selected
+            if (dichVuSelect.value) {
+                dichVuSelect.dispatchEvent(new Event('change'));
+            }
 
             // Step management
             function updateStep(step) {
@@ -538,17 +645,6 @@
             });
 
             // Event listeners with step tracking
-            dichVuSelect.addEventListener('change', function() {
-                if (this.value) {
-                    updateStep(2);
-                    if (dateInput.value) {
-                        fetchSlots();
-                    }
-                } else {
-                    updateStep(1);
-                }
-            });
-
             dateInput.addEventListener('change', function() {
                 if (this.value && dichVuSelect.value) {
                     fetchSlots();

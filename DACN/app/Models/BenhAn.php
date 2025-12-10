@@ -61,16 +61,25 @@ class BenhAn extends Model
     }
 
     // bổ sung quan hệ kê đơn và xét nghiệm
-    public function donThuocs() {
+    public function donThuocs()
+    {
         return $this->hasMany(\App\Models\DonThuoc::class);
     }
 
-    public function xetNghiems() {
+    public function xetNghiems()
+    {
         return $this->hasMany(\App\Models\XetNghiem::class);
     }
 
     // bổ sung quan hệ audit trail
-    public function audits() {
+    public function audits()
+    {
         return $this->hasMany(\App\Models\BenhAnAudit::class)->orderByDesc('created_at');
+    }
+
+    // Quan hệ với dịch vụ nâng cao
+    public function dichVuNangCao()
+    {
+        return $this->hasMany(BenhAnDichVuNangCao::class);
     }
 }
