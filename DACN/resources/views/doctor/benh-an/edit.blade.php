@@ -257,6 +257,7 @@
             </div>
 
             {{-- Xét nghiệm --}}
+            {{-- Xét nghiệm --}}
             <div class="card vc-card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
@@ -277,19 +278,24 @@
                         @foreach($xetNghiems as $xn)
                         <div class="list-group-item px-0">
                             <div class="d-flex justify-content-between align-items-start mb-1">
-                                <h6 class="mb-0 small">{{ $xn->loai }}</h6>
-                                @if($xn->trang_thai === 'completed')
-                                <span class="badge bg-success"><i class="fas fa-check"></i></span>
-                                @elseif($xn->trang_thai === 'processing')
-                                <span class="badge bg-warning"><i class="fas fa-clock"></i></span>
-                                @else
-                                <span class="badge bg-secondary"><i class="fas fa-hourglass-start"></i></span>
-                                @endif
+                                <h6 class="mb-0 small">{{ $xn->loai ?? $xn->loai_xet_nghiem ?? 'Xét nghiệm' }}</h6>
+                                <div>
+                                    @if($xn->trang_thai_xn === 'Đã có kết quả' || $xn->trang_thai === 'completed')
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i>Hoàn thành</span>
+                                    @elseif($xn->trang_thai_xn === 'Đang xử lý' || $xn->trang_thai === 'processing')
+                                    <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Đang xử lý</span>
+                                    @else
+                                    <span class="badge bg-secondary"><i class="fas fa-hourglass-start me-1"></i>Chờ thực hiện</span>
+                                    @endif
+                                    @if($xn->gia_tien)
+                                    <span class="badge bg-info ms-1">{{ number_format($xn->gia_tien, 0, ',', '.') }} đ</span>
+                                    @endif
+                                </div>
                             </div>
                             @if($xn->mo_ta)
                             <p class="mb-2 small text-muted">{{ Str::limit($xn->mo_ta, 60) }}</p>
                             @endif
-                            @if($xn->trang_thai === 'completed' && $xn->file_path)
+                            @if(($xn->trang_thai_xn === 'Đã có kết quả' || $xn->trang_thai === 'completed') && $xn->file_path)
                             <a href="{{ route('doctor.benhan.xetnghiem.download', $xn->id) }}"
                                class="btn btn-sm btn-outline-primary">
                                 <i class="fas fa-download me-1"></i>Tải KQ
@@ -303,6 +309,132 @@
                         <i class="fas fa-flask fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Chưa chỉ định XN</p>
                         <a href="{{ route('doctor.xetnghiem.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                            <i class="fas fa-plus me-2"></i>Chỉ định ngay
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Siêu âm --}}
+            <div class="card vc-card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-baby me-2" style="color: #ec4899;"></i>
+                        Siêu âm thai
+                    </h5>
+                    <a href="{{ route('doctor.sieu-am.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    @php
+                        $sieuAms = $record->sieuAms ?? collect();
+                    @endphp
+
+                    @if($sieuAms->count() > 0)
+                    <div class="list-group list-group-flush">
+                        @foreach($sieuAms as $sa)
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="mb-0 small">{{ $sa->loai_sieu_am }}</h6>
+                                <div>
+                                    @if($sa->trang_thai === 'Đã có kết quả')
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i>Hoàn thành</span>
+                                    @elseif($sa->trang_thai === 'Đang thực hiện')
+                                    <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Đang thực hiện</span>
+                                    @else
+                                    <span class="badge bg-secondary"><i class="fas fa-hourglass-start me-1"></i>Chờ thực hiện</span>
+                                    @endif
+                                    @if($sa->gia_tien)
+                                    <span class="badge bg-info ms-1">{{ number_format($sa->gia_tien, 0, ',', '.') }} đ</span>
+                                    @endif
+                                </div>
+                            </div>
+                            @if($sa->ly_do_chi_dinh)
+                            <p class="mb-2 small text-muted">{{ Str::limit($sa->ly_do_chi_dinh, 60) }}</p>
+                            @endif
+                            @if($sa->tuoi_thai_tuan)
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt me-1"></i>Tuổi thai: {{ $sa->tuoi_thai_tuan }} tuần 
+                                @if($sa->tuoi_thai_ngay) {{ $sa->tuoi_thai_ngay }} ngày @endif
+                            </small>
+                            @endif
+                            @if($sa->trang_thai === 'Đã có kết quả')
+                            <div class="mt-2">
+                                <a href="{{ route('doctor.sieu-am.edit', $sa->id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye me-1"></i>Xem KQ
+                                </a>
+                            </div>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="text-center py-4">
+                        <i class="fas fa-baby fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa chỉ định siêu âm</p>
+                        <a href="{{ route('doctor.sieu-am.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                            <i class="fas fa-plus me-2"></i>Chỉ định ngay
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Thủ thuật --}}
+            <div class="card vc-card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-procedures me-2" style="color: #f59e0b;"></i>
+                        Thủ thuật
+                    </h5>
+                    <a href="{{ route('doctor.thu-thuat.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    @php
+                        $thuThuats = $record->thuThuats ?? collect();
+                    @endphp
+
+                    @if($thuThuats->count() > 0)
+                    <div class="list-group list-group-flush">
+                        @foreach($thuThuats as $tt)
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="mb-0 small">{{ $tt->ten_thu_thuat }}</h6>
+                                <div>
+                                    @if($tt->trang_thai === 'Đã hoàn thành')
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i>Hoàn thành</span>
+                                    @elseif($tt->trang_thai === 'Đang thực hiện')
+                                    <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Đang thực hiện</span>
+                                    @else
+                                    <span class="badge bg-secondary"><i class="fas fa-hourglass-start me-1"></i>Chờ thực hiện</span>
+                                    @endif
+                                    @if($tt->gia_tien)
+                                    <span class="badge bg-info ms-1">{{ number_format($tt->gia_tien, 0, ',', '.') }} đ</span>
+                                    @endif
+                                </div>
+                            </div>
+                            @if($tt->chi_tiet_truoc_thu_thuat)
+                            <p class="mb-2 small text-muted">{{ Str::limit($tt->chi_tiet_truoc_thu_thuat, 60) }}</p>
+                            @endif
+                            @if($tt->trang_thai !== 'Chờ thực hiện')
+                            <div class="mt-2">
+                                <a href="{{ route('doctor.thu-thuat.edit', $tt->id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye me-1"></i>Xem chi tiết
+                                </a>
+                            </div>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="text-center py-4">
+                        <i class="fas fa-procedures fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa chỉ định thủ thuật</p>
+                        <a href="{{ route('doctor.thu-thuat.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
                             <i class="fas fa-plus me-2"></i>Chỉ định ngay
                         </a>
                     </div>

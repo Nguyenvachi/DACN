@@ -214,12 +214,12 @@ class MedicalWorkflowService
      */
     public function cancelAppointment(LichHen $lichHen, string $reason = null): bool
     {
-        if (in_array($lichHen->trang_thai, [LichHen::STATUS_COMPLETED, LichHen::STATUS_CANCELLED])) {
+        if (in_array($lichHen->trang_thai, [LichHen::STATUS_COMPLETED_VN, LichHen::STATUS_CANCELLED_VN])) {
             return false;
         }
 
         $lichHen->update([
-            'trang_thai' => LichHen::STATUS_CANCELLED,
+            'trang_thai' => LichHen::STATUS_CANCELLED_VN,
             'ghi_chu' => ($lichHen->ghi_chu ? $lichHen->ghi_chu . "\n" : '') . "Lý do hủy: " . ($reason ?? 'Không rõ'),
         ]);
 

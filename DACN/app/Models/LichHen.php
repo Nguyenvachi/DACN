@@ -25,6 +25,8 @@ class LichHen extends Model
         'payment_status',
         'payment_method',
         'paid_at',
+        'ho_ten_benh_nhan',
+        'so_dien_thoai_benh_nhan',
     ];
 
     // Các trạng thái trong luồng nghiệp vụ y tế chuẩn

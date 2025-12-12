@@ -31,10 +31,16 @@ class BacSiScheduleController extends Controller
             ? Carbon::parse($request->get('week_start'))->startOfWeek()
             : Carbon::now()->startOfWeek();
 
+        // Không cho phép xem các tuần trong quá khứ
+        $today = Carbon::today();
+        if ($weekStart->lt($today->copy()->startOfWeek())) {
+            $weekStart = $today->copy()->startOfWeek();
+        }
+
         $weekEnd = $weekStart->copy()->endOfWeek();
 
-        // Lấy tất cả slot rảnh trong tuần
-        $slots = $this->shiftService->getAvailableSlots(
+        // Lấy tất cả slot trong tuần (cả rảnh và đã đặt)
+        $slots = $this->shiftService->getAllSlots(
             $bacSi->id,
             $weekStart,
             $weekEnd,

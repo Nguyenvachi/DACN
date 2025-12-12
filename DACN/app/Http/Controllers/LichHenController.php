@@ -39,13 +39,28 @@ class LichHenController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'bac_si_id' => 'required|exists:bac_sis,id',
-            'dich_vu_id' => 'required|exists:dich_vus,id',
-            'ngay_hen' => 'required|date_format:Y-m-d',
-            'thoi_gian_hen' => 'required|date_format:H:i',
-            'ghi_chu' => 'nullable|string|max:1000',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'bac_si_id' => 'required|exists:bac_sis,id',
+                'dich_vu_id' => 'required|exists:dich_vus,id',
+                'ngay_hen' => 'required|date_format:Y-m-d',
+                'thoi_gian_hen' => 'required|date_format:H:i',
+                'ghi_chu' => 'nullable|string|max:1000',
+                'payment_method' => 'nullable|in:tien_mat,chuyen_khoan',
+                'payment_gateway' => 'nullable|in:vnpay,momo',
+                'ho_ten' => 'nullable|string|max:255',
+                'so_dien_thoai' => 'nullable|string|max:20',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Dữ liệu không hợp lệ',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+            throw $e;
+        }
 
         $dichVu = DichVu::find($validatedData['dich_vu_id']);
         $duration = $dichVu ? (int) ($dichVu->thoi_gian_uoc_tinh ?? 30) : 30;
@@ -59,7 +74,11 @@ class LichHenController extends Controller
         try {
             $weekday = Carbon::parse($date)->dayOfWeek;
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['ngay_hen' => 'Ngày không hợp lệ'])->withInput();
+            $errorMsg = 'Ngày không hợp lệ';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 422);
+            }
+            return redirect()->back()->withErrors(['ngay_hen' => $errorMsg])->withInput();
         }
 
         $lichLamViec = LichLamViec::where('bac_si_id', $bacSiId)
@@ -67,79 +86,122 @@ class LichHenController extends Controller
             ->first();
 
         if (! $lichLamViec) {
-            return redirect()->back()->withErrors(['thoi_gian_hen' => 'Bác sĩ không làm việc vào ngày này'])->withInput();
+            $errorMsg = 'Bác sĩ không làm việc vào ngày này';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 422);
+            }
+            return redirect()->back()->withErrors(['thoi_gian_hen' => $errorMsg])->withInput();
         }
 
         $shiftStart = Carbon::parse($date . ' ' . ($lichLamViec->thoi_gian_bat_dau ?? '08:00:00'));
         $shiftEnd   = Carbon::parse($date . ' ' . ($lichLamViec->thoi_gian_ket_thuc ?? '17:00:00'));
 
         if ($slotStart->lt($shiftStart) || $slotEnd->gt($shiftEnd)) {
-            return redirect()->back()->withErrors(['thoi_gian_hen' => "Khung giờ không hợp lệ: lịch hẹn kéo dài {$duration} phút và không nằm trong ca làm việc của bác sĩ"])->withInput();
+            $errorMsg = "Khung giờ không hợp lệ: lịch hẹn kéo dài {$duration} phút và không nằm trong ca làm việc của bác sĩ";
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 422);
+            }
+            return redirect()->back()->withErrors(['thoi_gian_hen' => $errorMsg])->withInput();
         }
 
-        // Re-check overlaps theo duration hiện tại
-        $conflict = LichHen::where('bac_si_id', $bacSiId)
+        // ✅ KIỂM TRA GIỚI HẠN 2 SLOT/KHUNG GIỜ
+        $sameTimeSlots = LichHen::where('bac_si_id', $bacSiId)
             ->where('ngay_hen', $date)
-            ->get()
-            ->filter(function ($item) use ($slotStart, $duration, $date) {
-                $existStart = Carbon::parse($date . ' ' . $item->thoi_gian_hen);
-                $existDur = $item->dichVu ? ($item->dichVu->thoi_gian_uoc_tinh ?? 30) : 30;
-                $existEnd = $existStart->copy()->addMinutes($existDur);
-                $reqStart = $slotStart->copy();
-                $reqEnd = $reqStart->copy()->addMinutes($duration);
-                return $reqStart->lt($existEnd) && $reqEnd->gt($existStart);
-            })->isNotEmpty();
+            ->where('thoi_gian_hen', $validatedData['thoi_gian_hen'])
+            ->whereNotIn('trang_thai', [\App\Models\LichHen::STATUS_CANCELLED_VN])
+            ->get();
 
-        if ($conflict) {
-            return redirect()->back()->withErrors(['thoi_gian_hen' => 'Khung giờ đã bị đặt bởi người khác, vui lòng chọn khung giờ khác'])->withInput();
+        // Kiểm tra đã đủ 2 slot chưa
+        if ($sameTimeSlots->count() >= 2) {
+            $errorMsg = 'Khung giờ này đã đủ 2 người đặt. Vui lòng chọn khung giờ khác.';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 422);
+            }
+            return redirect()->back()->withErrors(['thoi_gian_hen' => $errorMsg])->withInput();
         }
+
+        // ✅ CHỐNG SPAM: Kiểm tra user/người này đã đặt trong khung giờ này chưa
+        $userId = auth()->id();
+        $hoTen = $request->input('ho_ten');
+        $soDienThoai = $request->input('so_dien_thoai');
+
+        $existingBooking = $sameTimeSlots->first(function ($item) use ($userId, $hoTen, $soDienThoai) {
+            // Nếu đã đăng nhập, check theo user_id
+            if ($userId && $item->user_id == $userId) {
+                return true;
+            }
+            // Nếu chưa đăng nhập, check theo số điện thoại
+            if (!$userId && $soDienThoai && $item->so_dien_thoai_benh_nhan == $soDienThoai) {
+                return true;
+            }
+            return false;
+        });
+
+        if ($existingBooking) {
+            $errorMsg = 'Bạn đã đặt lịch trong khung giờ này rồi. Vui lòng chọn khung giờ khác.';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 422);
+            }
+            return redirect()->back()->withErrors(['thoi_gian_hen' => $errorMsg])->withInput();
+        }
+
+        // BỎ: Kiểm tra overlap phức tạp (không cần nữa vì đã giới hạn 2 slot/khung giờ)
+        // Re-check overlaps theo duration hiện tại
+        // $conflict = LichHen::where('bac_si_id', $bacSiId)
+        //     ->where('ngay_hen', $date)
+        //     ->get()
+        //     ->filter(function ($item) use ($slotStart, $duration, $date) {
+        //         $existStart = Carbon::parse($date . ' ' . $item->thoi_gian_hen);
+        //         $existDur = $item->dichVu ? ($item->dichVu->thoi_gian_uoc_tinh ?? 30) : 30;
+        //         $existEnd = $existStart->copy()->addMinutes($existDur);
+        //         $reqStart = $slotStart->copy();
+        //         $reqEnd = $reqStart->copy()->addMinutes($duration);
+        //         return $reqStart->lt($existEnd) && $reqEnd->gt($existStart);
+        //     })->isNotEmpty();
+
+        // if ($conflict) {
+        //     $errorMsg = 'Khung giờ đã bị đặt bởi người khác, vui lòng chọn khung giờ khác';
+        //     if ($request->ajax() || $request->wantsJson()) {
+        //         return response()->json(['success' => false, 'message' => $errorMsg], 422);
+        //     }
+        //     return redirect()->back()->withErrors(['thoi_gian_hen' => $errorMsg])->withInput();
+        // }
 
         // ✅ KIỂM TRA XUNG ĐỘT BÁC SĨ (lịch nghỉ, ca điều chỉnh, lịch hẹn khác)
         $svc = app(LichKhamService::class);
         $doctorCheck = $svc->hasConflictForDoctor($bacSiId, $date, $validatedData['thoi_gian_hen'], $duration, null);
         if ($doctorCheck['conflict']) {
-            return redirect()->back()->withErrors(['thoi_gian_hen' => $doctorCheck['details'][0] ?? 'Khung giờ không khả dụng'])->withInput();
+            $errorMsg = $doctorCheck['details'][0] ?? 'Khung giờ không khả dụng';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 422);
+            }
+            return redirect()->back()->withErrors(['thoi_gian_hen' => $errorMsg])->withInput();
         }
 
-        // ✅ KIỂM TRA XUNG ĐỘT BỆNH NHÂN (không cho đặt 2 lịch trùng giờ)
+        // ✅ KIỂM TRA XUNG ĐỘT BỆNH NHÂN (không cho đặt 2 lịch trùng giờ, kể cả với bác sĩ khác)
         $patientCheck = $svc->hasPatientConflict(Auth::id(), $date, $validatedData['thoi_gian_hen'], $duration, null);
         if ($patientCheck['conflict']) {
-            return redirect()->back()->withErrors(['thoi_gian_hen' => $patientCheck['details'][0] ?? 'Bạn đã có lịch trong khung giờ này'])->withInput();
-        }
-
-        // ✅ KIỂM TRA XUNG ĐỘT PHÒNG
-        $lichLamViecPhong = LichLamViec::where('bac_si_id', $bacSiId)
-            ->where('ngay_trong_tuan', $weekday)
-            ->first();
-
-        if ($lichLamViecPhong && $lichLamViecPhong->phong_id) {
-            $timeStart = Carbon::parse($date . ' ' . $validatedData['thoi_gian_hen']);
-            $timeEnd = $timeStart->copy()->addMinutes($duration);
-
-            $roomConflict = $this->roomService->checkRoomConflict(
-                $lichLamViecPhong->phong_id,
-                $timeStart,
-                $timeEnd,
-                null, // ignoreLichHenId
-                null, // ignoreLichLamViecId
-                $bacSiId // ignoreBacSiId - Loại trừ bác sĩ đang đặt lịch
-            );
-
-            if ($roomConflict['conflict']) {
-                $message = 'Phòng "' . ($lichLamViecPhong->phong->ten ?? 'N/A') . '" đã bị đặt trong khung giờ này';
-                if (!empty($roomConflict['details'])) {
-                    $message .= ': ' . $roomConflict['details'][0];
-                }
-                return redirect()->back()->withErrors(['thoi_gian_hen' => $message])->withInput();
+            $errorMsg = $patientCheck['details'][0] ?? 'Bạn đã có lịch hẹn trong khung giờ này';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $errorMsg], 422);
             }
+            return redirect()->back()->withErrors(['thoi_gian_hen' => $errorMsg])->withInput();
         }
+
+        // ✅ BỎ KIỂM TRA XUNG ĐỘT PHÒNG
+        // Lý do: Nhiều bác sĩ có thể dùng chung phòng theo lịch làm việc
+        // Chỉ cần kiểm tra xung đột lịch hẹn của cùng bác sĩ là đủ (đã check ở trên)
 
         // ✅ TẠO LỊCH HẸN TRONG TRANSACTION
         $lichHen = null;
-        DB::transaction(function () use ($validatedData, &$lichHen) {
+        $hoaDon = null;
+        $paymentMethod = $request->input('payment_method', 'tien_mat');
+        $paymentGateway = $request->input('payment_gateway'); // vnpay hoặc momo
+
+        DB::transaction(function () use ($validatedData, &$lichHen, &$hoaDon, $paymentMethod, $request) {
             // THÊM: Lấy giá dịch vụ để lưu vào tong_tien
             $dichVu = DichVu::find($validatedData['dich_vu_id']);
-            $tongTien = $dichVu ? $dichVu->gia : 0;
+            $tongTien = $dichVu ? $dichVu->gia_tien : 0;
 
             $lichHen = LichHen::create([
                 'user_id' => auth()->id(),
@@ -150,23 +212,75 @@ class LichHenController extends Controller
                 'thoi_gian_hen' => $validatedData['thoi_gian_hen'],
                 'ghi_chu' => $validatedData['ghi_chu'] ?? null,
                 'trang_thai' => \App\Models\LichHen::STATUS_PENDING_VN, // Trạng thái ban đầu
+                'ho_ten_benh_nhan' => $request->input('ho_ten'),
+                'so_dien_thoai_benh_nhan' => $request->input('so_dien_thoai'),
             ]);
 
             // THÊM: Tự động tạo hóa đơn luôn
-            HoaDon::create([
+            $hoaDon = HoaDon::create([
                 'lich_hen_id' => $lichHen->id,
                 'user_id' => auth()->id(),
                 'tong_tien' => $tongTien,
                 'trang_thai' => \App\Models\HoaDon::STATUS_UNPAID_VN,
+                'phuong_thuc_thanh_toan' => $paymentMethod === 'chuyen_khoan' ? 'Chuyển khoản' : 'Tiền mặt',
             ]);
         });
 
-        // THÊM: Redirect sang trang thanh toán thay vì success
-        if ($lichHen) {
-            return redirect()->route('patient.payment', $lichHen->id)->with('success', 'Đặt lịch thành công! Vui lòng thanh toán để hoàn tất.');
+        // Đảm bảo transaction đã tạo lịch hẹn và hóa đơn
+        if (!$lichHen || !$hoaDon) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Có lỗi xảy ra khi tạo lịch hẹn'
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'Có lỗi xảy ra khi tạo lịch hẹn')->withInput();
         }
 
-        return redirect()->route('lichhen.thanhcong')->with('success', 'Đặt lịch thành công');
+        // Xử lý theo phương thức thanh toán
+        if ($paymentMethod === 'chuyen_khoan') {
+            // Nếu có chọn cổng thanh toán cụ thể (vnpay hoặc momo)
+            if ($paymentGateway && in_array($paymentGateway, ['vnpay', 'momo'])) {
+                // Nếu là AJAX request
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Đặt lịch thành công! Đang chuyển đến trang thanh toán...',
+                        'payment_gateway' => $paymentGateway,
+                        'hoa_don_id' => $hoaDon->id,
+                        'amount' => $hoaDon->tong_tien,
+                        'lich_hen_id' => $lichHen->id
+                    ]);
+                }
+            }
+
+            // Nếu chưa chọn cổng hoặc không phải AJAX, chuyển đến trang chọn cổng
+            if ($request->ajax() || $request->wantsJson()) {
+                $paymentUrl = route('patient.payment', $lichHen->id);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đặt lịch thành công!',
+                    'payment_url' => $paymentUrl,
+                    'lich_hen_id' => $lichHen->id
+                ]);
+            }
+
+            // Nếu là form submit thông thường
+            return redirect()->route('patient.payment', $lichHen->id)
+                ->with('success', 'Đặt lịch thành công! Vui lòng thanh toán để hoàn tất.');
+        }
+
+        // Thanh toán tiền mặt
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đặt lịch thành công! Bạn sẽ thanh toán tiền mặt tại phòng khám.',
+                'redirect_url' => route('public.bacsi.schedule', ['bacSi' => $bacSiId])
+            ]);
+        }
+
+        return redirect()->route('public.bacsi.schedule', ['bacSi' => $bacSiId])
+            ->with('success', 'Đặt lịch thành công! Bạn sẽ thanh toán tiền mặt tại phòng khám.');
     }
 
     // Bệnh nhân xem lịch hẹn của mình
@@ -458,8 +572,8 @@ class LichHenController extends Controller
         while ($current->copy()->addMinutes($duration)->lte($shiftEnd)) {
             $slotEnd = $current->copy()->addMinutes($duration);
 
-            // Bỏ qua nếu khung giờ đã qua (nếu là hôm nay)
-            if ($date->isToday() && $current->lte($now)) {
+            // Chỉ hiển thị slot nếu thời gian bắt đầu >= thời gian hiện tại
+            if ($current->lt($now)) {
                 $current->addMinutes(30);
                 continue;
             }
@@ -502,7 +616,10 @@ class LichHenController extends Controller
     public function publicCalendar()
     {
         $bacSis = BacSi::orderBy('ho_ten')->get(['id', 'ho_ten']);
-        $dichVus = DichVu::orderBy('ten')->get(['id', 'ten', 'thoi_gian_uoc_tinh']);
+        $dichVus = DichVu::where('loai', 'Cơ bản')
+            ->where('hoat_dong', true)
+            ->orderBy('ten_dich_vu')
+            ->get(['id', 'ten_dich_vu as ten', 'thoi_gian_uoc_tinh']);
         return view('public.lichhen.calendar', compact('bacSis', 'dichVus'));
     }
 

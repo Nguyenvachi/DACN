@@ -245,6 +245,7 @@ class ShiftService
     public function getAvailableSlots(int $bacSiId, Carbon $startDate, Carbon $endDate, int $slotDuration = 30): array
     {
         $slots = [];
+        $now = Carbon::now(); // Lấy thời gian hiện tại
 
         $currentDate = $startDate->copy();
 
@@ -274,14 +275,17 @@ class ShiftService
                 while ($currentSlotStart->copy()->addMinutes($slotDuration)->lte($shiftEnd)) {
                     $currentSlotEnd = $currentSlotStart->copy()->addMinutes($slotDuration);
 
-                    // Kiểm tra slot này có bị đặt lịch chưa
-                    if (!$this->isSlotBooked($bacSiId, $currentSlotStart, $currentSlotEnd)) {
-                        $slots[] = [
-                            'date' => $currentSlotStart->format('Y-m-d'),
-                            'start' => $currentSlotStart->format('H:i'),
-                            'end' => $currentSlotEnd->format('H:i'),
-                            'phong_id' => $lich->phong_id,
-                        ];
+                    // Chỉ thêm slot nếu thời gian bắt đầu >= thời gian hiện tại
+                    if ($currentSlotStart->gte($now)) {
+                        // Kiểm tra slot này có bị đặt lịch chưa
+                        if (!$this->isSlotBooked($bacSiId, $currentSlotStart, $currentSlotEnd)) {
+                            $slots[] = [
+                                'date' => $currentSlotStart->format('Y-m-d'),
+                                'start' => $currentSlotStart->format('H:i'),
+                                'end' => $currentSlotEnd->format('H:i'),
+                                'phong_id' => $lich->phong_id,
+                            ];
+                        }
                     }
 
                     $currentSlotStart->addMinutes($slotDuration);
@@ -302,13 +306,16 @@ class ShiftService
                 while ($currentSlotStart->copy()->addMinutes($slotDuration)->lte($caEnd)) {
                     $currentSlotEnd = $currentSlotStart->copy()->addMinutes($slotDuration);
 
-                    if (!$this->isSlotBooked($bacSiId, $currentSlotStart, $currentSlotEnd)) {
-                        $slots[] = [
-                            'date' => $currentSlotStart->format('Y-m-d'),
-                            'start' => $currentSlotStart->format('H:i'),
-                            'end' => $currentSlotEnd->format('H:i'),
-                            'phong_id' => null,
-                        ];
+                    // Chỉ thêm slot nếu thời gian bắt đầu >= thời gian hiện tại
+                    if ($currentSlotStart->gte($now)) {
+                        if (!$this->isSlotBooked($bacSiId, $currentSlotStart, $currentSlotEnd)) {
+                            $slots[] = [
+                                'date' => $currentSlotStart->format('Y-m-d'),
+                                'start' => $currentSlotStart->format('H:i'),
+                                'end' => $currentSlotEnd->format('H:i'),
+                                'phong_id' => null,
+                            ];
+                        }
                     }
 
                     $currentSlotStart->addMinutes($slotDuration);
@@ -393,6 +400,116 @@ class ShiftService
     }
 
     /**
+     * Lấy TẤT CẢ slot (cả rảnh và đã đặt) của bác sĩ trong khoảng thời gian
+     * Trả về thông tin đầy đủ về trạng thái đặt chỗ
+     *
+     * @param int $bacSiId
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @param int $slotDuration - thời gian 1 slot tính bằng phút (mặc định 30)
+     * @return array
+     */
+    public function getAllSlots(int $bacSiId, Carbon $startDate, Carbon $endDate, int $slotDuration = 30): array
+    {
+        $slots = [];
+        $now = Carbon::now();
+
+        $currentDate = $startDate->copy();
+
+        while ($currentDate->lte($endDate)) {
+            $weekday = $currentDate->dayOfWeek;
+
+            // Lấy lịch làm việc định kỳ trong ngày này
+            $lichLamViecs = \App\Models\LichLamViec::where('bac_si_id', $bacSiId)
+                ->where('ngay_trong_tuan', $weekday)
+                ->get();
+
+            foreach ($lichLamViecs as $lich) {
+                $shiftStart = $currentDate->copy()->setTimeFromTimeString(
+                    (string) $this->parseTimeFlexible($lich->thoi_gian_bat_dau)->format('H:i:s')
+                );
+                $shiftEnd = $currentDate->copy()->setTimeFromTimeString(
+                    (string) $this->parseTimeFlexible($lich->thoi_gian_ket_thuc)->format('H:i:s')
+                );
+
+                // Kiểm tra xem ca này có bị lịch nghỉ hay ca điều chỉnh ảnh hưởng không
+                if ($this->isShiftBlocked($bacSiId, $shiftStart, $shiftEnd)) {
+                    continue;
+                }
+
+                // Chia ca làm việc thành các slot nhỏ
+                $currentSlotStart = $shiftStart->copy();
+                while ($currentSlotStart->copy()->addMinutes($slotDuration)->lte($shiftEnd)) {
+                    $currentSlotEnd = $currentSlotStart->copy()->addMinutes($slotDuration);
+
+                    // Chỉ thêm slot nếu thời gian bắt đầu >= thời gian hiện tại
+                    if ($currentSlotStart->gte($now)) {
+                        // Đếm số lượng đã đặt trong slot này
+                        $bookedCount = \App\Models\LichHen::where('bac_si_id', $bacSiId)
+                            ->whereDate('ngay_hen', $currentSlotStart->toDateString())
+                            ->where('thoi_gian_hen', $currentSlotStart->format('H:i:s'))
+                            ->whereNotIn('trang_thai', [\App\Models\LichHen::STATUS_CANCELLED_VN])
+                            ->count();
+
+                        $slots[] = [
+                            'date' => $currentSlotStart->format('Y-m-d'),
+                            'start' => $currentSlotStart->format('H:i'),
+                            'end' => $currentSlotEnd->format('H:i'),
+                            'phong_id' => $lich->phong_id,
+                            'booked_count' => $bookedCount,
+                            'is_full' => $bookedCount >= 2,
+                            'is_available' => $bookedCount < 2,
+                        ];
+                    }
+
+                    $currentSlotStart->addMinutes($slotDuration);
+                }
+            }
+
+            // Thêm các ca điều chỉnh 'add' cho ngày hiện tại
+            $caDieuChinhs = \App\Models\CaDieuChinhBacSi::where('bac_si_id', $bacSiId)
+                ->whereDate('ngay', $currentDate->toDateString())
+                ->where('hanh_dong', 'add')
+                ->get();
+
+            foreach ($caDieuChinhs as $ca) {
+                $caStart = Carbon::parse($ca->ngay->format('Y-m-d') . ' ' . $ca->gio_bat_dau);
+                $caEnd = Carbon::parse($ca->ngay->format('Y-m-d') . ' ' . $ca->gio_ket_thuc);
+
+                $currentSlotStart = $caStart->copy();
+                while ($currentSlotStart->copy()->addMinutes($slotDuration)->lte($caEnd)) {
+                    $currentSlotEnd = $currentSlotStart->copy()->addMinutes($slotDuration);
+
+                    // Chỉ thêm slot nếu thời gian bắt đầu >= thời gian hiện tại
+                    if ($currentSlotStart->gte($now)) {
+                        $bookedCount = \App\Models\LichHen::where('bac_si_id', $bacSiId)
+                            ->whereDate('ngay_hen', $currentSlotStart->toDateString())
+                            ->where('thoi_gian_hen', $currentSlotStart->format('H:i:s'))
+                            ->whereNotIn('trang_thai', [\App\Models\LichHen::STATUS_CANCELLED_VN])
+                            ->count();
+
+                        $slots[] = [
+                            'date' => $currentSlotStart->format('Y-m-d'),
+                            'start' => $currentSlotStart->format('H:i'),
+                            'end' => $currentSlotEnd->format('H:i'),
+                            'phong_id' => null,
+                            'booked_count' => $bookedCount,
+                            'is_full' => $bookedCount >= 2,
+                            'is_available' => $bookedCount < 2,
+                        ];
+                    }
+
+                    $currentSlotStart->addMinutes($slotDuration);
+                }
+            }
+
+            $currentDate->addDay();
+        }
+
+        return $slots;
+    }
+
+    /**
      * Lấy N slot kế tiếp có sẵn của bác sĩ
      *
      * @param int $bacSiId
@@ -459,4 +576,3 @@ class ShiftService
         }
     }
 }
-

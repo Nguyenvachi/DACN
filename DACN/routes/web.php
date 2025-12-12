@@ -165,7 +165,9 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
 
     // 3. NHÓM DỊCH VỤ & CHUYÊN KHOA (Cần quyền view-services)
     Route::middleware(['permission:view-services'])->group(function () {
-        Route::resource('dich-vu', DichVuController::class)->parameters(['dich-vu' => 'dichVu']);
+        Route::resource('dich-vu', \App\Http\Controllers\Admin\DichVuController::class)->parameters(['dich-vu' => 'dichVu']);
+        Route::post('dich-vu/{dichVu}/toggle-status', [\App\Http\Controllers\Admin\DichVuController::class, 'toggleStatus'])->name('dich-vu.toggle-status');
+
         Route::resource('chuyen-khoa', \App\Http\Controllers\Admin\ChuyenKhoaController::class)->names([
             'index' => 'chuyenkhoa.index',
             'create' => 'chuyenkhoa.create',
@@ -497,6 +499,52 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
         Route::post('/{xetNghiem}/upload', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'uploadResult'])->name('upload');
         Route::get('/{xetNghiem}/download', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'download'])->name('download');
         Route::delete('/{xetNghiem}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'destroy'])->name('destroy');
+    });
+
+    // Siêu âm - Ultrasound Management
+    Route::prefix('sieu-am')->name('sieu-am.')->group(function () {
+        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\SieuAmController::class, 'create'])->name('create');
+        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\SieuAmController::class, 'store'])->name('store');
+        Route::get('/{sieuAm}/edit', [\App\Http\Controllers\Doctor\SieuAmController::class, 'edit'])->name('edit');
+        Route::put('/{sieuAm}', [\App\Http\Controllers\Doctor\SieuAmController::class, 'update'])->name('update');
+    });
+
+    // Thủ thuật - Procedure Management
+    Route::prefix('thu-thuat')->name('thu-thuat.')->group(function () {
+        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'create'])->name('create');
+        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'store'])->name('store');
+        Route::get('/{thuThuat}/edit', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'edit'])->name('edit');
+        Route::put('/{thuThuat}', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'update'])->name('update');
+    });
+
+    // Lịch tái khám - Follow-up Appointment Management
+    Route::prefix('lich-tai-kham')->name('lich-tai-kham.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\LichTaiKhamController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Doctor\LichTaiKhamController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Doctor\LichTaiKhamController::class, 'store'])->name('store');
+        Route::get('/{lichTaiKham}', [\App\Http\Controllers\Doctor\LichTaiKhamController::class, 'show'])->name('show');
+        Route::post('/{lichTaiKham}/update-status', [\App\Http\Controllers\Doctor\LichTaiKhamController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{lichTaiKham}', [\App\Http\Controllers\Doctor\LichTaiKhamController::class, 'destroy'])->name('destroy');
+    });
+
+    // Theo dõi thai kỳ - Prenatal Care Management
+    Route::prefix('theo-doi-thai-ky')->name('theo-doi-thai-ky.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'store'])->name('store');
+        Route::get('/{theoDoiThaiKy}', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'show'])->name('show');
+        Route::get('/{theoDoiThaiKy}/edit', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'edit'])->name('edit');
+        Route::put('/{theoDoiThaiKy}', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'update'])->name('update');
+    });
+
+    // Lịch khám thai - Prenatal Checkup Schedule
+    Route::prefix('lich-kham-thai')->name('lich-kham-thai.')->group(function () {
+        Route::get('/{theoDoiThaiKy}/create', [\App\Http\Controllers\Doctor\LichKhamThaiController::class, 'create'])->name('create');
+        Route::post('/{theoDoiThaiKy}', [\App\Http\Controllers\Doctor\LichKhamThaiController::class, 'store'])->name('store');
+        Route::get('/{lichKhamThai}', [\App\Http\Controllers\Doctor\LichKhamThaiController::class, 'show'])->name('show');
+        Route::get('/{lichKhamThai}/edit', [\App\Http\Controllers\Doctor\LichKhamThaiController::class, 'edit'])->name('edit');
+        Route::put('/{lichKhamThai}', [\App\Http\Controllers\Doctor\LichKhamThaiController::class, 'update'])->name('update');
+        Route::delete('/{lichKhamThai}', [\App\Http\Controllers\Doctor\LichKhamThaiController::class, 'destroy'])->name('destroy');
     });
 });
 

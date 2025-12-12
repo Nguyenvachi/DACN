@@ -311,16 +311,42 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang xử lý...';
 
+        console.log('Submitting reject form to:', form.action);
+
         fetch(form.action, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: new FormData(form)
+            body: JSON.stringify({
+                reason: form.querySelector('[name="reason"]').value
+            })
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers.get('content-type'));
+            
+            // Kiểm tra nếu response không phải JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                // Có thể là redirect hoặc HTML error page
+                if (response.ok) {
+                    // Thành công nhưng không trả về JSON - reload page
+                    alert('Đã từ chối lịch hẹn thành công!');
+                    location.reload();
+                    return;
+                }
+                throw new Error('Response không phải JSON');
+            }
+            
+            return response.json();
+        })
         .then(data => {
+            if (!data) return; // Đã handle ở trên
+            
+            console.log('Response data:', data);
             if (data.success) {
                 alert(data.message);
                 location.reload();
@@ -332,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Có lỗi xảy ra');
+            alert('Có lỗi xảy ra: ' + error.message);
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-times me-1"></i>Từ chối';
         });

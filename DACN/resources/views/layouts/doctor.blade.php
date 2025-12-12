@@ -111,7 +111,23 @@
                 </a>
             </li>
 
-            {{-- 6. LỊCH LÀM VIỆC --}}
+            {{-- 6. THEO DÕI THAI KỲ - Prenatal Care --}}
+            <li>
+                <a href="{{ route('doctor.theo-doi-thai-ky.index') }}">
+                    <i class="fas fa-heart"></i>
+                    <span>Theo dõi thai kỳ</span>
+                </a>
+            </li>
+
+            {{-- 7. LỊCH TÁI KHÁM - Follow-up Appointments --}}
+            <li>
+                <a href="{{ route('doctor.lich-tai-kham.index') }}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Lịch tái khám</span>
+                </a>
+            </li>
+
+            {{-- 8. LỊCH LÀM VIỆC --}}
             <li>
                 <a href="{{ route('doctor.calendar.index') }}">
                     <i class="fas fa-calendar-alt"></i>
@@ -119,7 +135,7 @@
                 </a>
             </li>
 
-            {{-- 7. TIN NHẮN --}}
+            {{-- 9. TIN NHẮN --}}
             <li>
                 <a href="{{ route('doctor.chat.index') }}">
                     <i class="fas fa-comments"></i>

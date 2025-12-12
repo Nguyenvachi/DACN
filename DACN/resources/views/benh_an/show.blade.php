@@ -281,5 +281,197 @@
             </div>
         </div>
 
+        {{-- ===========================
+        SIÊU ÂM
+    ============================ --}}
+        @if ($role === 'doctor' && isset($benhAn->sieuAms))
+        <div class="card shadow-sm mb-4 border-start border-success border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-semibold mb-0">
+                        <i class="bi bi-display"></i> Siêu âm
+                    </h5>
+                    <a href="{{ route('doctor.sieu-am.create', $benhAn) }}" class="btn btn-sm btn-success">
+                        <i class="bi bi-plus-lg"></i> Chỉ định siêu âm
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Loại siêu âm</th>
+                                <th>Ngày chỉ định</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($benhAn->sieuAms as $sa)
+                                <tr>
+                                    <td>{{ $sa->loai_sieu_am }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($sa->ngay_chi_dinh)->format('d/m/Y') }}</td>
+                                    <td>
+                                        @php
+                                            $badgeClass = match($sa->trang_thai) {
+                                                'Chờ thực hiện' => 'bg-warning',
+                                                'Đang thực hiện' => 'bg-info',
+                                                'Hoàn thành' => 'bg-success',
+                                                'Đã hủy' => 'bg-secondary',
+                                                default => 'bg-secondary'
+                                            };
+                                        @endphp
+                                        <span class="badge {{ $badgeClass }}">{{ $sa->trang_thai }}</span>
+                                    </td>
+                                    <td>
+                                        @if ($sa->trang_thai !== 'Hoàn thành' && $sa->trang_thai !== 'Đã hủy')
+                                            <a href="{{ route('doctor.sieu-am.edit', $sa) }}" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-pencil"></i> Nhập kết quả
+                                            </a>
+                                        @else
+                                            <a href="{{ route('doctor.sieu-am.edit', $sa) }}" class="btn btn-sm btn-info">
+                                                <i class="bi bi-eye"></i> Xem kết quả
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Chưa có chỉ định siêu âm</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        {{-- ===========================
+        THỦ THUẬT
+    ============================ --}}
+        @if ($role === 'doctor' && isset($benhAn->thuThuats))
+        <div class="card shadow-sm mb-4 border-start border-warning border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-semibold mb-0">
+                        <i class="bi bi-clipboard-pulse"></i> Thủ thuật
+                    </h5>
+                    <a href="{{ route('doctor.thu-thuat.create', $benhAn) }}" class="btn btn-sm btn-warning">
+                        <i class="bi bi-plus-lg"></i> Chỉ định thủ thuật
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên thủ thuật</th>
+                                <th>Ngày chỉ định</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($benhAn->thuThuats as $tt)
+                                <tr>
+                                    <td>{{ $tt->ten_thu_thuat }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($tt->ngay_chi_dinh)->format('d/m/Y') }}</td>
+                                    <td>
+                                        @php
+                                            $badgeClass = match($tt->trang_thai) {
+                                                'Chờ thực hiện' => 'bg-warning',
+                                                'Đang thực hiện' => 'bg-info',
+                                                'Hoàn thành' => 'bg-success',
+                                                'Đã hủy' => 'bg-secondary',
+                                                default => 'bg-secondary'
+                                            };
+                                        @endphp
+                                        <span class="badge {{ $badgeClass }}">{{ $tt->trang_thai }}</span>
+                                    </td>
+                                    <td>
+                                        @if ($tt->trang_thai !== 'Hoàn thành' && $tt->trang_thai !== 'Đã hủy')
+                                            <a href="{{ route('doctor.thu-thuat.edit', $tt) }}" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-pencil"></i> Nhập kết quả
+                                            </a>
+                                        @else
+                                            <a href="{{ route('doctor.thu-thuat.edit', $tt) }}" class="btn btn-sm btn-info">
+                                                <i class="bi bi-eye"></i> Xem kết quả
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Chưa có chỉ định thủ thuật</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        {{-- ===========================
+        LỊCH TÁI KHÁM
+    ============================ --}}
+        @if ($role === 'doctor')
+        <div class="card shadow-sm mb-4 border-start border-primary border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-semibold mb-0">
+                        <i class="bi bi-calendar-check"></i> Lịch tái khám
+                    </h5>
+                    <a href="{{ route('doctor.lich-tai-kham.create', ['benh_an_id' => $benhAn->id]) }}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-lg"></i> Tạo lịch tái khám
+                    </a>
+                </div>
+
+                @if(isset($benhAn->lichTaiKhams) && $benhAn->lichTaiKhams->count() > 0)
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Ngày hẹn</th>
+                                    <th>Lý do</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($benhAn->lichTaiKhams as $ltk)
+                                    <tr>
+                                        <td>{{ \Carbon\Carbon::parse($ltk->ngay_hen)->format('d/m/Y') }}</td>
+                                        <td>{{ Str::limit($ltk->ly_do, 50) }}</td>
+                                        <td>
+                                            @php
+                                                $badgeClass = match($ltk->trang_thai) {
+                                                    'Đã hẹn' => 'bg-info',
+                                                    'Đã xác nhận' => 'bg-primary',
+                                                    'Đã khám' => 'bg-success',
+                                                    'Đã hủy' => 'bg-secondary',
+                                                    default => 'bg-secondary'
+                                                };
+                                            @endphp
+                                            <span class="badge {{ $badgeClass }}">{{ $ltk->trang_thai }}</span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('doctor.lich-tai-kham.show', $ltk) }}" class="btn btn-sm btn-info">
+                                                <i class="bi bi-eye"></i> Chi tiết
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <p class="text-muted mb-0">Chưa có lịch tái khám</p>
+                @endif
+            </div>
+        </div>
+        @endif
+
     </div>
 @endsection

@@ -124,7 +124,18 @@ class BenhAnController extends Controller
 
     public function show(BenhAn $benh_an)
     {
-        $benh_an->load(['benhNhan', 'bacSi', 'files', 'xetNghiems', 'donThuocs.items.thuoc', 'dichVuNangCao.dichVu', 'dichVuNangCao.nguoiThucHien']);
+        $benh_an->load([
+            'benhNhan', 
+            'bacSi', 
+            'files', 
+            'xetNghiems', 
+            'sieuAms',
+            'thuThuats',
+            'lichTaiKhams',
+            'donThuocs.items.thuoc', 
+            'dichVuNangCao.dichVu', 
+            'dichVuNangCao.nguoiThucHien'
+        ]);
         $role = $this->getCurrentRole();
         return view('benh_an.show', [
             'record'  => $benh_an,

@@ -12,16 +12,23 @@ class DichVu extends Model
     protected $fillable = [
         'ten_dich_vu',
         'loai',
+        'chuyen_khoa_id',
         'mo_ta',
-        'gia',
-        'thoi_gian_uoc_tinh',
+        'gia_tien',
+        'thoi_gian',
         'hoat_dong',
     ];
 
     protected $casts = [
-        'gia' => 'decimal:2',
+        'gia_tien' => 'decimal:2',
         'hoat_dong' => 'boolean',
     ];
+
+    // Relationship với chuyên khoa
+    public function chuyenKhoa()
+    {
+        return $this->belongsTo(ChuyenKhoa::class);
+    }
 
     // THÊM RELATIONSHIP NÀY
     public function lichHens()

@@ -133,7 +133,6 @@ class LichHenController extends Controller
                 return response()->json(['success' => false, 'message' => 'Không thể xác nhận lịch hẹn này.'], 500);
             }
             return back()->with('error', 'Không thể xác nhận lịch hẹn này.');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error confirming appointment: ' . $e->getMessage());
@@ -154,14 +153,22 @@ class LichHenController extends Controller
      */
     public function reject(Request $request, LichHen $lichHen)
     {
+        Log::info('Reject request received', [
+            'lich_hen_id' => $lichHen->id,
+            'user_id' => auth()->id(),
+            'trang_thai' => $lichHen->trang_thai
+        ]);
+
         // Check quyền
         $bacSi = BacSi::where('user_id', auth()->id())->first();
         if (!$bacSi || $lichHen->bac_si_id !== $bacSi->id) {
+            Log::warning('Unauthorized reject attempt', ['bac_si_id' => $bacSi?->id, 'lich_hen_bac_si_id' => $lichHen->bac_si_id]);
             return back()->with('error', 'Bạn không có quyền từ chối lịch hẹn này.');
         }
 
         // Check trạng thái
         if ($lichHen->trang_thai !== \App\Models\LichHen::STATUS_PENDING_VN) {
+            Log::warning('Invalid status for reject', ['current_status' => $lichHen->trang_thai]);
             return back()->with('error', 'Lịch hẹn này đã được xử lý rồi.');
         }
 
@@ -173,13 +180,17 @@ class LichHenController extends Controller
             DB::beginTransaction();
 
             $reason = $request->reason ?? 'Bác sĩ không thể tiếp nhận lịch hẹn này';
+            Log::info('Calling cancelAppointment', ['reason' => $reason]);
+
             $success = $this->workflowService->cancelAppointment($lichHen, $reason);
+
+            Log::info('CancelAppointment result', ['success' => $success]);
 
             if ($success) {
                 DB::commit();
 
-                // AJAX request
-                if ($request->ajax()) {
+                // AJAX request - kiểm tra bằng header Accept
+                if ($request->wantsJson() || $request->ajax() || $request->expectsJson()) {
                     return response()->json([
                         'success' => true,
                         'message' => 'Đã từ chối lịch hẹn.'
@@ -190,13 +201,21 @@ class LichHenController extends Controller
             }
 
             DB::rollBack();
-            return back()->with('error', 'Không thể từ chối lịch hẹn này.');
 
+            if ($request->wantsJson() || $request->ajax() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không thể từ chối lịch hẹn này.'
+                ], 400);
+            }
+
+            return back()->with('error', 'Không thể từ chối lịch hẹn này.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error rejecting appointment: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
 
-            if ($request->ajax()) {
+            if ($request->wantsJson() || $request->ajax() || $request->expectsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
@@ -285,7 +304,6 @@ class LichHenController extends Controller
             return redirect()
                 ->route('doctor.queue.index')
                 ->with('success', 'Đã hoàn thành khám bệnh. Hệ thống đã tạo hóa đơn tự động.');
-
         } catch (\Exception $e) {
             Log::error("Lỗi khi hoàn thành khám: " . $e->getMessage());
 
@@ -293,4 +311,3 @@ class LichHenController extends Controller
         }
     }
 }
-

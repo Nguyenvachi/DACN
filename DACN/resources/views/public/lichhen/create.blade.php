@@ -173,8 +173,8 @@
                                 <option value="">-- Chọn dịch vụ --</option>
                                 @foreach($danhSachDichVu as $dv)
                                 <option value="{{ $dv->id }}" 
-                                        data-price="{{ $dv->gia ?? 0 }}"
-                                        data-duration="{{ $dv->thoi_gian_uoc_tinh ?? 30 }}"
+                                        data-price="{{ $dv->gia_tien ?? 0 }}"
+                                        data-duration="{{ $dv->thoi_gian ?? 30 }}"
                                         {{ old('dich_vu_id') == $dv->id ? 'selected' : '' }}>
                                     {{ $dv->ten_dich_vu }}
                                 </option>

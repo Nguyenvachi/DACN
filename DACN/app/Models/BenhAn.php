@@ -82,4 +82,33 @@ class BenhAn extends Model
     {
         return $this->hasMany(BenhAnDichVuNangCao::class);
     }
+
+    // ✅ Quan hệ với siêu âm
+    public function sieuAms()
+    {
+        return $this->hasMany(SieuAm::class);
+    }
+
+    // ✅ Quan hệ với thủ thuật
+    public function thuThuats()
+    {
+        return $this->hasMany(ThuThuat::class);
+    }
+
+    // ✅ Quan hệ với lịch tái khám
+    public function lichTaiKhams()
+    {
+        return $this->hasMany(LichTaiKham::class);
+    }
+
+    // ✅ Helper: Tính tổng tiền tất cả dịch vụ đã chỉ định
+    public function tongTienDichVu()
+    {
+        $tongXetNghiem = $this->xetNghiems()->sum('gia_tien') ?? 0;
+        $tongSieuAm = $this->sieuAms()->sum('gia_tien') ?? 0;
+        $tongThuThuat = $this->thuThuats()->sum('gia_tien') ?? 0;
+        $tongDichVuNangCao = $this->dichVuNangCao()->sum('gia_tien') ?? 0;
+
+        return $tongXetNghiem + $tongSieuAm + $tongThuThuat + $tongDichVuNangCao;
+    }
 }

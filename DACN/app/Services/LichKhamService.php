@@ -100,11 +100,11 @@ class LichKhamService
                     $q2->where('thoi_gian_bat_dau', '<=', $startTime)
                         ->where('thoi_gian_ket_thuc', '>=', $endTime);
                 })
-                ->orWhere(function ($q2) use ($startTime, $endTime) {
-                    // Hoặc có overlap
-                    $q2->where('thoi_gian_bat_dau', '<', $endTime)
-                        ->where('thoi_gian_ket_thuc', '>', $startTime);
-                });
+                    ->orWhere(function ($q2) use ($startTime, $endTime) {
+                        // Hoặc có overlap
+                        $q2->where('thoi_gian_bat_dau', '<', $endTime)
+                            ->where('thoi_gian_ket_thuc', '>', $startTime);
+                    });
             })
             ->exists();
 
@@ -143,23 +143,18 @@ class LichKhamService
             $conflicts[] = 'Trùng với lịch nghỉ';
         }
 
-        // 2) Lịch hẹn khác trong cùng ngày (giả định mỗi lịch hẹn kéo dài DEFAULT_APPT_MINUTES)
-        $otherAppt = LichHen::query()
+        // 2) Lịch hẹn khác trong cùng ngày - CHO PHÉP TỐI ĐA 2 NGƯỜI CÙNG KHUNG GIỜ
+        // Đếm số lượng lịch hẹn cùng thời gian (không tính lịch đang ignore)
+        $sameTimeCount = LichHen::query()
             ->where('bac_si_id', $bacSiId)
             ->when($ignoreLichHenId, fn($q) => $q->where('id', '!=', $ignoreLichHenId))
             ->whereDate('ngay_hen', $date)
-            ->get(['id', 'thoi_gian_hen'])
-            ->first(function ($row) use ($startTime, $endTime) {
-                if (!$row) return false;
-                $s2 = Carbon::createFromFormat('H:i:s', $row->thoi_gian_hen)->format('H:i:s');
-                $e2 = Carbon::createFromFormat('H:i:s', $row->thoi_gian_hen)
-                    ->addMinutes(self::DEFAULT_APPT_MINUTES)
-                    ->format('H:i:s');
-                return $this->overlap($startTime, $endTime, $s2, $e2);
-            });
+            ->where('thoi_gian_hen', $startTime)
+            ->whereNotIn('trang_thai', [LichHen::STATUS_CANCELLED_VN])
+            ->count();
 
-        if ($otherAppt) {
-            $conflicts[] = 'Trùng với lịch hẹn khác';
+        if ($sameTimeCount >= 2) {
+            $conflicts[] = 'Khung giờ này đã đủ 2 người đặt';
         }
 
         // 3) Ca điều chỉnh đơn lẻ cùng ngày
@@ -206,8 +201,9 @@ class LichKhamService
             ->where('user_id', $userId)
             ->when($ignoreLichHenId, fn($q) => $q->where('id', '!=', $ignoreLichHenId))
             ->whereDate('ngay_hen', $ngay_hen)
+            ->whereNotIn('trang_thai', [\App\Models\LichHen::STATUS_CANCELLED_VN]) // Bỏ qua lịch đã hủy
             ->with('dichVu')
-            ->get(['id','thoi_gian_hen','dich_vu_id']);
+            ->get(['id', 'thoi_gian_hen', 'dich_vu_id', 'trang_thai']);
 
         foreach ($rows as $row) {
             $existDateOnly = Carbon::parse($ngay_hen)->format('Y-m-d');
