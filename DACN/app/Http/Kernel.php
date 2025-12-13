@@ -87,6 +87,7 @@ class Kernel extends HttpKernel
         'is_admin' => \App\Http\Middleware\IsAdmin::class,
         'check.locked' => \App\Http\Middleware\CheckAccountLocked::class,
         'must.change.password' => \App\Http\Middleware\MustChangePassword::class,
+        'custom_role' => \App\Http\Middleware\RoleMiddleware::class, // Custom role middleware
 
         // --- 👇 CẬP NHẬT 3 DÒNG NÀY CHO THƯ VIỆN SPATIE 👇 ---
         // (Lưu ý namespace là Spatie\Permission\...)

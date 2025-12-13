@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('xet_nghiems', function (Blueprint $table) {
-            $table->string('disk', 50)->default('public')->after('file_path');
-        });
+        // Xóa bảng xet_nghiems cũ (đã migrate sang xet_nghiem)
+        Schema::dropIfExists('xet_nghiems');
     }
 
     /**
@@ -25,8 +24,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('xet_nghiems', function (Blueprint $table) {
-            $table->dropColumn('disk');
-        });
+        // Không cần khôi phục
     }
 };

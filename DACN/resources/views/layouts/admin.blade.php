@@ -95,7 +95,11 @@
         <h5 class="fw-bold mb-3"><i class="fas fa-clinic-medical me-2"></i>Quản trị</h5>
 
         <ul>
-            <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-chart-line me-2"></i>Dashboard</a></li>
+            @if(auth()->user()->role === 'staff')
+                <li><a href="{{ route('staff.dashboard') }}"><i class="fas fa-chart-line me-2"></i>Dashboard</a></li>
+            @else
+                <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-chart-line me-2"></i>Dashboard</a></li>
+            @endif
             <li>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -104,6 +108,7 @@
             </li>
             <hr>
 
+            @if(auth()->user()->role === 'admin')
             <li><strong>Quản lý cơ bản</strong></li>
             <li><a href="{{ route('admin.bac-si.index') }}">👨‍⚕️ Quản lý Bác sĩ</a></li>
             <li><a href="{{ route('admin.nhanvien.index') }}">👥 Nhân viên</a></li>
@@ -113,12 +118,15 @@
             <li><a href="{{ route('admin.phong.diagram') }}">🗺️ Sơ đồ phòng</a></li>
 
             <hr>
+            @endif
 
             <li><strong>Lịch & Hẹn</strong></li>
             <li><a href="{{ route('admin.lichhen.index') }}">📅 Lịch hẹn</a></li>
+            @if(auth()->user()->role === 'admin')
             <li><a href="{{ route('admin.calendar.index') }}">📆 Calendar</a></li>
             <li><a href="{{ route('admin.danhgia.index') }}">⭐ Đánh giá</a></li>
             <li><a href="{{ route('admin.chat.index') }}">💬 Chat tư vấn</a></li>
+            @endif
 
             <hr>
 
@@ -126,6 +134,7 @@
             <li><a href="{{ route('admin.benhan.index') }}">📋 Bệnh án</a></li>
             <li><a href="{{ route('admin.hoadon.index') }}">💰 Hóa đơn</a></li>
 
+            @if(auth()->user()->role === 'admin')
             <hr>
 
             <li><strong>Quản lý kho</strong></li>
@@ -147,15 +156,17 @@
 
             <hr>
 
-            <li><strong>Phân quyền</strong></li>
+            <li><strong>Quản lý người dùng</strong></li>
             <li><a href="{{ route('admin.users.index') }}">👤 Users</a></li>
-            <li><a href="{{ route('admin.roles.index') }}">🎭 Vai trò</a></li>
-            <li><a href="{{ route('admin.permissions.index') }}">🔐 Quyền</a></li>
+            {{-- Đã chuyển sang hệ thống 4 role đơn giản --}}
+            {{-- <li><a href="{{ route('admin.roles.index') }}">🎭 Vai trò</a></li> --}}
+            {{-- <li><a href="{{ route('admin.permissions.index') }}">🔐 Quyền</a></li> --}}
 
             <hr>
 
             <li><strong>Tools</strong></li>
             <li><a href="{{ route('admin.tools.test-mail') }}">✉️ Test gửi mail</a></li>
+            @endif
         </ul>
     </nav>
 

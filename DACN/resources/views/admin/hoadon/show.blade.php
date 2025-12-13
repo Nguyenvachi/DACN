@@ -124,6 +124,83 @@
 
 
         {{-- ============================
+         🔥 CHI TIẾT DỊCH VỤ
+    ============================= --}}
+        @if($hoaDon->chiTiets && $hoaDon->chiTiets->count() > 0)
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-0">
+                <h5 class="fw-semibold mb-0">
+                    <i class="bi bi-list-check me-1"></i> Chi tiết dịch vụ
+                </h5>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="5%">#</th>
+                                <th width="15%">Loại dịch vụ</th>
+                                <th width="30%">Tên dịch vụ</th>
+                                <th width="15%">Số lượng</th>
+                                <th width="15%">Đơn giá</th>
+                                <th width="20%" class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($hoaDon->chiTiets as $index => $ct)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>
+                                        @php
+                                            $badgeColor = match($ct->loai_dich_vu) {
+                                                'thuoc' => 'secondary',
+                                                'noi_soi' => 'info',
+                                                'x_quang' => 'warning',
+                                                'xet_nghiem' => 'primary',
+                                                'thu_thuat' => 'danger',
+                                                'dich_vu_kham' => 'success',
+                                                default => 'dark'
+                                            };
+                                            $labelText = match($ct->loai_dich_vu) {
+                                                'thuoc' => 'Thuốc',
+                                                'noi_soi' => 'Nội soi',
+                                                'x_quang' => 'X-quang',
+                                                'xet_nghiem' => 'Xét nghiệm',
+                                                'thu_thuat' => 'Thủ thuật',
+                                                'dich_vu_kham' => 'Dịch vụ khám',
+                                                default => ucfirst($ct->loai_dich_vu)
+                                            };
+                                        @endphp
+                                        <span class="badge bg-{{ $badgeColor }}">{{ $labelText }}</span>
+                                    </td>
+                                    <td>
+                                        <strong>{{ $ct->ten_dich_vu }}</strong>
+                                        @if($ct->mo_ta)
+                                            <br><small class="text-muted">{{ $ct->mo_ta }}</small>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">{{ $ct->so_luong }}</td>
+                                    <td>{{ number_format($ct->don_gia, 0, ',', '.') }} đ</td>
+                                    <td class="text-end fw-bold text-primary">{{ number_format($ct->thanh_tien, 0, ',', '.') }} đ</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <th colspan="5" class="text-end">TỔNG CỘNG:</th>
+                                <th class="text-end text-danger fs-5">{{ number_format($hoaDon->tong_tien, 0, ',', '.') }} đ</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
+
+        {{-- ============================
          🔥 DANH SÁCH THANH TOÁN
     ============================= --}}
         <div class="card shadow-sm border-0 mb-4">

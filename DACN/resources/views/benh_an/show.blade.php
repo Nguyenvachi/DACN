@@ -29,6 +29,14 @@
             </h3>
 
             <div class="d-flex gap-2">
+                @if ($role === 'admin')
+                    {{-- Nút tạo hóa đơn cho admin --}}
+                    <a href="{{ route('admin.hoadon.create-from-benh-an', $record) }}"
+                        class="btn btn-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-receipt"></i> Tạo hóa đơn
+                    </a>
+                @endif
+                
                 @if (in_array($role, ['admin', 'doctor']))
                     @if($record->trang_thai === 'Đang khám')
                     <form action="{{ route($role . '.benhan.hoanthanh', $record) }}" method="POST" class="d-inline">

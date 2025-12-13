@@ -122,9 +122,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // =========================================================================
-// KHU VỰC ADMIN PANEL - ĐÃ BỔ SUNG KHÓA CHO TỪNG PHÒNG
+// KHU VỰC ADMIN & STAFF PANEL - Admin và Staff đều có quyền truy cập
 // =========================================================================
-Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'custom_role:admin,staff'])->prefix('admin')->name('admin.')->group(function () {
 
     // 1. Dashboard & Báo cáo (Ai có vé vào cổng đều xem được cái này)
     Route::get('/dashboard', [ReportController::class, 'dashboard'])->name('dashboard');
@@ -146,8 +146,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::get('/export-csv', [ReportController::class, 'exportCsv'])->name('export_csv');
     });
 
-    // 2. NHÓM QUẢN LÝ BÁC SĨ (Cần quyền view-doctors)
-    Route::middleware(['permission:view-doctors'])->group(function () {
+    // 2. NHÓM QUẢN LÝ BÁC SĨ (Chỉ admin)
+    Route::middleware(['custom_role:admin'])->group(function () {
         Route::resource('bac-si', AdminBacSiController::class);
         // Lịch làm việc/nghỉ cũng thuộc về quản lý bác sĩ
         Route::get('/lich-lam-viec/{bacSi}', [App\Http\Controllers\Admin\LichLamViecController::class, 'index'])->name('lichlamviec.index');
@@ -163,8 +163,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::delete('/ca-dieu-chinh/{caDieuChinh}', [App\Http\Controllers\Admin\CaDieuChinhController::class, 'destroy'])->name('cadieuchinh.destroy');
     });
 
-    // 3. NHÓM DỊCH VỤ & CHUYÊN KHOA (Cần quyền view-services)
-    Route::middleware(['permission:view-services'])->group(function () {
+    // 3. NHÓM DỊCH VỤ & CHUYÊN KHOA (Chỉ admin)
+    Route::middleware(['custom_role:admin'])->group(function () {
         Route::resource('dich-vu', \App\Http\Controllers\Admin\DichVuController::class)->parameters(['dich-vu' => 'dichVu']);
         Route::post('dich-vu/{dichVu}/toggle-status', [\App\Http\Controllers\Admin\DichVuController::class, 'toggleStatus'])->name('dich-vu.toggle-status');
 
@@ -199,9 +199,9 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::post('phong-suggest', [\App\Http\Controllers\Admin\PhongController::class, 'suggestForDoctor'])->name('phong.suggest');
     });
 
-    // 4. NHÓM QUẢN LÝ THUỐC (Cần quyền view-medicines)
+    // 4. NHÓM QUẢN LÝ THUỐC (Chỉ admin)
     // Lưu ý: Route 'thuoc' (danh mục) khác với 'kho' (nhập xuất)
-    Route::middleware(['permission:view-medicines'])->group(function () {
+    Route::middleware(['custom_role:admin'])->group(function () {
         Route::resource('thuoc', \App\Http\Controllers\Admin\ThuocController::class)->names([
             'index' => 'thuoc.index',
             'create' => 'thuoc.create',
@@ -213,8 +213,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         ]);
     });
 
-    // 4.1. NHÓM QUẢN LÝ MÃ GIẢM GIÁ (Cần quyền view-medicines - quản lý cửa hàng thuốc)
-    Route::middleware(['permission:view-medicines'])->group(function () {
+    // 4.1. NHÓM QUẢN LÝ MÃ GIẢM GIÁ (Chỉ admin)
+    Route::middleware(['custom_role:admin'])->group(function () {
         Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class)->names([
             'index' => 'coupons.index',
             'create' => 'coupons.create',
@@ -226,17 +226,16 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         ]);
     });
 
-    // 5. NHÓM QUẢN LÝ LỊCH HẸN & BỆNH ÁN (Cần quyền view-appointments hoặc view-medical-records)
-    // Tạm thời dùng view-invoices cho Lễ tân xem lịch hẹn nếu cần, hoặc để admin
-    Route::middleware(['permission:view-appointments'])->group(function () {
+    // 5. NHÓM QUẢN LÝ LỊCH HẸN (Admin & Staff)
+    Route::middleware(['custom_role:admin,staff'])->group(function () {
         Route::get('/lich-hen', [LichHenController::class, 'adminIndex'])->name('lichhen.index');
         Route::patch('/lich-hen/{lichHen}/status', [LichHenController::class, 'updateStatus'])->name('lichhen.updateStatus');
         Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
         Route::get('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
     });
 
-    // 5.1. QUẢN LÝ ĐÁNH GIÁ (Admin)
-    Route::middleware(['permission:view-appointments'])->prefix('danhgia')->name('danhgia.')->group(function () {
+    // 5.1. QUẢN LÝ ĐÁNH GIÁ (Admin & Staff)
+    Route::middleware(['custom_role:admin,staff'])->prefix('danhgia')->name('danhgia.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\DanhGiaController::class, 'index'])->name('index');
         Route::get('/{danhGia}', [\App\Http\Controllers\Admin\DanhGiaController::class, 'show'])->name('show');
         Route::patch('/{danhGia}/approve', [\App\Http\Controllers\Admin\DanhGiaController::class, 'approve'])->name('approve');
@@ -244,8 +243,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::delete('/{danhGia}', [\App\Http\Controllers\Admin\DanhGiaController::class, 'destroy'])->name('destroy');
     });
 
-    // 5.2. QUẢN LÝ CHAT (Admin)
-    Route::middleware(['permission:view-appointments'])->prefix('chat')->name('chat.')->group(function () {
+    // 5.2. QUẢN LÝ CHAT (Admin & Staff)
+    Route::middleware(['custom_role:admin,staff'])->prefix('chat')->name('chat.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\ChatController::class, 'index'])->name('index');
         Route::get('/{conversation}', [\App\Http\Controllers\Admin\ChatController::class, 'show'])->name('show');
         Route::get('/{conversation}/messages', [\App\Http\Controllers\Admin\ChatController::class, 'getMessages'])->name('messages');
@@ -253,7 +252,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::delete('/{conversation}', [\App\Http\Controllers\Admin\ChatController::class, 'destroy'])->name('destroy');
     });
 
-    Route::middleware(['permission:view-medical-records'])->group(function () {
+    // 6. QUẢN LÝ BỆNH ÁN (Admin, Staff, Doctor)
+    Route::middleware(['custom_role:admin,staff,doctor'])->group(function () {
         Route::resource('benh-an', BenhAnController::class)->names([
             'index' => 'benhan.index',
             'create' => 'benhan.create',
@@ -270,11 +270,16 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
     });
 
-    // 6. NHÓM HÓA ĐƠN (Cần quyền view-invoices)
-    Route::middleware(['permission:view-invoices'])->group(function () {
+    // 6. NHÓM HÓA ĐƠN (Admin & Staff)
+    Route::middleware(['custom_role:admin,staff'])->group(function () {
         Route::get('/hoa-don', [HoaDonController::class, 'index'])->name('hoadon.index');
         Route::get('/hoa-don/{hoaDon}', [HoaDonController::class, 'show'])->name('hoadon.show');
         Route::post('/lich-hen/{lichHen}/hoa-don', [HoaDonController::class, 'createFromAppointment'])->name('hoadon.create_from_appointment');
+
+        // Tạo hóa đơn từ bệnh án
+        Route::get('/benh-an/{benhAn}/hoa-don/create', [HoaDonController::class, 'createFromBenhAn'])->name('hoadon.create-from-benh-an');
+        Route::post('/benh-an/{benhAn}/hoa-don', [HoaDonController::class, 'storeFromBenhAn'])->name('hoadon.store-from-benh-an');
+
         Route::post('/hoa-don/{hoaDon}/thanh-toan/cash', [HoaDonController::class, 'cashCollect'])->name('hoadon.cash_collect');
         Route::get('/hoa-don/{hoaDon}/receipt', [ReceiptController::class, 'download'])->name('hoadon.receipt');
         // Thêm route download theo loại (phieu-thu, dich-vu, thuoc, tong-hop)
@@ -288,8 +293,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::get('/hoa-don/{hoaDon}/refunds', [HoaDonController::class, 'refundsList'])->name('hoadon.refunds.list');
     });
 
-    // 7. NHÓM KHO THUỐC & NCC (Cần quyền view-medicines)
-    Route::middleware(['permission:view-medicines'])->prefix('kho')->name('kho.')->group(function () {
+    // 7. NHÓM KHO THUỐC & NCC (Chỉ admin)
+    Route::middleware(['custom_role:admin'])->prefix('kho')->name('kho.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\KhoThuocController::class, 'index'])->name('index');
         Route::get('/bao-cao', [\App\Http\Controllers\Admin\KhoThuocController::class, 'baoCao'])->name('bao_cao');
         Route::get('/thuoc/{thuoc}/lots', [\App\Http\Controllers\Admin\KhoThuocController::class, 'lots'])->name('lots');
@@ -306,7 +311,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
             Route::post('/xuat', [\App\Http\Controllers\Admin\KhoThuocController::class, 'xuatStore'])->name('xuat.store');
         });
     });
-    Route::middleware(['permission:view-medicines'])->prefix('ncc')->name('ncc.')->group(function () {
+    // 8. NHÓM NHÀ CUNG CẤP (Chỉ admin)
+    Route::middleware(['custom_role:admin'])->prefix('ncc')->name('ncc.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'index'])->name('index');
         Route::get('/create', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\Admin\NhaCungCapController::class, 'store'])->name('store');
@@ -322,8 +328,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
     });
 
     // 8. NHÓM NHÂN VIÊN & USER & PHÂN QUYỀN (Cần quyền view-users HOẶC role:admin cho chắc)
-    // Ở đây mình dùng permission:view-users
-    Route::middleware(['permission:view-users'])->group(function () {
+    // Chỉ admin quản lý users và phân quyền
+    Route::middleware(['custom_role:admin'])->group(function () {
         Route::resource('nhanvien', NhanVienController::class);
         // Cập nhật trạng thái nhanh cho nhân viên
         Route::patch('nhanvien/{nhanvien}/status', [\App\Http\Controllers\Admin\NhanVienController::class, 'updateStatus'])->name('nhanvien.updateStatus');
@@ -331,9 +337,9 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::get('nhanvien/{nhanvien}/history', [NhanVienController::class, 'history'])->name('nhanvien.history');
         Route::get('nhanvien-export-shifts', [NhanVienController::class, 'exportShifts'])->name('nhanvien.shifts.export');
 
-        // Phân quyền
-        Route::resource('permissions', \App\Http\Controllers\Admin\PermissionController::class)->except(['show', 'edit', 'update']);
-        Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class)->except(['show']);
+        // Phân quyền - Đã chuyển sang hệ thống 4 role đơn giản, không cần quản lý permission/role nữa
+        // Route::resource('permissions', \App\Http\Controllers\Admin\PermissionController::class)->except(['show', 'edit', 'update']);
+        // Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class)->except(['show']);
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\UserManagementController::class, 'index'])->name('index');
             Route::get('/{user}/edit', [\App\Http\Controllers\Admin\UserManagementController::class, 'edit'])->name('edit');
@@ -346,7 +352,7 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
 
     // 9. NHÓM CMS BÀI VIẾT (Cần permission 'view-posts' hoặc role 'admin')
     // Sử dụng middleware 'role_or_permission' để chấp nhận role OR permission
-    Route::middleware(['role_or_permission:admin|view-posts'])->group(function () {
+    Route::middleware(['custom_role:admin'])->group(function () {
         Route::resource('baiviet', \App\Http\Controllers\Admin\BaiVietController::class)->names([
             'index' => 'baiviet.index',
             'create' => 'baiviet.create',
@@ -401,10 +407,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
 //     Route::get('/dashboard', [\App\Http\Controllers\Staff\DashboardController::class, 'index'])->name('dashboard');
 // });
 
-// Nhóm role STAFF (Dashboard riêng)
-// Sửa thành check quyền: Ai có vé view-dashboard thì được vào Dashboard nhân viên
-// ENHANCED: Added check-in and queue management routes (Parent: routes/web.php)
-Route::middleware(['auth', 'permission:view-dashboard'])->prefix('staff')->name('staff.')->group(function () {
+// Nhóm role STAFF (Dashboard riêng cho nhân viên)
+Route::middleware(['auth', 'custom_role:staff'])->prefix('staff')->name('staff.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Staff\DashboardController::class, 'index'])->name('dashboard');
 
     // Check-in Management (Parent: routes/web.php)
@@ -706,8 +710,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/ajax/chuyen-khoa', [LichHenController::class, 'ajaxChuyenKhoa'])->name('ajax.chuyenkhoa');
 Route::get('/ajax/bac-si-by-chuyen-khoa', [LichHenController::class, 'ajaxBacSiByChuyenKhoa'])->name('ajax.bacsi.byChuyenKhoa');
 
-// Legacy routes & UI cho Calendar cũ
-Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin/calendar')->group(function () {
+// Legacy routes & UI cho Calendar cũ (Admin & Staff)
+Route::middleware(['auth', 'custom_role:admin,staff'])->prefix('admin/calendar')->group(function () {
     Route::get('/', [CalendarController::class, 'index'])->name('admin.calendar.index');
     Route::get('events', [\App\Http\Controllers\Admin\CalendarController::class, 'apiEvents'])->name('admin.calendar.events');
     Route::get('stats', [\App\Http\Controllers\Admin\CalendarController::class, 'apiStats'])->name('admin.calendar.stats');

@@ -37,8 +37,8 @@
                         <select name="role" class="form-select">
                             <option value="">Tất cả vai trò</option>
                             @foreach ($roles as $role)
-                                <option value="{{ $role->name }}" {{ request('role') === $role->name ? 'selected' : '' }}>
-                                    {{ \Illuminate\Support\Facades\Lang::has('roles.' . $role->name) ? __('roles.' . $role->name) : $role->name }}
+                                <option value="{{ $role }}" {{ request('role') === $role ? 'selected' : '' }}>
+                                    {{ ucfirst($role) }}
                                 </option>
                             @endforeach
                         </select>
@@ -90,13 +90,13 @@
                                         <div class="text-muted small">{{ $user->email }}</div>
                                     </td>
 
-                                    {{-- Roles --}}
+                                    {{-- Role --}}
                                     <td>
-                                        @forelse ($user->roles as $role)
-                                            <span class="badge bg-primary">{{ \Illuminate\Support\Facades\Lang::has('roles.' . $role->name) ? __('roles.' . $role->name) : $role->name }}</span>
-                                        @empty
+                                        @if($user->role)
+                                            <span class="badge bg-primary">{{ ucfirst($user->role) }}</span>
+                                        @else
                                             <span class="text-muted">Chưa gán</span>
-                                        @endforelse
+                                        @endif
                                     </td>
 
                                     {{-- Status --}}

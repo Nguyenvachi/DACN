@@ -486,7 +486,20 @@ class BenhAnController extends Controller
         // Chỉ bác sĩ phụ trách mới được đánh dấu hoàn thành
         if ($user->role === 'doctor' && $user->bacSi && $benhAn->bac_si_id === $user->bacSi->id) {
             $benhAn->update(['trang_thai' => 'Hoàn thành']);
-            return redirect()->back()->with('success', 'Đã hoàn thành khám bệnh án!');
+
+            // Kiểm tra xem đã có đơn thuốc chưa
+            $benhAn->load('donThuocs');
+            if ($benhAn->donThuocs->isEmpty()) {
+                // Chưa có đơn thuốc → chuyển đến trang kê đơn
+                return redirect()
+                    ->route('doctor.donthuoc.create', $benhAn)
+                    ->with('success', 'Hoàn thành khám! Vui lòng kê đơn thuốc cho bệnh nhân.');
+            }
+
+            // Đã có đơn thuốc → quay lại trang bệnh án
+            return redirect()
+                ->route('doctor.benhan.show', $benhAn)
+                ->with('success', 'Đã hoàn thành khám bệnh án!');
         }
 
         abort(403, 'Bạn không có quyền thực hiện thao tác này');

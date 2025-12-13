@@ -150,4 +150,9 @@ class HoaDon extends Model
     {
         return $this->hasMany(\App\Models\HoanTien::class);
     }
+
+    public function chiTiets()
+    {
+        return $this->hasMany(HoaDonChiTiet::class);
+    }
 }

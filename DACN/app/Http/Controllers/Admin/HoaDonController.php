@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\HoaDon;
+use App\Models\HoaDonChiTiet;
+use App\Models\BenhAn;
 use App\Models\LichHen;
 use App\Models\ThanhToan;
 use App\Models\PaymentLog;
@@ -11,6 +13,7 @@ use App\Mail\HoaDonHoanTien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class HoaDonController extends Controller
 {
@@ -22,7 +25,7 @@ class HoaDonController extends Controller
 
     public function show(HoaDon $hoaDon)
     {
-        $hoaDon->load(['lichHen', 'user', 'thanhToans', 'paymentLogs']);
+        $hoaDon->load(['lichHen', 'user', 'thanhToans', 'paymentLogs', 'chiTiets']);
         return view('admin.hoadon.show', compact('hoaDon'));
     }
 
@@ -163,5 +166,107 @@ class HoaDonController extends Controller
     {
         $hoanTiens = $hoaDon->hoanTiens()->orderByDesc('created_at')->get();
         return view('admin.hoadon.refunds_list', compact('hoaDon', 'hoanTiens'));
+    }
+
+    /**
+     * Hiển thị form tạo hóa đơn từ bệnh án
+     */
+    public function createFromBenhAn(BenhAn $benhAn)
+    {
+        // Load tất cả dịch vụ đã làm
+        $benhAn->load([
+            'noiSois',
+            'xQuangs',
+            'xetNghiems',
+            'thuThuats',
+            'donThuocs.items.thuoc',
+            'lichHen'
+        ]);
+
+        // Kiểm tra xem đã có hóa đơn cho bệnh án này chưa
+        $existingHoaDon = null;
+        if ($benhAn->lich_hen_id) {
+            $existingHoaDon = HoaDon::where('lich_hen_id', $benhAn->lich_hen_id)->first();
+        }
+
+        return view('admin.hoadon.create_from_benh_an', compact('benhAn', 'existingHoaDon'));
+    }
+
+    /**
+     * Lưu hóa đơn từ bệnh án với chi tiết dịch vụ
+     */
+    public function storeFromBenhAn(Request $request, BenhAn $benhAn)
+    {
+        $validated = $request->validate([
+            'dich_vu' => 'required|array',
+            'dich_vu.*.loai' => 'required|in:noi_soi,x_quang,xet_nghiem,thu_thuat,thuoc',
+            'dich_vu.*.id' => 'required|integer',
+            'dich_vu.*.ten' => 'required|string',
+            'dich_vu.*.so_luong' => 'required|integer|min:1',
+            'dich_vu.*.don_gia' => 'required|numeric|min:0',
+            'ghi_chu' => 'nullable|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // Tạo hoặc lấy hóa đơn
+            if ($benhAn->lich_hen_id) {
+                $hoaDon = HoaDon::firstOrCreate(
+                    ['lich_hen_id' => $benhAn->lich_hen_id],
+                    [
+                        'user_id' => $benhAn->user_id,
+                        'tong_tien' => 0,
+                        'trang_thai' => HoaDon::STATUS_UNPAID_VN,
+                        'ghi_chu' => $validated['ghi_chu'] ?? null,
+                    ]
+                );
+            } else {
+                // Tạo hóa đơn mới không liên kết lịch hẹn
+                $hoaDon = HoaDon::create([
+                    'lich_hen_id' => null,
+                    'user_id' => $benhAn->user_id,
+                    'tong_tien' => 0,
+                    'trang_thai' => HoaDon::STATUS_UNPAID_VN,
+                    'ghi_chu' => $validated['ghi_chu'] ?? null,
+                ]);
+            }
+
+            // Xóa chi tiết cũ (nếu đang chỉnh sửa)
+            $hoaDon->chiTiets()->delete();
+
+            // Thêm chi tiết dịch vụ
+            $tongTien = 0;
+            foreach ($validated['dich_vu'] as $dv) {
+                $thanhTien = $dv['so_luong'] * $dv['don_gia'];
+                $tongTien += $thanhTien;
+
+                HoaDonChiTiet::create([
+                    'hoa_don_id' => $hoaDon->id,
+                    'loai_dich_vu' => $dv['loai'],
+                    'dich_vu_id' => $dv['id'],
+                    'ten_dich_vu' => $dv['ten'],
+                    'mo_ta' => $dv['mo_ta'] ?? null,
+                    'so_luong' => $dv['so_luong'],
+                    'don_gia' => $dv['don_gia'],
+                    'thanh_tien' => $thanhTien,
+                ]);
+            }
+
+            // Cập nhật tổng tiền hóa đơn
+            $hoaDon->update([
+                'tong_tien' => $tongTien,
+                'so_tien_con_lai' => $tongTien,
+            ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.hoadon.show', $hoaDon)
+                ->with('success', 'Đã tạo hóa đơn từ bệnh án với ' . count($validated['dich_vu']) . ' dịch vụ.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Lỗi tạo hóa đơn từ bệnh án: ' . $e->getMessage());
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
     }
 }

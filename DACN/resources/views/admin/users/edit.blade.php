@@ -54,76 +54,30 @@
 
                             </div>
 
-                            {{-- Roles --}}
+                            {{-- Role Selection - Simple 4 roles --}}
                             <div class="mt-4">
-                                <label class="form-label fw-semibold">Vai trò (Roles)</label>
-
-                                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3 border rounded p-3">
-
-                                    @php $userRoleIds = $user->roles->pluck('id')->toArray(); @endphp
-
-                                    @forelse ($roles as $role)
-                                        <div class="col">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input"
-                                                    id="role_{{ $role->id }}" name="roles[]" value="{{ $role->id }}"
-                                                    {{ in_array($role->id, old('roles', $userRoleIds)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="role_{{ $role->id }}">
-                                                    <strong>{{ \Illuminate\Support\Facades\Lang::has('roles.' . $role->name) ? __('roles.' . $role->name) : $role->name }}</strong><br>
-                                                    <small class="text-muted">{{ $role->permissions->count() }} quyền</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <p class="text-muted">Chưa có vai trò nào</p>
-                                    @endforelse
-
+                                <label class="form-label fw-semibold">Vai trò <span class="text-danger">*</span></label>
+                                
+                                <select name="role" class="form-select" required>
+                                    @foreach($roles as $r)
+                                        <option value="{{ $r }}" {{ old('role', $user->role) === $r ? 'selected' : '' }}>
+                                            {{ ucfirst($r) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                
+                                <div class="mt-2 text-muted small">
+                                    <ul class="mb-0">
+                                        <li><strong>admin</strong>: Toàn quyền quản lý hệ thống</li>
+                                        <li><strong>staff</strong>: Nhân viên (quản lý lịch hẹn, hóa đơn, bệnh án)</li>
+                                        <li><strong>doctor</strong>: Bác sĩ (quản lý lịch làm việc, bệnh án)</li>
+                                        <li><strong>patient</strong>: Bệnh nhân (đặt lịch, xem hồ sơ)</li>
+                                    </ul>
                                 </div>
-                            </div>
 
-                            {{-- Direct Permissions --}}
-                            <div class="mt-4">
-                                <label class="form-label fw-semibold">Quyền trực tiếp (Direct Permissions)</label>
-
-                                <div class="row row-cols-1 row-cols-md-3 g-3 border rounded p-3"
-                                    style="max-height: 260px; overflow-y: auto;">
-
-                                    @php $userPermissionIds = $user->permissions->pluck('id')->toArray(); @endphp
-
-                                    @forelse ($permissions as $permission)
-                                        <div class="col">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input"
-                                                    id="perm_{{ $permission->id }}" name="permissions[]"
-                                                    value="{{ $permission->id }}"
-                                                    {{ in_array($permission->id, old('permissions', $userPermissionIds)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="perm_{{ $permission->id }}">
-                                                    @php
-                                                        $pname = $permission->name;
-                                                        $candidates = [
-                                                            'permissions.' . $pname,
-                                                            'permissions.' . strtolower($pname),
-                                                            'permissions.' . str_replace(' ', '-', strtolower($pname)),
-                                                            'permissions.' . str_replace([' ', '-'], '_', strtolower($pname)),
-                                                        ];
-                                                        $label = null;
-                                                        foreach ($candidates as $k) {
-                                                            if (\Illuminate\Support\Facades\Lang::has($k)) {
-                                                                $label = __($k);
-                                                                break;
-                                                            }
-                                                        }
-                                                        $label = $label ?: ucwords(str_replace(['-','_'], ' ', $pname));
-                                                    @endphp
-                                                    {{ $label }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <p class="text-muted">Chưa có quyền nào</p>
-                                    @endforelse
-
-                                </div>
+                                @error('role')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             {{-- Buttons --}}

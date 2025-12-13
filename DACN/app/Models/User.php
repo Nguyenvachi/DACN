@@ -6,7 +6,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles; // ✅ Giữ dòng này
 
 /**
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -15,13 +14,12 @@ use Spatie\Permission\Traits\HasRoles; // ✅ Giữ dòng này
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    use HasRoles; // ✅ Giữ dòng này để nạp method assignRole, hasRole...
 
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role', // Vẫn giữ cột role để lưu legacy nếu cần
+        'role', // admin, staff, doctor, patient
         'so_dien_thoai',
         'ngay_sinh',
         'gioi_tinh',
@@ -47,40 +45,35 @@ class User extends Authenticatable
         'ngay_sinh' => 'date',
     ];
 
-    // --- ❌ XÓA HOẶC COMMENT ĐOẠN NÀY (Vì Spatie đã có sẵn) ---
-    /*
-    public function roleKey(): string { ... }
-
-    // Hàm này đang GHI ĐÈ hàm của Spatie -> Gây lỗi logic
-    public function hasRole(string $role): bool { ... }
-
-    public function hasAnyRole(array $roles): bool { ... }
-    */
-    // -----------------------------------------------------------
-
-    // --- ✅ CẬP NHẬT CÁC HÀM TIỆN ÍCH DÙNG LOGIC SPATIE ---
-    // Thay vì check cột string, ta tận dụng hàm hasRole() chuẩn của thư viện
-
+    // --- ROLE CHECK METHODS ---
     public function isAdmin(): bool
     {
-        // Spatie sẽ tự check trong bảng phân quyền
-        return $this->hasRole('admin') || $this->role === 'admin';
-        // (Thêm || check cột cũ để tương thích ngược dữ liệu cũ chưa migrate)
+        return $this->role === 'admin';
     }
 
     public function isDoctor(): bool
     {
-        return $this->hasRole('doctor') || $this->role === 'doctor';
+        return $this->role === 'doctor';
     }
 
     public function isStaff(): bool
     {
-        return $this->hasRole('staff') || $this->role === 'staff';
+        return $this->role === 'staff';
     }
 
     public function isPatient(): bool
     {
-        return $this->hasRole('patient') || $this->role === 'patient';
+        return $this->role === 'patient';
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    public function hasAnyRole(array $roles): bool
+    {
+        return in_array($this->role, $roles);
     }
 
     // --- CÁC RELATIONSHIP KHÁC GIỮ NGUYÊN ---
@@ -179,20 +172,5 @@ class User extends Authenticatable
             $data['locked_until'] = now()->addMinutes(30);
         }
         $this->update($data);
-    }
-
-    // Ensure Spatie role is assigned when a user is created (fallback to legacy `role` column)
-    protected static function booted()
-    {
-        static::created(function ($user) {
-            try {
-                if (! $user->roles()->exists()) {
-                    $roleToAssign = $user->role ?: 'patient';
-                    $user->assignRole($roleToAssign);
-                }
-            } catch (\Throwable $e) {
-                \Log::warning('Failed to assign role to user #' . ($user->id ?? 'unknown') . ': ' . $e->getMessage());
-            }
-        });
     }
 }

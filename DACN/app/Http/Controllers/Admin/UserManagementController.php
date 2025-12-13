@@ -6,14 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\LoginAudit;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class UserManagementController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::with(['roles', 'permissions']);
+        $query = User::query();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -24,7 +22,7 @@ class UserManagementController extends Controller
         }
 
         if ($request->filled('role')) {
-            $query->role($request->role);
+            $query->where('role', $request->role);
         }
 
         if ($request->filled('status')) {
@@ -43,22 +41,20 @@ class UserManagementController extends Controller
         }
 
         $users = $query->orderBy('created_at', 'desc')->paginate(20);
-        $roles = Role::orderBy('name')->get();
+        $roles = ['admin', 'staff', 'doctor', 'patient']; // 4 role đơn giản
 
         return view('admin.users.index', compact('users', 'roles'));
     }
 
     public function edit(User $user)
     {
-        $user->load('roles', 'permissions');
-        $roles = Role::with('permissions')->orderBy('name')->get();
-        $permissions = Permission::orderBy('name')->get();
+        $roles = ['admin', 'staff', 'doctor', 'patient'];
         $loginAudits = LoginAudit::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
 
-        return view('admin.users.edit', compact('user', 'roles', 'permissions', 'loginAudits'));
+        return view('admin.users.edit', compact('user', 'roles', 'loginAudits'));
     }
 
     public function update(Request $request, User $user)
@@ -66,30 +62,14 @@ class UserManagementController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'roles' => 'nullable|array',
-            'roles.*' => 'exists:roles,id',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'exists:permissions,id',
+            'role' => 'required|in:admin,staff,doctor,patient',
         ]);
 
         $user->update([
             'name' => $data['name'],
             'email' => $data['email'],
+            'role' => $data['role'],
         ]);
-
-        if (!empty($data['roles'])) {
-            $roles = Role::whereIn('id', $data['roles'])->get();
-            $user->syncRoles($roles);
-        } else {
-            $user->syncRoles([]);
-        }
-
-        if (!empty($data['permissions'])) {
-            $perms = Permission::whereIn('id', $data['permissions'])->get();
-            $user->syncPermissions($perms);
-        } else {
-            $user->syncPermissions([]);
-        }
 
         return redirect()->route('admin.users.index')
             ->with('status', 'Đã cập nhật thông tin user');

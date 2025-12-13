@@ -40,24 +40,8 @@
                                 <i class="bi bi-calendar-check fs-2"></i>
                             </div>
                             <div class="ms-3">
-                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Ca hôm nay</p>
-                                <h3 class="mb-0 fw-bold">{{ $caHomNay->count() }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 h-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
-                    <div class="card-body text-white p-4">
-                        <div class="d-flex align-items-center">
-                            <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                                <i class="bi bi-calendar-week fs-2"></i>
-                            </div>
-                            <div class="ms-3">
-                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Ca tuần này</p>
-                                <h3 class="mb-0 fw-bold">{{ $caTuanNay->count() }}</h3>
+                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Lịch hẹn hôm nay</p>
+                                <h3 class="mb-0 fw-bold">{{ $statistics['lich_hen_hom_nay'] ?? 0 }}</h3>
                             </div>
                         </div>
                     </div>
@@ -69,11 +53,11 @@
                     <div class="card-body text-white p-4">
                         <div class="d-flex align-items-center">
                             <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                                <i class="bi bi-person-check fs-2"></i>
+                                <i class="bi bi-receipt fs-2"></i>
                             </div>
                             <div class="ms-3">
-                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Trạng thái</p>
-                                <h3 class="mb-0 fw-bold">{{ $nhanVien->trang_thai === 'active' ? 'Hoạt động' : 'Nghỉ' }}</h3>
+                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Cần tạo hóa đơn</p>
+                                <h3 class="mb-0 fw-bold">{{ $statistics['benh_an_can_tao_hoa_don'] ?? 0 }}</h3>
                             </div>
                         </div>
                     </div>
@@ -81,17 +65,31 @@
             </div>
 
             <div class="col-lg-3 col-md-6">
-                <div class="card border-0 h-100" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
+                <div class="card border-0 h-100" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);">
                     <div class="card-body text-white p-4">
                         <div class="d-flex align-items-center">
                             <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                                <i class="bi bi-clock-history fs-2"></i>
+                                <i class="bi bi-exclamation-triangle fs-2"></i>
                             </div>
                             <div class="ms-3">
-                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Tổng giờ tuần</p>
-                                <h3 class="mb-0 fw-bold">{{ $caTuanNay->sum(function($ca) {
-                                    return \Carbon\Carbon::parse($ca->bat_dau)->diffInHours(\Carbon\Carbon::parse($ca->ket_thuc));
-                                }) }} giờ</h3>
+                                <p class="text-white text-opacity-75 mb-1 small fw-medium">HĐ chưa thanh toán</p>
+                                <h3 class="mb-0 fw-bold">{{ $statistics['hoa_don_chua_thanh_toan'] ?? 0 }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 h-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                    <div class="card-body text-white p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="p-3 rounded-circle bg-white bg-opacity-25">
+                                <i class="bi bi-check-circle fs-2"></i>
+                            </div>
+                            <div class="ms-3">
+                                <p class="text-white text-opacity-75 mb-1 small fw-medium">HĐ hôm nay</p>
+                                <h3 class="mb-0 fw-bold">{{ $statistics['hoa_don_hom_nay'] ?? 0 }}</h3>
                             </div>
                         </div>
                     </div>
@@ -101,6 +99,63 @@
 
         {{-- Main Content Row --}}
         <div class="row">
+            {{-- Bệnh án cần tạo hóa đơn --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0 pt-4 pb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-receipt text-warning me-2"></i>Bệnh án cần tạo hóa đơn
+                            </h5>
+                            <span class="badge bg-warning">{{ $benhAnCanXuLy->count() }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if ($benhAnCanXuLy->isEmpty())
+                            <x-empty-state
+                                icon="bi-check-circle"
+                                title="Không có bệnh án cần xử lý"
+                                description="Tất cả bệnh án đã hoàn thành đều có hóa đơn!"
+                            />
+                        @else
+                            <div class="list-group list-group-flush">
+                                @foreach ($benhAnCanXuLy as $ba)
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">
+                                                    <i class="bi bi-person-circle text-primary me-1"></i>
+                                                    {{ $ba->benhNhan->name ?? 'N/A' }}
+                                                </h6>
+                                                <p class="mb-1 small text-muted">
+                                                    <i class="bi bi-calendar3 me-1"></i>{{ $ba->ngay_kham }}
+                                                    <span class="mx-2">•</span>
+                                                    <i class="bi bi-person-badge me-1"></i>{{ $ba->bacSi->ten ?? 'N/A' }}
+                                                </p>
+                                                <p class="mb-0 small">
+                                                    <span class="badge bg-success">Hoàn thành khám</span>
+                                                </p>
+                                            </div>
+                                            <a href="{{ route('admin.hoadon.create-from-benh-an', $ba) }}" 
+                                               class="btn btn-sm btn-warning">
+                                                <i class="bi bi-receipt"></i> Tạo HĐ
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            @if($statistics['benh_an_can_tao_hoa_don'] > 5)
+                                <div class="text-center mt-3">
+                                    <a href="{{ route('admin.benhan.index') }}" class="btn btn-sm btn-outline-primary">
+                                        Xem tất cả {{ $statistics['benh_an_can_tao_hoa_don'] }} bệnh án
+                                    </a>
+                                </div>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+            </div>
+
             {{-- Ca làm việc hôm nay --}}
             <div class="col-lg-6 mb-4">
                 <div class="card border-0 shadow-sm h-100">
@@ -142,8 +197,51 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            {{-- Thông tin cá nhân --}}
+        {{-- Quick Actions --}}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 pt-4 pb-3">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-lightning-charge text-warning me-2"></i>Thao tác nhanh
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <a href="{{ route('staff.checkin.index') }}" class="btn btn-outline-primary w-100 py-3">
+                                    <i class="bi bi-person-check-fill d-block fs-3 mb-2"></i>
+                                    Check-in bệnh nhân
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{{ route('admin.hoadon.index') }}" class="btn btn-outline-success w-100 py-3">
+                                    <i class="bi bi-receipt d-block fs-3 mb-2"></i>
+                                    Quản lý hóa đơn
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{{ route('admin.benhan.index') }}" class="btn btn-outline-info w-100 py-3">
+                                    <i class="bi bi-journal-medical d-block fs-3 mb-2"></i>
+                                    Danh sách bệnh án
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{{ route('staff.queue.index') }}" class="btn btn-outline-warning w-100 py-3">
+                                    <i class="bi bi-list-ol d-block fs-3 mb-2"></i>
+                                    Hàng đợi khám
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Thông tin cá nhân --}}
+        <div class="row mb-4">
             <div class="col-lg-6 mb-4">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-white border-0 pt-4 pb-3">
@@ -193,7 +291,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         {{-- Lịch tuần này --}}
         <div class="card border-0 shadow-sm" id="lich">
