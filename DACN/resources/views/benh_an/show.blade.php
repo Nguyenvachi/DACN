@@ -21,14 +21,31 @@
             <h3 class="fw-bold mb-0">
                 <i class="bi bi-journal-medical text-primary"></i>
                 Chi tiết bệnh án
+                @if($record->trang_thai === 'Hoàn thành')
+                    <span class="badge bg-success ms-2">Hoàn thành</span>
+                @else
+                    <span class="badge bg-warning ms-2">Đang khám</span>
+                @endif
             </h3>
 
-            @if (in_array($role, ['admin', 'doctor']))
-                <a href="{{ route($role . '.benhan.audit', $record) }}"
-                    class="btn btn-secondary d-flex align-items-center gap-2">
-                    <i class="bi bi-clock-history"></i> Lịch sử thay đổi
-                </a>
-            @endif
+            <div class="d-flex gap-2">
+                @if (in_array($role, ['admin', 'doctor']))
+                    @if($record->trang_thai === 'Đang khám')
+                    <form action="{{ route($role . '.benhan.hoanthanh', $record) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-success d-flex align-items-center gap-2" 
+                                onclick="return confirm('Xác nhận hoàn thành khám bệnh án này?')">
+                            <i class="bi bi-check-circle"></i> Hoàn thành khám
+                        </button>
+                    </form>
+                    @endif
+                    <a href="{{ route($role . '.benhan.audit', $record) }}"
+                        class="btn btn-secondary d-flex align-items-center gap-2">
+                        <i class="bi bi-clock-history"></i> Lịch sử thay đổi
+                    </a>
+                @endif
+            </div>
         </div>
 
 
@@ -61,6 +78,40 @@
 
             </div>
         </div>
+
+        {{-- Quick Action Buttons cho Bác sĩ --}}
+        @if($role === 'doctor')
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <a href="{{ route('doctor.donthuoc.create', $record->id) }}" 
+                   class="btn btn-primary w-100 py-3 d-flex flex-column align-items-center">
+                    <i class="bi bi-prescription2 fs-1 mb-2"></i>
+                    <strong>Kê đơn thuốc</strong>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{{ route('doctor.xet-nghiem.create', ['benh_an_id' => $record->id]) }}" 
+                   class="btn btn-danger w-100 py-3 d-flex flex-column align-items-center">
+                    <i class="bi bi-droplet-fill fs-1 mb-2"></i>
+                    <strong>Chỉ định XN</strong>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{{ route('doctor.noi-soi.create', ['benh_an_id' => $record->id]) }}" 
+                   class="btn btn-info w-100 py-3 d-flex flex-column align-items-center">
+                    <i class="bi bi-camera-video fs-1 mb-2"></i>
+                    <strong>Nội soi</strong>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{{ route('doctor.x-quang.create', ['benh_an_id' => $record->id]) }}" 
+                   class="btn btn-warning w-100 py-3 d-flex flex-column align-items-center text-dark">
+                    <i class="bi bi-eyeglasses fs-1 mb-2"></i>
+                    <strong>X-quang</strong>
+                </a>
+            </div>
+        </div>
+        @endif
 
 
         {{-- ===========================
@@ -177,6 +228,7 @@
         {{-- ===========================
         ĐƠN THUỐC
     ============================ --}}
+        @if($benhAn->donThuocs && count($benhAn->donThuocs) > 0)
         <div class="card shadow-sm mb-4 border-start border-danger border-3">
             <div class="card-body">
 
@@ -185,7 +237,7 @@
                 </h5>
 
                 <ul class="ms-4">
-                    @forelse($benhAn->donThuocs as $dt)
+                    @foreach($benhAn->donThuocs as $dt)
                         <li class="mb-2">
                             <strong>Đơn #{{ $dt->id }}</strong>
                             — {{ $dt->created_at->format('d/m/Y') }}
@@ -209,19 +261,12 @@
                                 @endforeach
                             </ul>
                         </li>
-                    @empty
-                        <li class="text-muted">Chưa có đơn thuốc nào.</li>
-                    @endforelse
+                    @endforeach
                 </ul>
-
-                @if (in_array($role, ['admin', 'doctor']))
-                    <a class="btn btn-outline-primary btn-sm mt-3" href="{{ route('benhan.donthuoc.create', $benhAn) }}">
-                        + Kê đơn thuốc
-                    </a>
-                @endif
 
             </div>
         </div>
+        @endif
 
 
         {{-- ===========================
@@ -284,16 +329,13 @@
         {{-- ===========================
         SIÊU ÂM
     ============================ --}}
-        @if ($role === 'doctor' && isset($benhAn->sieuAms))
+        @if ($role === 'doctor' && isset($benhAn->sieuAms) && count($benhAn->sieuAms) > 0)
         <div class="card shadow-sm mb-4 border-start border-success border-3">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-semibold mb-0">
                         <i class="bi bi-display"></i> Siêu âm
                     </h5>
-                    <a href="{{ route('doctor.sieu-am.create', $benhAn) }}" class="btn btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i> Chỉ định siêu âm
-                    </a>
                 </div>
 
                 <div class="table-responsive">
@@ -307,7 +349,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($benhAn->sieuAms as $sa)
+                            @foreach($benhAn->sieuAms as $sa)
                                 <tr>
                                     <td>{{ $sa->loai_sieu_am }}</td>
                                     <td>{{ \Carbon\Carbon::parse($sa->ngay_chi_dinh)->format('d/m/Y') }}</td>
@@ -335,11 +377,7 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted">Chưa có chỉ định siêu âm</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -350,16 +388,13 @@
         {{-- ===========================
         THỦ THUẬT
     ============================ --}}
-        @if ($role === 'doctor' && isset($benhAn->thuThuats))
+        @if ($role === 'doctor' && isset($benhAn->thuThuats) && count($benhAn->thuThuats) > 0)
         <div class="card shadow-sm mb-4 border-start border-warning border-3">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-semibold mb-0">
                         <i class="bi bi-clipboard-pulse"></i> Thủ thuật
                     </h5>
-                    <a href="{{ route('doctor.thu-thuat.create', $benhAn) }}" class="btn btn-sm btn-warning">
-                        <i class="bi bi-plus-lg"></i> Chỉ định thủ thuật
-                    </a>
                 </div>
 
                 <div class="table-responsive">
@@ -373,7 +408,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($benhAn->thuThuats as $tt)
+                            @foreach($benhAn->thuThuats as $tt)
                                 <tr>
                                     <td>{{ $tt->ten_thu_thuat }}</td>
                                     <td>{{ \Carbon\Carbon::parse($tt->ngay_chi_dinh)->format('d/m/Y') }}</td>
@@ -401,11 +436,170 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted">Chưa có chỉ định thủ thuật</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        {{-- ===========================
+        NỘI SOI
+    ============================ --}}
+        @if ($role === 'doctor' && isset($benhAn->noiSois) && count($benhAn->noiSois) > 0)
+        <div class="card shadow-sm mb-4 border-start border-info border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0">
+                        <i class="bi bi-camera-video text-info"></i> Nội soi
+                    </h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Loại nội soi</th>
+                                <th>Ngày chỉ định</th>
+                                <th>Ngày thực hiện</th>
+                                <th>Trạng thái</th>
+                                <th class="text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($benhAn->noiSois as $noiSoi)
+                            <tr>
+                                <td>{{ $noiSoi->loai_noi_soi }}</td>
+                                <td>{{ $noiSoi->ngay_chi_dinh->format('d/m/Y') }}</td>
+                                <td>{{ $noiSoi->ngay_thuc_hien ? $noiSoi->ngay_thuc_hien->format('d/m/Y') : '-' }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $noiSoi->trang_thai_badge }}">
+                                        {{ $noiSoi->trang_thai_text }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    @if (in_array($noiSoi->trang_thai, ['Chờ thực hiện', 'Đang thực hiện']))
+                                    <a href="{{ route('doctor.noi-soi.edit', $noiSoi->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-pencil"></i> Nhập kết quả
+                                    </a>
+                                    @else
+                                    <a href="{{ route('doctor.noi-soi.show', $noiSoi->id) }}" class="btn btn-sm btn-secondary">
+                                        <i class="bi bi-eye"></i> Xem kết quả
+                                    </a>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        {{-- ===========================
+        X-QUANG
+    ============================ --}}
+        @if ($role === 'doctor' && isset($benhAn->xQuangs) && count($benhAn->xQuangs) > 0)
+        <div class="card shadow-sm mb-4 border-start border-warning border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-medical text-warning"></i> X-quang
+                    </h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Loại X-quang</th>
+                                <th>Vị trí</th>
+                                <th>Ngày chỉ định</th>
+                                <th>Ngày chụp</th>
+                                <th>Trạng thái</th>
+                                <th class="text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($benhAn->xQuangs as $xQuang)
+                            <tr>
+                                <td>{{ $xQuang->loai_x_quang }}</td>
+                                <td>{{ $xQuang->vi_tri }}</td>
+                                <td>{{ $xQuang->ngay_chi_dinh->format('d/m/Y') }}</td>
+                                <td>{{ $xQuang->ngay_chup ? $xQuang->ngay_chup->format('d/m/Y') : '-' }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $xQuang->trang_thai_badge }}">
+                                        {{ $xQuang->trang_thai_text }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    @if (in_array($xQuang->trang_thai, ['Chờ chụp', 'Đã chụp']))
+                                    <a href="{{ route('doctor.x-quang.edit', $xQuang->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-pencil"></i> Nhập kết quả
+                                    </a>
+                                    @else
+                                    <a href="{{ route('doctor.x-quang.show', $xQuang->id) }}" class="btn btn-sm btn-secondary">
+                                        <i class="bi bi-eye"></i> Xem kết quả
+                                    </a>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        {{-- ===========================
+        XÉT NGHIỆM
+    ============================ --}}
+        @if ($role === 'doctor' && isset($benhAn->xetNghiems) && count($benhAn->xetNghiems) > 0)
+        <div class="card shadow-sm mb-4 border-start border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0">
+                        <i class="bi bi-heart-pulse text-danger"></i> Xét nghiệm
+                    </h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Loại xét nghiệm</th>
+                                <th>Tên xét nghiệm</th>
+                                <th>Ngày chỉ định</th>
+                                <th>Ngày lấy mẫu</th>
+                                <th>Trạng thái</th>
+                                <th class="text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($benhAn->xetNghiems as $xetNghiem)
+                            <tr>
+                                <td>{{ $xetNghiem->loai_xet_nghiem }}</td>
+                                <td>{{ $xetNghiem->ten_xet_nghiem }}</td>
+                                <td>{{ $xetNghiem->ngay_chi_dinh->format('d/m/Y') }}</td>
+                                <td>{{ $xetNghiem->ngay_lay_mau ? $xetNghiem->ngay_lay_mau->format('d/m/Y') : '-' }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $xetNghiem->trang_thai_badge }}">
+                                        {{ $xetNghiem->trang_thai_text }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    @if (in_array($xetNghiem->trang_thai, ['Chờ lấy mẫu', 'Đã lấy mẫu', 'Đang xét nghiệm']))
+                                    <a href="{{ route('doctor.xet-nghiem.edit', $xetNghiem->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-pencil"></i> Nhập kết quả
+                                    </a>
+                                    @else
+                                    <a href="{{ route('doctor.xet-nghiem.show', $xetNghiem->id) }}" class="btn btn-sm btn-secondary">
+                                        <i class="bi bi-eye"></i> Xem kết quả
+                                    </a>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -416,21 +610,17 @@
         {{-- ===========================
         LỊCH TÁI KHÁM
     ============================ --}}
-        @if ($role === 'doctor')
+        @if ($role === 'doctor' && isset($benhAn->lichTaiKhams) && $benhAn->lichTaiKhams->count() > 0)
         <div class="card shadow-sm mb-4 border-start border-primary border-3">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-semibold mb-0">
                         <i class="bi bi-calendar-check"></i> Lịch tái khám
                     </h5>
-                    <a href="{{ route('doctor.lich-tai-kham.create', ['benh_an_id' => $benhAn->id]) }}" class="btn btn-sm btn-primary">
-                        <i class="bi bi-plus-lg"></i> Tạo lịch tái khám
-                    </a>
                 </div>
 
-                @if(isset($benhAn->lichTaiKhams) && $benhAn->lichTaiKhams->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table table-sm">
+                <div class="table-responsive">
+                    <table class="table table-sm">
                             <thead>
                                 <tr>
                                     <th>Ngày hẹn</th>
@@ -462,16 +652,81 @@
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @else
-                    <p class="text-muted mb-0">Chưa có lịch tái khám</p>
-                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        @endif
+        @endif    </div>
 
+    {{-- Quick Actions Modal --}}
+    @if(session('show_quick_actions') && in_array($role, ['doctor']))
+    <div class="modal fade" id="quickActionsModal" tabindex="-1" aria-labelledby="quickActionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-success text-white border-0">
+                    <h5 class="modal-title" id="quickActionsModalLabel">
+                        <i class="bi bi-check-circle-fill me-2"></i>Thao tác tiếp theo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-4">Bạn muốn làm gì tiếp theo?</p>
+                    
+                    <div class="d-grid gap-3">
+                        <a href="{{ route('doctor.donthuoc.create', $record->id) }}" 
+                           class="btn btn-lg btn-outline-primary d-flex align-items-center justify-content-between">
+                            <span>
+                                <i class="bi bi-prescription2 fs-4 me-3"></i>
+                                <strong>Kê đơn thuốc</strong>
+                            </span>
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                        <a href="{{ route('doctor.xet-nghiem.create', ['benh_an_id' => $record->id]) }}" 
+                           class="btn btn-lg btn-outline-danger d-flex align-items-center justify-content-between">
+                            <span>
+                                <i class="bi bi-droplet-fill fs-4 me-3"></i>
+                                <strong>Thêm xét nghiệm</strong>
+                            </span>
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                        <a href="{{ route('doctor.noi-soi.create', ['benh_an_id' => $record->id]) }}" 
+                           class="btn btn-lg btn-outline-info d-flex align-items-center justify-content-between">
+                            <span>
+                                <i class="bi bi-camera-video fs-4 me-3"></i>
+                                <strong>Chỉ định nội soi</strong>
+                            </span>
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                        <a href="{{ route('doctor.x-quang.create', ['benh_an_id' => $record->id]) }}" 
+                           class="btn btn-lg btn-outline-warning d-flex align-items-center justify-content-between">
+                            <span>
+                                <i class="bi bi-eyeglasses fs-4 me-3"></i>
+                                <strong>Chỉ định X-quang</strong>
+                            </span>
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                        <button type="button" class="btn btn-lg btn-light" data-bs-dismiss="modal">
+                            <i class="bi bi-file-earmark-text me-2"></i>Ở lại trang bệnh án
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const quickActionsModal = new bootstrap.Modal(document.getElementById('quickActionsModal'));
+            quickActionsModal.show();
+        });
+    </script>
+    @endpush
+    @endif
 @endsection

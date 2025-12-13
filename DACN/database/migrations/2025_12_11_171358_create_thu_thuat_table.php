@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('ten_thu_thuat'); // 'Chọc ối', 'Sinh thiết nhau thai', 'Đo độ mở da gáy'...
             $table->date('ngay_chi_dinh');
             $table->date('ngay_thuc_hien')->nullable();
-            $table->enum('trang_thai', ['Chờ thực hiện', 'Đang thực hiện', 'Hoàn thành', 'Đã hủy'])->default('Chờ thực hiện');
+            $table->enum('trang_thai', ['Chờ thực hiện', 'Đang thực hiện', 'Đã hoàn thành', 'Đã hủy'])->default('Chờ thực hiện');
 
             // Thông tin thủ thuật
             $table->text('chi_tiet_truoc_thu_thuat')->nullable(); // Chuẩn bị, điều kiện

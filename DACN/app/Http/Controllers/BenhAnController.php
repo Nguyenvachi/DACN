@@ -125,16 +125,16 @@ class BenhAnController extends Controller
     public function show(BenhAn $benh_an)
     {
         $benh_an->load([
-            'benhNhan', 
-            'bacSi', 
-            'files', 
-            'xetNghiems', 
+            'benhNhan',
+            'bacSi',
+            'files',
+            'xetNghiems',
             'sieuAms',
             'thuThuats',
             'lichTaiKhams',
-            'donThuocs.items.thuoc', 
-            'dichVuNangCao.dichVu', 
-            'dichVuNangCao.nguoiThucHien'
+            'noiSois',
+            'xQuangs',
+            'donThuocs.items.thuoc',
         ]);
         $role = $this->getCurrentRole();
         return view('benh_an.show', [
@@ -149,7 +149,7 @@ class BenhAnController extends Controller
         $role = $this->getCurrentRole();
 
         // Load relationships cần thiết
-        $benh_an->load(['user', 'bacSi', 'lichHen.dichVu', 'files', 'xetNghiems', 'donThuocs.items.thuoc', 'dichVuNangCao.dichVu']);
+        $benh_an->load(['user', 'bacSi', 'lichHen.dichVu', 'files', 'xetNghiems', 'donThuocs.items.thuoc']);
 
         // Nếu là doctor, dùng view mới với enhanced features
         if ($role === 'doctor') {
@@ -477,100 +477,18 @@ class BenhAnController extends Controller
     }
 
     /**
-     * Chỉ định dịch vụ nâng cao cho bệnh án
+     * Đánh dấu bệnh án hoàn thành khám
      */
-    public function chiDinhDichVuNangCao(Request $request, BenhAn $benhAn)
+    public function hoanThanh(BenhAn $benhAn)
     {
-        $this->authorize('update', $benhAn);
+        $user = auth()->user();
 
-        $data = $request->validate([
-            'dich_vu_ids' => 'required|array|min:1',
-            'dich_vu_ids.*' => 'required|exists:dich_vus,id',
-            'ghi_chu' => 'nullable|string|max:1000',
-        ]);
-
-        $dichVuIds = $data['dich_vu_ids'];
-        $ghi_chu = $data['ghi_chu'] ?? null;
-
-        // Lấy thông tin các dịch vụ
-        $dichVus = \App\Models\DichVu::whereIn('id', $dichVuIds)->get();
-
-        foreach ($dichVus as $dichVu) {
-            // Kiểm tra xem đã chỉ định dịch vụ này chưa
-            $exists = \App\Models\BenhAnDichVuNangCao::where('benh_an_id', $benhAn->id)
-                ->where('dich_vu_id', $dichVu->id)
-                ->whereNotIn('trang_thai', ['Đã hủy'])
-                ->exists();
-
-            if (!$exists) {
-                \App\Models\BenhAnDichVuNangCao::create([
-                    'benh_an_id' => $benhAn->id,
-                    'dich_vu_id' => $dichVu->id,
-                    'gia_tai_thoi_diem' => $dichVu->gia,
-                    'trang_thai' => 'Chờ thực hiện',
-                    'ghi_chu' => $ghi_chu,
-                ]);
-            }
+        // Chỉ bác sĩ phụ trách mới được đánh dấu hoàn thành
+        if ($user->role === 'doctor' && $user->bacSi && $benhAn->bac_si_id === $user->bacSi->id) {
+            $benhAn->update(['trang_thai' => 'Hoàn thành']);
+            return redirect()->back()->with('success', 'Đã hoàn thành khám bệnh án!');
         }
 
-        // Ghi audit log
-        \App\Observers\BenhAnObserver::logCustomAction(
-            $benhAn,
-            'advanced_services_ordered',
-            "Chỉ định " . count($dichVuIds) . " dịch vụ nâng cao"
-        );
-
-        return back()->with('status', 'Đã chỉ định dịch vụ nâng cao thành công');
-    }
-
-    /**
-     * Cập nhật trạng thái dịch vụ nâng cao
-     */
-    public function capNhatDichVuNangCao(Request $request, \App\Models\BenhAnDichVuNangCao $dichVuNangCao)
-    {
-        $this->authorize('update', $dichVuNangCao->benhAn);
-
-        $data = $request->validate([
-            'trang_thai' => 'required|in:Chờ thực hiện,Đang thực hiện,Hoàn thành,Đã hủy',
-            'ket_qua' => 'nullable|string',
-            'ghi_chu' => 'nullable|string|max:1000',
-        ]);
-
-        if (in_array($data['trang_thai'], ['Đang thực hiện', 'Hoàn thành']) && !$dichVuNangCao->thoi_gian_thuc_hien) {
-            $data['thoi_gian_thuc_hien'] = now();
-            $data['nguoi_thuc_hien_id'] = auth()->id();
-        }
-
-        $dichVuNangCao->update($data);
-
-        // Ghi audit log
-        \App\Observers\BenhAnObserver::logCustomAction(
-            $dichVuNangCao->benhAn,
-            'advanced_service_updated',
-            "Cập nhật dịch vụ {$dichVuNangCao->dichVu->ten_dich_vu}: {$data['trang_thai']}"
-        );
-
-        return back()->with('status', 'Đã cập nhật trạng thái dịch vụ');
-    }
-
-    /**
-     * Hủy dịch vụ nâng cao
-     */
-    public function huyDichVuNangCao(\App\Models\BenhAnDichVuNangCao $dichVuNangCao)
-    {
-        $this->authorize('update', $dichVuNangCao->benhAn);
-
-        $dichVuNangCao->update([
-            'trang_thai' => 'Đã hủy',
-        ]);
-
-        // Ghi audit log
-        \App\Observers\BenhAnObserver::logCustomAction(
-            $dichVuNangCao->benhAn,
-            'advanced_service_cancelled',
-            "Hủy dịch vụ {$dichVuNangCao->dichVu->ten_dich_vu}"
-        );
-
-        return back()->with('status', 'Đã hủy dịch vụ');
+        abort(403, 'Bạn không có quyền thực hiện thao tác này');
     }
 }

@@ -2,39 +2,43 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class XetNghiem extends Model
+class XQuang extends Model
 {
-    protected $table = 'xet_nghiem';
+    use HasFactory;
+
+    protected $table = 'x_quang';
 
     protected $fillable = [
         'benh_an_id',
         'dich_vu_id',
-        'loai_xet_nghiem',
-        'ten_xet_nghiem',
+        'loai_x_quang',
+        'vi_tri',
         'ngay_chi_dinh',
-        'ngay_lay_mau',
-        'ngay_tra_ket_qua',
+        'ngay_chup',
         'bac_si_chi_dinh_id',
+        'bac_si_doc_ket_qua_id',
         'chi_dinh',
         'trang_thai',
-        'can_nhin_an',
-        'chuan_bi',
-        'chi_so',
-        'nhan_xet',
+        'ky_thuat',
+        'mo_ta_hinh_anh',
+        'tim_mach',
+        'phoi',
+        'xuong_khop',
+        'co_quan_khac',
+        'chan_doan',
+        'hinh_anh',
         'ket_luan',
-        'file_ket_qua',
+        'de_nghi',
         'ghi_chu',
     ];
 
     protected $casts = [
         'ngay_chi_dinh' => 'date',
-        'ngay_lay_mau' => 'date',
-        'ngay_tra_ket_qua' => 'date',
-        'can_nhin_an' => 'boolean',
-        'chi_so' => 'array',
-        'file_ket_qua' => 'array',
+        'ngay_chup' => 'date',
+        'hinh_anh' => 'array',
     ];
 
     // Quan hệ
@@ -53,14 +57,18 @@ class XetNghiem extends Model
         return $this->belongsTo(BacSi::class, 'bac_si_chi_dinh_id');
     }
 
+    public function bacSiDocKetQua()
+    {
+        return $this->belongsTo(BacSi::class, 'bac_si_doc_ket_qua_id');
+    }
+
     // Helper methods
     public function getTrangThaiTextAttribute()
     {
         return match ($this->trang_thai) {
-            'Chờ lấy mẫu' => 'Chờ lấy mẫu',
-            'Đã lấy mẫu' => 'Đã lấy mẫu',
-            'Đang xét nghiệm' => 'Đang xét nghiệm',
-            'Có kết quả' => 'Có kết quả',
+            'Chờ chụp' => 'Chờ chụp',
+            'Đã chụp' => 'Đã chụp',
+            'Đã có kết quả' => 'Đã có kết quả',
             'Đã hủy' => 'Đã hủy',
             default => $this->trang_thai,
         };
@@ -69,10 +77,9 @@ class XetNghiem extends Model
     public function getTrangThaiBadgeAttribute()
     {
         return match ($this->trang_thai) {
-            'Chờ lấy mẫu' => 'warning',
-            'Đã lấy mẫu' => 'info',
-            'Đang xét nghiệm' => 'primary',
-            'Có kết quả' => 'success',
+            'Chờ chụp' => 'warning',
+            'Đã chụp' => 'info',
+            'Đã có kết quả' => 'success',
             'Đã hủy' => 'secondary',
             default => 'secondary',
         };

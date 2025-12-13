@@ -103,13 +103,13 @@
                 </a>
             </li>
 
-            {{-- 5. XÉT NGHIỆM - Quản lý kết quả --}}
-            <li>
-                <a href="{{ route('doctor.xetnghiem.index') }}">
+            {{-- 5. XÉT NGHIỆM - Quản lý kết quả (Truy cập qua Bệnh án) --}}
+            {{-- <li>
+                <a href="#">
                     <i class="fas fa-flask"></i>
                     <span>Xét nghiệm</span>
                 </a>
-            </li>
+            </li> --}}
 
             {{-- 6. THEO DÕI THAI KỲ - Prenatal Care --}}
             <li>

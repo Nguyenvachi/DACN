@@ -104,7 +104,7 @@ class ThuThuatController extends Controller
     {
         $validated = $request->validate([
             'ngay_thuc_hien' => 'required|date',
-            'trang_thai' => 'required|in:Chờ thực hiện,Đang thực hiện,Hoàn thành,Đã hủy',
+            'trang_thai' => 'required|in:Chờ thực hiện,Đang thực hiện,Đã hoàn thành,Đã hủy',
             'mo_ta_quy_trinh' => 'nullable|string',
             'ket_qua' => 'nullable|string',
             'bien_chung' => 'nullable|string',

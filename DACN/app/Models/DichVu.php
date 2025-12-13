@@ -35,10 +35,4 @@ class DichVu extends Model
     {
         return $this->hasMany(LichHen::class, 'dich_vu_id');
     }
-
-    // Relationship với dịch vụ nâng cao trong bệnh án
-    public function benhAnDichVuNangCao()
-    {
-        return $this->hasMany(BenhAnDichVuNangCao::class);
-    }
 }

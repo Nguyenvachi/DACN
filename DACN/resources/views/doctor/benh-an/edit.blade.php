@@ -67,8 +67,8 @@
                         <a href="{{ route('doctor.donthuoc.create', $record->id) }}" class="btn btn-outline-primary">
                             <i class="fas fa-prescription-bottle-alt me-2"></i>Kê đơn thuốc
                         </a>
-                        <a href="{{ route('doctor.xetnghiem.create', $record->id) }}" class="btn btn-outline-info">
-                            <i class="fas fa-flask me-2"></i>Chỉ định xét nghiệm
+                        <a href="{{ route('doctor.xet-nghiem.create', ['benh_an_id' => $record->id]) }}" class="btn btn-outline-info">
+                            <i class="bi bi-flask"></i> Chỉ định Xét nghiệm
                         </a>
                     </div>
                 </div>
@@ -264,7 +264,7 @@
                         <i class="fas fa-flask me-2" style="color: #3b82f6;"></i>
                         Xét nghiệm
                     </h5>
-                    <a href="{{ route('doctor.xetnghiem.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                    <a href="{{ route('doctor.xet-nghiem.create', ['benh_an_id' => $record->id]) }}" class="btn btn-sm vc-btn-primary">
                         <i class="fas fa-plus"></i>
                     </a>
                 </div>
@@ -308,7 +308,7 @@
                     <div class="text-center py-4">
                         <i class="fas fa-flask fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Chưa chỉ định XN</p>
-                        <a href="{{ route('doctor.xetnghiem.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                        <a href="{{ route('doctor.xet-nghiem.create', ['benh_an_id' => $record->id]) }}" class="btn btn-sm vc-btn-primary">
                             <i class="fas fa-plus me-2"></i>Chỉ định ngay
                         </a>
                     </div>
@@ -442,133 +442,6 @@
                 </div>
             </div>
 
-            {{-- Dịch vụ nâng cao --}}
-            <div class="card vc-card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="fas fa-stethoscope me-2" style="color: #f59e0b;"></i>
-                        Dịch vụ nâng cao
-                    </h5>
-                    <button type="button" class="btn btn-sm vc-btn-primary" data-bs-toggle="modal" data-bs-target="#dichVuNangCaoModal">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-                <div class="card-body">
-                    @php
-                        $dichVuNangCao = $record->dichVuNangCao;
-                    @endphp
-
-                    @if($dichVuNangCao->count() > 0)
-                    <div class="list-group list-group-flush">
-                        @foreach($dichVuNangCao as $dv)
-                        <div class="list-group-item px-0">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">{{ $dv->dichVu->ten_dich_vu }}</h6>
-                                    <p class="mb-1 small text-muted">
-                                        <i class="fas fa-tag me-1"></i>
-                                        {{ number_format($dv->gia_tai_thoi_diem, 0, ',', '.') }} VNĐ
-                                    </p>
-                                    @if($dv->ghi_chu)
-                                    <p class="mb-1 small text-muted">
-                                        <i class="fas fa-comment me-1"></i>
-                                        {{ $dv->ghi_chu }}
-                                    </p>
-                                    @endif
-                                </div>
-                                <div class="ms-2">
-                                    @if($dv->trang_thai === 'Hoàn thành')
-                                    <span class="badge bg-success">Hoàn thành</span>
-                                    @elseif($dv->trang_thai === 'Đang thực hiện')
-                                    <span class="badge bg-info">Đang thực hiện</span>
-                                    @elseif($dv->trang_thai === 'Đã hủy')
-                                    <span class="badge bg-secondary">Đã hủy</span>
-                                    @else
-                                    <span class="badge bg-warning">Chờ thực hiện</span>
-                                    @endif
-                                </div>
-                            </div>
-                            
-                            @if($dv->trang_thai !== 'Đã hủy' && $dv->trang_thai !== 'Hoàn thành')
-                            <div class="d-flex gap-2 mt-2">
-                                <button type="button" class="btn btn-sm btn-outline-info" 
-                                        onclick="updateStatus({{ $dv->id }}, 'Đang thực hiện')">
-                                    <i class="fas fa-play me-1"></i>Bắt đầu
-                                </button>
-                                @if($dv->trang_thai === 'Đang thực hiện')
-                                <button type="button" class="btn btn-sm btn-outline-success" 
-                                        data-bs-toggle="modal" data-bs-target="#ketQuaModal{{ $dv->id }}">
-                                    <i class="fas fa-check me-1"></i>Hoàn thành
-                                </button>
-                                @endif
-                                <form action="{{ route('doctor.benhan.dichvunangcao.destroy', $dv) }}" 
-                                      method="POST" class="d-inline"
-                                      onsubmit="return confirm('Hủy dịch vụ này?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </form>
-                            </div>
-                            @endif
-
-                            @if($dv->ket_qua)
-                            <div class="mt-2 p-2 bg-light rounded">
-                                <strong class="small">Kết quả:</strong>
-                                <p class="mb-0 small">{{ $dv->ket_qua }}</p>
-                            </div>
-                            @endif
-                        </div>
-
-                        {{-- Modal kết quả --}}
-                        <div class="modal fade" id="ketQuaModal{{ $dv->id }}" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Nhập kết quả - {{ $dv->dichVu->ten_dich_vu }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <form action="{{ route('doctor.benhan.dichvunangcao.update', $dv) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="trang_thai" value="Hoàn thành">
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label class="form-label">Kết quả</label>
-                                                <textarea name="ket_qua" class="form-control" rows="4" 
-                                                          placeholder="Nhập kết quả thực hiện dịch vụ..." required></textarea>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Ghi chú bổ sung</label>
-                                                <textarea name="ghi_chu" class="form-control" rows="2" 
-                                                          placeholder="Ghi chú thêm (nếu có)">{{ $dv->ghi_chu }}</textarea>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                            <button type="submit" class="btn btn-success">
-                                                <i class="fas fa-check me-2"></i>Xác nhận hoàn thành
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                    @else
-                    <div class="text-center py-4">
-                        <i class="fas fa-stethoscope fa-3x text-muted mb-3"></i>
-                        <p class="text-muted">Chưa chỉ định dịch vụ nâng cao</p>
-                        <button type="button" class="btn btn-sm vc-btn-primary" data-bs-toggle="modal" data-bs-target="#dichVuNangCaoModal">
-                            <i class="fas fa-plus me-2"></i>Chỉ định ngay
-                        </button>
-                    </div>
-                    @endif
-                </div>
-            </div>
-
             {{-- Lịch sử --}}
             <div class="card vc-card">
                 <div class="card-header">
@@ -625,92 +498,6 @@
     </div>
 </div>
 @endif
-
-{{-- Modal chỉ định dịch vụ nâng cao --}}
-<div class="modal fade" id="dichVuNangCaoModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-stethoscope me-2"></i>
-                    Chỉ định dịch vụ nâng cao
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="{{ route('doctor.benhan.dichvunangcao.create', $record) }}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    @php
-                        $dichVuNangCaoList = \App\Models\DichVu::where('loai', 'Nâng cao')
-                            ->where('hoat_dong', true)
-                            ->orderBy('ten_dich_vu')
-                            ->get();
-                        $daChiDinh = $record->dichVuNangCao->pluck('dich_vu_id')->toArray();
-                    @endphp
-
-                    @if($dichVuNangCaoList->count() > 0)
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Chọn dịch vụ cần chỉ định</label>
-                        <div class="row">
-                            @foreach($dichVuNangCaoList as $dv)
-                            <div class="col-md-6 mb-3">
-                                <div class="form-check card h-100 {{ in_array($dv->id, $daChiDinh) ? 'border-secondary bg-light' : '' }}">
-                                    <div class="card-body">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" 
-                                                   name="dich_vu_ids[]" 
-                                                   value="{{ $dv->id }}" 
-                                                   id="dv{{ $dv->id }}"
-                                                   {{ in_array($dv->id, $daChiDinh) ? 'disabled' : '' }}>
-                                            <label class="form-check-label" for="dv{{ $dv->id }}">
-                                                <strong>{{ $dv->ten_dich_vu }}</strong>
-                                                @if(in_array($dv->id, $daChiDinh))
-                                                <span class="badge bg-secondary ms-2">Đã chỉ định</span>
-                                                @endif
-                                                <br>
-                                                <small class="text-muted">{{ $dv->mo_ta }}</small>
-                                                <br>
-                                                <span class="text-primary fw-bold">
-                                                    <i class="fas fa-tag me-1"></i>
-                                                    {{ number_format($dv->gia, 0, ',', '.') }} VNĐ
-                                                </span>
-                                                <small class="text-muted ms-2">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    ~{{ $dv->thoi_gian_uoc_tinh }} phút
-                                                </small>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Ghi chú chỉ định</label>
-                        <textarea name="ghi_chu" class="form-control" rows="3" 
-                                  placeholder="Ghi chú cho các dịch vụ được chỉ định (nếu có)..."></textarea>
-                    </div>
-                    @else
-                    <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        Chưa có dịch vụ nâng cao nào trong hệ thống.
-                    </div>
-                    @endif
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    @if($dichVuNangCaoList->count() > 0)
-                    <button type="submit" class="btn vc-btn-primary">
-                        <i class="fas fa-check me-2"></i>Chỉ định
-                    </button>
-                    @endif
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 @push('scripts')
 <script>

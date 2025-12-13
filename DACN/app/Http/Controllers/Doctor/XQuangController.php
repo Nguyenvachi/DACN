@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Doctor;
 use App\Http\Controllers\Controller;
 use App\Models\BacSi;
 use App\Models\BenhAn;
-use App\Models\XetNghiem;
+use App\Models\XQuang;
 use App\Models\DichVu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class XetNghiemController extends Controller
+class XQuangController extends Controller
 {
     /**
-     * Trang chỉ định xét nghiệm cho bệnh án
+     * Trang chỉ định X-quang cho bệnh án
      */
     public function create(Request $request)
     {
@@ -23,65 +23,61 @@ class XetNghiemController extends Controller
 
         $bacSi = BacSi::where('user_id', Auth::id())->first();
         if (!$bacSi || $benhAn->bac_si_id !== $bacSi->id) {
-            abort(403, 'Bạn không có quyền chỉ định xét nghiệm cho bệnh án này.');
+            abort(403, 'Bạn không có quyền chỉ định X-quang cho bệnh án này.');
         }
 
-        $dichVuXetNghiem = DichVu::where('loai', 'Nâng cao')
+        $dichVuXQuang = DichVu::where('loai', 'Nâng cao')
             ->where('hoat_dong', true)
             ->where(function ($q) {
-                $q->where('ten_dich_vu', 'like', '%xét nghiệm%')
-                    ->orWhere('ten_dich_vu', 'like', '%Xét nghiệm%')
-                    ->orWhere('ten_dich_vu', 'like', '%xet nghiem%');
+                $q->where('ten_dich_vu', 'like', '%x-quang%')
+                    ->orWhere('ten_dich_vu', 'like', '%X-quang%')
+                    ->orWhere('ten_dich_vu', 'like', '%xquang%');
             })
             ->orderBy('ten_dich_vu')
             ->get();
 
-        return view('doctor.xet-nghiem.create', compact('benhAn', 'dichVuXetNghiem'));
+        return view('doctor.x-quang.create', compact('benhAn', 'dichVuXQuang'));
     }
 
     /**
-     * Lưu chỉ định xét nghiệm
+     * Lưu chỉ định X-quang
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'benh_an_id' => 'required|exists:benh_ans,id',
             'dich_vu_id' => 'nullable|exists:dich_vus,id',
-            'loai_xet_nghiem' => 'required|string|max:255',
-            'ten_xet_nghiem' => 'required|string|max:255',
+            'loai_x_quang' => 'required|string|max:255',
+            'vi_tri' => 'required|string|max:255',
             'ngay_chi_dinh' => 'required|date',
             'chi_dinh' => 'nullable|string',
-            'can_nhin_an' => 'nullable|boolean',
-            'chuan_bi' => 'nullable|string',
         ]);
 
         $benhAn = BenhAn::findOrFail($validated['benh_an_id']);
         $bacSi = BacSi::where('user_id', Auth::id())->first();
 
         if (!$bacSi || $benhAn->bac_si_id !== $bacSi->id) {
-            return back()->with('error', 'Bạn không có quyền chỉ định xét nghiệm cho bệnh án này.');
+            return back()->with('error', 'Bạn không có quyền chỉ định X-quang cho bệnh án này.');
         }
 
         try {
             DB::beginTransaction();
 
-            XetNghiem::create([
+            XQuang::create([
                 'benh_an_id' => $validated['benh_an_id'],
                 'dich_vu_id' => $validated['dich_vu_id'],
-                'loai_xet_nghiem' => $validated['loai_xet_nghiem'],
-                'ten_xet_nghiem' => $validated['ten_xet_nghiem'],
+                'loai_x_quang' => $validated['loai_x_quang'],
+                'vi_tri' => $validated['vi_tri'],
                 'ngay_chi_dinh' => $validated['ngay_chi_dinh'],
                 'bac_si_chi_dinh_id' => $bacSi->id,
                 'chi_dinh' => $validated['chi_dinh'] ?? null,
-                'can_nhin_an' => $validated['can_nhin_an'] ?? false,
-                'chuan_bi' => $validated['chuan_bi'] ?? null,
-                'trang_thai' => 'Chờ lấy mẫu',
+                'trang_thai' => 'Chờ chụp',
             ]);
 
             DB::commit();
 
             return redirect()->route('doctor.benhan.show', $benhAn->id)
-                ->with('success', 'Đã chỉ định xét nghiệm thành công!')
+                ->with('success', 'Đã chỉ định X-quang thành công!')
                 ->with('show_quick_actions', true)
                 ->with('benh_an_id', $benhAn->id);
         } catch (\Exception $e) {
@@ -91,36 +87,36 @@ class XetNghiemController extends Controller
     }
 
     /**
-     * Hiển thị chi tiết kết quả xét nghiệm
+     * Hiển thị chi tiết kết quả X-quang
      */
-    public function show(XetNghiem $xetNghiem)
+    public function show(XQuang $xQuang)
     {
         $bacSi = BacSi::where('user_id', Auth::id())->first();
         if (!$bacSi) {
             abort(403);
         }
 
-        $xetNghiem->load(['benhAn.benhNhan', 'bacSiChiDinh', 'dichVu']);
-        return view('doctor.xet-nghiem.show', compact('xetNghiem'));
+        $xQuang->load(['benhAn.benhNhan', 'bacSiChiDinh', 'bacSiDocKetQua', 'dichVu']);
+        return view('doctor.x-quang.show', compact('xQuang'));
     }
 
     /**
-     * Trang nhập kết quả xét nghiệm
+     * Trang nhập kết quả X-quang
      */
-    public function edit(XetNghiem $xetNghiem)
+    public function edit(XQuang $xQuang)
     {
         $bacSi = BacSi::where('user_id', Auth::id())->first();
         if (!$bacSi) {
             abort(403);
         }
 
-        return view('doctor.xet-nghiem.edit', compact('xetNghiem'));
+        return view('doctor.x-quang.edit', compact('xQuang'));
     }
 
     /**
-     * Cập nhật kết quả xét nghiệm
+     * Cập nhật kết quả X-quang
      */
-    public function update(Request $request, XetNghiem $xetNghiem)
+    public function update(Request $request, XQuang $xQuang)
     {
         $bacSi = BacSi::where('user_id', Auth::id())->first();
         if (!$bacSi) {
@@ -128,37 +124,43 @@ class XetNghiemController extends Controller
         }
 
         $validated = $request->validate([
-            'ngay_lay_mau' => 'nullable|date',
-            'ngay_tra_ket_qua' => 'nullable|date',
-            'trang_thai' => 'required|in:Chờ lấy mẫu,Đã lấy mẫu,Đang xét nghiệm,Có kết quả,Đã hủy',
-            'chi_so' => 'nullable|array',
-            'nhan_xet' => 'nullable|string',
+            'ngay_chup' => 'required|date',
+            'trang_thai' => 'required|in:Chờ chụp,Đã chụp,Đã có kết quả,Đã hủy',
+            'ky_thuat' => 'nullable|string|max:255',
+            'mo_ta_hinh_anh' => 'nullable|string',
+            'tim_mach' => 'nullable|string',
+            'phoi' => 'nullable|string',
+            'xuong_khop' => 'nullable|string',
+            'co_quan_khac' => 'nullable|string',
+            'chan_doan' => 'nullable|string',
             'ket_luan' => 'nullable|string',
+            'de_nghi' => 'nullable|string',
             'ghi_chu' => 'nullable|string',
-            'file_ket_qua.*' => 'nullable|file|max:10240', // 10MB
+            'hinh_anh.*' => 'nullable|image|max:5120', // 5MB
         ]);
 
         try {
             DB::beginTransaction();
 
             $data = $validated;
+            $data['bac_si_doc_ket_qua_id'] = $bacSi->id;
 
-            // Xử lý upload file kết quả
-            if ($request->hasFile('file_ket_qua')) {
-                $filePaths = [];
-                foreach ($request->file('file_ket_qua') as $file) {
-                    $path = $file->store('xet-nghiem', 'public');
-                    $filePaths[] = $path;
+            // Xử lý upload hình ảnh
+            if ($request->hasFile('hinh_anh')) {
+                $hinhAnhPaths = [];
+                foreach ($request->file('hinh_anh') as $file) {
+                    $path = $file->store('x-quang', 'public');
+                    $hinhAnhPaths[] = $path;
                 }
-                $data['file_ket_qua'] = $filePaths;
+                $data['hinh_anh'] = $hinhAnhPaths;
             }
 
-            $xetNghiem->update($data);
+            $xQuang->update($data);
 
             DB::commit();
 
-            return redirect()->route('doctor.benhan.show', $xetNghiem->benh_an_id)
-                ->with('success', 'Đã cập nhật kết quả xét nghiệm thành công!');
+            return redirect()->route('doctor.benhan.show', $xQuang->benh_an_id)
+                ->with('success', 'Đã cập nhật kết quả X-quang thành công!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage())->withInput();

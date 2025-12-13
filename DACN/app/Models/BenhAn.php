@@ -16,6 +16,7 @@ class BenhAn extends Model
         'chuan_doan',
         'dieu_tri',
         'ghi_chu',
+        'trang_thai',
     ];
 
     protected $casts = [
@@ -77,12 +78,6 @@ class BenhAn extends Model
         return $this->hasMany(\App\Models\BenhAnAudit::class)->orderByDesc('created_at');
     }
 
-    // Quan hệ với dịch vụ nâng cao
-    public function dichVuNangCao()
-    {
-        return $this->hasMany(BenhAnDichVuNangCao::class);
-    }
-
     // ✅ Quan hệ với siêu âm
     public function sieuAms()
     {
@@ -99,6 +94,18 @@ class BenhAn extends Model
     public function lichTaiKhams()
     {
         return $this->hasMany(LichTaiKham::class);
+    }
+
+    // ✅ Quan hệ với nội soi
+    public function noiSois()
+    {
+        return $this->hasMany(NoiSoi::class);
+    }
+
+    // ✅ Quan hệ với X-quang
+    public function xQuangs()
+    {
+        return $this->hasMany(XQuang::class);
     }
 
     // ✅ Helper: Tính tổng tiền tất cả dịch vụ đã chỉ định

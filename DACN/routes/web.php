@@ -268,11 +268,6 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::get('benh-an/{benh_an}/audit', [BenhAnController::class, 'auditLog'])->name('benhan.audit');
         Route::get('benh-an/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('benhan.files.download')->middleware('signed');
         Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
-
-        // Routes cho dịch vụ nâng cao
-        Route::post('benh-an/{benhAn}/dich-vu-nang-cao', [BenhAnController::class, 'chiDinhDichVuNangCao'])->name('benhan.dichvunangcao.create');
-        Route::put('dich-vu-nang-cao/{dichVuNangCao}', [BenhAnController::class, 'capNhatDichVuNangCao'])->name('benhan.dichvunangcao.update');
-        Route::delete('dich-vu-nang-cao/{dichVuNangCao}', [BenhAnController::class, 'huyDichVuNangCao'])->name('benhan.dichvunangcao.destroy');
     });
 
     // 6. NHÓM HÓA ĐƠN (Cần quyền view-invoices)
@@ -447,13 +442,9 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::delete('benh-an/{benh_an}/files/{file}', [BenhAnController::class, 'destroyFile'])->name('benhan.files.destroy');
     Route::get('benh-an/{benh_an}/audit', [BenhAnController::class, 'auditLog'])->name('benhan.audit');
     Route::get('benh-an/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('benhan.exportPdf');
+    Route::put('benh-an/{benh_an}/hoan-thanh', [BenhAnController::class, 'hoanThanh'])->name('benhan.hoanthanh');
     Route::get('benh-an/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('benhan.files.download')->middleware('signed');
     Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
-
-    // Routes cho dịch vụ nâng cao
-    Route::post('benh-an/{benhAn}/dich-vu-nang-cao', [BenhAnController::class, 'chiDinhDichVuNangCao'])->name('benhan.dichvunangcao.create');
-    Route::put('dich-vu-nang-cao/{dichVuNangCao}', [BenhAnController::class, 'capNhatDichVuNangCao'])->name('benhan.dichvunangcao.update');
-    Route::delete('dich-vu-nang-cao/{dichVuNangCao}', [BenhAnController::class, 'huyDichVuNangCao'])->name('benhan.dichvunangcao.destroy');
 
     // Doctor Chat Routes (File mẹ: routes/web.php)
     Route::prefix('chat')->name('chat.')->group(function () {
@@ -491,14 +482,12 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     });
 
     // Xét nghiệm - Lab Test Management (File mẹ: routes/web.php)
-    Route::prefix('xet-nghiem')->name('xetnghiem.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'index'])->name('index');
-        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'create'])->name('create');
-        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'store'])->name('store');
-        Route::get('/{xetNghiem}/show', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'show'])->name('show');
-        Route::post('/{xetNghiem}/upload', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'uploadResult'])->name('upload');
-        Route::get('/{xetNghiem}/download', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'download'])->name('download');
-        Route::delete('/{xetNghiem}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'destroy'])->name('destroy');
+    Route::prefix('xet-nghiem')->name('xet-nghiem.')->group(function () {
+        Route::get('/create', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'store'])->name('store');
+        Route::get('/{xetNghiem}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'show'])->name('show');
+        Route::get('/{xetNghiem}/edit', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'edit'])->name('edit');
+        Route::put('/{xetNghiem}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'update'])->name('update');
     });
 
     // Siêu âm - Ultrasound Management
@@ -515,6 +504,24 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
         Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'store'])->name('store');
         Route::get('/{thuThuat}/edit', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'edit'])->name('edit');
         Route::put('/{thuThuat}', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'update'])->name('update');
+    });
+
+    // Nội soi - Endoscopy Management
+    Route::prefix('noi-soi')->name('noi-soi.')->group(function () {
+        Route::get('/create', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'store'])->name('store');
+        Route::get('/{noiSoi}', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'show'])->name('show');
+        Route::get('/{noiSoi}/edit', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'edit'])->name('edit');
+        Route::put('/{noiSoi}', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'update'])->name('update');
+    });
+
+    // X-quang - X-ray Management
+    Route::prefix('x-quang')->name('x-quang.')->group(function () {
+        Route::get('/create', [\App\Http\Controllers\Doctor\XQuangController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Doctor\XQuangController::class, 'store'])->name('store');
+        Route::get('/{xQuang}', [\App\Http\Controllers\Doctor\XQuangController::class, 'show'])->name('show');
+        Route::get('/{xQuang}/edit', [\App\Http\Controllers\Doctor\XQuangController::class, 'edit'])->name('edit');
+        Route::put('/{xQuang}', [\App\Http\Controllers\Doctor\XQuangController::class, 'update'])->name('update');
     });
 
     // Lịch tái khám - Follow-up Appointment Management
