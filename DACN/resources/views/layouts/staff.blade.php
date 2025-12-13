@@ -278,6 +278,40 @@
                 <span>Quản lý Hàng đợi</span>
             </a>
 
+            {{-- Prescription Management Section --}}
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-prescription2 me-1"></i> Quản lý Đơn thuốc
+            </div>
+            <a href="{{ route('staff.donthuoc.index') }}"
+               class="menu-item {{ request()->routeIs('staff.donthuoc.index') ? 'active' : '' }}">
+                <i class="bi bi-list-ul"></i>
+                <span>Tất cả đơn thuốc</span>
+            </a>
+            <a href="{{ route('staff.donthuoc.dang-cho') }}"
+               class="menu-item {{ request()->routeIs('staff.donthuoc.dang-cho') ? 'active' : '' }}">
+                <i class="bi bi-hourglass-split"></i>
+                <span>Đơn chờ cấp</span>
+                @php $dangCho = \App\Models\DonThuoc::whereNull('ngay_cap_thuoc')->count(); @endphp
+                @if($dangCho > 0)
+                    <span class="badge bg-warning text-dark ms-auto">{{ $dangCho }}</span>
+                @endif
+            </a>
+            <a href="{{ route('staff.donthuoc.da-cap') }}"
+               class="menu-item {{ request()->routeIs('staff.donthuoc.da-cap') ? 'active' : '' }}">
+                <i class="bi bi-check-circle"></i>
+                <span>Đã cấp thuốc</span>
+            </a>
+
+            {{-- Invoice Management Section --}}
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-receipt me-1"></i> Quản lý Hóa đơn
+            </div>
+            <a href="{{ route('staff.hoadon.index') }}"
+               class="menu-item {{ request()->routeIs('staff.hoadon.*') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Hóa đơn</span>
+            </a>
+
             {{-- Schedule Section --}}
             <div class="menu-group-title mt-3">
                 <i class="bi bi-calendar-week-fill me-1"></i> Lịch làm việc

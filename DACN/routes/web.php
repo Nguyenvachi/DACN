@@ -226,6 +226,39 @@ Route::middleware(['auth', 'custom_role:admin,staff'])->prefix('admin')->name('a
         ]);
     });
 
+    // 4.2. NHÓM QUẢN LÝ DỊCH VỤ Y TẾ (Siêu âm, Xét nghiệm, Thủ thuật) - Chỉ admin
+    Route::middleware(['custom_role:admin'])->group(function () {
+        Route::resource('sieu-am', \App\Http\Controllers\Admin\SieuAmController::class)->names([
+            'index' => 'sieu-am.index',
+            'create' => 'sieu-am.create',
+            'store' => 'sieu-am.store',
+            'show' => 'sieu-am.show',
+            'edit' => 'sieu-am.edit',
+            'update' => 'sieu-am.update',
+            'destroy' => 'sieu-am.destroy',
+        ]);
+
+        Route::resource('xet-nghiem', \App\Http\Controllers\Admin\XetNghiemController::class)->names([
+            'index' => 'xet-nghiem.index',
+            'create' => 'xet-nghiem.create',
+            'store' => 'xet-nghiem.store',
+            'show' => 'xet-nghiem.show',
+            'edit' => 'xet-nghiem.edit',
+            'update' => 'xet-nghiem.update',
+            'destroy' => 'xet-nghiem.destroy',
+        ]);
+
+        Route::resource('thu-thuat', \App\Http\Controllers\Admin\ThuThuatController::class)->names([
+            'index' => 'thu-thuat.index',
+            'create' => 'thu-thuat.create',
+            'store' => 'thu-thuat.store',
+            'show' => 'thu-thuat.show',
+            'edit' => 'thu-thuat.edit',
+            'update' => 'thu-thuat.update',
+            'destroy' => 'thu-thuat.destroy',
+        ]);
+    });
+
     // 5. NHÓM QUẢN LÝ LỊCH HẸN (Admin & Staff)
     Route::middleware(['custom_role:admin,staff'])->group(function () {
         Route::get('/lich-hen', [LichHenController::class, 'adminIndex'])->name('lichhen.index');
@@ -270,29 +303,55 @@ Route::middleware(['auth', 'custom_role:admin,staff'])->prefix('admin')->name('a
         Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
     });
 
-    // 6. NHÓM HÓA ĐƠN (Admin & Staff)
-    Route::middleware(['custom_role:admin,staff'])->group(function () {
-        Route::get('/hoa-don', [HoaDonController::class, 'index'])->name('hoadon.index');
-        Route::get('/hoa-don/{hoaDon}', [HoaDonController::class, 'show'])->name('hoadon.show');
-        Route::post('/lich-hen/{lichHen}/hoa-don', [HoaDonController::class, 'createFromAppointment'])->name('hoadon.create_from_appointment');
-
-        // Tạo hóa đơn từ bệnh án
-        Route::get('/benh-an/{benhAn}/hoa-don/create', [HoaDonController::class, 'createFromBenhAn'])->name('hoadon.create-from-benh-an');
-        Route::post('/benh-an/{benhAn}/hoa-don', [HoaDonController::class, 'storeFromBenhAn'])->name('hoadon.store-from-benh-an');
-
-        Route::post('/hoa-don/{hoaDon}/thanh-toan/cash', [HoaDonController::class, 'cashCollect'])->name('hoadon.cash_collect');
-        Route::get('/hoa-don/{hoaDon}/receipt', [ReceiptController::class, 'download'])->name('hoadon.receipt');
-        // Thêm route download theo loại (phieu-thu, dich-vu, thuoc, tong-hop)
-        // Parent file: `routes/web.php` (thêm route)
-        Route::get('/hoa-don/{hoaDon}/receipt/{type}', [ReceiptController::class, 'downloadByType'])->name('hoadon.receipt.type');
-        Route::get('/hoa-don/{hoaDon}/payment-logs', [HoaDonController::class, 'paymentLogs'])->name('hoadon.payment_logs');
-
-        // Routes hoàn tiền (cần permission quản lý hóa đơn)
-        Route::get('/hoa-don/{hoaDon}/refund', [HoaDonController::class, 'showRefundForm'])->name('hoadon.refund.form');
-        Route::post('/hoa-don/{hoaDon}/refund', [HoaDonController::class, 'refund'])->name('hoadon.refund.process');
-        Route::get('/hoa-don/{hoaDon}/refunds', [HoaDonController::class, 'refundsList'])->name('hoadon.refunds.list');
+    // 6. NHÓM HÓA ĐƠN
+    // Admin: Chỉ xem hóa đơn và thông tin hóa đơn (chỉ admin mới vào được routes này)
+    Route::middleware(['custom_role:admin'])->group(function () {
+        Route::get('hoa-don', [HoaDonController::class, 'index'])->name('hoadon.index');
+        Route::get('hoa-don/{hoaDon}', [HoaDonController::class, 'show'])->name('hoadon.show');
+        Route::get('hoa-don/{hoaDon}/payment-logs', [HoaDonController::class, 'paymentLogs'])->name('hoadon.payment_logs');
     });
+});
 
+// =========================================================================
+// KHU VỰC STAFF PANEL - Chỉ Staff mới vào được
+// =========================================================================
+Route::middleware(['auth', 'custom_role:staff'])->prefix('staff')->name('staff.')->group(function () {
+    // Quản lý Đơn thuốc
+    Route::get('don-thuoc', [\App\Http\Controllers\Staff\DonThuocController::class, 'index'])->name('donthuoc.index');
+    Route::get('don-thuoc/dang-cho', [\App\Http\Controllers\Staff\DonThuocController::class, 'dangCho'])->name('donthuoc.dang-cho');
+    Route::get('don-thuoc/da-cap', [\App\Http\Controllers\Staff\DonThuocController::class, 'daCap'])->name('donthuoc.da-cap');
+    Route::get('don-thuoc/{donThuoc}', [\App\Http\Controllers\Staff\DonThuocController::class, 'show'])->name('donthuoc.show');
+    Route::post('don-thuoc/{donThuoc}/cap-thuoc', [\App\Http\Controllers\Staff\DonThuocController::class, 'capThuoc'])->name('donthuoc.cap-thuoc');
+    Route::post('don-thuoc/{donThuoc}/huy-cap', [\App\Http\Controllers\Staff\DonThuocController::class, 'huyCap'])->name('donthuoc.huy-cap');
+    Route::get('benh-an/{benhAn}/don-thuoc', [\App\Http\Controllers\Staff\DonThuocController::class, 'showFromBenhAn'])->name('benhan.donthuoc');
+    Route::get('api/thuoc/{thuoc}/ton-kho', [\App\Http\Controllers\Staff\DonThuocController::class, 'checkTonKho'])->name('api.thuoc.ton-kho');
+
+    // Xem danh sách hóa đơn
+    Route::get('hoa-don', [\App\Http\Controllers\Staff\HoaDonController::class, 'index'])->name('hoadon.index');
+    Route::get('hoa-don/{hoaDon}', [\App\Http\Controllers\Staff\HoaDonController::class, 'show'])->name('hoadon.show');
+
+    // Xem toa thuốc từ bệnh án
+    Route::get('benh-an/{benhAn}/toa-thuoc', [\App\Http\Controllers\Staff\HoaDonController::class, 'viewToaThuoc'])->name('benhan.toa-thuoc');
+
+    // Tạo hóa đơn từ bệnh án (bao gồm tất cả dịch vụ đã chỉ định)
+    Route::get('benh-an/{benhAn}/hoa-don/create', [\App\Http\Controllers\Staff\HoaDonController::class, 'createFromBenhAn'])->name('hoadon.create-from-benh-an');
+    Route::post('benh-an/{benhAn}/hoa-don', [\App\Http\Controllers\Staff\HoaDonController::class, 'storeFromBenhAn'])->name('hoadon.store-from-benh-an');
+
+    // Thanh toán
+    Route::post('hoa-don/{hoaDon}/thanh-toan/cash', [\App\Http\Controllers\Staff\HoaDonController::class, 'cashCollect'])->name('hoadon.cash_collect');
+    Route::get('hoa-don/{hoaDon}/receipt', [ReceiptController::class, 'download'])->name('hoadon.receipt');
+    Route::get('hoa-don/{hoaDon}/receipt/{type}', [ReceiptController::class, 'downloadByType'])->name('hoadon.receipt.type');
+
+    // Hoàn tiền (staff có quyền)
+    Route::get('hoa-don/{hoaDon}/refund', [\App\Http\Controllers\Staff\HoaDonController::class, 'showRefundForm'])->name('hoadon.refund.form');
+    Route::post('hoa-don/{hoaDon}/refund', [\App\Http\Controllers\Staff\HoaDonController::class, 'refund'])->name('hoadon.refund.process');
+    Route::get('hoa-don/{hoaDon}/refunds', [\App\Http\Controllers\Staff\HoaDonController::class, 'refundsList'])->name('hoadon.refunds.list');
+});
+
+// =========================================================================
+// TIẾP TỤC ADMIN ROUTES
+// =========================================================================
+Route::middleware(['auth', 'custom_role:admin,staff'])->prefix('admin')->name('admin.')->group(function () {
     // 7. NHÓM KHO THUỐC & NCC (Chỉ admin)
     Route::middleware(['custom_role:admin'])->prefix('kho')->name('kho.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\KhoThuocController::class, 'index'])->name('index');

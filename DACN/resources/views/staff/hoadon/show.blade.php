@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.staff')
 
 @section('content')
     <div class="container-fluid py-4">
@@ -12,7 +12,17 @@
                 Hóa đơn {{ $hoaDon->ma_hoa_don ?? '#' . $hoaDon->id }}
             </h2>
             <div class="d-flex gap-2">
-                <a href="{{ route('admin.hoadon.index') }}" class="btn btn-secondary btn-sm">
+                @if(isset($hoaDon->so_tien_da_thanh_toan) && $hoaDon->so_tien_da_thanh_toan > 0 && $hoaDon->status != 'refunded')
+                    <a href="{{ route('staff.hoadon.refund.form', $hoaDon->id) }}" class="btn btn-warning btn-sm">
+                        <i class="bi bi-arrow-return-left"></i> Hoàn tiền
+                    </a>
+                @endif
+                @if($hoaDon->hoanTiens && $hoaDon->hoanTiens->count() > 0)
+                    <a href="{{ route('staff.hoadon.refunds.list', $hoaDon->id) }}" class="btn btn-info btn-sm">
+                        <i class="bi bi-clock-history"></i> Lịch sử hoàn tiền
+                    </a>
+                @endif
+                <a href="{{ route('staff.hoadon.index') }}" class="btn btn-secondary btn-sm">
                     <i class="fas fa-arrow-left me-1"></i> Quay lại
                 </a>
             </div>
@@ -116,7 +126,6 @@
         {{-- ============================
          🔥 CHI TIẾT DỊCH VỤ
     ============================= --}}
-        @if($hoaDon->chiTiets && $hoaDon->chiTiets->count() > 0)
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-white border-0">
                 <h5 class="fw-semibold mb-0">
@@ -125,8 +134,9 @@
             </div>
 
             <div class="card-body">
+                @if($hoaDon->chiTiets && $hoaDon->chiTiets->count() > 0)
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover table-bordered align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th width="5%">#</th>
@@ -140,7 +150,7 @@
                         <tbody>
                             @foreach($hoaDon->chiTiets as $index => $ct)
                                 <tr>
-                                    <td>{{ $index + 1 }}</td>
+                                    <td class="text-center">{{ $index + 1 }}</td>
                                     <td>
                                         @php
                                             $badgeColor = match($ct->loai_dich_vu) {
@@ -149,6 +159,7 @@
                                                 'x_quang' => 'warning',
                                                 'xet_nghiem' => 'primary',
                                                 'thu_thuat' => 'danger',
+                                                'sieu_am' => 'purple',
                                                 'dich_vu_kham' => 'success',
                                                 default => 'dark'
                                             };
@@ -158,11 +169,12 @@
                                                 'x_quang' => 'X-quang',
                                                 'xet_nghiem' => 'Xét nghiệm',
                                                 'thu_thuat' => 'Thủ thuật',
-                                                'dich_vu_kham' => 'Dịch vụ khám',
+                                                'sieu_am' => 'Siêu âm',
+                                                'dich_vu_kham' => 'Khám bệnh',
                                                 default => ucfirst($ct->loai_dich_vu)
                                             };
                                         @endphp
-                                        <span class="badge bg-{{ $badgeColor }}">{{ $labelText }}</span>
+                                        <span class="badge bg-{{ $badgeColor }}" @if($ct->loai_dich_vu == 'sieu_am') style="background-color: #6f42c1 !important;" @endif>{{ $labelText }}</span>
                                     </td>
                                     <td>
                                         <strong>{{ $ct->ten_dich_vu }}</strong>
@@ -170,23 +182,44 @@
                                             <br><small class="text-muted">{{ $ct->mo_ta }}</small>
                                         @endif
                                     </td>
-                                    <td class="text-center">{{ $ct->so_luong }}</td>
-                                    <td>{{ number_format($ct->don_gia, 0, ',', '.') }} đ</td>
-                                    <td class="text-end fw-bold text-primary">{{ number_format($ct->thanh_tien, 0, ',', '.') }} đ</td>
+                                    <td class="text-center"><strong>{{ $ct->so_luong }}</strong></td>
+                                    <td class="text-end">{{ number_format($ct->don_gia, 0, ',', ',') }} đ</td>
+                                    <td class="text-end fw-bold text-primary">{{ number_format($ct->thanh_tien, 0, ',', ',') }} đ</td>
                                 </tr>
                             @endforeach
                         </tbody>
                         <tfoot class="table-light">
                             <tr>
-                                <th colspan="5" class="text-end">TỔNG CỘNG:</th>
-                                <th class="text-end text-danger fs-5">{{ number_format($hoaDon->tong_tien, 0, ',', '.') }} đ</th>
+                                <th colspan="5" class="text-end fs-6">TỔNG TIỀN:</th>
+                                <th class="text-end text-danger fs-5">{{ number_format($hoaDon->tong_tien, 0, ',', ',') }} đ</th>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
+                @else
+                <div class="alert alert-warning mb-0">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Không có chi tiết dịch vụ!</strong>
+                    <p class="mb-2 mt-2">Hóa đơn này được tạo trước khi có tính năng lưu chi tiết dịch vụ.</p>
+                    @if($hoaDon->lichHen)
+                        <p class="mb-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Thông tin dịch vụ có thể xem tại: <strong>Lịch hẹn #{{ $hoaDon->lich_hen_id }}</strong>
+                        </p>
+                        @php
+                            $benhAn = \App\Models\BenhAn::where('lich_hen_id', $hoaDon->lich_hen_id)->first();
+                        @endphp
+                        @if($benhAn)
+                            <a href="{{ route('staff.hoadon.create-from-benh-an', $benhAn->id) }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-plus-circle me-1"></i>
+                                Cập nhật chi tiết dịch vụ từ bệnh án
+                            </a>
+                        @endif
+                    @endif
+                </div>
+                @endif
             </div>
         </div>
-        @endif
 
 
 
@@ -250,11 +283,99 @@
 
 
         {{-- ============================
-         🔥 THÔNG TIN BỔ SUNG
+         🔥 FORM THU TIỀN / ONLINE
     ============================= --}}
-        <div class="alert alert-info">
-            <i class="bi bi-info-circle me-2"></i>
-            <strong>Lưu ý:</strong> Admin chỉ có quyền xem hóa đơn. Để thu tiền, thanh toán và tải biên lai, vui lòng liên hệ nhân viên.
+        <div class="row g-4 mb-4">
+
+            {{-- Thu tiền mặt --}}
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <h5 class="fw-semibold mb-3">
+                            <i class="fas fa-hand-holding-usd me-2 text-success"></i>Thu tiền mặt
+                        </h5>
+
+                        <form method="POST" action="{{ route('staff.hoadon.cash_collect', $hoaDon) }}" class="row g-3">
+                            @csrf
+                            <div class="col-12">
+                                <label class="form-label">Số tiền</label>
+                                <input type="number" name="so_tien" class="form-control"
+                                    value="{{ (int) $hoaDon->tong_tien }}" min="0" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Ghi chú (tùy chọn)</label>
+                                <input type="text" name="ghi_chu" class="form-control">
+                            </div>
+
+                            <div class="col-12 text-end">
+                                <button class="btn btn-success">
+                                    <i class="fas fa-check-circle me-1"></i> Xác nhận thanh toán
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Thanh toán online --}}
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <h5 class="fw-semibold mb-3">
+                            <i class="fas fa-credit-card me-2 text-primary"></i>Thanh toán Online
+                        </h5>
+
+                        {{-- VNPay --}}
+                        <form method="POST" action="{{ route('vnpay.create') }}" class="mb-2">
+                            @csrf
+                            <input type="hidden" name="hoa_don_id" value="{{ $hoaDon->id }}">
+                            <input type="hidden" name="amount" value="{{ $hoaDon->tong_tien }}">
+                            <button class="btn btn-primary w-100" {{ $hoaDon->tong_tien == 0 ? 'disabled' : '' }}>
+                                Thanh toán qua VNPay
+                            </button>
+                        </form>
+
+                        {{-- MoMo --}}
+                        <form method="POST" action="{{ route('momo.create') }}">
+                            @csrf
+                            <input type="hidden" name="hoa_don_id" value="{{ $hoaDon->id }}">
+                            <input type="hidden" name="amount" value="{{ $hoaDon->tong_tien }}">
+                            <button class="btn btn-danger w-100" {{ $hoaDon->tong_tien == 0 ? 'disabled' : '' }}>
+                                Thanh toán qua MoMo
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        {{-- ============================
+        🔥 ACTION BUTTONS
+    ============================= --}}
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-dark" href="{{ route('staff.hoadon.receipt', $hoaDon) }}">
+                <i class="fas fa-file-pdf me-1"></i> Tải biên lai (PDF)
+            </a>
+
+            {{-- Các nút tải theo loại hóa đơn (Parent file: resources/views/admin/hoadon/show.blade.php) --}}
+            <div class="btn-group" role="group" aria-label="Hoá đơn theo loại">
+                <a class="btn btn-outline-secondary" href="{{ route('staff.hoadon.receipt.type', [$hoaDon, 'phieu-thu']) }}">
+                    <i class="fas fa-receipt me-1"></i> Phiếu thu khám
+                </a>
+                <a class="btn btn-outline-secondary" href="{{ route('staff.hoadon.receipt.type', [$hoaDon, 'dich-vu']) }}">
+                    <i class="fas fa-stethoscope me-1"></i> Hóa đơn dịch vụ
+                </a>
+                <a class="btn btn-outline-secondary" href="{{ route('staff.hoadon.receipt.type', [$hoaDon, 'thuoc']) }}">
+                    <i class="fas fa-pills me-1"></i> Hóa đơn thuốc
+                </a>
+                <a class="btn btn-outline-secondary" href="{{ route('staff.hoadon.receipt.type', [$hoaDon, 'tong-hop']) }}">
+                    <i class="fas fa-layer-group me-1"></i> Hóa đơn tổng hợp
+                </a>
+            </div>
         </div>
 
     </div>

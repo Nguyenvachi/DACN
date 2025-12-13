@@ -132,7 +132,12 @@
 
             <li><strong>Bệnh án & Hóa đơn</strong></li>
             <li><a href="{{ route('admin.benhan.index') }}">📋 Bệnh án</a></li>
-            <li><a href="{{ route('admin.hoadon.index') }}">💰 Hóa đơn</a></li>
+            
+            @if(auth()->user()->role === 'staff')
+                <li><a href="{{ route('staff.hoadon.index') }}">💰 Hóa đơn</a></li>
+            @else
+                <li><a href="{{ route('admin.hoadon.index') }}">💰 Hóa đơn (Xem)</a></li>
+            @endif
 
             @if(auth()->user()->role === 'admin')
             <hr>
@@ -143,6 +148,13 @@
             <li><a href="{{ route('admin.kho.index') }}">📦 Kho</a></li>
             <li><a href="{{ route('admin.kho.nhap.form') }}">📥 Nhập kho</a></li>
             <li><a href="{{ route('admin.kho.xuat.form') }}">📤 Xuất kho</a></li>
+
+            <hr>
+
+            <li><strong>Dịch vụ Y tế</strong></li>
+            <li><a href="{{ route('admin.sieu-am.index') }}">🔊 Siêu âm</a></li>
+            <li><a href="{{ route('admin.xet-nghiem.index') }}">🧪 Xét nghiệm</a></li>
+            <li><a href="{{ route('admin.thu-thuat.index') }}">🔧 Thủ thuật</a></li>
             <li><a href="{{ route('admin.kho.bao_cao') }}">📊 Báo cáo</a></li>
             <li><a href="{{ route('admin.ncc.index') }}">🏢 Nhà cung cấp</a></li>
 

@@ -51,15 +51,17 @@
             <div class="col-lg-3 col-md-6">
                 <div class="card border-0 h-100" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
                     <div class="card-body text-white p-4">
-                        <div class="d-flex align-items-center">
-                            <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                                <i class="bi bi-receipt fs-2"></i>
+                        <a href="{{ route('staff.donthuoc.dang-cho') }}" class="text-white text-decoration-none">
+                            <div class="d-flex align-items-center">
+                                <div class="p-3 rounded-circle bg-white bg-opacity-25">
+                                    <i class="bi bi-prescription2 fs-2"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <p class="text-white text-opacity-75 mb-1 small fw-medium">Đơn thuốc chờ cấp</p>
+                                    <h3 class="mb-0 fw-bold">{{ \App\Models\DonThuoc::whereNull('ngay_cap_thuoc')->count() }}</h3>
+                                </div>
                             </div>
-                            <div class="ms-3">
-                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Cần tạo hóa đơn</p>
-                                <h3 class="mb-0 fw-bold">{{ $statistics['benh_an_can_tao_hoa_don'] ?? 0 }}</h3>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -88,8 +90,8 @@
                                 <i class="bi bi-check-circle fs-2"></i>
                             </div>
                             <div class="ms-3">
-                                <p class="text-white text-opacity-75 mb-1 small fw-medium">HĐ hôm nay</p>
-                                <h3 class="mb-0 fw-bold">{{ $statistics['hoa_don_hom_nay'] ?? 0 }}</h3>
+                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Đã cấp hôm nay</p>
+                                <h3 class="mb-0 fw-bold">{{ \App\Models\DonThuoc::whereDate('ngay_cap_thuoc', today())->count() }}</h3>
                             </div>
                         </div>
                     </div>
@@ -136,10 +138,16 @@
                                                     <span class="badge bg-success">Hoàn thành khám</span>
                                                 </p>
                                             </div>
-                                            <a href="{{ route('admin.hoadon.create-from-benh-an', $ba) }}" 
-                                               class="btn btn-sm btn-warning">
-                                                <i class="bi bi-receipt"></i> Tạo HĐ
-                                            </a>
+                                            <div class="btn-group">
+                                                <a href="{{ route('staff.benhan.toa-thuoc', $ba) }}" 
+                                                   class="btn btn-sm btn-info" title="Xem toa thuốc">
+                                                    <i class="bi bi-prescription2"></i> Toa
+                                                </a>
+                                                <a href="{{ route('staff.hoadon.create-from-benh-an', $ba) }}" 
+                                                   class="btn btn-sm btn-warning" title="Tạo hóa đơn">
+                                                    <i class="bi bi-receipt"></i> HĐ
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
@@ -217,7 +225,7 @@
                                 </a>
                             </div>
                             <div class="col-md-3">
-                                <a href="{{ route('admin.hoadon.index') }}" class="btn btn-outline-success w-100 py-3">
+                                <a href="{{ route('staff.hoadon.index') }}" class="btn btn-outline-success w-100 py-3">
                                     <i class="bi bi-receipt d-block fs-3 mb-2"></i>
                                     Quản lý hóa đơn
                                 </a>

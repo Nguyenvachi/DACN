@@ -65,41 +65,16 @@
                         <input type="hidden" name="benh_an_id" value="{{ $benhAn->id }}">
 
                         <div class="mb-3">
-                            <label class="form-label">Dịch vụ xét nghiệm</label>
-                            <select name="dich_vu_id" class="form-select">
-                                <option value="">-- Không chọn dịch vụ cụ thể --</option>
-                                @foreach($dichVuXetNghiem as $dichVu)
-                                <option value="{{ $dichVu->id }}" {{ old('dich_vu_id') == $dichVu->id ? 'selected' : '' }}>
-                                    {{ $dichVu->ten_dich_vu }} - {{ number_format($dichVu->gia_tien, 0, ',', '.') }} VNĐ
+                            <label class="form-label">Chọn xét nghiệm <span class="text-danger">*</span></label>
+                            <select name="danh_muc_xet_nghiem_id" class="form-select" required>
+                                <option value="">-- Chọn xét nghiệm --</option>
+                                @foreach($danhMucXetNghiem as $xn)
+                                <option value="{{ $xn->id }}" data-gia="{{ $xn->gia_tien }}" {{ old('danh_muc_xet_nghiem_id') == $xn->id ? 'selected' : '' }}>
+                                    {{ $xn->ten_xet_nghiem }} - {{ number_format($xn->gia_tien, 0, ',', '.') }} đ
                                 </option>
                                 @endforeach
                             </select>
-                            <small class="text-muted">Chọn dịch vụ nếu có trong danh sách</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Loại xét nghiệm <span class="text-danger">*</span></label>
-                            <select name="loai_xet_nghiem" class="form-select" required>
-                                <option value="">-- Chọn loại xét nghiệm --</option>
-                                <option value="Xét nghiệm máu" {{ old('loai_xet_nghiem') == 'Xét nghiệm máu' ? 'selected' : '' }}>Xét nghiệm máu</option>
-                                <option value="Xét nghiệm nước tiểu" {{ old('loai_xet_nghiem') == 'Xét nghiệm nước tiểu' ? 'selected' : '' }}>Xét nghiệm nước tiểu</option>
-                                <option value="Xét nghiệm sinh hóa" {{ old('loai_xet_nghiem') == 'Xét nghiệm sinh hóa' ? 'selected' : '' }}>Xét nghiệm sinh hóa</option>
-                                <option value="Xét nghiệm vi sinh" {{ old('loai_xet_nghiem') == 'Xét nghiệm vi sinh' ? 'selected' : '' }}>Xét nghiệm vi sinh</option>
-                                <option value="Xét nghiệm huyết học" {{ old('loai_xet_nghiem') == 'Xét nghiệm huyết học' ? 'selected' : '' }}>Xét nghiệm huyết học</option>
-                                <option value="Xét nghiệm miễn dịch" {{ old('loai_xet_nghiem') == 'Xét nghiệm miễn dịch' ? 'selected' : '' }}>Xét nghiệm miễn dịch</option>
-                                <option value="Khác">Khác (ghi rõ trong tên xét nghiệm)</option>
-                            </select>
-                            @error('loai_xet_nghiem')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Tên xét nghiệm <span class="text-danger">*</span></label>
-                            <input type="text" name="ten_xet_nghiem" class="form-control" 
-                                   value="{{ old('ten_xet_nghiem') }}" 
-                                   placeholder="VD: Công thức máu, Đường huyết, Ure, Creatinin..." required>
-                            @error('ten_xet_nghiem')
+                            @error('danh_muc_xet_nghiem_id')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>

@@ -26,17 +26,10 @@ class XetNghiemController extends Controller
             abort(403, 'Bạn không có quyền chỉ định xét nghiệm cho bệnh án này.');
         }
 
-        $dichVuXetNghiem = DichVu::where('loai', 'Nâng cao')
-            ->where('hoat_dong', true)
-            ->where(function ($q) {
-                $q->where('ten_dich_vu', 'like', '%xét nghiệm%')
-                    ->orWhere('ten_dich_vu', 'like', '%Xét nghiệm%')
-                    ->orWhere('ten_dich_vu', 'like', '%xet nghiem%');
-            })
-            ->orderBy('ten_dich_vu')
-            ->get();
+        // Lấy danh mục xét nghiệm
+        $danhMucXetNghiem = \App\Models\DanhMucXetNghiem::orderBy('ten_xet_nghiem')->get();
 
-        return view('doctor.xet-nghiem.create', compact('benhAn', 'dichVuXetNghiem'));
+        return view('doctor.xet-nghiem.create', compact('benhAn', 'danhMucXetNghiem'));
     }
 
     /**
@@ -46,9 +39,7 @@ class XetNghiemController extends Controller
     {
         $validated = $request->validate([
             'benh_an_id' => 'required|exists:benh_ans,id',
-            'dich_vu_id' => 'nullable|exists:dich_vus,id',
-            'loai_xet_nghiem' => 'required|string|max:255',
-            'ten_xet_nghiem' => 'required|string|max:255',
+            'danh_muc_xet_nghiem_id' => 'required|exists:danh_muc_xet_nghiem,id',
             'ngay_chi_dinh' => 'required|date',
             'chi_dinh' => 'nullable|string',
             'can_nhin_an' => 'nullable|boolean',
@@ -62,14 +53,18 @@ class XetNghiemController extends Controller
             return back()->with('error', 'Bạn không có quyền chỉ định xét nghiệm cho bệnh án này.');
         }
 
+        // Lấy thông tin từ danh mục
+        $danhMuc = \App\Models\DanhMucXetNghiem::findOrFail($validated['danh_muc_xet_nghiem_id']);
+
         try {
             DB::beginTransaction();
 
             XetNghiem::create([
                 'benh_an_id' => $validated['benh_an_id'],
-                'dich_vu_id' => $validated['dich_vu_id'],
-                'loai_xet_nghiem' => $validated['loai_xet_nghiem'],
-                'ten_xet_nghiem' => $validated['ten_xet_nghiem'],
+                'dich_vu_id' => null,
+                'loai_xet_nghiem' => 'Xét nghiệm',
+                'ten_xet_nghiem' => $danhMuc->ten_xet_nghiem,
+                'gia_tien' => $danhMuc->gia_tien,
                 'ngay_chi_dinh' => $validated['ngay_chi_dinh'],
                 'bac_si_chi_dinh_id' => $bacSi->id,
                 'chi_dinh' => $validated['chi_dinh'] ?? null,

@@ -26,6 +26,7 @@ class XetNghiem extends Model
         'ket_luan',
         'file_ket_qua',
         'ghi_chu',
+        'gia_tien',
     ];
 
     protected $casts = [
