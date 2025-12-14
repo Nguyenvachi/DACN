@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DichVu;
-use App\Models\ChuyenKhoa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,16 +14,11 @@ class DichVuController extends Controller
      */
     public function index(Request $request)
     {
-        $query = DichVu::with('chuyenKhoa');
+        $query = DichVu::query();
 
         // Filter by type
         if ($request->filled('loai')) {
             $query->where('loai', $request->loai);
-        }
-
-        // Filter by specialty
-        if ($request->filled('chuyen_khoa_id')) {
-            $query->where('chuyen_khoa_id', $request->chuyen_khoa_id);
         }
 
         // Search by name
@@ -38,9 +32,8 @@ class DichVuController extends Controller
         }
 
         $dichVus = $query->orderBy('loai')->orderBy('ten_dich_vu')->paginate(20);
-        $chuyenKhoas = ChuyenKhoa::all();
 
-        return view('admin.dich-vu.index', compact('dichVus', 'chuyenKhoas'));
+        return view('admin.dich-vu.index', compact('dichVus'));
     }
 
     /**
@@ -48,8 +41,7 @@ class DichVuController extends Controller
      */
     public function create()
     {
-        $chuyenKhoas = ChuyenKhoa::all();
-        return view('admin.dich-vu.create', compact('chuyenKhoas'));
+        return view('admin.dich-vu.create');
     }
 
     /**
@@ -59,16 +51,19 @@ class DichVuController extends Controller
     {
         $validated = $request->validate([
             'ten_dich_vu' => 'required|string|max:255',
-            'loai' => 'required|in:Cơ bản,Nâng cao',
-            'chuyen_khoa_id' => 'nullable|exists:chuyen_khoas,id',
             'gia_tien' => 'required|numeric|min:0',
             'thoi_gian' => 'nullable|integer|min:1',
             'mo_ta' => 'nullable|string',
-            'hoat_dong' => 'boolean',
+            'hoat_dong' => 'nullable|boolean',
         ]);
 
         try {
-            DichVu::create($validated);
+            $payload = $validated + [
+                'loai' => 'Cơ bản',
+                'hoat_dong' => $request->boolean('hoat_dong'),
+            ];
+
+            DichVu::create($payload);
 
             return redirect()->route('admin.dich-vu.index')
                 ->with('success', 'Đã thêm dịch vụ thành công!');
@@ -82,7 +77,6 @@ class DichVuController extends Controller
      */
     public function show(DichVu $dichVu)
     {
-        $dichVu->load('chuyenKhoa');
         return view('admin.dich-vu.show', compact('dichVu'));
     }
 
@@ -91,8 +85,7 @@ class DichVuController extends Controller
      */
     public function edit(DichVu $dichVu)
     {
-        $chuyenKhoas = ChuyenKhoa::all();
-        return view('admin.dich-vu.edit', compact('dichVu', 'chuyenKhoas'));
+        return view('admin.dich-vu.edit', compact('dichVu'));
     }
 
     /**
@@ -102,16 +95,19 @@ class DichVuController extends Controller
     {
         $validated = $request->validate([
             'ten_dich_vu' => 'required|string|max:255',
-            'loai' => 'required|in:Cơ bản,Nâng cao',
-            'chuyen_khoa_id' => 'nullable|exists:chuyen_khoas,id',
             'gia_tien' => 'required|numeric|min:0',
             'thoi_gian' => 'nullable|integer|min:1',
             'mo_ta' => 'nullable|string',
-            'hoat_dong' => 'boolean',
+            'hoat_dong' => 'nullable|boolean',
         ]);
 
         try {
-            $dichVu->update($validated);
+            $payload = $validated + [
+                'loai' => $dichVu->loai ?? 'Cơ bản',
+                'hoat_dong' => $request->boolean('hoat_dong'),
+            ];
+
+            $dichVu->update($payload);
 
             return redirect()->route('admin.dich-vu.index')
                 ->with('success', 'Đã cập nhật dịch vụ thành công!');

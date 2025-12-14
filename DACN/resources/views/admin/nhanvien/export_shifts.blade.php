@@ -15,6 +15,14 @@
     </style>
 
     <div class="container-fluid py-4">
+        @php
+            $roleLabels = [
+                'admin' => 'Quản trị',
+                'doctor' => 'Bác sĩ',
+                'staff' => 'Nhân viên',
+                'patient' => 'Bệnh nhân',
+            ];
+        @endphp
 
         {{-- HEADER --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -54,9 +62,13 @@
                                 <option value="">-- Tất cả nhân viên --</option>
 
                                 @foreach ($nhanViens as $nv)
+                                    @php
+                                        $roleValue = optional($nv->user)->role;
+                                        $roleLabel = $roleLabels[$roleValue ?? ''] ?? ($roleValue ? ucfirst($roleValue) : 'Không rõ');
+                                    @endphp
                                     <option value="{{ $nv->id }}"
                                         {{ request('nhan_vien_id') == $nv->id ? 'selected' : '' }}>
-                                        {{ $nv->ho_ten }} ({{ $nv->chuc_vu ?? 'Không rõ' }})
+                                        {{ $nv->ho_ten }} ({{ $roleLabel }})
                                     </option>
                                 @endforeach
                             </select>

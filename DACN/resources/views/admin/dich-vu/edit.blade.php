@@ -43,23 +43,6 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="loai" class="form-label">
-                                    Loại dịch vụ <span class="text-danger">*</span>
-                                </label>
-                                <select class="form-select @error('loai') is-invalid @enderror" 
-                                        id="loai" 
-                                        name="loai" 
-                                        required>
-                                    <option value="">-- Chọn loại --</option>
-                                    <option value="Cơ bản" {{ old('loai', $dichVu->loai) == 'Cơ bản' ? 'selected' : '' }}>Cơ bản</option>
-                                    <option value="Nâng cao" {{ old('loai', $dichVu->loai) == 'Nâng cao' ? 'selected' : '' }}>Nâng cao</option>
-                                </select>
-                                @error('loai')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="col-md-6 mb-3">
                                 <label for="chuyen_khoa_id" class="form-label">Chuyên khoa</label>
                                 <select class="form-select @error('chuyen_khoa_id') is-invalid @enderror" 
                                         id="chuyen_khoa_id" 
@@ -74,6 +57,12 @@
                                 @error('chuyen_khoa_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="alert alert-info small mb-0">
+                                    Loại dịch vụ hiện tại: <strong>{{ $dichVu->loai ?? 'Cơ bản' }}</strong>
+                                </div>
                             </div>
                         </div>
 
@@ -123,12 +112,13 @@
                         </div>
 
                         <div class="mb-3 form-check">
+                            <input type="hidden" name="hoat_dong" value="0">
                             <input type="checkbox" 
-                                   class="form-check-input" 
-                                   id="hoat_dong" 
-                                   name="hoat_dong" 
-                                   value="1" 
-                                   {{ old('hoat_dong', $dichVu->hoat_dong) ? 'checked' : '' }}>
+                                class="form-check-input" 
+                                id="hoat_dong" 
+                                name="hoat_dong" 
+                                value="1" 
+                                {{ old('hoat_dong', $dichVu->hoat_dong) ? 'checked' : '' }}>
                             <label class="form-check-label" for="hoat_dong">
                                 Dịch vụ đang hoạt động
                             </label>

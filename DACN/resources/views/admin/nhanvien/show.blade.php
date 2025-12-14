@@ -52,6 +52,16 @@
                                 'active' => 'success',
                                 'inactive' => 'secondary',
                             ];
+
+                            $roleLabels = [
+                                'admin' => 'Quản trị',
+                                'doctor' => 'Bác sĩ',
+                                'staff' => 'Nhân viên',
+                                'patient' => 'Bệnh nhân',
+                            ];
+
+                            $roleValue = optional($nhanvien->user)->role;
+                            $roleLabel = $roleLabels[$roleValue ?? ''] ?? ($roleValue ? ucfirst($roleValue) : '—');
                         @endphp
 
                         <ul class="list-group">
@@ -59,7 +69,8 @@
                                 <span class="info-label">Họ tên:</span> {{ $nhanvien->ho_ten }}
                             </li>
                             <li class="list-group-item">
-                                <span class="info-label">Chức vụ:</span> {{ $nhanvien->chuc_vu ?? '—' }}
+                                <span class="info-label">Quyền hệ thống:</span>
+                                {{ $roleLabel }}
                             </li>
                             <li class="list-group-item">
                                 <span class="info-label">Email:</span> {{ $nhanvien->email_cong_viec }}

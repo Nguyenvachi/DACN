@@ -51,7 +51,13 @@ class NhanVienController extends Controller
     public function create()
     {
         $this->authorize('create', NhanVien::class);
-        return view('admin.nhanvien.create');
+        $roleOptions = [
+            'staff' => 'Nhân viên',
+            'doctor' => 'Bác sĩ',
+            'admin' => 'Quản trị',
+        ];
+
+        return view('admin.nhanvien.create', compact('roleOptions'));
     }
 
     public function store(Request $r)
@@ -59,25 +65,35 @@ class NhanVienController extends Controller
         $this->authorize('create', NhanVien::class);
         $data = $r->validate([
             'ho_ten' => 'required|string|max:120',
-            'chuc_vu' => 'nullable|string|max:100',
             'so_dien_thoai' => 'nullable|string|max:30',
             'email_cong_viec' => 'required|email|max:150|unique:nhan_viens,email_cong_viec|unique:users,email',
             'ngay_sinh' => 'nullable|date',
             'gioi_tinh' => 'nullable|string|max:10',
             'avatar' => 'nullable|image|max:2048',
+            'trang_thai' => 'nullable|string|max:20',
+            'role' => 'required|in:staff,doctor,admin',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
+        $selectedRole = $data['role'];
+        unset($data['role']);
+
+        $manualPassword = $data['password'] ?? null;
+        unset($data['password']);
+
         // Tự động tạo User cho nhân viên
-        $randomPassword = Str::random(16);
+        $chosenPassword = $manualPassword ?: Str::random(16);
         $user = User::create([
             'name' => $data['ho_ten'],
             'email' => $data['email_cong_viec'],
-            'password' => Hash::make($randomPassword),
-            'role' => 'staff',
+            'password' => Hash::make($chosenPassword),
+            'role' => $selectedRole,
         ]);
 
-        // Gửi email đặt lại mật khẩu cho nhân viên
-        Password::sendResetLink(['email' => $user->email]);
+        if (!$manualPassword) {
+            // Gửi email đặt lại mật khẩu cho nhân viên nếu không đặt thủ công
+            Password::sendResetLink(['email' => $user->email]);
+        }
 
         if ($r->hasFile('avatar')) {
             $data['avatar_path'] = $r->file('avatar')->store('nv_avatar', 'public');
@@ -86,14 +102,18 @@ class NhanVienController extends Controller
         $data['user_id'] = $user->id;
         $nv = NhanVien::create($data);
 
+        $statusMessage = $manualPassword
+            ? 'Đã tạo nhân viên và đặt mật khẩu thủ công. Vui lòng thông báo mật khẩu mới cho nhân viên.'
+            : 'Đã tạo nhân viên và gửi email đặt mật khẩu đến ' . $user->email;
+
         return redirect()->route('admin.nhanvien.show', $nv)
-            ->with('status', 'Đã tạo nhân viên và gửi email đặt mật khẩu đến ' . $user->email);
+            ->with('status', $statusMessage);
     }
 
     public function show(NhanVien $nhanvien)
     {
         $this->authorize('view', $nhanvien);
-        $nhanvien->load('caLamViecs');
+        $nhanvien->load('caLamViecs', 'user');
         return view('admin.nhanvien.show', compact('nhanvien'));
     }
 
@@ -109,7 +129,6 @@ class NhanVienController extends Controller
         $this->authorize('update', $nhanvien);
         $data = $r->validate([
             'ho_ten' => 'required|string|max:120',
-            'chuc_vu' => 'nullable|string|max:100',
             'so_dien_thoai' => 'nullable|string|max:30',
             'ngay_sinh' => 'nullable|date',
             'gioi_tinh' => 'nullable|string|max:10',
@@ -196,7 +215,7 @@ class NhanVienController extends Controller
 
         // Nếu không có tham số, hiển thị form
         if (!$r->has('start_date')) {
-            $nhanViens = NhanVien::orderBy('ho_ten')->get();
+            $nhanViens = NhanVien::with('user')->orderBy('ho_ten')->get();
             return view('admin.nhanvien.export_shifts', compact('nhanViens'));
         }
 
@@ -221,10 +240,10 @@ class NhanVienController extends Controller
             'Content-Disposition' => "attachment; filename=\"$filename\"",
         ];
 
-        $callback = function() use ($shifts) {
+        $callback = function () use ($shifts) {
             $file = fopen('php://output', 'w');
             // UTF-8 BOM để Excel hiển thị đúng tiếng Việt
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
             // Header
             fputcsv($file, ['ID', 'Nhân viên', 'Ngày', 'Bắt đầu', 'Kết thúc', 'Ghi chú']);

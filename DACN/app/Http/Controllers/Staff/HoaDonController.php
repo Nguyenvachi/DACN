@@ -12,6 +12,7 @@ use App\Models\NoiSoi;
 use App\Models\XQuang;
 use App\Models\XetNghiem;
 use App\Models\ThuThuat;
+use App\Models\DichVu;
 use App\Mail\HoaDonHoanTien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -82,7 +83,12 @@ class HoaDonController extends Controller
         // Lấy danh sách dịch vụ khám
         $dichVuKham = $benhAn->lichHen ? [$benhAn->lichHen->dichVu] : [];
 
-        return view('staff.hoadon.create-from-benh-an', compact('benhAn', 'dichVuKham', 'existingHoaDon'));
+        $thuThuatNames = $benhAn->thuThuats->pluck('ten_thu_thuat')->filter()->unique()->all();
+        $thuThuatPriceMap = empty($thuThuatNames)
+            ? collect()
+            : DichVu::whereIn('ten_dich_vu', $thuThuatNames)->pluck('gia_tien', 'ten_dich_vu');
+
+        return view('staff.hoadon.create-from-benh-an', compact('benhAn', 'dichVuKham', 'existingHoaDon', 'thuThuatPriceMap'));
     }
 
     /**

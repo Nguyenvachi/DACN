@@ -42,23 +42,6 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="loai" class="form-label">
-                                    Loại dịch vụ <span class="text-danger">*</span>
-                                </label>
-                                <select class="form-select @error('loai') is-invalid @enderror" 
-                                        id="loai" 
-                                        name="loai" 
-                                        required>
-                                    <option value="">-- Chọn loại --</option>
-                                    <option value="Cơ bản" {{ old('loai') == 'Cơ bản' ? 'selected' : '' }}>Cơ bản</option>
-                                    <option value="Nâng cao" {{ old('loai') == 'Nâng cao' ? 'selected' : '' }}>Nâng cao</option>
-                                </select>
-                                @error('loai')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="col-md-6 mb-3">
                                 <label for="chuyen_khoa_id" class="form-label">Chuyên khoa</label>
                                 <select class="form-select @error('chuyen_khoa_id') is-invalid @enderror" 
                                         id="chuyen_khoa_id" 
@@ -73,6 +56,12 @@
                                 @error('chuyen_khoa_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="alert alert-info small mb-0">
+                                    Loại dịch vụ được đặt mặc định là <strong>Cơ bản</strong>.
+                                </div>
                             </div>
                         </div>
 
@@ -122,12 +111,13 @@
                         </div>
 
                         <div class="mb-3 form-check">
-                            <input type="checkbox" 
-                                   class="form-check-input" 
-                                   id="hoat_dong" 
-                                   name="hoat_dong" 
-                                   value="1" 
-                                   {{ old('hoat_dong', 1) ? 'checked' : '' }}>
+                                <input type="hidden" name="hoat_dong" value="0">
+                                <input type="checkbox" 
+                                    class="form-check-input" 
+                                    id="hoat_dong" 
+                                    name="hoat_dong" 
+                                    value="1" 
+                                    {{ old('hoat_dong', 1) ? 'checked' : '' }}>
                             <label class="form-check-label" for="hoat_dong">
                                 Dịch vụ đang hoạt động
                             </label>
@@ -150,12 +140,6 @@
                     <i class="fas fa-info-circle"></i> Hướng dẫn
                 </div>
                 <div class="card-body">
-                    <h6>Loại dịch vụ</h6>
-                    <ul class="small">
-                        <li><strong>Cơ bản:</strong> Khám bệnh thông thường</li>
-                        <li><strong>Nâng cao:</strong> Siêu âm, xét nghiệm, thủ thuật</li>
-                    </ul>
-
                     <h6 class="mt-3">Lưu ý</h6>
                     <ul class="small">
                         <li>Tên dịch vụ nên rõ ràng, dễ hiểu</li>

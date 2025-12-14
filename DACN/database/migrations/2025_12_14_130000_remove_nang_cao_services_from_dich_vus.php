@@ -1,21 +1,31 @@
 <?php
 
-namespace Database\Seeders;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\DichVu;
-
-class DichVuNangCaoSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
+return new class extends Migration {
+    public function up(): void
     {
-        $dichVuNangCao = [
+        // Get IDs of services to be deleted
+        $serviceIds = DB::table('dich_vus')
+            ->where('loai', 'Nâng cao')
+            ->pluck('id');
+
+        // First, handle foreign key constraint by deleting related lich_hens
+        // or update them to null if the foreign key allows it
+        DB::table('lich_hens')
+            ->whereIn('dich_vu_id', $serviceIds)
+            ->delete();
+
+        // Now delete the services
+        DB::table('dich_vus')
+            ->where('loai', 'Nâng cao')
+            ->delete();
+    }
+
+    public function down(): void
+    {
+        $services = [
             [
                 'ten_dich_vu' => 'Đo tim thai',
                 'loai' => 'Nâng cao',
@@ -98,14 +108,11 @@ class DichVuNangCaoSeeder extends Seeder
             ],
         ];
 
-        foreach ($dichVuNangCao as $dv) {
-            DichVu::updateOrCreate(
-                ['ten_dich_vu' => $dv['ten_dich_vu']],
-                $dv
+        foreach ($services as $service) {
+            DB::table('dich_vus')->updateOrInsert(
+                ['ten_dich_vu' => $service['ten_dich_vu']],
+                $service
             );
         }
-
-        // Cập nhật các dịch vụ cơ bản hiện có
-        DichVu::whereNull('loai')->update(['loai' => 'Cơ bản']);
     }
-}
+};

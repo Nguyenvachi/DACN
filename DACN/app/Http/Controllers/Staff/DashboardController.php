@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $user = auth()->user();
 
         // Lấy thông tin nhân viên từ user_id
-        $nhanVien = NhanVien::where('user_id', $user->id)->first();
+        $nhanVien = NhanVien::with('user')->where('user_id', $user->id)->first();
 
         if (!$nhanVien) {
             return view('staff.dashboard', [

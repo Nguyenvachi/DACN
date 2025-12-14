@@ -39,17 +39,6 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Chuyên khoa</label>
-                        <select name="chuyen_khoa_id" class="form-select">
-                            <option value="">Tất cả</option>
-                            @foreach ($chuyenKhoas as $ck)
-                                <option value="{{ $ck->id }}" {{ request('chuyen_khoa_id') == $ck->id ? 'selected' : '' }}>
-                                    {{ $ck->ten_chuyen_khoa }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-2">
                         <label class="form-label">Trạng thái</label>
                         <select name="hoat_dong" class="form-select">
                             <option value="">Tất cả</option>
@@ -82,7 +71,6 @@
                             <th>ID</th>
                             <th>Tên dịch vụ</th>
                             <th>Loại</th>
-                            <th>Chuyên khoa</th>
                             <th>Giá tiền</th>
                             <th>Thời gian</th>
                             <th>Trạng thái</th>
@@ -104,7 +92,6 @@
                                         {{ $dichVu->loai }}
                                     </span>
                                 </td>
-                                <td>{{ $dichVu->chuyenKhoa->ten_chuyen_khoa ?? '-' }}</td>
                                 <td class="text-end">
                                     <strong>{{ number_format($dichVu->gia_tien) }} đ</strong>
                                 </td>
@@ -140,7 +127,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center text-muted py-4">
+                                <td colspan="7" class="text-center text-muted py-4">
                                     <i class="fas fa-inbox fa-3x mb-3"></i>
                                     <p>Không tìm thấy dịch vụ nào</p>
                                 </td>

@@ -125,6 +125,15 @@
 
                             {{-- Thủ thuật --}}
                             @foreach($benhAn->thuThuats as $tt)
+                                @php
+                                    $giaThuThuat = (float) ($tt->gia_tien ?? 0);
+                                    if ($giaThuThuat <= 0 && isset($thuThuatPriceMap)) {
+                                        $giaThuThuat = (float) ($thuThuatPriceMap[$tt->ten_thu_thuat] ?? 0);
+                                    }
+                                    if ($giaThuThuat <= 0) {
+                                        $giaThuThuat = 1000000;
+                                    }
+                                @endphp
                             <tr>
                                 <td>
                                     <input type="checkbox" class="dv-checkbox" checked
@@ -132,13 +141,13 @@
                                         data-id="{{ $tt->id }}"
                                         data-ten="Thủ thuật - {{ $tt->ten_thu_thuat }}"
                                         data-soluong="1"
-                                        data-dongia="1000000">
+                                        data-dongia="{{ $giaThuThuat }}">
                                 </td>
                                 <td><span class="badge bg-danger">Thủ thuật</span></td>
                                 <td>{{ $tt->ten_thu_thuat }}</td>
                                 <td><input type="number" class="form-control form-control-sm sl-input" value="1" min="1" style="width: 80px;"></td>
-                                <td><input type="number" class="form-control form-control-sm dg-input" value="1000000" min="0" step="1000" style="width: 150px;"></td>
-                                <td class="tt-cell fw-bold">1,000,000</td>
+                                <td><input type="number" class="form-control form-control-sm dg-input" value="{{ $giaThuThuat }}" min="0" step="1000" style="width: 150px;"></td>
+                                <td class="tt-cell fw-bold">{{ number_format($giaThuThuat, 0, ',', ',') }}</td>
                             </tr>
                             @endforeach
 

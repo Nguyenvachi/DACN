@@ -148,7 +148,7 @@ class LichHen extends Model
     /** Gợi ý tổng tiền nếu chưa có hóa đơn (dựa theo dịch vụ) */
     public function getTongTienDeXuatAttribute()
     {
-        return optional($this->dichVu)->gia ?? 0;
+        return optional($this->dichVu)->gia_tien ?? optional($this->dichVu)->gia ?? 0;
     }
 
     public function getIsPaidAttribute(): bool

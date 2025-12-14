@@ -219,17 +219,7 @@
                                             <span class="badge bg-warning mb-2">
                                                 <i class="bi bi-exclamation-circle me-1"></i>
                                                 Chưa thanh toán
-                                            </span><br>
-
-                                            <form method="POST"
-                                                action="{{ route('admin.hoadon.create_from_appointment', $lichHen->id) }}"
-                                                class="d-inline">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-primary">
-                                                    <i class="bi bi-plus-circle"></i>
-                                                    Tạo HĐ
-                                                </button>
-                                            </form>
+                                            </span>
                                         @endif
                                     </td>
 

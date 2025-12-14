@@ -42,9 +42,9 @@
                 {{-- LƯU Ý --}}
                 <div class="alert alert-info">
                     <strong>📌 Lưu ý:</strong>
-                    Hệ thống sẽ <strong>tự động tạo tài khoản đăng nhập</strong> cho nhân viên và gửi email hướng dẫn đặt
-                    mật khẩu đến
-                    <strong>Email công việc</strong>.
+                    Hệ thống sẽ <strong>tự động tạo tài khoản đăng nhập</strong> cho nhân viên. Để trống mật khẩu bên dưới
+                    nếu bạn muốn hệ thống gửi email đặt lại mật khẩu đến <strong>Email công việc</strong>. Nhập mật khẩu
+                    thủ công khi cần tự cấp mật khẩu và không gửi email.
                 </div>
 
                 {{-- ERROR LIST --}}
@@ -75,12 +75,18 @@
                             @enderror
                         </div>
 
-                        {{-- Chức vụ --}}
+                        {{-- Quyền hệ thống --}}
                         <div class="col-md-6">
-                            <label class="form-label">Chức vụ</label>
-                            <input name="chuc_vu" class="form-control" placeholder="Lễ tân, Điều dưỡng..."
-                                value="{{ old('chuc_vu') }}">
-                            @error('chuc_vu')
+                            <label class="form-label">Quyền hệ thống <span class="text-danger">*</span></label>
+                            <select name="role" class="form-select" required>
+                                @foreach ($roleOptions as $value => $label)
+                                    <option value="{{ $value }}" @selected(old('role', 'staff') === $value)>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="form-text">Quyền này quyết định phạm vi thao tác nhân viên.</div>
+                            @error('role')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
@@ -106,6 +112,22 @@
                             <div class="form-text">
                                 Email này sẽ dùng để đăng nhập hệ thống. Hệ thống sẽ gửi email đặt mật khẩu tự động.
                             </div>
+                        </div>
+
+                        {{-- Mật khẩu thủ công --}}
+                        <div class="col-md-6">
+                            <label class="form-label">Mật khẩu (tùy chọn)</label>
+                            <input type="password" name="password" class="form-control" placeholder="Ít nhất 8 ký tự">
+                            <div class="form-text">Để trống để gửi email đặt lại mật khẩu tự động.</div>
+                            @error('password')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        {{-- Xác nhận mật khẩu --}}
+                        <div class="col-md-6">
+                            <label class="form-label">Xác nhận mật khẩu</label>
+                            <input type="password" name="password_confirmation" class="form-control">
                         </div>
 
                         {{-- Ngày sinh --}}

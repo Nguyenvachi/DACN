@@ -62,12 +62,14 @@ class ThuThuatController extends Controller
             // Lấy thông tin dịch vụ
             $dichVu = DichVu::findOrFail($validated['dich_vu_id']);
 
+            $giaThuThuat = $dichVu->gia_tien ?? $dichVu->gia ?? 0;
+
             ThuThuat::create([
                 'benh_an_id' => $benhAn->id,
                 'bac_si_id' => $bacSi->id,
                 'ten_thu_thuat' => $dichVu->ten_dich_vu,
                 'ngay_chi_dinh' => now()->toDateString(),
-                'gia_tien' => $dichVu->gia_tien,
+                'gia_tien' => $giaThuThuat,
                 'trang_thai' => 'Chờ thực hiện',
                 'trang_thai_thanh_toan' => 'Chưa thanh toán',
                 'chi_tiet_truoc_thu_thuat' => $validated['chi_tiet_truoc_thu_thuat'] ?? null,

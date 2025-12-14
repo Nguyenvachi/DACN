@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class DichVu extends Model
 {
@@ -15,7 +16,9 @@ class DichVu extends Model
         'chuyen_khoa_id',
         'mo_ta',
         'gia_tien',
+        'gia',
         'thoi_gian',
+        'thoi_gian_uoc_tinh',
         'hoat_dong',
     ];
 
@@ -30,7 +33,7 @@ class DichVu extends Model
         return $this->belongsTo(ChuyenKhoa::class);
     }
 
-    // THÊM RELATIONSHIP NÀY
+    // Relationship với lịch hẹn
     public function lichHens()
     {
         return $this->hasMany(LichHen::class, 'dich_vu_id');

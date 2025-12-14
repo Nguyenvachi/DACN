@@ -10,6 +10,16 @@
             Tài khoản của bạn chưa được liên kết với hồ sơ nhân viên. Vui lòng liên hệ quản trị viên.
         </x-alert>
     @else
+        @php
+            $roleLabels = [
+                'admin' => 'Quản trị',
+                'doctor' => 'Bác sĩ',
+                'staff' => 'Nhân viên',
+                'patient' => 'Bệnh nhân',
+            ];
+            $currentRole = optional($nhanVien->user)->role;
+            $currentRoleLabel = $roleLabels[$currentRole ?? ''] ?? ($currentRole ? ucfirst($currentRole) : 'Nhân viên');
+        @endphp
         {{-- Welcome Section --}}
         <div class="row mb-4">
             <div class="col-12">
@@ -18,7 +28,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h2 class="mb-1 fw-bold">👋 Xin chào, {{ $nhanVien->ho_ten }}!</h2>
-                                <p class="mb-0 opacity-90">{{ $nhanVien->chuc_vu ?? 'Nhân viên' }} • {{ now()->isoFormat('dddd, D MMMM YYYY') }}</p>
+                                <p class="mb-0 opacity-90">{{ $currentRoleLabel }} • {{ now()->isoFormat('dddd, D MMMM YYYY') }}</p>
                             </div>
                             <div class="text-end d-none d-md-block">
                                 <div class="fs-1 fw-bold">{{ now()->format('H:i') }}</div>
@@ -273,7 +283,7 @@
                                     <i class="bi bi-briefcase fs-3 text-success me-3"></i>
                                     <div>
                                         <small class="text-muted d-block">Chức vụ</small>
-                                        <strong>{{ $nhanVien->chuc_vu ?? 'Chưa cập nhật' }}</strong>
+                                        <strong>{{ $currentRoleLabel }}</strong>
                                     </div>
                                 </div>
                             </div>

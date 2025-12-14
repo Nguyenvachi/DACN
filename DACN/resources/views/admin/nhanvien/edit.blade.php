@@ -58,11 +58,25 @@
                                 value="{{ old('ho_ten', $nhanvien->ho_ten) }}">
                         </div>
 
-                        {{-- CHỨC VỤ --}}
-                        <div class="col-md-6">
-                            <label class="form-label">Chức vụ</label>
-                            <input name="chuc_vu" class="form-control" value="{{ old('chuc_vu', $nhanvien->chuc_vu) }}">
-                        </div>
+                        @php
+                            $roleLabels = [
+                                'admin' => 'Quản trị',
+                                'doctor' => 'Bác sĩ',
+                                'staff' => 'Nhân viên',
+                                'patient' => 'Bệnh nhân',
+                            ];
+                        @endphp
+
+                        @if ($nhanvien->user)
+                            {{-- QUYỀN HỆ THỐNG --}}
+                            <div class="col-md-6">
+                                <label class="form-label">Quyền hệ thống</label>
+                                <input class="form-control"
+                                    value="{{ $roleLabels[$nhanvien->user->role] ?? ucfirst($nhanvien->user->role) }}"
+                                    disabled>
+                                <small class="text-muted">Cập nhật quyền tại mục Quản lý tài khoản.</small>
+                            </div>
+                        @endif
 
                         {{-- SỐ ĐIỆN THOẠI --}}
                         <div class="col-md-6">

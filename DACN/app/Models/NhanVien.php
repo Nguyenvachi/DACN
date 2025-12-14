@@ -7,8 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class NhanVien extends Model
 {
     protected $fillable = [
-        'user_id','ho_ten','chuc_vu','so_dien_thoai','email_cong_viec',
-        'ngay_sinh','gioi_tinh','avatar_path','trang_thai'
+        'user_id',
+        'ho_ten',
+        'so_dien_thoai',
+        'email_cong_viec',
+        'ngay_sinh',
+        'gioi_tinh',
+        'avatar_path',
+        'trang_thai'
     ];
 
     public function user()

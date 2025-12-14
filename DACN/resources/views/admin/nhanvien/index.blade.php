@@ -55,7 +55,6 @@
                             <tr>
                                 <th style="width: 70px;">ID</th>
                                 <th>Họ tên</th>
-                                <th>Chức vụ</th>
                                 <th>Email công việc</th>
                                 <th style="width: 160px;">Trạng thái</th>
                                 <th style="width: 140px;">Hành động</th>
@@ -80,7 +79,7 @@
                             {{-- Flash messages --}}
                             @if (session('status'))
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         <div class="alert alert-success mb-0">{{ session('status') }}</div>
                                     </td>
                                 </tr>
@@ -91,8 +90,6 @@
                                     <td class="fw-semibold">{{ $nv->id }}</td>
 
                                     <td>{{ $nv->ho_ten }}</td>
-
-                                    <td>{{ $nv->chuc_vu }}</td>
 
                                     <td>{{ $nv->email_cong_viec }}</td>
 
@@ -148,7 +145,7 @@
 
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">
+                                    <td colspan="5" class="text-center py-5 text-muted">
                                         <i class="bi bi-person-x fs-1 d-block mb-2"></i>
                                         Chưa có nhân viên nào
                                     </td>

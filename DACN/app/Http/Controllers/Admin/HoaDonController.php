@@ -9,6 +9,7 @@ use App\Models\BenhAn;
 use App\Models\LichHen;
 use App\Models\ThanhToan;
 use App\Models\PaymentLog;
+use App\Models\DichVu;
 use App\Mail\HoaDonHoanTien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -183,13 +184,18 @@ class HoaDonController extends Controller
             'lichHen'
         ]);
 
+        $thuThuatNames = $benhAn->thuThuats->pluck('ten_thu_thuat')->filter()->unique()->all();
+        $thuThuatPriceMap = empty($thuThuatNames)
+            ? collect()
+            : DichVu::whereIn('ten_dich_vu', $thuThuatNames)->pluck('gia_tien', 'ten_dich_vu');
+
         // Kiểm tra xem đã có hóa đơn cho bệnh án này chưa
         $existingHoaDon = null;
         if ($benhAn->lich_hen_id) {
             $existingHoaDon = HoaDon::where('lich_hen_id', $benhAn->lich_hen_id)->first();
         }
 
-        return view('admin.hoadon.create_from_benh_an', compact('benhAn', 'existingHoaDon'));
+        return view('admin.hoadon.create_from_benh_an', compact('benhAn', 'existingHoaDon', 'thuThuatPriceMap'));
     }
 
     /**
