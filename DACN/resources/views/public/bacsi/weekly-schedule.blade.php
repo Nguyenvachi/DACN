@@ -7,100 +7,339 @@
 
 @section('content')
     <style>
-        .schedule-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
+        /* ===== Color System ===== */
+        :root {
+            --primary: #2563eb;      /* Blue - primary actions */
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            
+            --success: #10b981;      /* Green - success states */
+            --success-light: #ecfdf5;
+            
+            --warning: #f59e0b;      /* Orange - warnings */
+            --warning-light: #fffbeb;
+            
+            --danger: #ef4444;       /* Red - errors/full */
+            --danger-light: #fef2f2;
+            
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            
+            --transition: all 0.2s ease;
         }
 
+        body {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        /* ===== Header ===== */
+        .schedule-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .schedule-header h2 {
+            color: var(--gray-900);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .schedule-header p {
+            color: var(--gray-600);
+            margin-bottom: 0;
+        }
+
+        /* ===== Navigation ===== */
         .week-navigation {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 1.5rem;
+            background: white;
+            padding: 1.25rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .week-navigation h4 {
+            color: var(--gray-900);
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .week-navigation .btn {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .week-navigation .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .week-navigation .btn-outline-primary:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateX(0);
+        }
+
+        /* ===== Filter Tabs ===== */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-tab {
+            padding: 0.625rem 1rem;
+            border-radius: 8px;
+            border: 1.5px solid var(--gray-200);
+            background: white;
+            color: var(--gray-700);
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .filter-tab i {
+            font-size: 14px;
+        }
+
+        /* ===== Day Selector ===== */
+        .day-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            scrollbar-width: thin;
+        }
+
+        .day-selector::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .day-selector::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 3px;
+        }
+
+        .day-selector::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 3px;
+        }
+
+        .day-card {
+            min-width: 100px;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1.5px solid var(--gray-200);
+            background: white;
+        }
+
+        .day-card:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .day-card.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .day-card .day-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+            color: inherit;
+        }
+
+        .day-card .day-date {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: inherit;
+        }
+
+        /* ===== Slots Container ===== */
+        .slots-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
             margin-bottom: 2rem;
         }
 
-        .schedule-table {
+        .slot-card {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .day-column {
-            border: 1px solid #e0e0e0;
-            padding: 1rem;
-            min-height: 200px;
-        }
-
-        .day-header {
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #667eea;
-        }
-
-        .day-header.weekend {
-            color: #dc3545;
-            border-bottom-color: #dc3545;
-        }
-
-        .slot-item {
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .slot-item.slot-available {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
+            border-radius: 8px;
+            padding: 1.25rem;
             cursor: pointer;
+            transition: var(--transition);
+            border: 1.5px solid var(--gray-200);
+            position: relative;
         }
 
-        .slot-item.slot-available:hover {
-            background: #2196f3;
-            color: white;
-            transform: translateX(5px);
+        /* Available slots */
+        .slot-card.slot-available:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
-        .slot-item.slot-partial {
-            background: #fff3e0;
-            border-left: 4px solid #ff9800;
-            cursor: pointer;
+        /* Partial slots */
+        .slot-card.slot-partial {
+            background: var(--warning-light);
+            border-color: var(--warning);
         }
 
-        .slot-item.slot-partial:hover {
-            background: #ff9800;
-            color: white;
-            transform: translateX(5px);
+        .slot-card.slot-partial:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
-        .slot-item.slot-my-booking {
-            background: #fff9c4 !important;
-            border-left: 5px solid #fbc02d !important;
-            cursor: not-allowed;
-            font-weight: bold;
-            color: #f57f17 !important;
+        /* My bookings */
+        .slot-card.slot-my-booking {
+            background: var(--success-light);
+            border-color: var(--success);
+            cursor: default;
         }
 
-        .slot-item.slot-full {
-            background: #ffebee;
-            border-left: 3px solid #ef5350;
-            cursor: not-allowed;
+        /* Full slots */
+        .slot-card.slot-full {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
             opacity: 0.7;
-            color: #c62828;
+            cursor: not-allowed;
         }
 
-        .no-slots {
-            color: #999;
-            font-style: italic;
+        .slot-time {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slot-time i {
+            font-size: 1rem;
+            color: var(--gray-600);
+        }
+
+        .slot-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .slot-status.status-empty {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .slot-status.status-partial {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .slot-status.status-my {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .slot-status.status-full {
+            background: var(--gray-200);
+            color: var(--gray-600);
+        }
+
+        .no-slots-message {
             text-align: center;
-            padding: 1rem;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .no-slots-message i {
+            font-size: 3rem;
+            color: var(--gray-300);
+            margin-bottom: 1rem;
+        }
+
+        .no-slots-message h4 {
+            color: var(--gray-700);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-slots-message p {
+            color: var(--gray-600);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .slots-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .week-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .schedule-header {
+                padding: 1.5rem;
+            }
         }
     </style>
 
@@ -109,18 +348,18 @@
         <div class="schedule-header">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h2 class="mb-2">
+                    <h2>
                         <i class="fas fa-calendar-week"></i>
-                        Lịch Rảnh - {{ $bacSi->ten }}
+                        Lịch khám - BS. {{ $bacSi->ho_ten }}
                     </h2>
-                    <p class="mb-0">
+                    <p>
                         <i class="fas fa-stethoscope"></i>
-                        {{ $bacSi->chuyenKhoa->ten ?? 'Đa khoa' }}
+                        {{ $bacSi->chuyenKhoa->ten ?? 'Sản phụ khoa' }}
                     </p>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <a href="{{ route('public.bacsi.index') }}" class="btn btn-light">
-                        <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                    <a href="{{ route('public.bacsi.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại
                     </a>
                 </div>
             </div>
@@ -135,168 +374,185 @@
             
             @if(!$isCurrentWeek)
                 <a href="{{ route('public.bacsi.schedule', ['bacSi' => $bacSi->id, 'week_start' => $weekStart->copy()->subWeek()->format('Y-m-d')]) }}"
-                    class="btn btn-outline-primary">
+                    class="btn btn-outline-primary btn-lg">
                     <i class="fas fa-chevron-left"></i> Tuần trước
                 </a>
             @else
-                <div style="width: 150px;"></div>
+                <div></div>
             @endif
             
-            <h4 class="mb-0">
+            <h4 class="mb-0 text-center">
+                <i class="fas fa-calendar-week text-primary"></i>
                 {{ $weekStart->format('d/m/Y') }} - {{ $weekEnd->format('d/m/Y') }}
                 @if($isCurrentWeek)
-                    <span class="badge bg-primary ms-2">Tuần này</span>
+                    <span class="badge bg-success ms-2">Tuần này</span>
                 @endif
             </h4>
             <a href="{{ route('public.bacsi.schedule', ['bacSi' => $bacSi->id, 'week_start' => $weekStart->copy()->addWeek()->format('Y-m-d')]) }}"
-                class="btn btn-outline-primary">
+                class="btn btn-outline-primary btn-lg">
                 Tuần sau <i class="fas fa-chevron-right"></i>
             </a>
         </div>
 
-        <!-- Chú thích màu sắc -->
-        <div class="alert alert-info mb-3">
-            <div class="row text-center">
-                <div class="col-md-3">
-                    <span class="badge" style="background: #2196f3; padding: 8px 12px;">
-                        <i class="far fa-clock"></i> Còn trống (0/2)
-                    </span>
-                </div>
-                <div class="col-md-3">
-                    <span class="badge" style="background: #ff9800; padding: 8px 12px;">
-                        <i class="fas fa-user-plus"></i> Đã có 1 người (1/2)
-                    </span>
-                </div>
-                <div class="col-md-3">
-                    <span class="badge" style="background: #fbc02d; color: #f57f17; padding: 8px 12px;">
-                        <i class="fas fa-check-circle"></i> Bạn đã đặt
-                    </span>
-                </div>
-                <div class="col-md-3">
-                    <span class="badge" style="background: #ef5350; padding: 8px 12px;">
-                        <i class="fas fa-user-clock"></i> Đã đầy (2/2)
-                    </span>
-                </div>
-            </div>
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab" data-filter="empty" onclick="filterSlots('empty')">
+                <i class="far fa-clock"></i>
+                <span>Còn trống <span id="count-empty">(0)</span></span>
+            </button>
+            <button class="filter-tab" data-filter="partial" onclick="filterSlots('partial')">
+                <i class="fas fa-user-plus"></i>
+                <span>Đã có người <span id="count-partial">(0)</span></span>
+            </button>
+            <button class="filter-tab" data-filter="my" onclick="filterSlots('my')">
+                <i class="fas fa-check-circle"></i>
+                <span>Đã đặt <span id="count-my">(0)</span></span>
+            </button>
+            <button class="filter-tab" data-filter="full" onclick="filterSlots('full')">
+                <i class="fas fa-times-circle"></i>
+                <span>Đã đầy <span id="count-full">(0)</span></span>
+            </button>
+            <button class="filter-tab active" data-filter="all" onclick="filterSlots('all')">
+                <i class="fas fa-list"></i>
+                <span>Tất cả</span>
+            </button>
         </div>
 
-        <!-- Schedule Table -->
-        <div class="schedule-table">
-            <div class="row g-0">
+        <!-- Day Selector -->
+        <div class="day-selector">
+            @php
+                $daysOfWeek = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+                $currentDay = $weekStart->copy();
+                $today = now()->startOfDay();
+            @endphp
+
+            @for ($i = 0; $i < 7; $i++)
                 @php
-                    $daysOfWeek = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'];
-                    $currentDay = $weekStart->copy();
-                    $today = now()->startOfDay();
+                    $dateStr = $currentDay->format('Y-m-d');
+                    $isPastDay = $currentDay->lt($today);
                 @endphp
 
-                @for ($i = 0; $i < 7; $i++)
-                    @php
-                        $dateStr = $currentDay->format('Y-m-d');
-                        $daySlots = $slotsByDate->get($dateStr, collect());
-                        $isWeekend = $i >= 5;
-                        $isPastDay = $currentDay->lt($today); // Kiểm tra ngày đã qua
-                    @endphp
+                @if(!$isPastDay)
+                    <div class="day-card {{ $currentDay->isToday() ? 'active' : '' }}" 
+                         data-date="{{ $dateStr }}"
+                         onclick="selectDay('{{ $dateStr }}')">
+                        <div class="day-name">{{ $daysOfWeek[$i] }}</div>
+                        <div class="day-date">{{ $currentDay->format('d/m') }}</div>
+                        @if($currentDay->isToday())
+                            <small class="badge bg-success mt-1" style="font-size: 0.7rem;">Hôm nay</small>
+                        @endif
+                    </div>
+                @endif
 
-                    @if(!$isPastDay)
-                        <div class="col-md-12 col-lg-{{ 12 / 7 }} day-column">
-                            <div class="day-header {{ $isWeekend ? 'weekend' : '' }}">
-                                {{ $daysOfWeek[$i] }}<br>
-                                <small>{{ $currentDay->format('d/m') }}</small>
-                                @if($currentDay->isToday())
-                                    <span class="badge bg-success ms-1" style="font-size: 0.7rem;">Hôm nay</span>
-                                @endif
-                            </div>
-
-                            @if ($daySlots->isNotEmpty())
-                                @foreach ($daySlots as $slot)
-                                    @php
-                                        // Kiểm tra bệnh nhân này đã đặt slot này chưa
-                                        $userId = auth()->id();
-                                        $userPhone = auth()->check() && auth()->user()->benh_nhan 
-                                            ? auth()->user()->benh_nhan->so_dien_thoai 
-                                            : null;
-                                        
-                                        $hasBooked = false;
-                                        
-                                        // Chuẩn hóa format thời gian để so sánh
-                                        $slotTime = \Carbon\Carbon::createFromFormat('H:i', $slot['start'])->format('H:i:s');
-                                        
-                                        if ($userId || $userPhone) {
-                                            $query = \App\Models\LichHen::where('bac_si_id', $bacSi->id)
-                                                ->where('ngay_hen', $dateStr)
-                                                ->where('thoi_gian_hen', $slotTime)
-                                                ->whereNotIn('trang_thai', [\App\Models\LichHen::STATUS_CANCELLED_VN]);
-                                            
-                                            if ($userId) {
-                                                $query->where('user_id', $userId);
-                                            } elseif ($userPhone) {
-                                                $query->where('so_dien_thoai_benh_nhan', $userPhone);
-                                            }
-                                            
-                                            $hasBooked = $query->exists();
-                                        }
-                                        
-                                        // Lấy thông tin từ slot (đã có sẵn từ service)
-                                        $bookedCount = $slot['booked_count'] ?? 0;
-                                        $isFull = $slot['is_full'] ?? false;
-                                        $isAvailable = $slot['is_available'] ?? true;
-                                    @endphp
-                                    
-                                    @if($hasBooked)
-                                        {{-- Đã đặt - màu vàng, không click được --}}
-                                        <div class="slot-item slot-my-booking">
-                                            <i class="fas fa-check-circle"></i>
-                                            {{ $slot['start'] }} - {{ $slot['end'] }}
-                                            <span class="badge bg-warning text-dark ms-1" style="font-size: 0.65rem;">Đã đặt</span>
-                                        </div>
-                                    @elseif($isFull)
-                                        {{-- Đầy (2/2) - màu đỏ nhạt --}}
-                                        <div class="slot-item slot-full">
-                                            <i class="fas fa-user-clock"></i>
-                                            {{ $slot['start'] }} - {{ $slot['end'] }}
-                                            <span class="badge bg-danger ms-1" style="font-size: 0.65rem;">{{ $bookedCount }}/2</span>
-                                        </div>
-                                    @elseif($bookedCount > 0)
-                                        {{-- Đã có người đặt (1/2) - màu cam, vẫn click được --}}
-                                        <div class="slot-item slot-partial" 
-                                             onclick="bookSlot('{{ $dateStr }}', '{{ $slot['start'] }}')">
-                                            <i class="fas fa-user-plus"></i>
-                                            {{ $slot['start'] }} - {{ $slot['end'] }}
-                                            <span class="badge bg-warning text-dark ms-1" style="font-size: 0.65rem;">{{ $bookedCount }}/2</span>
-                                        </div>
-                                    @else
-                                        {{-- Còn trống (0/2) - màu xanh dương, click được --}}
-                                        <div class="slot-item slot-available" 
-                                             onclick="bookSlot('{{ $dateStr }}', '{{ $slot['start'] }}')">
-                                            <i class="far fa-clock"></i>
-                                            {{ $slot['start'] }} - {{ $slot['end'] }}
-                                        </div>
-                                    @endif
-                                @endforeach
-                            @else
-                                <div class="no-slots">
-                                    Không có lịch
-                                </div>
-                            @endif
-                        </div>
-                    @endif
-
-                    @php
-                        $currentDay->addDay();
-                    @endphp
-                @endfor
-            </div>
+                @php
+                    $currentDay->addDay();
+                @endphp
+            @endfor
         </div>
 
-        <!-- Quick Info -->
-        <div class="alert alert-info mt-4">
-            <i class="fas fa-info-circle"></i>
-            <strong>Lưu ý:</strong> 
-            <ul class="mb-0 mt-2">
-                <li><span class="badge bg-primary">Xanh dương</span> - Khung giờ còn trống, click để đặt lịch</li>
-                <li><span class="badge bg-success">Xanh lá</span> - Bạn đã đặt lịch khung giờ này</li>
-                <li><span class="badge bg-secondary">Xám</span> - Khung giờ đã đủ 2 người đặt</li>
-            </ul>
+        <!-- Slots Container -->
+        <div id="slotsContainer">
+            @php
+                $currentDay = $weekStart->copy();
+                $today = now()->startOfDay();
+                $hasSlots = false;
+            @endphp
+
+            @for ($i = 0; $i < 7; $i++)
+                @php
+                    $dateStr = $currentDay->format('Y-m-d');
+                    $daySlots = $slotsByDate->get($dateStr, collect());
+                    $isPastDay = $currentDay->lt($today);
+                @endphp
+
+                @if(!$isPastDay && $daySlots->isNotEmpty())
+                    <div class="day-slots" data-date="{{ $dateStr }}" style="{{ $currentDay->isToday() ? '' : 'display: none;' }}">
+                        <div class="slots-container">
+                            @foreach ($daySlots as $slot)
+                                @php
+                                    $userId = auth()->id();
+                                    $userPhone = auth()->check() && auth()->user()->benh_nhan 
+                                        ? auth()->user()->benh_nhan->so_dien_thoai 
+                                        : null;
+                                    
+                                    $hasBooked = false;
+                                    $slotTime = \Carbon\Carbon::createFromFormat('H:i', $slot['start'])->format('H:i:s');
+                                    
+                                    if ($userId || $userPhone) {
+                                        $query = \App\Models\LichHen::where('bac_si_id', $bacSi->id)
+                                            ->where('ngay_hen', $dateStr)
+                                            ->where('thoi_gian_hen', $slotTime)
+                                            ->whereNotIn('trang_thai', [\App\Models\LichHen::STATUS_CANCELLED_VN]);
+                                        
+                                        if ($userId) {
+                                            $query->where('user_id', $userId);
+                                        } elseif ($userPhone) {
+                                            $query->where('so_dien_thoai_benh_nhan', $userPhone);
+                                        }
+                                        
+                                        $hasBooked = $query->exists();
+                                    }
+                                    
+                                    $bookedCount = $slot['booked_count'] ?? 0;
+                                    $isFull = $slot['is_full'] ?? false;
+                                    
+                                    if($hasBooked) {
+                                        $slotClass = 'slot-my-booking';
+                                        $statusClass = 'status-my';
+                                        $statusIcon = 'fa-check-circle';
+                                        $statusText = 'Đã đặt';
+                                        $dataFilter = 'my';
+                                    } elseif($isFull) {
+                                        $slotClass = 'slot-full';
+                                        $statusClass = 'status-full';
+                                        $statusIcon = 'fa-user-clock';
+                                        $statusText = "{$bookedCount}/2";
+                                        $dataFilter = 'full';
+                                    } elseif($bookedCount > 0) {
+                                        $slotClass = 'slot-partial';
+                                        $statusClass = 'status-partial';
+                                        $statusIcon = 'fa-user-plus';
+                                        $statusText = "{$bookedCount}/2";
+                                        $dataFilter = 'partial';
+                                    } else {
+                                        $slotClass = 'slot-available';
+                                        $statusClass = 'status-empty';
+                                        $statusIcon = 'far fa-clock';
+                                        $statusText = 'Còn trống';
+                                        $dataFilter = 'empty';
+                                    }
+                                    $hasSlots = true;
+                                @endphp
+                                
+                                <div class="slot-card {{ $slotClass }}" 
+                                     data-filter="{{ $dataFilter }}"
+                                     @if(!$hasBooked && !$isFull) onclick="bookSlot('{{ $dateStr }}', '{{ $slot['start'] }}')" @endif>
+                                    <div class="slot-time">
+                                        <i class="fas fa-clock"></i>
+                                        {{ $slot['start'] }} - {{ $slot['end'] }}
+                                    </div>
+                                    <span class="slot-status {{ $statusClass }}">
+                                        <i class="fas {{ $statusIcon }}"></i>
+                                        {{ $statusText }}
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                @php
+                    $currentDay->addDay();
+                @endphp
+            @endfor
+
+            @if(!$hasSlots)
+                <div class="no-slots-message">
+                    <i class="fas fa-calendar-times"></i>
+                    <h4>Không có lịch khả dụng</h4>
+                    <p class="text-muted">Bác sĩ chưa mở lịch cho tuần này</p>
+                </div>
+            @endif
         </div>
 
         <!-- Booking Modal -->
@@ -605,6 +861,86 @@
     </div>
 
     <script>
+        let currentFilter = 'all';
+
+        // Update slot counts
+        function updateCounts() {
+            const counts = {
+                empty: 0,
+                partial: 0,
+                my: 0,
+                full: 0
+            };
+
+            document.querySelectorAll('.day-slots:not([style*="display: none"]) .slot-card').forEach(slot => {
+                const filter = slot.getAttribute('data-filter');
+                if (counts.hasOwnProperty(filter)) {
+                    counts[filter]++;
+                }
+            });
+
+            document.getElementById('count-empty').textContent = `(${counts.empty})`;
+            document.getElementById('count-partial').textContent = `(${counts.partial})`;
+            document.getElementById('count-my').textContent = `(${counts.my})`;
+            document.getElementById('count-full').textContent = `(${counts.full})`;
+        }
+
+        // Filter slots by status
+        function filterSlots(filter) {
+            currentFilter = filter;
+            const slots = document.querySelectorAll('.day-slots:not([style*="display: none"]) .slot-card');
+            
+            // Update slots visibility
+            slots.forEach(slot => {
+                const slotFilter = slot.getAttribute('data-filter');
+                if (filter === 'all' || slotFilter === filter) {
+                    slot.style.display = 'block';
+                } else {
+                    slot.style.display = 'none';
+                }
+            });
+
+            // Update active filter tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                if (tab.getAttribute('data-filter') === filter) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
+
+        // Select day
+        function selectDay(dateStr) {
+            // Update day cards
+            document.querySelectorAll('.day-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.day-card').classList.add('active');
+
+            // Show selected day slots
+            document.querySelectorAll('.day-slots').forEach(daySlot => {
+                if (daySlot.getAttribute('data-date') === dateStr) {
+                    daySlot.style.display = 'block';
+                } else {
+                    daySlot.style.display = 'none';
+                }
+            });
+
+            // Reapply current filter
+            if (currentFilter !== 'all') {
+                filterSlots(currentFilter);
+            }
+
+            // Update counts
+            updateCounts();
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCounts();
+        });
+
         function bookSlot(date, time) {
             // Điền thông tin vào modal
             document.getElementById('modal_ngay_hen').value = date;

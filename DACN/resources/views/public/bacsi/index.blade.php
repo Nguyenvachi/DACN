@@ -161,7 +161,7 @@
                                 <span class="badge-specialty">
                                     @php
                                         // ưu tiên relation chuyenKhoas, nếu không có dùng cột chuyen_khoa
-                                        $spec = optional($bacSi->chuyenKhoas->first())->ten ?? $bacSi->chuyen_khoa ?? 'Đa khoa';
+                                        $spec = optional($bacSi->chuyenKhoas->first())->ten ?? $bacSi->chuyen_khoa ?? 'Sản phụ khoa';
                                     @endphp
                                     {{ $spec }}
                                 </span>

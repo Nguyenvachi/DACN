@@ -78,8 +78,17 @@
                                 ->whereDate('ngay_hen', today())
                                 ->count()
                             : 0;
+                        
+                        $inProgressCount = auth()->user()->bacSi
+                            ? \App\Models\LichHen::where('bac_si_id', auth()->user()->bacSi->id)
+                                ->where('trang_thai', \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
+                                ->whereDate('ngay_hen', today())
+                                ->count()
+                            : 0;
                     @endphp
-                    @if($queueCount > 0)
+                    @if($inProgressCount > 0)
+                        <span class="sidebar-badge" style="background: #10b981; animation: pulse 2s infinite;">{{ $inProgressCount }}</span>
+                    @elseif($queueCount > 0)
                         <span class="sidebar-badge">{{ $queueCount }}</span>
                     @endif
                 </a>
@@ -210,6 +219,59 @@
             @yield('content')
         </div>
     </main>
+
+    {{-- FLOATING QUICK ACCESS BUTTON FOR IN-PROGRESS PATIENTS --}}
+    @php
+        $hasInProgress = auth()->user()->bacSi
+            ? \App\Models\LichHen::where('bac_si_id', auth()->user()->bacSi->id)
+                ->where('trang_thai', \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
+                ->whereDate('ngay_hen', today())
+                ->with(['user', 'benhAn'])
+                ->first()
+            : null;
+    @endphp
+
+    @if($hasInProgress && !request()->is('doctor/queue*') && !request()->is('doctor/benhan/*/edit'))
+    <div class="floating-quick-access">
+        <button class="btn btn-success btn-lg rounded-circle shadow-lg" 
+                style="width: 65px; height: 65px; position: relative;"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="left"
+                title="Bạn đang khám {{ $hasInProgress->user->name }}"
+                onclick="window.location.href='{{ $hasInProgress->benhAn ? route('doctor.benhan.edit', $hasInProgress->benhAn->id) : route('doctor.queue.index') }}'">
+            <i class="fas fa-stethoscope fa-lg"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+                  style="font-size: 0.65rem; animation: pulse 2s infinite;">
+                1
+            </span>
+        </button>
+        <small class="d-block text-center mt-2 fw-semibold" style="color: #065f46;">
+            Đang khám
+        </small>
+    </div>
+
+    <style>
+        .floating-quick-access {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .floating-quick-access button {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            border: 3px solid white;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4) !important;
+            transition: all 0.3s ease;
+        }
+
+        .floating-quick-access button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(16, 185, 129, 0.6) !important;
+        }
+    </style>
+    @endif
 
     {{-- JS --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

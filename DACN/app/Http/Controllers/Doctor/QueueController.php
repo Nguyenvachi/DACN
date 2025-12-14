@@ -53,17 +53,17 @@ class QueueController extends Controller
 
         $queue = $queueQuery->get();
 
-        // Phân loại
-        $waitingQueue = $queue->where('trang_thai', LichHen::STATUS_CHECKED_IN_VN); // Chờ khám
-        $inProgressQueue = $queue->where('trang_thai', LichHen::STATUS_IN_PROGRESS_VN); // Đang khám
-        $confirmedToday = $queue->where('trang_thai', LichHen::STATUS_CONFIRMED_VN); // Chưa check-in nhưng đã xác nhận
+        // Phân loại theo trạng thái
+        $waitingQueue = $queue->where('trang_thai', LichHen::STATUS_CHECKED_IN_VN); // Đã đến, đang chờ được gọi vào khám
+        $inProgressQueue = $queue->where('trang_thai', LichHen::STATUS_IN_PROGRESS_VN); // Đang được khám (đã vào phòng khám)
+        $confirmedToday = $queue->where('trang_thai', LichHen::STATUS_CONFIRMED_VN); // Đã đặt lịch và xác nhận nhưng chưa đến phòng khám (chưa check-in)
 
-        // Thống kê
+        // Thống kê tổng quan
         $stats = [
-            'waiting' => $waitingQueue->count(),
-            'in_progress' => $inProgressQueue->count(),
-            'confirmed_today' => $confirmedToday->count(),
-            'avg_wait_time' => $this->calculateAverageWaitTime($bacSi->id),
+            'waiting' => $waitingQueue->count(), // Số bệnh nhân đang chờ ở ngoài
+            'in_progress' => $inProgressQueue->count(), // Số bệnh nhân đang được khám
+            'confirmed_today' => $confirmedToday->count(), // Số lịch hẹn đã xác nhận nhưng bệnh nhân chưa đến
+            'avg_wait_time' => $this->calculateAverageWaitTime($bacSi->id), // Thời gian chờ trung bình (phút) từ lúc check-in đến lúc bắt đầu khám
         ];
 
         return view('doctor.queue.index', compact('queue', 'waitingQueue', 'inProgressQueue', 'confirmedToday', 'stats', 'bacSi'));
@@ -143,29 +143,51 @@ class QueueController extends Controller
     }
 
     /**
-     * Tính thời gian chờ trung bình
+     * Tính thời gian chờ trung bình (từ lúc check-in đến lúc bắt đầu khám)
      */
     private function calculateAverageWaitTime($bacSiId)
     {
-        $completedToday = LichHen::where('bac_si_id', $bacSiId)
+        // Lấy các lịch hẹn đã bắt đầu khám hoặc đã hoàn thành hôm nay
+        $processedToday = LichHen::where('bac_si_id', $bacSiId)
             ->whereDate('ngay_hen', today())
-            ->where('trang_thai', LichHen::STATUS_COMPLETED_VN)
+            ->whereIn('trang_thai', [
+                LichHen::STATUS_IN_PROGRESS_VN,
+                LichHen::STATUS_COMPLETED_VN
+            ])
             ->whereNotNull('checked_in_at')
-            ->whereNotNull('completed_at')
             ->get();
 
-        if ($completedToday->isEmpty()) {
+        if ($processedToday->isEmpty()) {
             return 0;
         }
 
         $totalWaitMinutes = 0;
-        foreach ($completedToday as $appt) {
-            $checkedIn = Carbon::parse($appt->checked_in_at);
-            $completed = Carbon::parse($appt->completed_at);
-            $totalWaitMinutes += $checkedIn->diffInMinutes($completed);
+        $countWithData = 0;
+
+        foreach ($processedToday as $appt) {
+            $checkedInAt = Carbon::parse($appt->checked_in_at);
+            
+            // Ưu tiên lấy thời gian từ bệnh án (khi bắt đầu khám)
+            if ($appt->benhAn && $appt->benhAn->created_at) {
+                $startedAt = Carbon::parse($appt->benhAn->created_at);
+                $totalWaitMinutes += $checkedInAt->diffInMinutes($startedAt);
+                $countWithData++;
+            }
+            // Nếu không có bệnh án, dùng updated_at khi chuyển sang IN_PROGRESS
+            elseif ($appt->trang_thai === LichHen::STATUS_IN_PROGRESS_VN && $appt->updated_at) {
+                $startedAt = Carbon::parse($appt->updated_at);
+                $totalWaitMinutes += $checkedInAt->diffInMinutes($startedAt);
+                $countWithData++;
+            }
+            // Nếu đã hoàn thành, dùng completed_at (ít chính xác hơn)
+            elseif ($appt->trang_thai === LichHen::STATUS_COMPLETED_VN && $appt->completed_at) {
+                $completedAt = Carbon::parse($appt->completed_at);
+                $totalWaitMinutes += $checkedInAt->diffInMinutes($completedAt);
+                $countWithData++;
+            }
         }
 
-        return round($totalWaitMinutes / $completedToday->count());
+        return $countWithData > 0 ? round($totalWaitMinutes / $countWithData) : 0;
     }
 
     /**

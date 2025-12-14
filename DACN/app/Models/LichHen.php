@@ -110,6 +110,11 @@ class LichHen extends Model
         return $this->hasOne(\App\Models\HoaDon::class);
     }
 
+    public function benhAn()
+    {
+        return $this->hasOne(\App\Models\BenhAn::class, 'lich_hen_id');
+    }
+
     public function danhGia()
     {
         return $this->hasOne(DanhGia::class);

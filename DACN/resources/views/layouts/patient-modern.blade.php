@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Phòng khám HealthCare')</title>
+    <title>@yield('title', 'Phòng khám Sản Phụ Khoa')</title>
 
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -198,7 +198,7 @@
                 </div>
                 <div>
                     <h1 class="text-white mb-0" style="font-size: 1.25rem; font-weight: 700;">HealthCare</h1>
-                    <p class="mb-0" style="color: #d1fae5; font-size: 0.75rem;">Phòng khám đa khoa</p>
+                    <p class="mb-0" style="color: #d1fae5; font-size: 0.75rem;">Phòng khám sản phụ khoa</p>
                 </div>
             </div>
 

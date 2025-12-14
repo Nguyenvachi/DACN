@@ -130,8 +130,8 @@
     <table>
         <tr>
             <td width="75%">
-                <div class="hospital-name">BỆNH VIỆN ĐA KHOA QUỐC TẾ</div>
-                <div class="hospital-sub">PHÒNG KHÁM BỆNH VIỆN ĐẠI HỌC (MÔ PHỎNG)</div>
+                <div class="hospital-name">PHÒNG KHÁM SẢN PHỤ KHOA</div>
+                <div class="hospital-sub">CHĂM SÓC SỨC KHỎE PHỤ NỮ & TRẺ EM</div>
                 <div class="hospital-sub">📍 Địa chỉ: 215 Hồng Bàng, P.11, Q.5, TP.HCM</div>
                 <div class="hospital-sub">📞 Hotline: 1900 1234</div>
             </td>

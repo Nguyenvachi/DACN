@@ -7,6 +7,7 @@ use App\Models\BacSi;
 use App\Models\BenhAn;
 use App\Models\ThuThuat;
 use App\Models\DichVu;
+use App\Models\LoaiThuThuat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,14 +24,9 @@ class ThuThuatController extends Controller
             abort(403, 'Bạn không có quyền chỉ định thủ thuật cho bệnh án này.');
         }
 
-        $dichVuThuThuat = DichVu::where('loai', 'Nâng cao')
-            ->where('hoat_dong', true)
-            ->where(function ($q) {
-                $q->where('ten_dich_vu', 'like', '%chọc%')
-                    ->orWhere('ten_dich_vu', 'like', '%sinh thiết%')
-                    ->orWhere('ten_dich_vu', 'like', '%đo%');
-            })
-            ->orderBy('ten_dich_vu')
+        // Lấy danh sách loại thủ thuật từ bảng loai_thu_thuats
+        $dichVuThuThuat = LoaiThuThuat::where('hoat_dong', true)
+            ->orderBy('ten')
             ->get();
 
         $existingThuThuat = ThuThuat::where('benh_an_id', $benhAn->id)
@@ -51,7 +47,7 @@ class ThuThuatController extends Controller
         }
 
         $validated = $request->validate([
-            'dich_vu_id' => 'required|exists:dich_vus,id',
+            'dich_vu_id' => 'required|exists:loai_thu_thuats,id',
             'chi_tiet_truoc_thu_thuat' => 'nullable|string',
             'ghi_chu' => 'nullable|string|max:1000',
         ]);

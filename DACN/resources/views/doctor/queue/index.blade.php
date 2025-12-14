@@ -29,7 +29,9 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <small class="text-muted">Đang chờ</small>
+                            <small class="text-muted" data-bs-toggle="tooltip" title="Bệnh nhân đã check-in, đang chờ được gọi vào phòng khám">
+                                <i class="fas fa-info-circle me-1"></i>Đang chờ
+                            </small>
                             <h3 class="fw-bold mb-0 mt-1" style="color: #f59e0b;">{{ $stats['waiting'] }}</h3>
                         </div>
                         <div class="rounded p-3" style="background: #fef3c7;">
@@ -45,7 +47,9 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <small class="text-muted">Đang khám</small>
+                            <small class="text-muted" data-bs-toggle="tooltip" title="Bệnh nhân đang được khám trong phòng">
+                                <i class="fas fa-info-circle me-1"></i>Đang khám
+                            </small>
                             <h3 class="fw-bold mb-0 mt-1" style="color: #10b981;">{{ $stats['in_progress'] }}</h3>
                         </div>
                         <div class="rounded p-3" style="background: #d1fae5;">
@@ -61,7 +65,9 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <small class="text-muted">Đã xác nhận hôm nay</small>
+                            <small class="text-muted" data-bs-toggle="tooltip" title="Lịch hẹn đã xác nhận nhưng bệnh nhân chưa check-in">
+                                <i class="fas fa-info-circle me-1"></i>Đã xác nhận hôm nay
+                            </small>
                             <h3 class="fw-bold mb-0 mt-1" style="color: #3b82f6;">{{ $stats['confirmed_today'] }}</h3>
                         </div>
                         <div class="rounded p-3" style="background: #dbeafe;">
@@ -77,7 +83,9 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <small class="text-muted">Thời gian chờ TB</small>
+                            <small class="text-muted" data-bs-toggle="tooltip" title="Thời gian chờ trung bình từ lúc check-in đến lúc bắt đầu khám">
+                                <i class="fas fa-info-circle me-1"></i>Thời gian chờ TB
+                            </small>
                             <h3 class="fw-bold mb-0 mt-1" style="color: #8b5cf6;">
                                 {{ $stats['avg_wait_time'] ?? 0 }} phút
                             </h3>
@@ -182,54 +190,135 @@
             @else
                 <div class="row g-3">
                     @foreach($inProgressQueue as $appt)
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card border h-100 shadow-sm" style="border-left: 4px solid #10b981 !important;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-2" style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;">
-                                            {{ strtoupper(substr($appt->user->name, 0, 1)) }}
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold">{{ $appt->user->name }}</div>
-                                            <small class="text-muted">{{ $appt->user->email }}</small>
+                    @php
+                        $startTime = $appt->thoi_gian_bat_dau_kham ?? $appt->updated_at;
+                        $duration = $startTime ? \Carbon\Carbon::parse($startTime)->diffInMinutes(now()) : 0;
+                        $phoneNumber = $appt->user->benh_nhan->so_dien_thoai ?? $appt->user->so_dien_thoai ?? 'N/A';
+                    @endphp
+                    
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm" style="border-left: 4px solid #10b981 !important; background: linear-gradient(to right, #ecfdf5 0%, white 100%);">
+                            <div class="card-body p-3">
+                                <div class="row align-items-center">
+                                    {{-- STT & Avatar --}}
+                                    <div class="col-auto">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <div class="mb-2" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+                                                {{ $appt->stt_kham ?? '?' }}
+                                            </div>
+                                            <span class="badge bg-success" style="font-size: 0.7rem;">
+                                                <i class="fas fa-spinner fa-spin me-1"></i>Đang khám
+                                            </span>
                                         </div>
                                     </div>
-                                    <span class="status-badge status-in-progress">
-                                        <i class="fas fa-spinner fa-spin me-1"></i>Đang khám
-                                    </span>
-                                </div>
 
-                                <div class="mb-2">
-                                    <small class="text-muted d-block">Dịch vụ:</small>
-                                    <span class="badge bg-light text-dark border">
-                                        {{ $appt->dichVu->ten_dich_vu ?? 'N/A' }}
-                                    </span>
-                                </div>
+                                    {{-- Patient Info --}}
+                                    <div class="col-md-3">
+                                        <div class="fw-bold text-dark mb-1" style="font-size: 1.1rem;">
+                                            {{ $appt->user->name }}
+                                        </div>
+                                        <div class="d-flex flex-column gap-1">
+                                            <small class="text-muted">
+                                                <i class="fas fa-id-card me-1"></i>
+                                                Mã BN: #{{ $appt->user->id }}
+                                            </small>
+                                            <small class="text-muted">
+                                                <i class="fas fa-phone me-1"></i>
+                                                {{ $phoneNumber }}
+                                            </small>
+                                        </div>
+                                    </div>
 
-                                <div class="mb-3">
-                                    <small class="text-muted d-block">Thời gian bắt đầu:</small>
-                                    <div class="fw-semibold">
-                                        <i class="far fa-clock me-1" style="color: #10b981;"></i>
-                                        {{ $appt->updated_at ? \Carbon\Carbon::parse($appt->updated_at)->format('H:i') : 'N/A' }}
+                                    {{-- Service & Room --}}
+                                    <div class="col-md-2">
+                                        <small class="text-muted d-block mb-1">Dịch vụ</small>
+                                        <span class="badge" style="background: #dcfce7; color: #166534; font-size: 0.85rem; font-weight: 600;">
+                                            {{ $appt->dichVu->ten_dich_vu ?? 'N/A' }}
+                                        </span>
+                                        @if($appt->bacSi && $appt->bacSi->phong)
+                                        <div class="mt-2">
+                                            <small class="text-muted d-block">Phòng khám</small>
+                                            <span class="fw-semibold text-primary">
+                                                <i class="fas fa-door-open me-1"></i>
+                                                {{ $appt->bacSi->phong->ten_phong }}
+                                            </span>
+                                        </div>
+                                        @endif
+                                    </div>
+
+                                    {{-- Timeline --}}
+                                    <div class="col-md-2">
+                                        <div class="d-flex flex-column gap-2">
+                                            <div>
+                                                <small class="text-muted d-block">Bắt đầu khám</small>
+                                                <div class="fw-semibold text-success">
+                                                    <i class="far fa-clock me-1"></i>
+                                                    {{ $startTime ? \Carbon\Carbon::parse($startTime)->format('H:i') : 'N/A' }}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">Thời gian khám</small>
+                                                <div class="fw-bold {{ $duration > 30 ? 'text-warning' : 'text-success' }}">
+                                                    <i class="fas fa-stopwatch me-1"></i>
+                                                    {{ $duration }} phút
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- Progress Bar --}}
+                                    <div class="col-md-2">
+                                        <small class="text-muted d-block mb-1">Tiến độ</small>
+                                        <div class="progress mb-2" style="height: 8px;">
+                                            @php
+                                                $expectedDuration = $appt->dichVu->thoi_gian ?? 30;
+                                                $progress = min(100, ($duration / $expectedDuration) * 100);
+                                                $progressColor = $progress > 100 ? '#ef4444' : ($progress > 80 ? '#f59e0b' : '#10b981');
+                                            @endphp
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: {{ $progress }}%; background: {{ $progressColor }};"
+                                                 aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ min(100, round($progress)) }}% / Dự kiến: {{ $expectedDuration }}p
+                                        </small>
+                                    </div>
+
+                                    {{-- Actions --}}
+                                    <div class="col-md-2">
+                                        <div class="d-flex flex-column gap-2">
+                                            @if($appt->benhAn)
+                                                <a href="{{ route('doctor.benhan.edit', $appt->benhAn->id) }}"
+                                                   class="btn btn-success btn-sm w-100">
+                                                    <i class="fas fa-stethoscope me-1"></i>
+                                                    Tiếp tục khám
+                                                </a>
+                                            @else
+                                                <form action="{{ route('doctor.queue.start', $appt->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                                        <i class="fas fa-file-medical me-1"></i>
+                                                        Tạo bệnh án
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            
+                                            <div class="btn-group w-100" role="group">
+                                                <a href="tel:{{ $phoneNumber }}" 
+                                                   class="btn btn-outline-primary btn-sm"
+                                                   title="Gọi điện">
+                                                    <i class="fas fa-phone"></i>
+                                                </a>
+                                                <a href="{{ route('doctor.lichhen.show', $appt->id) }}" 
+                                                   class="btn btn-outline-info btn-sm"
+                                                   title="Xem chi tiết">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
-                                @if($appt->benhAn)
-                                    <a href="{{ route('doctor.benhan.edit', $appt->benhAn->id) }}"
-                                       class="btn btn-outline-success w-100">
-                                        <i class="fas fa-edit me-1"></i>
-                                        Tiếp tục khám
-                                    </a>
-                                @else
-                                    <form action="{{ route('doctor.queue.start', $appt->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn vc-btn-primary w-100">
-                                            <i class="fas fa-stethoscope me-1"></i>
-                                            Tạo bệnh án
-                                        </button>
-                                    </form>
-                                @endif
                             </div>
                         </div>
                     </div>
@@ -329,6 +418,12 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Bootstrap tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
     // Start examination confirmation
     document.querySelectorAll('.start-exam-form').forEach(form => {
         form.addEventListener('submit', function(e) {

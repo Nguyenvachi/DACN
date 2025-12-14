@@ -93,13 +93,26 @@ class BenhAnController extends Controller
             'bac_si_id'   => ['required', 'exists:bac_sis,id'],
             'lich_hen_id' => ['nullable', 'exists:lich_hens,id'],
             'ngay_kham'   => ['required', 'date'],
-            'tieu_de'     => ['required', 'string', 'max:255'],
+            'tieu_de'     => ['nullable', 'string', 'max:255'],
             'trieu_chung' => ['nullable', 'string'],
             'chuan_doan'  => ['nullable', 'string'],
             'dieu_tri'    => ['nullable', 'string'],
             'ghi_chu'     => ['nullable', 'string'],
             'files.*'     => ['nullable', 'file', 'max:8192'],
         ]);
+
+        // Tự động lấy tiêu đề từ dịch vụ nếu có lịch hẹn
+        if (!empty($data['lich_hen_id'])) {
+            $lichHen = LichHen::with('dichVu')->find($data['lich_hen_id']);
+            if ($lichHen && $lichHen->dichVu) {
+                $data['tieu_de'] = $lichHen->dichVu->ten_dich_vu;
+            }
+        }
+
+        // Nếu vẫn không có tiêu đề, dùng mặc định
+        if (empty($data['tieu_de'])) {
+            $data['tieu_de'] = 'Khám bệnh';
+        }
 
         $record = BenhAn::create($data);
 

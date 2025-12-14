@@ -104,8 +104,10 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Tiêu đề</label>
-                            <input type="text" name="tieu_de" class="form-control"
-                                   value="{{ old('tieu_de', $record->tieu_de) }}" required>
+                            <input type="text" name="tieu_de" class="form-control bg-light" 
+                                   value="{{ $record->lichHen && $record->lichHen->dichVu ? $record->lichHen->dichVu->ten_dich_vu : old('tieu_de', $record->tieu_de) }}" 
+                                   readonly required>
+                            <small class="text-muted">Tiêu đề tự động lấy từ dịch vụ đã chọn</small>
                         </div>
 
                         <div class="mb-3">

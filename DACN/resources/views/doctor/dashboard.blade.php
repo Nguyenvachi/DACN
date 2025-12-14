@@ -54,6 +54,79 @@
         </div>
     </div>
 
+    {{-- ĐANG KHÁM - HIGHLIGHTED SECTION --}}
+    @php
+        $inProgressAppointments = \App\Models\LichHen::where('bac_si_id', $bacSi->id)
+            ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_IN_PROGRESS_VN])
+            ->with(['user.benh_nhan', 'dichVu', 'benhAn'])
+            ->orderBy('updated_at', 'desc')
+            ->get();
+    @endphp
+
+    @if($inProgressAppointments->isNotEmpty())
+    <div class="alert" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 2px solid #10b981; border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);" role="alert">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1">
+                <h5 class="mb-2 fw-bold" style="color: #065f46;">
+                    <i class="fas fa-stethoscope fa-spin me-2"></i>
+                    Bạn đang khám {{ $inProgressAppointments->count() }} bệnh nhân
+                </h5>
+                <div class="row g-2">
+                    @foreach($inProgressAppointments as $appt)
+                    @php
+                        $startTime = $appt->thoi_gian_bat_dau_kham ?? $appt->updated_at;
+                        $duration = $startTime ? \Carbon\Carbon::parse($startTime)->diffInMinutes(now()) : 0;
+                    @endphp
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm" style="background: white;">
+                            <div class="card-body p-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center flex-grow-1">
+                                        <div class="me-3" style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem;">
+                                            {{ $appt->stt_kham ?? '?' }}
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">{{ $appt->user->name }}</div>
+                                            <small class="text-muted">
+                                                {{ $appt->dichVu->ten_dich_vu ?? 'N/A' }} • 
+                                                <i class="fas fa-clock me-1"></i>{{ $duration }}p
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        @if($appt->benhAn)
+                                            <a href="{{ route('doctor.benhan.edit', $appt->benhAn->id) }}"
+                                               class="btn btn-success btn-sm">
+                                                <i class="fas fa-arrow-right me-1"></i>
+                                                Tiếp tục
+                                            </a>
+                                        @else
+                                            <form action="{{ route('doctor.queue.start', $appt->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-play me-1"></i>
+                                                    Bắt đầu
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="ms-3">
+                <a href="{{ route('doctor.queue.index') }}" class="btn btn-success">
+                    <i class="fas fa-list me-2"></i>
+                    Xem hàng đợi
+                </a>
+            </div>
+        </div>
+    </div>
+    @endif
+
     {{-- THỐNG KÊ TỔNG QUAN - 4 CARDS --}}
     <div class="row g-3 mb-4">
         {{-- Card 1: Lịch hẹn hôm nay --}}

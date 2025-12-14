@@ -68,11 +68,11 @@
                             <label class="form-label">Loại thủ thuật <span class="text-danger">*</span></label>
                             <select name="dich_vu_id" class="form-select" required id="thuThuatSelect">
                                 <option value="">-- Chọn loại thủ thuật --</option>
-                                @foreach($dichVuThuThuat as $dichVu)
-                                <option value="{{ $dichVu->id }}" 
-                                        data-gia="{{ number_format($dichVu->gia_tien, 0, ',', '.') }}"
-                                        {{ old('dich_vu_id') == $dichVu->id ? 'selected' : '' }}>
-                                    {{ $dichVu->ten_dich_vu }} - {{ number_format($dichVu->gia_tien, 0, ',', '.') }} VNĐ
+                                @foreach($dichVuThuThuat as $thuThuat)
+                                <option value="{{ $thuThuat->id }}" 
+                                        data-gia="{{ number_format($thuThuat->gia_tien, 0, ',', '.') }}"
+                                        {{ old('dich_vu_id') == $thuThuat->id ? 'selected' : '' }}>
+                                    {{ $thuThuat->ten }} - {{ number_format($thuThuat->gia_tien, 0, ',', '.') }} VNĐ
                                 </option>
                                 @endforeach
                             </select>

@@ -190,14 +190,14 @@
                         <div class="card-body">
                             {{-- Tiêu đề --}}
                             <div class="mb-4">
-                                <label class="form-label fw-semibold required">
+                                <label class="form-label fw-semibold">
                                     <i class="fas fa-heading me-1"></i>
                                     Tiêu đề bệnh án
                                 </label>
-                                <input type="text" name="tieu_de" class="form-control form-control-lg"
+                                <input type="text" name="tieu_de" id="tieu_de_input" class="form-control form-control-lg bg-light"
                                     value="{{ old('tieu_de') }}"
-                                    placeholder="VD: Khám tổng quát, Khám tiêu hóa, Khám nội khoa..." required>
-                                <small class="text-muted">Tên mô tả ngắn gọn về ca khám</small>
+                                    placeholder="Sẽ tự động điền khi chọn lịch hẹn" readonly>
+                                <small class="text-muted">Tiêu đề tự động lấy từ dịch vụ đã chọn</small>
                             </div>
 
                             {{-- 3 cột nội dung chính --}}
@@ -641,6 +641,21 @@ VD:
                 e.preventDefault();
                 alert('Vui lòng chọn bệnh nhân!');
                 return false;
+            }
+        });
+
+        // Auto-fill title from appointment service
+        document.getElementById('lich_hen_id')?.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const tieuDeInput = document.getElementById('tieu_de_input');
+            
+            if (this.value && selectedOption) {
+                const serviceName = selectedOption.getAttribute('data-service');
+                if (serviceName && serviceName !== 'N/A') {
+                    tieuDeInput.value = serviceName;
+                }
+            } else {
+                tieuDeInput.value = '';
             }
         });
     </script>
