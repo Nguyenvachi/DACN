@@ -6,149 +6,150 @@
     <div class="container-fluid px-4 py-4">
 
         <!-- Page Header -->
-        <x-patient.page-header title="Lịch Hẹn Khám" subtitle="Quản lý và theo dõi các lịch hẹn của bạn" icon="fa-calendar-alt"
-            :action-route="route('public.bacsi.index')" action-text="Đặt lịch mới" action-icon="fa-plus" />
+        <div class="d-flex justify-content-between align-items-center mb-4 animate__animated animate__fadeInDown">
+            <div>
+                <h2 class="fw-bold mb-1" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <i class="fas fa-calendar-alt me-2" style="-webkit-text-fill-color: #667eea;"></i>Lịch Hẹn Khám
+                </h2>
+                <p class="text-muted mb-0">Quản lý và theo dõi các lịch hẹn của bạn</p>
+            </div>
+            <a href="{{ route('public.bacsi.index') }}" class="btn btn-primary px-4 py-2 shadow-sm" 
+               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                <i class="fas fa-plus me-2"></i>Đặt lịch mới
+            </a>
+        </div>
 
         <!-- Alerts -->
         @if (session('success'))
-            <x-patient.alert type="success">{{ session('success') }}</x-patient.alert>
+            <div class="alert alert-success alert-dismissible fade show shadow-sm border-0">
+                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         @endif
         @if (session('error'))
-            <x-patient.alert type="error">{{ session('error') }}</x-patient.alert>
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         @endif
-
-        <!-- Stats Overview -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <x-patient.stat-card title="Tổng lịch hẹn" :value="$danhSachLichHen->count()" icon="fa-calendar-check" color="primary" />
-            </div>
-            <div class="col-md-3">
-                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_PENDING_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)->count()" icon="fa-clock" color="warning" />
-            </div>
-            <div class="col-md-3">
-                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count()" icon="fa-check-circle" color="success" />
-            </div>
-            <div class="col-md-3">
-                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)->count()" icon="fa-check-double" color="info" />
-            </div>
-        </div>
 
         @if ($danhSachLichHen->count() > 0)
 
             <!-- Filter Tabs -->
-            <x-patient.filter-tabs :tabs="[
-                ['id' => 'all', 'label' => 'Tất cả', 'icon' => 'fa-list', 'count' => $danhSachLichHen->count()],
-                [
-                    'id' => 'pending',
-                    'label' => 'Chờ xác nhận',
-                    'icon' => 'fa-clock',
-                    'count' => $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)->count(),
-                ],
-                [
-                    'id' => 'confirmed',
-                    'label' => 'Đã xác nhận',
-                    'icon' => 'fa-check',
-                    'count' => $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count(),
-                ],
-                [
-                    'id' => 'completed',
-                    'label' => \App\Models\LichHen::STATUS_COMPLETED_VN,
-                    'icon' => 'fa-check-double',
-                    'count' => $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)->count(),
-                ],
-                [
-                    'id' => 'cancelled',
-                    'label' => 'Đã hủy',
-                    'icon' => 'fa-times',
-                    'count' => $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_CANCELLED_VN)->count(),
-                ],
-            ]" />
+            <div class="card shadow-sm border-0 mb-4" style="overflow: hidden;">
+                <div class="card-body p-0" style="background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%);">
+                    <ul class="nav nav-pills p-3" role="tablist">
+                        <li class="nav-item me-2">
+                            <button class="nav-link active rounded-pill px-4 py-2" data-bs-toggle="tab" data-bs-target="#all">
+                                <i class="fas fa-list me-2"></i>Tất cả 
+                                <span class="badge bg-white text-primary ms-2 shadow-sm">{{ $danhSachLichHen->count() }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item me-2">
+                            <button class="nav-link rounded-pill px-4 py-2" data-bs-toggle="tab" data-bs-target="#pending">
+                                <i class="fas fa-clock me-2"></i>Chờ xác nhận 
+                                <span class="badge bg-warning text-white ms-2 shadow-sm">{{ $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)->count() }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item me-2">
+                            <button class="nav-link rounded-pill px-4 py-2" data-bs-toggle="tab" data-bs-target="#confirmed">
+                                <i class="fas fa-check-circle me-2"></i>Đã xác nhận 
+                                <span class="badge bg-success text-white ms-2 shadow-sm">{{ $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count() }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item me-2">
+                            <button class="nav-link rounded-pill px-4 py-2" data-bs-toggle="tab" data-bs-target="#completed">
+                                <i class="fas fa-check-double me-2"></i>Hoàn thành 
+                                <span class="badge bg-info text-white ms-2 shadow-sm">{{ $danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)->count() }}</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
             <!-- Listing -->
-            <div class="card-hc">
+            <div class="card shadow border-0" style="border-radius: 15px; overflow: hidden;">
                 <div class="table-responsive">
-                    <table id="appointmentsTable" class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                             <tr>
-                                <th class="px-4">Ngày & Giờ</th>
-                                <th>Bác sĩ</th>
-                                <th>Chuyên khoa</th>
-                                <th>Dịch vụ</th>
-                                <th>Trạng thái</th>
-                                <th>Thanh toán</th>
-                                <th class="text-center">Hành động</th>
+                                <th class="border-0 py-3 ps-4">Ngày & Giờ</th>
+                                <th class="border-0 py-3">Bác sĩ</th>
+                                <th class="border-0 py-3">Dịch vụ</th>
+                                <th class="border-0 py-3">Trạng thái</th>
+                                <th class="border-0 py-3">Thanh toán</th>
+                                <th class="border-0 py-3 text-center pe-4">Hành động</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             @foreach ($danhSachLichHen as $lichHen)
-                                <tr data-status="{{ strtolower(str_replace(' ', '-', $lichHen->trang_thai)) }}">
+                                <tr class="border-bottom">
 
                                     <!-- NGÀY GIỜ -->
-                                    <td class="px-4">
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-light rounded p-2 me-3">
-                                                <i class="fas fa-calendar text-primary-hc"></i>
+                                    <td class="py-3 ps-4">
+                                        <div>
+                                            <div class="fw-semibold" style="color: #2d3748;">
+                                                {{ \Carbon\Carbon::parse($lichHen->ngay_hen)->format('d/m/Y') }}
                                             </div>
-                                            <div>
-                                                <div class="fw-semibold">
-                                                    {{ \Carbon\Carbon::parse($lichHen->ngay_hen)->format('d/m/Y') }}</div>
-                                                <div class="text-secondary-hc small">
-                                                    <i class="fas fa-clock"></i> {{ $lichHen->thoi_gian_hen }}
-                                                </div>
+                                            <div class="text-muted small">
+                                                {{ $lichHen->thoi_gian_hen }}
                                             </div>
                                         </div>
                                     </td>
 
                                     <!-- BÁC SĨ -->
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            @if ($lichHen->bacSi?->user?->avatar)
-                                                <img src="{{ Storage::url($lichHen->bacSi->user->avatar) }}"
-                                                    class="rounded-circle me-2"
-                                                    style="width:40px;height:40px;object-fit:cover;">
-                                            @else
-                                                <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-2"
-                                                    style="width:40px;height:40px;background:linear-gradient(135deg,#667eea,#764ba2);">
-                                                    <i class="fas fa-user-md"></i>
-                                                </div>
-                                            @endif
-                                            <div class="fw-semibold">{{ $lichHen->bacSi->ho_ten ?? 'N/A' }}</div>
+                                    <td class="py-3">
+                                        <div>
+                                            <div class="fw-semibold" style="color: #2d3748;">{{ $lichHen->bacSi->ho_ten ?? 'N/A' }}</div>
+                                            <div class="text-muted small">
+                                                {{ $lichHen->bacSi->chuyen_khoa }}
+                                            </div>
                                         </div>
                                     </td>
 
-                                    <td><span class="badge bg-light text-dark border"><i
-                                                class="fas fa-stethoscope me-1"></i>{{ $lichHen->bacSi->chuyen_khoa }}</span>
+                                    <!-- DỊCH VỤ -->
+                                    <td class="py-3">
+                                        <span class="badge bg-light text-dark border">
+                                            {{ $lichHen->dichVu->ten_dich_vu }}
+                                        </span>
                                     </td>
-                                    <td>{{ $lichHen->dichVu->ten_dich_vu }}</td>
 
                                     <!-- TRẠNG THÁI -->
-                                    <td>
-                                        <x-patient.status-badge :status="$lichHen->trang_thai" :type="match ($lichHen->trang_thai) {
+                                    <td class="py-3">
+                                        @php
+                                            $statusClass = match ($lichHen->trang_thai) {
                                                 \App\Models\LichHen::STATUS_PENDING_VN => 'warning',
                                                 \App\Models\LichHen::STATUS_CONFIRMED_VN => 'success',
                                                 \App\Models\LichHen::STATUS_CANCELLED_VN => 'danger',
                                                 \App\Models\LichHen::STATUS_COMPLETED_VN => 'info',
-                                            default => 'default',
-                                        }" />
+                                                default => 'secondary',
+                                            };
+                                        @endphp
+                                        <span class="badge bg-{{ $statusClass }}">
+                                            {{ $lichHen->trang_thai }}
+                                        </span>
                                     </td>
 
                                     <!-- THANH TOÁN -->
-                                    <td>
+                                    <td class="py-3">
                                         @if ($lichHen->is_paid)
-                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Đã TT</span>
+                                            <span class="badge bg-success">
+                                                Đã thanh toán
+                                            </span>
                                         @else
-                                            <span class="badge bg-warning text-dark"><i
-                                                    class="fas fa-exclamation-circle"></i> Chưa TT</span>
+                                            <span class="badge bg-warning text-dark">
+                                                Chưa thanh toán
+                                            </span>
                                         @endif
                                     </td>
 
                                     <!-- ACTIONS -->
-                                    <td class="text-center">
-                                        <div class="btn-group">
+                                    <td class="text-center py-3">
+                                        <div class="btn-group" role="group">
 
-                                            <!-- 🔍 XEM CHI TIẾT (CHỈ 1 MODAL DUY NHẤT) -->
-                                            <button type="button" class="btn btn-sm btn-outline-primary btn-view-detail"
+                                            <!-- XEM CHI TIẾT -->
+                                            <button type="button" class="btn btn-sm btn-outline-primary" title="Xem chi tiết"
                                                 data-bs-toggle="modal" data-bs-target="#detailModal"
                                                 data-ngay="{{ \Carbon\Carbon::parse($lichHen->ngay_hen)->format('d/m/Y') }}"
                                                 data-gio="{{ $lichHen->thoi_gian_hen }}"
@@ -164,25 +165,17 @@
 
                                             <!-- SỬA -->
                                             @if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN]))
-                                                <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal{{ $lichHen->id }}">
+                                                <button class="btn btn-sm btn-outline-success" title="Chỉnh sửa"
+                                                    data-bs-toggle="modal" data-bs-target="#editModal{{ $lichHen->id }}">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                             @endif
 
-                                            <!-- CHAT -->
-                                            @if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_COMPLETED_VN]))
-                                                <a href="{{ route('patient.chat.create', $lichHen->bac_si_id) }}"
-                                                    class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-comment-medical"></i>
-                                                </a>
-                                            @endif
-
                                             <!-- HỦY -->
                                             @if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN]))
-                                                <button class="btn btn-sm btn-outline-danger"
+                                                <button class="btn btn-sm btn-outline-danger" title="Hủy lịch"
                                                     onclick="if(confirm('Xác nhận hủy lịch hẹn?')) document.getElementById('delete{{ $lichHen->id }}').submit();">
-                                                    <i class="fas fa-times-circle"></i>
+                                                    <i class="fas fa-times"></i>
                                                 </button>
 
                                                 <form id="delete{{ $lichHen->id }}" method="POST"
@@ -360,8 +353,120 @@
                     document.getElementById("ctGhiChu").innerText = btn.dataset.ghichu || "Không có ghi chú";
                 });
 
+                // Tab filtering functionality
+                const tabButtons = document.querySelectorAll('.nav-pills .nav-link');
+                const tableRows = document.querySelectorAll('table tbody tr');
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const target = this.getAttribute('data-bs-target');
+                        let filterStatus = '';
+
+                        // Determine which status to filter
+                        if (target === '#pending') {
+                            filterStatus = '{{ \App\Models\LichHen::STATUS_PENDING_VN }}';
+                        } else if (target === '#confirmed') {
+                            filterStatus = '{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}';
+                        } else if (target === '#completed') {
+                            filterStatus = '{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}';
+                        }
+
+                        // Show/hide rows based on filter
+                        tableRows.forEach(row => {
+                            if (target === '#all') {
+                                row.style.display = '';
+                            } else {
+                                const statusBadge = row.querySelector('td:nth-child(4) .badge');
+                                if (statusBadge && statusBadge.textContent.trim() === filterStatus) {
+                                    row.style.display = '';
+                                } else {
+                                    row.style.display = 'none';
+                                }
+                            }
+                        });
+                    });
+                });
+
             });
         </script>
+
+        <style>
+            /* Smooth transitions */
+            .table tbody tr {
+                transition: all 0.3s ease;
+            }
+
+            .table tbody tr:hover {
+                background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+                transform: translateX(5px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            }
+
+            /* Button hover effects */
+            .btn-group .btn {
+                transition: all 0.2s ease;
+            }
+
+            .btn-group .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            }
+
+            /* Badge animations */
+            .badge {
+                transition: all 0.2s ease;
+            }
+
+            .badge:hover {
+                transform: scale(1.05);
+            }
+
+            /* Nav pills active state */
+            .nav-pills .nav-link.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+                transition: all 0.3s ease;
+            }
+
+            .nav-pills .nav-link {
+                transition: all 0.3s ease;
+            }
+
+            .nav-pills .nav-link:not(.active):hover {
+                background-color: #f8f9fa;
+                transform: translateY(-2px);
+            }
+
+            /* Card hover effect */
+            .card {
+                transition: all 0.3s ease;
+            }
+
+            .card:hover {
+                box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+            }
+
+            /* Avatar pulse effect */
+            .rounded-circle.bg-gradient {
+                animation: subtle-pulse 3s ease-in-out infinite;
+            }
+
+            @keyframes subtle-pulse {
+                0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+                50% { box-shadow: 0 0 0 8px rgba(102, 126, 234, 0); }
+            }
+
+            /* Icon date hover */
+            .bg-light.rounded:hover {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                color: white !important;
+                transition: all 0.3s ease;
+            }
+
+            .bg-light.rounded:hover i {
+                color: white !important;
+            }
+        </style>
     @endpush
 
 @endsection

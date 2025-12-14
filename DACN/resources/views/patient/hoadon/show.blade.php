@@ -38,7 +38,7 @@
                 @if($hoaDon->lichHen)
                     <div class="alert alert-info">
                         <h6 class="alert-heading"><i class="fas fa-calendar-check me-2"></i>Thông tin lịch hẹn</h6>
-                        <p class="mb-1"><strong>Bác sĩ:</strong> {{ $hoaDon->lichHen->bacSi->ten_bac_si }}</p>
+                        <p class="mb-1"><strong>Bác sĩ:</strong> {{ $hoaDon->lichHen->bacSi->ho_ten ?? 'N/A' }}</p>
                         <p class="mb-1"><strong>Chuyên khoa:</strong> {{ $hoaDon->lichHen->bacSi->chuyenKhoa->ten_chuyen_khoa ?? 'N/A' }}</p>
                         <p class="mb-0"><strong>Ngày khám:</strong> {{ $hoaDon->lichHen->ngay_gio_kham?->format('d/m/Y H:i') }}</p>
                     </div>

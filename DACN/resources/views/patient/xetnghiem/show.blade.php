@@ -46,7 +46,7 @@
                             <p class="text-muted small mb-1">Bác sĩ chỉ định</p>
                             <p class="fw-bold mb-0">
                                 <i class="fas fa-user-md me-2 text-info"></i>
-                                {{ $xetNghiem->bacSi->user->name ?? 'N/A' }}
+                                {{ $xetNghiem->bacSiChiDinh->ho_ten ?? ($xetNghiem->benhAn->bacSi->ho_ten ?? 'N/A') }}
                             </p>
                         </div>
                         <div class="col-md-6 mb-3">

@@ -96,7 +96,7 @@
                         <div class="col-md-8">
                             @if($xetNghiem->benhAn)
                                 <div class="mb-3">
-                                    <p class="mb-1"><strong><i class="fas fa-user-md me-2"></i>Bác sĩ chỉ định:</strong> {{ $xetNghiem->benhAn->bacSi->ten_bac_si ?? 'N/A' }}</p>
+                                    <p class="mb-1"><strong><i class="fas fa-user-md me-2"></i>Bác sĩ chỉ định:</strong> {{ $xetNghiem->bacSiChiDinh->ho_ten ?? ($xetNghiem->benhAn->bacSi->ho_ten ?? 'N/A') }}</p>
                                     <p class="mb-1"><strong><i class="fas fa-file-medical me-2"></i>Bệnh án:</strong> #{{ $xetNghiem->benh_an_id }}</p>
                                     <p class="mb-0"><strong><i class="fas fa-stethoscope me-2"></i>Chẩn đoán:</strong> {{ $xetNghiem->benhAn->chan_doan ?? 'N/A' }}</p>
                                 </div>

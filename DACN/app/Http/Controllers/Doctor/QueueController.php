@@ -105,7 +105,6 @@ class QueueController extends Controller
             // Chuyển sang trang edit bệnh án để bác sĩ nhập thông tin
             return redirect()->route('doctor.benhan.edit', $benhAn->id)
                 ->with('success', 'Đã bắt đầu khám bệnh. Vui lòng nhập thông tin khám bệnh.');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error starting examination: ' . $e->getMessage());
@@ -135,7 +134,6 @@ class QueueController extends Controller
             }
 
             return back()->with('error', 'Không thể check-in.');
-
         } catch (\Exception $e) {
             Log::error('Error checking in: ' . $e->getMessage());
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
@@ -166,7 +164,7 @@ class QueueController extends Controller
 
         foreach ($processedToday as $appt) {
             $checkedInAt = Carbon::parse($appt->checked_in_at);
-            
+
             // Ưu tiên lấy thời gian từ bệnh án (khi bắt đầu khám)
             if ($appt->benhAn && $appt->benhAn->created_at) {
                 $startedAt = Carbon::parse($appt->benhAn->created_at);

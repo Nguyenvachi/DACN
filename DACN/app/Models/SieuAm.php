@@ -55,4 +55,14 @@ class SieuAm extends Model
     {
         return $this->belongsTo(BacSi::class);
     }
+
+    public function bacSiThucHien()
+    {
+        return $this->belongsTo(BacSi::class, 'bac_si_id');
+    }
+
+    public function loaiSieuAm()
+    {
+        return $this->belongsTo(LoaiSieuAm::class, 'loai_sieu_am');
+    }
 }

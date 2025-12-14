@@ -34,7 +34,7 @@
                             <p class="text-muted small mb-1">Bác sĩ kê đơn</p>
                             <p class="fw-bold">
                                 <i class="fas fa-user-md me-2 text-success"></i>
-                                {{ $donThuoc->bacSi->user->name ?? 'N/A' }}
+                                {{ $donThuoc->bacSi->ho_ten ?? ($donThuoc->benhAn->bacSi->ho_ten ?? 'N/A') }}
                             </p>
                         </div>
                     </div>
@@ -63,12 +63,14 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>
-                                            <strong>{{ $item->thuoc->ten_thuoc }}</strong>
-                                            <br><small class="text-muted">{{ $item->thuoc->hoat_chat }}</small>
+                                            <strong>{{ $item->thuoc->ten_thuoc ?? 'N/A' }}</strong>
+                                            @if($item->thuoc && $item->thuoc->hoat_chat)
+                                                <br><small class="text-muted">{{ $item->thuoc->hoat_chat }}</small>
+                                            @endif
                                         </td>
-                                        <td>{{ $item->lieu_luong }}</td>
+                                        <td>{{ $item->lieu_dung ?? 'Á Ả' }}</td>
                                         <td>{{ $item->so_luong }}</td>
-                                        <td>{{ $item->cach_dung }}</td>
+                                        <td>{{ $item->cach_dung ?? 'Á Ả' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

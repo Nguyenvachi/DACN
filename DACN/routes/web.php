@@ -726,6 +726,18 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::get('/{xetNghiem}', [\App\Http\Controllers\Patient\XetNghiemController::class, 'show'])->name('show');
     });
 
+    // Patient Ultrasound Results Routes
+    Route::prefix('sieu-am')->name('patient.sieuam.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\SieuAmController::class, 'index'])->name('index');
+        Route::get('/{sieuAm}', [\App\Http\Controllers\Patient\SieuAmController::class, 'show'])->name('show');
+    });
+
+    // Patient Procedure Results Routes
+    Route::prefix('thu-thuat')->name('patient.thuthuat.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\ThuThuatController::class, 'index'])->name('index');
+        Route::get('/{thuThuat}', [\App\Http\Controllers\Patient\ThuThuatController::class, 'show'])->name('show');
+    });
+
     // Patient Notifications Routes (File mẹ: routes/web.php)
     Route::get('/thong-bao', [\App\Http\Controllers\Patient\NotificationController::class, 'index'])->name('patient.notifications');
     Route::post('/thong-bao/mark-all-read', [\App\Http\Controllers\Patient\NotificationController::class, 'markAllRead'])->name('patient.notifications.mark-all-read');

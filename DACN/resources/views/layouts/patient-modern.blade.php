@@ -254,6 +254,16 @@
                     <span>Kết quả xét nghiệm</span>
                 </a>
 
+                <a href="{{ route('patient.sieuam.index') }}" class="sidebar-link {{ request()->routeIs('patient.sieuam.*') ? 'active' : '' }}">
+                    <i class="fas fa-heartbeat" style="width: 20px;"></i>
+                    <span>Kết quả siêu âm</span>
+                </a>
+
+                <a href="{{ route('patient.thuthuat.index') }}" class="sidebar-link {{ request()->routeIs('patient.thuthuat.*') ? 'active' : '' }}">
+                    <i class="fas fa-procedures" style="width: 20px;"></i>
+                    <span>Kết quả thủ thuật</span>
+                </a>
+
                 <a href="{{ route('patient.hoadon.index') }}" class="sidebar-link {{ request()->routeIs('patient.hoadon.*') ? 'active' : '' }}">
                     <i class="fas fa-file-invoice-dollar" style="width: 20px;"></i>
                     <span>Hóa đơn</span>

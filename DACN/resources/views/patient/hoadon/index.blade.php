@@ -102,8 +102,6 @@
                                 <th>Lịch hẹn</th>
                                 <th>Tổng tiền</th>
                                 <th>Đã thanh toán</th>
-                                <th>Còn lại</th>
-                                <th>Trạng thái</th>
                                 <th>Hành động</th>
                             </tr>
                         </thead>
@@ -111,11 +109,11 @@
                             @forelse($hoaDons as $hoaDon)
                                 <tr>
                                     <td><strong>#{{ $hoaDon->id }}</strong></td>
-                                    <td>{{ $hoaDon->ngay_tao?->format('d/m/Y H:i') }}</td>
+                                    <td>{{ $hoaDon->created_at?->format('d/m/Y H:i') }}</td>
                                     <td>
                                         @if($hoaDon->lichHen)
                                             <small class="text-muted">
-                                                {{ $hoaDon->lichHen->bacSi->ten_bac_si }}<br>
+                                                {{ $hoaDon->lichHen->bacSi->ho_ten ?? 'N/A' }}<br>
                                                 {{ $hoaDon->lichHen->ngay_gio_kham?->format('d/m/Y H:i') }}
                                             </small>
                                         @else
@@ -124,24 +122,6 @@
                                     </td>
                                     <td><strong>{{ number_format($hoaDon->tong_tien) }}đ</strong></td>
                                     <td>{{ number_format($hoaDon->da_thanh_toan) }}đ</td>
-                                    <td>
-                                        @if($hoaDon->con_lai > 0)
-                                            <span class="text-danger fw-bold">{{ number_format($hoaDon->con_lai) }}đ</span>
-                                        @else
-                                            <span class="text-success">0đ</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($hoaDon->trang_thai === 'chua_thanh_toan')
-                                            <span class="badge badge-warning">Chưa thanh toán</span>
-                                        @elseif($hoaDon->trang_thai === 'da_thanh_toan')
-                                            <span class="badge badge-success">Đã thanh toán</span>
-                                        @elseif($hoaDon->trang_thai === 'thanh_toan_mot_phan')
-                                            <span class="badge badge-info">Thanh toán 1 phần</span>
-                                        @elseif($hoaDon->trang_thai === 'hoan_tien')
-                                            <span class="badge badge-danger">Hoàn tiền</span>
-                                        @endif
-                                    </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ route('patient.hoadon.show', $hoaDon) }}" class="btn btn-outline-primary" title="Xem chi tiết">

@@ -44,10 +44,12 @@ class PatientDashboardController extends Controller
             'unpaid_invoices' => HoaDon::where('user_id', $user->id)
                 ->where('trang_thai', '!=', \App\Models\HoaDon::STATUS_PAID_VN)
                 ->count(),
-            'total_prescriptions' => DonThuoc::whereHas('benhAn', function($q) use ($user) {
+            'total_prescriptions' => DonThuoc::whereHas('benhAn', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             })->count(),
-            'total_tests' => XetNghiem::where('user_id', $user->id)->count(),
+            'total_tests' => XetNghiem::whereHas('benhAn', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->count(),
         ];
 
         // === LỊCH HẸN SẮP TỚI (5 gần nhất) ===
@@ -97,10 +99,12 @@ class PatientDashboardController extends Controller
         $appointmentChartData = $this->getAppointmentChartData($user->id);
 
         // === XÉT NGHIỆM GẦN ĐÂY ===
-        $recentTests = XetNghiem::where('user_id', $user->id)
+        $recentTests = XetNghiem::whereHas('benhAn', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })
             ->orderBy('created_at', 'desc')
             ->take(3)
-            ->with(['bacSi', 'benhAn'])
+            ->with(['bacSiChiDinh.user', 'benhAn'])
             ->get();
 
         // === ĐÁNH GIÁ CỦA TÔI ===

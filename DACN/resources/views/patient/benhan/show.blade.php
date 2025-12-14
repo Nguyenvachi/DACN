@@ -63,11 +63,11 @@
                         </div>
                     @endif
 
-                    @if($benhAn->chan_doan)
+                    @if($benhAn->chuan_doan)
                         <div class="mt-3">
                             <p class="text-muted small mb-1"><i class="fas fa-stethoscope me-1"></i>Chẩn đoán</p>
                             <div class="alert alert-info mb-0">
-                                {{ $benhAn->chan_doan }}
+                                {{ $benhAn->chuan_doan }}
                             </div>
                         </div>
                     @endif
@@ -120,6 +120,123 @@
                         <a href="{{ route('patient.donthuoc.show', $benhAn->donThuoc) }}" class="btn btn-sm btn-outline-success">
                             <i class="fas fa-eye me-1"></i>Xem chi tiết đơn thuốc
                         </a>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Kết quả siêu âm -->
+            @if($benhAn->sieuAms && $benhAn->sieuAms->count() > 0)
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <h5 class="mb-0"><i class="fas fa-heartbeat me-2"></i>Kết Quả Siêu Âm</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach($benhAn->sieuAms as $sieuAm)
+                            <div class="border rounded p-3 mb-3" style="background-color: #f8f9fa;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="mb-2"><strong>Loại siêu âm:</strong> {{ $sieuAm->loaiSieuAm->ten ?? 'N/A' }}</p>
+                                        <p class="mb-2"><strong>Ngày thực hiện:</strong> {{ \Carbon\Carbon::parse($sieuAm->ngay_thuc_hien)->format('d/m/Y') }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-2"><strong>Bác sĩ thực hiện:</strong> {{ $sieuAm->bacSiThucHien->ho_ten ?? 'N/A' }}</p>
+                                        <p class="mb-2">
+                                            <strong>Trạng thái:</strong> 
+                                            <span class="badge bg-{{ $sieuAm->trang_thai === 'Đã có kết quả' ? 'success' : 'warning' }}">
+                                                {{ $sieuAm->trang_thai }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                @if($sieuAm->ket_qua)
+                                    <div class="mt-3">
+                                        <p class="mb-1"><strong>Kết quả:</strong></p>
+                                        <div class="alert alert-info mb-0">
+                                            {{ $sieuAm->ket_qua }}
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($sieuAm->ket_luan)
+                                    <div class="mt-2">
+                                        <p class="mb-1"><strong>Kết luận:</strong></p>
+                                        <div class="alert alert-success mb-0">
+                                            {{ $sieuAm->ket_luan }}
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($sieuAm->ghi_chu)
+                                    <div class="mt-2">
+                                        <p class="mb-1"><strong>Ghi chú:</strong></p>
+                                        <p class="text-muted mb-0">{{ $sieuAm->ghi_chu }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <!-- Kết quả thủ thuật -->
+            @if($benhAn->thuThuats && $benhAn->thuThuats->count() > 0)
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header text-white" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <h5 class="mb-0"><i class="fas fa-procedures me-2"></i>Kết Quả Thủ Thuật</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach($benhAn->thuThuats as $thuThuat)
+                            <div class="border rounded p-3 mb-3" style="background-color: #fff5f5;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="mb-2"><strong>Loại thủ thuật:</strong> {{ $thuThuat->loaiThuThuat->ten ?? 'N/A' }}</p>
+                                        <p class="mb-2"><strong>Ngày thực hiện:</strong> {{ \Carbon\Carbon::parse($thuThuat->ngay_thuc_hien)->format('d/m/Y') }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-2"><strong>Bác sĩ thực hiện:</strong> {{ $thuThuat->bacSiThucHien->ho_ten ?? 'N/A' }}</p>
+                                        <p class="mb-2">
+                                            <strong>Trạng thái:</strong> 
+                                            <span class="badge bg-{{ $thuThuat->trang_thai === 'Đã hoàn thành' ? 'success' : 'warning' }}">
+                                                {{ $thuThuat->trang_thai }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                @if($thuThuat->mo_ta)
+                                    <div class="mt-3">
+                                        <p class="mb-1"><strong>Mô tả:</strong></p>
+                                        <p class="mb-0">{{ $thuThuat->mo_ta }}</p>
+                                    </div>
+                                @endif
+
+                                @if($thuThuat->ket_qua)
+                                    <div class="mt-2">
+                                        <p class="mb-1"><strong>Kết quả:</strong></p>
+                                        <div class="alert alert-info mb-0">
+                                            {{ $thuThuat->ket_qua }}
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($thuThuat->tai_bien)
+                                    <div class="mt-2">
+                                        <p class="mb-1"><strong>Tai biến/Biến chứng:</strong></p>
+                                        <div class="alert alert-danger mb-0">
+                                            {{ $thuThuat->tai_bien }}
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($thuThuat->ghi_chu)
+                                    <div class="mt-2">
+                                        <p class="mb-1"><strong>Ghi chú:</strong></p>
+                                        <p class="text-muted mb-0">{{ $thuThuat->ghi_chu }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             @endif

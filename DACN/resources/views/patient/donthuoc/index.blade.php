@@ -32,8 +32,8 @@
                         <div class="alert alert-info mb-4">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p class="mb-1"><strong><i class="fas fa-user-md me-2"></i>Bác sĩ:</strong> {{ $donThuoc->benhAn->bacSi->ten_bac_si ?? 'N/A' }}</p>
-                                    <p class="mb-0"><strong><i class="fas fa-stethoscope me-2"></i>Chẩn đoán:</strong> {{ $donThuoc->benhAn->chan_doan ?? 'N/A' }}</p>
+                                    <p class="mb-1"><strong><i class="fas fa-user-md me-2"></i>Bác sĩ:</strong> {{ $donThuoc->bacSi->ho_ten ?? ($donThuoc->benhAn->bacSi->ho_ten ?? 'N/A') }}</p>
+                                    <p class="mb-0"><strong><i class="fas fa-stethoscope me-2"></i>Chẩn đoán:</strong> {{ $donThuoc->benhAn->chuan_doan ?? 'Chưa có' }}</p>
                                 </div>
                                 <div class="col-md-6">
                                     <p class="mb-1"><strong><i class="fas fa-calendar-check me-2"></i>Ngày khám:</strong> {{ $donThuoc->benhAn->ngay_kham?->format('d/m/Y') ?? 'N/A' }}</p>
@@ -59,14 +59,14 @@
                                 @foreach($donThuoc->items as $item)
                                     <tr>
                                         <td>
-                                            <strong>{{ $item->ten_thuoc }}</strong>
+                                            <strong>{{ $item->thuoc->ten_thuoc ?? 'N/A' }}</strong>
                                             @if($item->thuoc)
                                                 <br><small class="text-muted">{{ $item->thuoc->hoat_chat ?? '' }}</small>
                                             @endif
                                         </td>
-                                        <td>{{ $item->lieu_luong }}</td>
+                                        <td>{{ $item->lieu_dung ?? 'Á Ả' }}</td>
                                         <td><span class="badge bg-primary">{{ $item->so_luong }}</span></td>
-                                        <td>{{ $item->cach_dung }}</td>
+                                        <td>{{ $item->cach_dung ?? 'Á Ả' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -5,34 +5,9 @@
 @section('content')
     <div class="container-fluid px-4">
 
-        <!-- Welcome Section -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm welcome-card">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-center">
-
-                            <div>
-                                <h2 class="welcome-title mb-2">
-                                    <span class="wave-emoji">👋</span> Xin chào, {{ auth()->user()->name }}!
-                                </h2>
-                                <p class="welcome-text mb-0">Chào mừng bạn quay trở lại hệ thống quản lý sức khỏe</p>
-                            </div>
-
-                            <div class="text-end d-none d-md-block">
-                                <div class="welcome-date fs-5">{{ now()->format('d/m/Y') }}</div>
-                                <div class="welcome-day">{{ now()->locale('vi')->isoFormat('dddd') }}</div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Quick Stats -->
         {{-- ENHANCED: Modern gradient stat cards (Parent: patient/dashboard-modern.blade.php) --}}
-        <div class="row mb-4 g-4">
+        <div class="row mb-4 g-4 mt-3">
 
             <div class="col-lg-3 col-md-6">
                 <x-patient.stat-card title="Lịch Hẹn Sắp Tới" :value="$statistics['upcoming_appointments']"

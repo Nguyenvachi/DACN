@@ -155,4 +155,15 @@ class HoaDon extends Model
     {
         return $this->hasMany(HoaDonChiTiet::class);
     }
+
+    // Accessors for backward compatibility
+    public function getDaThanhToanAttribute()
+    {
+        return $this->so_tien_da_thanh_toan;
+    }
+
+    public function getConLaiAttribute()
+    {
+        return $this->so_tien_con_lai;
+    }
 }

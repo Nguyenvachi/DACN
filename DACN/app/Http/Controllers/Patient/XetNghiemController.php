@@ -10,8 +10,8 @@ class XetNghiemController extends Controller
 {
     public function index()
     {
-        $xetNghiems = XetNghiem::with(['benhAn.bacSi'])
-            ->whereHas('benhAn', function($query) {
+        $xetNghiems = XetNghiem::with(['benhAn.bacSi', 'bacSiChiDinh'])
+            ->whereHas('benhAn', function ($query) {
                 $query->where('user_id', auth()->id());
             })
             ->orderBy('created_at', 'desc')
@@ -27,7 +27,7 @@ class XetNghiemController extends Controller
             abort(403, 'Bạn không có quyền xem xét nghiệm này');
         }
 
-        $xetNghiem->load(['benhAn.bacSi']);
+        $xetNghiem->load(['benhAn.bacSi', 'bacSiChiDinh']);
 
         return view('patient.xetnghiem.show', compact('xetNghiem'));
     }

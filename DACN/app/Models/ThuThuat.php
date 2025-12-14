@@ -42,4 +42,14 @@ class ThuThuat extends Model
     {
         return $this->belongsTo(BacSi::class);
     }
+
+    public function bacSiThucHien()
+    {
+        return $this->belongsTo(BacSi::class, 'bac_si_id');
+    }
+
+    public function loaiThuThuat()
+    {
+        return $this->belongsTo(LoaiThuThuat::class, 'ten_thu_thuat');
+    }
 }

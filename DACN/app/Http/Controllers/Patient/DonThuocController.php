@@ -10,8 +10,8 @@ class DonThuocController extends Controller
 {
     public function index()
     {
-        $donThuocs = DonThuoc::with(['benhAn.bacSi', 'items.thuoc'])
-            ->whereHas('benhAn', function($query) {
+        $donThuocs = DonThuoc::with(['benhAn.bacSi', 'bacSi', 'items.thuoc'])
+            ->whereHas('benhAn', function ($query) {
                 $query->where('user_id', auth()->id());
             })
             ->orderBy('created_at', 'desc')
@@ -27,7 +27,7 @@ class DonThuocController extends Controller
             abort(403, 'Bạn không có quyền xem đơn thuốc này');
         }
 
-        $donThuoc->load(['benhAn.bacSi', 'items.thuoc']);
+        $donThuoc->load(['benhAn.bacSi', 'bacSi', 'items.thuoc']);
 
         return view('patient.donthuoc.show', compact('donThuoc'));
     }
