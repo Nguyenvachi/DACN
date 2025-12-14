@@ -1,106 +1,80 @@
 <?php
 
-// File: app/Http/Controllers/Staff/CheckInController.php
-// Parent: app/Http/Controllers/Staff/
-
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Models\LichHen;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use function activity;
 
 class CheckInController extends Controller
 {
-    /**
-     * Display check-in page with today's appointments
-     */
     public function index(Request $request)
     {
         $today = Carbon::today();
         $search = $request->get('search');
 
-        // Hiển thị lịch hẹn từ hôm nay đến 7 ngày tới để có thể check-in sớm
-        $query = LichHen::with(['user', 'bacSi', 'dichVu'])
-            ->whereDate('ngay_hen', '>=', $today)
-            ->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))
+        $query = LichHen::with(['user', 'bacSi.phong', 'dichVu'])
             ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_IN_PROGRESS_VN, \App\Models\LichHen::STATUS_CHECKED_IN_VN]);
 
         if ($search) {
-            $query->whereHas('user', function($subQ) use ($search) {
+            $query->whereHas('user', function ($subQ) use ($search) {
                 $subQ->where('name', 'LIKE', "%{$search}%")
-                     ->orWhere('email', 'LIKE', "%{$search}%")
-                     ->orWhere('so_dien_thoai', 'LIKE', "%{$search}%");
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('so_dien_thoai', 'LIKE', "%{$search}%");
             });
         }
 
-        $appointments = $query->orderBy('ngay_hen', 'asc')->orderBy('thoi_gian_hen', 'asc')->paginate(20);
+        $appointments = $query->orderBy('ngay_hen', 'desc')->orderBy('thoi_gian_hen', 'asc')->paginate(20);
 
         $statistics = [
-            'total' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->whereIn('trang_thai', [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_IN_PROGRESS_VN, \App\Models\LichHen::STATUS_CHECKED_IN_VN])->count(),
-            'checked_in' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->where('trang_thai', \App\Models\LichHen::STATUS_CHECKED_IN_VN)->count(),
-            'waiting' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count(),
-            'in_progress' => LichHen::whereDate('ngay_hen', '>=', $today)->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))->where('trang_thai', \App\Models\LichHen::STATUS_IN_PROGRESS_VN)->count(),
+            'total' => LichHen::whereIn('trang_thai', [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_IN_PROGRESS_VN, \App\Models\LichHen::STATUS_CHECKED_IN_VN])->count(),
+            'checked_in' => LichHen::where('trang_thai', \App\Models\LichHen::STATUS_CHECKED_IN_VN)->count(),
+            'waiting' => LichHen::where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count(),
+            'in_progress' => LichHen::where('trang_thai', \App\Models\LichHen::STATUS_IN_PROGRESS_VN)->count(),
         ];
 
         return view('staff.checkin.index', compact('appointments', 'statistics', 'search'));
     }
 
-    /**
-     * Process check-in for patient
-     */
-    public function checkIn(Request $request, LichHen $lichhen)
+    public function checkIn(Request $request, $lichhen)
     {
-        // DEBUG: Check if form reaches controller
-        \Log::info('CheckIn method called', [
-            'lichhen_id' => $lichhen->id,
-            'trang_thai' => $lichhen->trang_thai,
-            'ngay_hen' => $lichhen->ngay_hen
-        ]);
+        try {
+            $lichHen = LichHen::findOrFail($lichhen);
 
-        // Validate appointment can be checked in
-        if ($lichhen->trang_thai !== \App\Models\LichHen::STATUS_CONFIRMED_VN) {
-            \Log::warning('CheckIn failed - Invalid status', ['status' => $lichhen->trang_thai]);
-            return back()->with('error', 'Lịch hẹn này không thể check-in. Trạng thái hiện tại: ' . $lichhen->trang_thai);
-        }
-
-        // Ensure appointment is for today — queue only shows today's checked-in appointments
-        // (Keeping pre-checkin for future dates caused confusion: staff check-in should apply on appointment date)
-        $appointmentDate = Carbon::parse($lichhen->ngay_hen);
-        $today = Carbon::today();
-
-        if (! $appointmentDate->isToday()) {
-            return back()->with('error', 'Chỉ có thể check-in vào đúng ngày hẹn (hôm nay).');
-        }
-
-        // Update status to checked-in
-        $lichhen->update([
-            'trang_thai' => \App\Models\LichHen::STATUS_CHECKED_IN_VN,
-            'checked_in_at' => now()
-        ]);
-
-        // Log activity (use global helper if available). Wrap in guard to avoid uncaught exceptions
-        if (function_exists('activity')) {
-            try {
-                activity()
-                    ->performedOn($lichhen)
-                    ->causedBy(auth()->user())
-                    ->withProperties(['old_status' => \App\Models\LichHen::STATUS_CONFIRMED_VN, 'new_status' => \App\Models\LichHen::STATUS_CHECKED_IN_VN])
-                    ->log('Nhân viên check-in bệnh nhân');
-            } catch (\Throwable $e) {
-                \Log::warning('Activity logging failed on check-in: ' . $e->getMessage());
+            if ($lichHen->trang_thai !== \App\Models\LichHen::STATUS_CONFIRMED_VN) {
+                return back()->with('error', 'Chỉ có thể check-in lịch hẹn đã xác nhận.');
             }
-        } else {
-            \Log::warning('Activity helper not available; skipping activity log for check-in.');
-        }
 
-        return back()->with('success', "Đã check-in thành công cho bệnh nhân {$lichhen->user->name}");
+            if ($lichHen->bacSi->phong_id) {
+                $maxStt = LichHen::join('bac_sis', 'lich_hens.bac_si_id', '=', 'bac_sis.id')
+                    ->where('bac_sis.phong_id', $lichHen->bacSi->phong_id)
+                    ->whereDate('lich_hens.ngay_hen', $lichHen->ngay_hen)
+                    ->whereNotNull('lich_hens.stt_kham')
+                    ->max('lich_hens.stt_kham');
+            } else {
+                $maxStt = LichHen::where('bac_si_id', $lichHen->bac_si_id)
+                    ->whereDate('ngay_hen', $lichHen->ngay_hen)
+                    ->whereNotNull('stt_kham')
+                    ->max('stt_kham');
+            }
+
+            $nextStt = ($maxStt ?? 0) + 1;
+
+            $lichHen->update([
+                'trang_thai' => \App\Models\LichHen::STATUS_CHECKED_IN_VN,
+                'stt_kham' => $nextStt,
+                'checked_in_at' => now()
+            ]);
+
+            $roomInfo = $lichHen->bacSi->phong ? " - Phòng {$lichHen->bacSi->phong->ten}" : '';
+            return back()->with('success', "Đã check-in thành công cho bệnh nhân {$lichHen->user->name}. STT khám: {$nextStt}{$roomInfo}");
+        } catch (\Exception $e) {
+            \Log::error('CheckIn error: ' . $e->getMessage());
+            return back()->with('error', 'Có lỗi xảy ra khi check-in: ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Quick search for patient by code or phone
-     */
     public function quickSearch(Request $request)
     {
         $keyword = $request->get('keyword');
@@ -110,7 +84,7 @@ class CheckInController extends Controller
         }
 
         $appointment = LichHen::with(['user', 'bacSi', 'dichVu'])
-            ->whereHas('user', function($subQ) use ($keyword) {
+            ->whereHas('user', function ($subQ) use ($keyword) {
                 $subQ->where('so_dien_thoai', $keyword);
             })
             ->whereDate('ngay_hen', '>=', Carbon::today())
@@ -137,9 +111,6 @@ class CheckInController extends Controller
         ]);
     }
 
-    /**
-     * Bulk check-in for multiple appointments
-     */
     public function bulkCheckIn(Request $request)
     {
         $request->validate([
@@ -154,16 +125,17 @@ class CheckInController extends Controller
             $lichhen = LichHen::find($id);
 
             if ($lichhen && $lichhen->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN && Carbon::parse($lichhen->ngay_hen)->isToday()) {
+                $maxStt = LichHen::where('bac_si_id', $lichhen->bac_si_id)
+                    ->whereDate('ngay_hen', $lichhen->ngay_hen)
+                    ->whereNotNull('stt_kham')
+                    ->max('stt_kham');
+
                 $lichhen->update([
                     'trang_thai' => \App\Models\LichHen::STATUS_CHECKED_IN_VN,
+                    'stt_kham' => ($maxStt ?? 0) + 1,
                     'checked_in_at' => now()
                 ]);
                 $updated++;
-                \activity()
-                    ->performedOn($lichhen)
-                    ->causedBy(auth()->user())
-                    ->withProperties(['type' => 'bulk_checkin'])
-                    ->log('Nhân viên check-in hàng loạt');
             } else {
                 $failed[] = "ID: {$id}";
             }

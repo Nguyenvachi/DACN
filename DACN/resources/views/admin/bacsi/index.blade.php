@@ -27,22 +27,7 @@
                 <form method="GET" class="row g-3">
                     <div class="col-md-4">
                         <input type="text" name="keyword" class="form-control"
-                            placeholder="Tìm tên bác sĩ, chuyên khoa..." value="{{ request('keyword') }}">
-                    </div>
-
-                    <div class="col-md-3">
-                        <select name="chuyen_khoa" class="form-select">
-                            <option value="">-- Chọn chuyên khoa --</option>
-                            @foreach(($chuyenKhoaList ?? []) as $ck)
-                                @php
-                                    // support both plain string list and objects (e.g. model with `ten` or `name`)
-                                    $ckValue = is_object($ck) ? ($ck->ten ?? $ck->name ?? $ck) : $ck;
-                                @endphp
-                                <option value="{{ $ckValue }}" {{ request('chuyen_khoa') == $ckValue ? 'selected' : '' }}>
-                                    {{ $ckValue }}
-                                </option>
-                            @endforeach
-                        </select>
+                            placeholder="Tìm tên bác sĩ..." value="{{ request('keyword') }}">
                     </div>
 
                     <div class="col-md-3">
@@ -78,12 +63,11 @@
                             <tr>
                                 <th width="5%">ID</th>
                                 <th width="15%">Họ Tên</th>
-                                <th width="13%">Chuyên Khoa</th>
                                 <th width="12%">Số điện thoại</th>
                                 <th width="15%">Email</th>
                                 <th width="8%">Kinh nghiệm</th>
                                 <th width="10%">Trạng thái</th>
-                                <th width="22%">Hành động</th>
+                                <th width="35%">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -91,17 +75,6 @@
                                 <tr>
                                     <td>{{ $bacSi->id }}</td>
                                     <td><strong>{{ $bacSi->ho_ten }}</strong></td>
-
-                                    <!-- =========================
-                                                     🔥 BỔ SUNG: Badge chuyên khoa
-                                                ========================== -->
-                                    <td>
-                                        <span class="badge bg-primary px-3 py-2">
-                                            {{ $bacSi->chuyen_khoa }}
-                                        </span>
-                                    </td>
-                                    <!-- ========================= -->
-
                                     <td>{{ $bacSi->so_dien_thoai }}</td>
                                     <td>{{ $bacSi->email ?? 'N/A' }}</td>
                                     <td>{{ $bacSi->kinh_nghiem ?? 0 }} năm</td>

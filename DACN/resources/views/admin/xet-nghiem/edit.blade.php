@@ -28,12 +28,22 @@
                     @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Giá tiền (VNĐ) <span class="text-danger">*</span></label>
-                    <input type="number" name="gia_tien" class="form-control @error('gia_tien') is-invalid @enderror" value="{{ old('gia_tien', $xetNghiem->gia_tien) }}" min="0" step="1000" required>
-                    @error('gia_tien')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Giá tiền (VNĐ) <span class="text-danger">*</span></label>
+                        <input type="number" name="gia_tien" class="form-control @error('gia_tien') is-invalid @enderror" value="{{ old('gia_tien', $xetNghiem->gia_tien) }}" min="0" step="1000" required>
+                        @error('gia_tien')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Thời gian ước tính (phút) <span class="text-danger">*</span></label>
+                        <input type="number" name="thoi_gian" class="form-control @error('thoi_gian') is-invalid @enderror" value="{{ old('thoi_gian', $xetNghiem->thoi_gian) }}" min="1" required>
+                        @error('thoi_gian')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -42,6 +52,15 @@
                     @error('mo_ta')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="hoat_dong" class="form-check-input" id="hoat_dong" value="1" {{ old('hoat_dong', $xetNghiem->hoat_dong) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="hoat_dong">
+                            Đang hoạt động
+                        </label>
+                    </div>
                 </div>
 
                 <div class="d-flex gap-2">

@@ -30,7 +30,8 @@
                             <th>#</th>
                             <th>Tên thủ thuật</th>
                             <th>Giá tiền</th>
-                            <th>Mô tả</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
                             <th width="200">Thao tác</th>
                         </tr>
                     </thead>
@@ -38,9 +39,16 @@
                         @forelse($items as $item)
                         <tr>
                             <td>{{ $item->id }}</td>
-                            <td><strong>{{ $item->ten_thu_thuat }}</strong></td>
+                            <td><strong>{{ $item->ten }}</strong></td>
                             <td>{{ number_format($item->gia_tien ?? 0, 0, ',', '.') }} đ</td>
-                            <td>{{ Str::limit($item->mo_ta ?? 'N/A', 50) }}</td>
+                            <td>{{ $item->thoi_gian }} phút</td>
+                            <td>
+                                @if($item->hoat_dong)
+                                    <span class="badge bg-success">Hoạt động</span>
+                                @else
+                                    <span class="badge bg-secondary">Tạm ngưng</span>
+                                @endif
+                            </td>
                             <td>
                                 <a href="{{ route('admin.thu-thuat.edit', $item) }}" class="btn btn-sm btn-warning">
                                     <i class="bi bi-pencil"></i>

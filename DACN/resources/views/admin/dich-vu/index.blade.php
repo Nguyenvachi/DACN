@@ -30,15 +30,7 @@
         <div class="card-body">
             <form method="GET" action="{{ route('admin.dich-vu.index') }}">
                 <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="form-label">Loại dịch vụ</label>
-                        <select name="loai" class="form-select">
-                            <option value="">Tất cả</option>
-                            <option value="Cơ bản" {{ request('loai') == 'Cơ bản' ? 'selected' : '' }}>Cơ bản</option>
-                            <option value="Nâng cao" {{ request('loai') == 'Nâng cao' ? 'selected' : '' }}>Nâng cao</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label">Trạng thái</label>
                         <select name="hoat_dong" class="form-select">
                             <option value="">Tất cả</option>
@@ -46,11 +38,11 @@
                             <option value="0" {{ request('hoat_dong') === '0' ? 'selected' : '' }}>Ngưng hoạt động</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <label class="form-label">Tìm kiếm</label>
                         <input type="text" name="search" class="form-control" placeholder="Tên dịch vụ..." value="{{ request('search') }}">
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                         <label class="form-label">&nbsp;</label>
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="fas fa-search"></i>
@@ -70,7 +62,6 @@
                         <tr>
                             <th>ID</th>
                             <th>Tên dịch vụ</th>
-                            <th>Loại</th>
                             <th>Giá tiền</th>
                             <th>Thời gian</th>
                             <th>Trạng thái</th>
@@ -86,11 +77,6 @@
                                     @if ($dichVu->mo_ta)
                                         <br><small class="text-muted">{{ Str::limit($dichVu->mo_ta, 50) }}</small>
                                     @endif
-                                </td>
-                                <td>
-                                    <span class="badge {{ $dichVu->loai == 'Cơ bản' ? 'bg-info' : 'bg-warning' }}">
-                                        {{ $dichVu->loai }}
-                                    </span>
                                 </td>
                                 <td class="text-end">
                                     <strong>{{ number_format($dichVu->gia_tien) }} đ</strong>
@@ -127,7 +113,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4">
+                                <td colspan="6" class="text-center text-muted py-4">
                                     <i class="fas fa-inbox fa-3x mb-3"></i>
                                     <p>Không tìm thấy dịch vụ nào</p>
                                 </td>

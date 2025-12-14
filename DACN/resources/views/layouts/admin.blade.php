@@ -114,6 +114,7 @@
             <li><a href="{{ route('admin.nhanvien.index') }}">👥 Nhân viên</a></li>
             <li><a href="{{ route('admin.dich-vu.index') }}">🏥 Dịch vụ</a></li>
             <li><a href="{{ route('admin.chuyenkhoa.index') }}">🔬 Chuyên khoa</a></li>
+            <li><a href="{{ route('admin.loaiphong.index') }}">🏢 Loại phòng</a></li>
             <li><a href="{{ route('admin.phong.index') }}">🚪 Phòng khám</a></li>
             <li><a href="{{ route('admin.phong.diagram') }}">🗺️ Sơ đồ phòng</a></li>
 
@@ -152,9 +153,9 @@
             <hr>
 
             <li><strong>Dịch vụ Y tế</strong></li>
-            <li><a href="{{ route('admin.sieu-am.index') }}">🔊 Siêu âm</a></li>
+            <li><a href="{{ route('admin.sieu-am.index') }}">🔊 Loại siêu âm</a></li>
             <li><a href="{{ route('admin.xet-nghiem.index') }}">🧪 Xét nghiệm</a></li>
-            <li><a href="{{ route('admin.thu-thuat.index') }}">🔧 Thủ thuật</a></li>
+            <li><a href="{{ route('admin.thu-thuat.index') }}">🔧 Loại thủ thuật</a></li>
             <li><a href="{{ route('admin.kho.bao_cao') }}">📊 Báo cáo</a></li>
             <li><a href="{{ route('admin.ncc.index') }}">🏢 Nhà cung cấp</a></li>
 

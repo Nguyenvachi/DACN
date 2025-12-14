@@ -20,6 +20,8 @@ class BacSi extends Model
         'kinh_nghiem',
         'mo_ta',
         'trang_thai',
+        'so_phong',
+        'phong_id',
     ];
 
     protected static function booted()
@@ -72,7 +74,13 @@ class BacSi extends Model
         return $this->belongsToMany(\App\Models\ChuyenKhoa::class, 'bac_si_chuyen_khoa');
     }
 
-    // Thuộc nhiều phòng
+    // Phòng khám chính của bác sĩ (one-to-one)
+    public function phong()
+    {
+        return $this->belongsTo(\App\Models\Phong::class, 'phong_id');
+    }
+
+    // Thuộc nhiều phòng (many-to-many) - có thể làm việc ở nhiều phòng
     public function phongs()
     {
         return $this->belongsToMany(\App\Models\Phong::class, 'bac_si_phong');

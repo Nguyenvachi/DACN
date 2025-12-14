@@ -35,12 +35,21 @@
                                 value="{{ old('ten', $phong->ten) }}" required>
                         </div>
 
-                        {{-- Loại --}}
+                        {{-- Loại phòng --}}
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Loại phòng</label>
-                            <input type="text" name="loai" class="form-control form-control-lg"
-                                placeholder="phong_kham, phong_chuc_nang, phong_xet_nghiem..."
-                                value="{{ old('loai', $phong->loai) }}">
+                            <label class="form-label fw-bold">Loại phòng <span class="text-danger">*</span></label>
+                            <select name="loai_phong_id" class="form-select form-select-lg" required>
+                                <option value="">-- Chọn loại phòng --</option>
+                                @foreach($loaiPhongs as $loai)
+                                    <option value="{{ $loai->id }}" 
+                                        {{ old('loai_phong_id', $phong->loai_phong_id) == $loai->id ? 'selected' : '' }}>
+                                        {{ $loai->ten }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('loai_phong_id')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         {{-- MỞ RỘNG: Trạng thái (Parent file: resources/views/admin/phong/form.blade.php) --}}

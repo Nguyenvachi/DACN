@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">
             <i class="bi bi-plus-circle me-2"></i>
-            Thêm Thủ thuật
+            Thêm Loại Thủ thuật
         </h2>
         <a href="{{ route('admin.thu-thuat.index') }}" class="btn btn-secondary">
             <i class="bi bi-arrow-left me-1"></i>Quay lại
@@ -21,18 +21,28 @@
 
                 <div class="mb-3">
                     <label class="form-label">Tên thủ thuật <span class="text-danger">*</span></label>
-                    <input type="text" name="ten_thu_thuat" class="form-control @error('ten_thu_thuat') is-invalid @enderror" value="{{ old('ten_thu_thuat') }}" required>
-                    @error('ten_thu_thuat')
+                    <input type="text" name="ten" class="form-control @error('ten') is-invalid @enderror" value="{{ old('ten') }}" required>
+                    @error('ten')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Giá tiền (VNĐ) <span class="text-danger">*</span></label>
-                    <input type="number" name="gia_tien" class="form-control @error('gia_tien') is-invalid @enderror" value="{{ old('gia_tien') }}" min="0" step="1000" required>
-                    @error('gia_tien')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Giá tiền (VNĐ) <span class="text-danger">*</span></label>
+                        <input type="number" name="gia_tien" class="form-control @error('gia_tien') is-invalid @enderror" value="{{ old('gia_tien') }}" min="0" step="1000" required>
+                        @error('gia_tien')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Thời gian (phút) <span class="text-danger">*</span></label>
+                        <input type="number" name="thoi_gian" class="form-control @error('thoi_gian') is-invalid @enderror" value="{{ old('thoi_gian') }}" min="1" required>
+                        @error('thoi_gian')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -41,6 +51,15 @@
                     @error('mo_ta')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="hoat_dong" class="form-check-input" id="hoat_dong" value="1" {{ old('hoat_dong', true) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="hoat_dong">
+                            Đang hoạt động
+                        </label>
+                    </div>
                 </div>
 
                 <div class="d-flex gap-2">

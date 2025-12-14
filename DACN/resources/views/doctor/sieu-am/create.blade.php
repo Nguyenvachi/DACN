@@ -66,17 +66,17 @@
 
                         <div class="mb-3">
                             <label class="form-label">Loại siêu âm <span class="text-danger">*</span></label>
-                            <select name="dich_vu_id" class="form-select" required>
+                            <select name="loai_sieu_am_id" class="form-select" required>
                                 <option value="">-- Chọn loại siêu âm --</option>
-                                @foreach($dichVuSieuAm as $dichVu)
-                                <option value="{{ $dichVu->id }}" 
-                                        data-gia="{{ number_format($dichVu->gia_tien, 0, ',', '.') }}"
-                                        {{ old('dich_vu_id') == $dichVu->id ? 'selected' : '' }}>
-                                    {{ $dichVu->ten_dich_vu }} - {{ number_format($dichVu->gia_tien, 0, ',', '.') }} VNĐ
+                                @foreach($loaiSieuAms as $loai)
+                                <option value="{{ $loai->id }}" 
+                                        data-gia="{{ number_format($loai->gia_tien, 0, ',', '.') }}"
+                                        {{ old('loai_sieu_am_id') == $loai->id ? 'selected' : '' }}>
+                                    {{ $loai->ten }} - {{ number_format($loai->gia_tien, 0, ',', '.') }} VNĐ
                                 </option>
                                 @endforeach
                             </select>
-                            @error('dich_vu_id')
+                            @error('loai_sieu_am_id')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>

@@ -50,7 +50,7 @@
                                     <option value="">-- Không xác định --</option>
                                     @foreach ($chuyenKhoas as $ck)
                                         <option value="{{ $ck->id }}" {{ old('chuyen_khoa_id', $dichVu->chuyen_khoa_id) == $ck->id ? 'selected' : '' }}>
-                                            {{ $ck->ten_chuyen_khoa }}
+                                            {{ $ck->ten }}
                                         </option>
                                     @endforeach
                                 </select>

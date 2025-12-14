@@ -178,6 +178,17 @@ Route::middleware(['auth', 'custom_role:admin,staff'])->prefix('admin')->name('a
             'destroy' => 'chuyenkhoa.destroy',
         ])->parameters(['chuyen-khoa' => 'chuyenkhoa']);
 
+        // Routes quản lý loại phòng
+        Route::resource('loai-phong', \App\Http\Controllers\Admin\LoaiPhongController::class)->names([
+            'index' => 'loaiphong.index',
+            'create' => 'loaiphong.create',
+            'store' => 'loaiphong.store',
+            'show' => 'loaiphong.show',
+            'edit' => 'loaiphong.edit',
+            'update' => 'loaiphong.update',
+            'destroy' => 'loaiphong.destroy',
+        ])->parameters(['loai-phong' => 'loaiphong']);
+
         // MỞ RỘNG: Routes phòng (Parent file: routes/web.php)
         Route::resource('phong', \App\Http\Controllers\Admin\PhongController::class)->names([
             'index' => 'phong.index',

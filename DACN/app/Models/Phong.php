@@ -12,7 +12,7 @@ class Phong extends Model
 {
     protected $fillable = [
         'ten',
-        'loai',
+        'loai_phong_id',
         'mo_ta',
         'trang_thai',  // MỞ RỘNG: Thêm trạng thái (Parent file)
         'vi_tri',      // MỞ RỘNG: Vị trí phòng (Parent file)
@@ -25,6 +25,14 @@ class Phong extends Model
     ];
 
     // ==================== RELATIONSHIPS ====================
+
+    /**
+     * Loại phòng
+     */
+    public function loaiPhong()
+    {
+        return $this->belongsTo(\App\Models\LoaiPhong::class, 'loai_phong_id');
+    }
 
     /**
      * Bác sĩ thuộc phòng này (many-to-many)
@@ -105,7 +113,7 @@ class Phong extends Model
      */
     public function getStatusBadgeAttribute(): string
     {
-        return match($this->trang_thai) {
+        return match ($this->trang_thai) {
             'Sẵn sàng' => 'success',
             'Đang sử dụng' => 'primary',
             'Bảo trì' => 'warning',
@@ -120,7 +128,7 @@ class Phong extends Model
      */
     public function getStatusIconAttribute(): string
     {
-        return match($this->trang_thai) {
+        return match ($this->trang_thai) {
             'Sẵn sàng' => 'bi-check-circle',
             'Đang sử dụng' => 'bi-hourglass-split',
             'Bảo trì' => 'bi-tools',

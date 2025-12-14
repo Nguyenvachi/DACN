@@ -148,8 +148,10 @@
                                 <th>Bệnh Nhân</th>
                                 <th>Số Điện Thoại</th>
                                 <th>Bác Sĩ</th>
+                                <th>Phòng</th>
                                 <th>Dịch Vụ</th>
                                 <th>Thời Gian</th>
+                                <th>STT Khám</th>
                                 <th>Trạng Thái</th>
                                 <th width="150">Thao Tác</th>
                             </tr>
@@ -171,43 +173,59 @@
                                     </td>
                                     <td>{{ $apt->user->so_dien_thoai ?? 'N/A' }}</td>
                                     <td>{{ $apt->bacSi->ho_ten }}</td>
+                                    <td>
+                                        @if($apt->bacSi->phong)
+                                            <span class="badge bg-secondary" title="{{ $apt->bacSi->phong->mo_ta }}">
+                                                <i class="bi bi-door-closed me-1"></i>{{ $apt->bacSi->phong->ten }}
+                                            </span>
+                                        @elseif($apt->bacSi->so_phong)
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-door-closed me-1"></i>{{ $apt->bacSi->so_phong }}
+                                            </span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $apt->dichVu->ten_dich_vu }}</td>
                                     <td><i class="bi bi-clock me-1"></i>{{ $apt->thoi_gian_hen }}</td>
+                                    <td>
+                                        @if($apt->stt_kham)
+                                            <span class="badge bg-info fs-6">
+                                                <i class="bi bi-hash me-1"></i>{{ $apt->stt_kham }}
+                                            </span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($apt->trang_thai === \App\Models\LichHen::STATUS_CHECKED_IN_VN)
                                             <span class="badge bg-success">{{ \App\Models\LichHen::STATUS_CHECKED_IN_VN }}</span>
                                         @elseif($apt->trang_thai === \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
                                             <span class="badge bg-info">{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }}</span>
+                                        @elseif($apt->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
+                                            <span class="badge bg-primary">{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}</span>
                                         @else
-                                            <span class="badge bg-warning">{{ \App\Models\LichHen::STATUS_PENDING_VN }}</span>
+                                            <span class="badge bg-warning">{{ $apt->trang_thai }}</span>
                                         @endif
                                     </td>
                                     <td>
                                         @if($apt->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
-                                            <form method="POST" action="{{ route('staff.checkin.checkin', $apt->id) }}" class="d-inline checkin-form-{{ $apt->id }}">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-primary checkin-btn-{{ $apt->id }}">
-                                                    <i class="bi bi-check-circle me-1"></i>Check-in
-                                                </button>
-                                            </form>
+                                            <button type="button" class="btn btn-sm btn-primary" 
+                                                    onclick="if(confirm('Xác nhận check-in cho bệnh nhân {{ $apt->user->name }}?')) directCheckIn({{ $apt->id }})">
+                                                <i class="bi bi-check-circle me-1"></i>Check-in
+                                            </button>
                                         @elseif($apt->trang_thai === \App\Models\LichHen::STATUS_CHECKED_IN_VN)
-                                            <div class="d-flex align-items-center gap-2">
-                                                <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i>{{ \App\Models\LichHen::STATUS_CHECKED_IN_VN }}</span>
-                                                <form method="POST" action="{{ route('staff.queue.call_next', $apt->id) }}" class="d-inline">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Gọi {{ $apt->user->name }} vào khám?')">
-                                                        <i class="bi bi-telephone-forward me-1"></i>Gọi vào
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <span class="text-success">
+                                                <i class="bi bi-check-circle-fill me-1"></i>Đã check-in
+                                            </span>
                                         @else
-                                            <span class="text-muted">{{ \App\Models\LichHen::STATUS_PENDING_VN }}</span>
+                                            <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-4 text-muted">
+                                    <td colspan="11" class="text-center py-4 text-muted">
                                         <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                                         Không có lịch hẹn nào hôm nay
                                     </td>
@@ -267,35 +285,6 @@
 
 @push('scripts')
 <script>
-// ========== CHECK-IN FORMS HANDLER ==========
-document.addEventListener('DOMContentLoaded', function() {
-    // Handle all check-in forms
-    document.querySelectorAll('[class^="checkin-form-"]').forEach(form => {
-        const btn = form.querySelector('button[type="submit"]');
-
-        // Force enable button (remove disabled if exists)
-        if (btn) {
-            btn.removeAttribute('disabled');
-        }
-
-        // Handle form submit
-        form.addEventListener('submit', function(e) {
-            const patientName = this.closest('tr').querySelector('td:nth-child(3) strong').textContent;
-
-            if (!confirm('Xác nhận check-in cho bệnh nhân ' + patientName + '?')) {
-                e.preventDefault();
-                return false;
-            }
-
-            // Disable button and show loading
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang xử lý...';
-            }
-        });
-    });
-});
-
 // Select all checkbox
 document.getElementById('selectAll')?.addEventListener('change', function() {
     document.querySelectorAll('.appointment-checkbox').forEach(cb => cb.checked = this.checked);
@@ -375,6 +364,22 @@ function performQuickSearch() {
 document.getElementById('quickSearchInput')?.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') performQuickSearch();
 });
+
+// Direct check-in function
+function directCheckIn(appointmentId) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '{{ url("staff/checkin/checkin") }}/' + appointmentId;
+    
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = '_token';
+    csrfInput.value = '{{ csrf_token() }}';
+    
+    form.appendChild(csrfInput);
+    document.body.appendChild(form);
+    form.submit();
+}
 </script>
 @endpush
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BacSi;
 use App\Models\BenhAn;
 use App\Models\SieuAm;
-use App\Models\DichVu;
+use App\Models\LoaiSieuAm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,20 +23,15 @@ class SieuAmController extends Controller
             abort(403, 'Bạn không có quyền chỉ định siêu âm cho bệnh án này.');
         }
 
-        $dichVuSieuAm = DichVu::where('loai', 'Nâng cao')
-            ->where('hoat_dong', true)
-            ->where(function ($q) {
-                $q->where('ten_dich_vu', 'like', '%siêu âm%')
-                    ->orWhere('ten_dich_vu', 'like', '%Siêu âm%');
-            })
-            ->orderBy('ten_dich_vu')
+        $loaiSieuAms = LoaiSieuAm::where('hoat_dong', true)
+            ->orderBy('ten')
             ->get();
 
         $existingSieuAm = SieuAm::where('benh_an_id', $benhAn->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('doctor.sieu-am.create', compact('benhAn', 'dichVuSieuAm', 'existingSieuAm'));
+        return view('doctor.sieu-am.create', compact('benhAn', 'loaiSieuAms', 'existingSieuAm'));
     }
 
     /**
@@ -50,7 +45,7 @@ class SieuAmController extends Controller
         }
 
         $validated = $request->validate([
-            'dich_vu_id' => 'required|exists:dich_vus,id',
+            'loai_sieu_am_id' => 'required|exists:loai_sieu_ams,id',
             'ly_do_chi_dinh' => 'nullable|string',
             'ghi_chu' => 'nullable|string|max:1000',
         ]);
@@ -58,15 +53,15 @@ class SieuAmController extends Controller
         try {
             DB::beginTransaction();
 
-            // Lấy thông tin dịch vụ
-            $dichVu = DichVu::findOrFail($validated['dich_vu_id']);
+            // Lấy thông tin loại siêu âm
+            $loaiSieuAm = LoaiSieuAm::findOrFail($validated['loai_sieu_am_id']);
 
             SieuAm::create([
                 'benh_an_id' => $benhAn->id,
                 'bac_si_id' => $bacSi->id,
-                'loai_sieu_am' => $dichVu->ten_dich_vu,
+                'loai_sieu_am' => $loaiSieuAm->ten,
                 'ngay_chi_dinh' => now()->toDateString(),
-                'gia_tien' => $dichVu->gia_tien,
+                'gia_tien' => $loaiSieuAm->gia_tien,
                 'ly_do_chi_dinh' => $validated['ly_do_chi_dinh'] ?? null,
                 'trang_thai' => 'Chờ thực hiện',
                 'trang_thai_thanh_toan' => 'Chưa thanh toán',

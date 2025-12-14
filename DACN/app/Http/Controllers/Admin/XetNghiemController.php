@@ -24,12 +24,16 @@ class XetNghiemController extends Controller
         $data = $request->validate([
             'ten_xet_nghiem' => 'required|string|max:255',
             'gia_tien' => 'required|numeric|min:0',
+            'thoi_gian' => 'required|integer|min:1',
             'mo_ta' => 'nullable|string',
+            'hoat_dong' => 'boolean',
         ]);
 
         DanhMucXetNghiem::create([
             'ten_xet_nghiem' => $data['ten_xet_nghiem'],
             'gia_tien' => $data['gia_tien'],
+            'thoi_gian' => $data['thoi_gian'],
+            'hoat_dong' => $request->has('hoat_dong'),
             'ghi_chu' => $data['mo_ta'] ?? null,
         ]);
 
@@ -52,12 +56,16 @@ class XetNghiemController extends Controller
         $data = $request->validate([
             'ten_xet_nghiem' => 'required|string|max:255',
             'gia_tien' => 'required|numeric|min:0',
+            'thoi_gian' => 'required|integer|min:1',
             'mo_ta' => 'nullable|string',
+            'hoat_dong' => 'boolean',
         ]);
 
         $xetNghiem->update([
             'ten_xet_nghiem' => $data['ten_xet_nghiem'],
             'gia_tien' => $data['gia_tien'],
+            'thoi_gian' => $data['thoi_gian'],
+            'hoat_dong' => $request->has('hoat_dong'),
             'ghi_chu' => $data['mo_ta'] ?? $xetNghiem->ghi_chu,
         ]);
 

@@ -4,20 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DanhMucXetNghiem extends Model
+class LoaiThuThuat extends Model
 {
-    protected $table = 'danh_muc_xet_nghiem';
-
     protected $fillable = [
-        'ten_xet_nghiem',
+        'ten',
+        'mo_ta',
         'gia_tien',
         'thoi_gian',
         'hoat_dong',
-        'ghi_chu',
     ];
 
     protected $casts = [
         'gia_tien' => 'decimal:2',
         'hoat_dong' => 'boolean',
     ];
+
+    /**
+     * Các chỉ định thủ thuật thuộc loại này
+     */
+    public function thuThuats()
+    {
+        return $this->hasMany(ThuThuat::class, 'loai_thu_thuat_id');
+    }
 }

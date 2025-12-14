@@ -19,6 +19,7 @@ class LichHen extends Model
         'thoi_gian_hen',
         'ghi_chu',
         'trang_thai',
+        'stt_kham',
         'checked_in_at',
         'thoi_gian_bat_dau_kham',
         'completed_at',

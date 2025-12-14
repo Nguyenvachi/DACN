@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Phong;
+use App\Models\LoaiPhong;
 use App\Models\BacSi;
 use App\Services\RoomAvailabilityService;
 use Illuminate\Http\Request;
@@ -24,22 +25,23 @@ class PhongController extends Controller
 
     public function index()
     {
-        $phongs = Phong::withCount('bacSis')->orderBy('ten')->paginate(20);
+        $phongs = Phong::with('loaiPhong')->withCount('bacSis')->orderBy('ten')->paginate(20);
         return view('admin.phong.index', compact('phongs'));
     }
 
     public function create()
     {
         $phong = new Phong();
+        $loaiPhongs = LoaiPhong::orderBy('ten')->get();
         $bacSis = BacSi::orderBy('ho_ten')->get();
-        return view('admin.phong.form', compact('phong','bacSis'));
+        return view('admin.phong.form', compact('phong', 'loaiPhongs', 'bacSis'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'ten' => 'required|string|max:255',
-            'loai' => 'nullable|string|max:100',
+            'loai_phong_id' => 'required|integer|exists:loai_phongs,id',
             'mo_ta' => 'nullable|string',
             'trang_thai' => 'nullable|in:Sẵn sàng,Đang sử dụng,Bảo trì,Tạm ngưng',
             'vi_tri' => 'nullable|string|max:255',
@@ -56,20 +58,21 @@ class PhongController extends Controller
         if (!empty($data['bac_si_ids'])) {
             $phong->bacSis()->sync($data['bac_si_ids']);
         }
-        return redirect()->route('admin.phong.index')->with('success','Đã tạo phòng');
+        return redirect()->route('admin.phong.index')->with('success', 'Đã tạo phòng');
     }
 
     public function edit(Phong $phong)
     {
+        $loaiPhongs = LoaiPhong::orderBy('ten')->get();
         $bacSis = BacSi::orderBy('ho_ten')->get();
-        return view('admin.phong.form', compact('phong','bacSis'));
+        return view('admin.phong.form', compact('phong', 'loaiPhongs', 'bacSis'));
     }
 
     public function update(Request $request, Phong $phong)
     {
         $data = $request->validate([
             'ten' => 'required|string|max:255',
-            'loai' => 'nullable|string|max:100',
+            'loai_phong_id' => 'required|integer|exists:loai_phongs,id',
             'mo_ta' => 'nullable|string',
             'trang_thai' => 'nullable|in:Sẵn sàng,Đang sử dụng,Bảo trì,Tạm ngưng',
             'vi_tri' => 'nullable|string|max:255',
@@ -80,13 +83,13 @@ class PhongController extends Controller
         ]);
         $phong->update($data);
         $phong->bacSis()->sync($data['bac_si_ids'] ?? []);
-        return redirect()->route('admin.phong.index')->with('success','Đã cập nhật phòng');
+        return redirect()->route('admin.phong.index')->with('success', 'Đã cập nhật phòng');
     }
 
     public function destroy(Phong $phong)
     {
         $phong->delete();
-        return redirect()->route('admin.phong.index')->with('success','Đã xóa phòng');
+        return redirect()->route('admin.phong.index')->with('success', 'Đã xóa phòng');
     }
 
     // ==================== MỞ RỘNG: METHODS MỚI (Parent: app/Http/Controllers/Admin/PhongController.php) ====================

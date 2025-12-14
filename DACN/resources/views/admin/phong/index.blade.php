@@ -50,7 +50,13 @@
                             @forelse($phongs as $p)
                                 <tr>
                                     <td class="fw-semibold">{{ $p->ten }}</td>
-                                    <td>{{ $p->loai }}</td>
+                                    <td>
+                                        @if($p->loaiPhong)
+                                            <span class="badge bg-primary">{{ $p->loaiPhong->ten }}</span>
+                                        @else
+                                            <span class="badge bg-secondary">Chưa gán</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $p->bac_sis_count }}</td>
 
                                     <td class="text-center text-nowrap">

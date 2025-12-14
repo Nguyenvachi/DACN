@@ -85,7 +85,8 @@ class DichVuController extends Controller
      */
     public function edit(DichVu $dichVu)
     {
-        return view('admin.dich-vu.edit', compact('dichVu'));
+        $chuyenKhoas = \App\Models\ChuyenKhoa::orderBy('ten')->get();
+        return view('admin.dich-vu.edit', compact('dichVu', 'chuyenKhoas'));
     }
 
     /**

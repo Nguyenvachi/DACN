@@ -30,7 +30,8 @@
                             <th>#</th>
                             <th>Tên xét nghiệm</th>
                             <th>Giá tiền</th>
-                            <th>Mô tả</th>
+                            <th>Thời gian (phút)</th>
+                            <th>Trạng thái</th>
                             <th width="200">Thao tác</th>
                         </tr>
                     </thead>
@@ -40,7 +41,14 @@
                             <td>{{ $item->id }}</td>
                             <td><strong>{{ $item->ten_xet_nghiem }}</strong></td>
                             <td>{{ number_format($item->gia_tien ?? 0, 0, ',', '.') }} đ</td>
-                            <td>{{ Str::limit($item->ghi_chu ?? 'N/A', 50) }}</td>
+                            <td>{{ $item->thoi_gian }} phút</td>
+                            <td>
+                                @if($item->hoat_dong)
+                                    <span class="badge bg-success">Hoạt động</span>
+                                @else
+                                    <span class="badge bg-secondary">Tạm ngưng</span>
+                                @endif
+                            </td>
                             <td>
                                 <a href="{{ route('admin.xet-nghiem.edit', $item) }}" class="btn btn-sm btn-warning">
                                     <i class="bi bi-pencil"></i>

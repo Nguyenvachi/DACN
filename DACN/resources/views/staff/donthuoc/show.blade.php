@@ -29,20 +29,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show">
-        <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show">
-        <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    @endif
-
     <div class="row g-4">
         {{-- Left Column --}}
         <div class="col-lg-8">
@@ -181,14 +167,6 @@
                         <p class="mb-0"><strong>Ghi chú:</strong> {{ $donThuoc->ghi_chu_cap_thuoc }}</p>
                         @endif
                     </div>
-
-                    <form method="POST" action="{{ route('staff.donthuoc.huy-cap', $donThuoc) }}" 
-                          onsubmit="return confirm('Bạn có chắc muốn hủy cấp thuốc?');">
-                        @csrf
-                        <button type="submit" class="btn btn-warning w-100">
-                            <i class="bi bi-x-circle me-1"></i>Hủy cấp thuốc
-                        </button>
-                    </form>
                     @else
                     <div class="alert alert-warning mb-3">
                         <h6 class="alert-heading"><i class="bi bi-hourglass-split me-2"></i>Chưa cấp thuốc</h6>
