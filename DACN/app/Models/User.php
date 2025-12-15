@@ -138,10 +138,6 @@ class User extends Authenticatable
         return $this->hasMany(Message::class);
     }
 
-    public function familyMembers()
-    {
-        return $this->hasMany(FamilyMember::class);
-    }
 
     public function lichHens()
     {

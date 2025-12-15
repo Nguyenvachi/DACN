@@ -1,15 +1,15 @@
 @extends('layouts.patient-modern')
 
-@section('title', 'Thêm thành viên gia đình')
-@section('page-title', 'Thêm thành viên gia đình')
-@section('page-subtitle', 'Nhập thông tin thành viên gia đình')
+@section('title', 'Thành viên gia đình (đã gỡ)')
+@section('page-title', 'Thành viên gia đình (đã gỡ)')
+@section('page-subtitle', 'Module Thành viên gia đình đã được gỡ khỏi ứng dụng')
 
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('patient.family.store') }}" method="POST" enctype="multipart/form-data">
+                <div class="alert alert-warning">Module "Thành viên gia đình" đã bị gỡ. Không thể thêm thành viên.</div>
                     @csrf
 
                     <div class="row g-3">

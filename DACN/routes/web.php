@@ -558,15 +558,9 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
     // Patient Medical History Routes (File mẹ: routes/web.php)
     Route::get('/lich-su-kham', [\App\Http\Controllers\Patient\LichSuKhamController::class, 'index'])->name('patient.lich-su-kham');
 
-    // Patient Family Members Routes (File mẹ: routes/web.php)
-    Route::prefix('thanh-vien-gia-dinh')->name('patient.family.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Patient\FamilyController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Patient\FamilyController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Patient\FamilyController::class, 'store'])->name('store');
-        Route::get('/{member}/edit', [\App\Http\Controllers\Patient\FamilyController::class, 'edit'])->name('edit');
-        Route::put('/{member}', [\App\Http\Controllers\Patient\FamilyController::class, 'update'])->name('update');
-        Route::delete('/{member}', [\App\Http\Controllers\Patient\FamilyController::class, 'destroy'])->name('destroy');
-    });
+    // Patient Family Members Routes (removed)
+    // NOTE: Routes for `patient.family.*` were removed as part of cleanup of the family module.
+    // If you need to restore them, revert the deletion or check the backup branch `remove-family-backup-*`.
 
     Route::get('/lich-hen/{lichHen}/thanh-toan', [PatientPaymentController::class, 'show'])->name('patient.payment');
     Route::post('/lich-hen/{lichHen}/thanh-toan/skip', [PatientPaymentController::class, 'skip'])->name('patient.payment.skip');

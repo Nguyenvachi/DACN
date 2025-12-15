@@ -299,12 +299,7 @@
                     <span>Lịch sử khám</span>
                 </a>
 
-                <div style="border-top: 1px solid rgba(255, 255, 255, 0.2); margin: 1rem 0;"></div>
-
-                <a href="{{ route('patient.family.index') }}" class="sidebar-link {{ request()->routeIs('patient.family.*') ? 'active' : '' }}">
-                    <i class="fas fa-users" style="width: 20px;"></i>
-                    <span>Thành viên gia đình</span>
-                </a>
+                {{-- Family menu removed --}}
 
                 <a href="{{ route('patient.notifications') }}" class="sidebar-link {{ request()->routeIs('patient.notifications') ? 'active' : '' }}">
                     <i class="fas fa-bell" style="width: 20px;"></i>
