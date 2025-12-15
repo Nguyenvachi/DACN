@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles; // ✅ Giữ dòng này
+use Illuminate\Support\Facades\Log;
 
 /**
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -64,11 +65,9 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        // Spatie sẽ tự check trong bảng phân quyền
-            // Spatie sẽ tự check trong bảng phân quyền
-            // Bao gồm 'super-admin' để siêu quản trị được coi là admin thực sự
-            return $this->hasAnyRole(['admin', 'super-admin']) || $this->role === 'admin';
-        // (Thêm || check cột cũ để tương thích ngược dữ liệu cũ chưa migrate)
+        // Check cả cột role và Spatie role
+        $result = $this->role === 'admin' || $this->hasRole('admin') || $this->hasRole('super-admin');
+        return $result;
     }
 
     public function isDoctor(): bool
@@ -123,9 +122,20 @@ class User extends Authenticatable
         return $this->hasOne(\App\Models\NotificationPreference::class);
     }
 
-    public function danhGias()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function notifications()
     {
-        return $this->hasMany(DanhGia::class);
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
     }
 
     public function conversationsAsBenhNhan()
@@ -199,9 +209,17 @@ class User extends Authenticatable
                 if (! $user->roles()->exists()) {
                     $roleToAssign = $user->role ?: 'patient';
                     $user->assignRole($roleToAssign);
+                    Log::info('Assigned role ' . $roleToAssign . ' to user #' . $user->id);
                 }
             } catch (\Throwable $e) {
-                \Log::warning('Failed to assign role to user #' . ($user->id ?? 'unknown') . ': ' . $e->getMessage());
+                Log::error('Failed to assign role to user #' . ($user->id ?? 'unknown') . ': ' . $e->getMessage());
+                // THÊM: Retry với role mặc định nếu thất bại
+                try {
+                    $user->assignRole('patient');
+                    Log::info('Fallback: Assigned patient role to user #' . $user->id);
+                } catch (\Throwable $e2) {
+                    Log::critical('Critical: Could not assign any role to user #' . ($user->id ?? 'unknown'));
+                }
             }
         });
     }

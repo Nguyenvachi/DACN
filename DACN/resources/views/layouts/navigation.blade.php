@@ -34,17 +34,36 @@
                         @php $user = auth()->user(); @endphp
                         {{-- ADMIN --}}
                         @if ($user->isAdmin())
-                            <x-nav-link :href="route('admin.lichhen.index')" :active="request()->routeIs('admin.*')">
-                                Quản trị
-                            </x-nav-link>
-
-                            <x-nav-link :href="route('admin.benhan.index')" :active="request()->routeIs('admin.benhan.*')">
-                                Bệnh án
-                            </x-nav-link>
-
-                            <x-nav-link :href="route('admin.hoadon.index')" :active="request()->routeIs('admin.hoadon.*')">
-                                Hóa đơn
-                            </x-nav-link>
+                            {{-- THÊM: Check permission cho menu admin --}}
+                            @can('view-admin-dashboard')
+                                <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                                    Dashboard
+                                </x-nav-link>
+                            @endcan
+                            {{-- THÊM: Check permission cho menu Bệnh án --}}
+                            @can('view-admin-medical-records')
+                                <x-nav-link :href="route('admin.benhan.index')" :active="request()->routeIs('admin.benhan.*')">
+                                    Bệnh án
+                                </x-nav-link>
+                            @endcan
+                            {{-- THÊM: Check permission cho menu Hóa đơn --}}
+                            @can('view-admin-invoices')
+                                <x-nav-link :href="route('admin.hoadon.index')" :active="request()->routeIs('admin.hoadon.*')">
+                                    Hóa đơn
+                                </x-nav-link>
+                            @endcan
+                            {{-- THÊM: Check permission cho menu Bác sĩ --}}
+                            @can('view-admin-doctors')
+                                <x-nav-link :href="route('admin.bac-si.index')" :active="request()->routeIs('admin.bac-si.*')">
+                                    Bác sĩ
+                                </x-nav-link>
+                            @endcan
+                            {{-- THÊM: Check permission cho menu Báo cáo --}}
+                            @can('view-admin-reports')
+                                <x-nav-link :href="route('admin.reports.index')" :active="request()->routeIs('admin.reports.*')">
+                                    Báo cáo
+                                </x-nav-link>
+                            @endcan
                         @endif
 
                         {{-- BÁC SĨ --}}

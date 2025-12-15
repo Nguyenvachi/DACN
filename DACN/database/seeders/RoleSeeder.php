@@ -32,6 +32,7 @@ class RoleSeeder extends Seeder
             'view-invoices', 'create-invoices', 'edit-invoices', 'process-payments', 'view-payment-logs',
             'view-reports', 'view-revenue-reports', 'view-appointment-reports', 'export-data',
             'view-dashboard',
+            'send-notifications',  // Thêm mới
         ]);
         $this->command->info('✅ Role: admin - Quản trị hệ thống');
 

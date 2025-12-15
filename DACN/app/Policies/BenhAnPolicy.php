@@ -35,4 +35,22 @@ class BenhAnPolicy
     {
         return $this->update($user, $record);
     }
+
+    // THÊM: Method cho export PDF (nếu chưa có)
+    public function exportPdf(User $user, BenhAn $record): bool
+    {
+        return $this->view($user, $record) && $user->hasPermissionTo('export-data');
+    }
+
+    // THÊM: Method cho audit log (nếu chưa có)
+    public function audit(User $user, BenhAn $record): bool
+    {
+        return $user->isAdmin() || ($user->isDoctor() && $user->bacSi && $user->bacSi->id === $record->bac_si_id);
+    }
+
+    // THÊM: Method tổng hợp cho admin actions
+    public function manage(User $user): bool
+    {
+        return $user->hasAnyPermission(['create-medical-records', 'edit-medical-records', 'delete-medical-records']);
+    }
 }

@@ -19,7 +19,6 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        'App\Models\Model' => 'App\Policies\ModelPolicy',
         BenhAn::class => BenhAnPolicy::class,
         NhanVien::class => NhanVienPolicy::class,
         LichHen::class => LichHenPolicy::class,
@@ -55,5 +54,24 @@ class AuthServiceProvider extends ServiceProvider
             // Chỉ admin được xuất, staff bị hạn chế (có thể mở rộng sau)
             return $user->isAdmin();
         });
+
+        // THÊM: Gates cho permissions admin panel (đảm bảo views chỉ hiển thị khi có quyền)
+        Gate::define('view-admin-dashboard', fn($user) => $user->hasPermissionTo('view-dashboard'));
+        Gate::define('view-admin-doctors', fn($user) => $user->hasPermissionTo('view-doctors'));
+        Gate::define('view-admin-reports', fn($user) => $user->hasPermissionTo('view-reports'));
+        Gate::define('view-admin-invoices', fn($user) => $user->hasPermissionTo('view-invoices'));
+        Gate::define('view-admin-medical-records', fn($user) => $user->hasPermissionTo('view-medical-records'));
+        Gate::define('view-admin-services', fn($user) => $user->hasPermissionTo('view-services'));
+        Gate::define('view-admin-medicines', fn($user) => $user->hasPermissionTo('view-medicines'));
+        Gate::define('view-admin-staff', fn($user) => $user->hasPermissionTo('view-staff'));
+        Gate::define('view-admin-users', fn($user) => $user->hasPermissionTo('view-users'));
+        Gate::define('view-admin-appointments', fn($user) => $user->hasPermissionTo('view-appointments'));
+        Gate::define('manage-admin-settings', fn($user) => $user->hasPermissionTo('manage-settings'));  // Thêm cho settings nếu cần
+
+        // THÊM: Gate tổng hợp cho admin panel (fallback nếu thiếu permission cụ thể)
+        Gate::define('access-admin-panel', fn($user) => $user->hasAnyRole(['admin', 'manager']) || $user->hasAnyPermission(['view-dashboard', 'view-doctors', 'view-reports']));
+
+        // THÊM: Gate cho gửi thông báo/reminders (sử dụng permission 'send-notifications' đã có)
+        Gate::define('send-reminders', fn($user) => $user->hasPermissionTo('send-notifications') || $user->isAdmin() || $user->hasRole('admin'));
     }
 }

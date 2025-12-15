@@ -92,6 +92,7 @@ class PermissionSeeder extends Seeder
             'view-appointment-reports',
             'export-data',
             'view-dashboard',
+            'send-notifications',  // Thêm mới
         ];
 
         foreach ($permissions as $permission) {

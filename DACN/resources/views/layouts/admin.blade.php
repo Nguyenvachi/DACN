@@ -95,7 +95,10 @@
         <h5 class="fw-bold mb-3"><i class="fas fa-clinic-medical me-2"></i>Quản trị</h5>
 
         <ul>
-            <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-chart-line me-2"></i>Dashboard</a></li>
+            {{-- THÊM: Check permission cho menu Dashboard --}}
+            @can('view-admin-dashboard')
+                <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-chart-line me-2"></i>Dashboard</a></li>
+            @endcan
             <li>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -105,9 +108,18 @@
             <hr>
 
             <li><strong>Quản lý cơ bản</strong></li>
-            <li><a href="{{ route('admin.bac-si.index') }}">👨‍⚕️ Quản lý Bác sĩ</a></li>
-            <li><a href="{{ route('admin.nhanvien.index') }}">👥 Nhân viên</a></li>
-            <li><a href="{{ route('admin.dich-vu.index') }}">🏥 Dịch vụ</a></li>
+            {{-- THÊM: Check permission cho menu Bác sĩ --}}
+            @can('view-admin-doctors')
+                <li><a href="{{ route('admin.bac-si.index') }}">👨‍⚕️ Quản lý Bác sĩ</a></li>
+            @endcan
+            {{-- THÊM: Check permission cho menu Nhân viên --}}
+            @can('view-admin-staff')
+                <li><a href="{{ route('admin.nhanvien.index') }}">👥 Nhân viên</a></li>
+            @endcan
+            {{-- THÊM: Check permission cho menu Dịch vụ --}}
+            @can('view-admin-services')
+                <li><a href="{{ route('admin.dich-vu.index') }}">🏥 Dịch vụ</a></li>
+            @endcan
             <li><a href="{{ route('admin.chuyenkhoa.index') }}">🔬 Chuyên khoa</a></li>
             <li><a href="{{ route('admin.phong.index') }}">🚪 Phòng khám</a></li>
             <li><a href="{{ route('admin.phong.diagram') }}">🗺️ Sơ đồ phòng</a></li>
@@ -115,7 +127,10 @@
             <hr>
 
             <li><strong>Lịch & Hẹn</strong></li>
-            <li><a href="{{ route('admin.lichhen.index') }}">📅 Lịch hẹn</a></li>
+            {{-- THÊM: Check permission cho menu Lịch hẹn --}}
+            @can('view-admin-appointments')
+                <li><a href="{{ route('admin.lichhen.index') }}">📅 Lịch hẹn</a></li>
+            @endcan
             <li><a href="{{ route('admin.calendar.index') }}">📆 Calendar</a></li>
             <li><a href="{{ route('admin.danhgia.index') }}">⭐ Đánh giá</a></li>
             <li><a href="{{ route('admin.chat.index') }}">💬 Chat tư vấn</a></li>
@@ -123,13 +138,22 @@
             <hr>
 
             <li><strong>Bệnh án & Hóa đơn</strong></li>
-            <li><a href="{{ route('admin.benhan.index') }}">📋 Bệnh án</a></li>
-            <li><a href="{{ route('admin.hoadon.index') }}">💰 Hóa đơn</a></li>
+            {{-- THÊM: Check permission cho menu Bệnh án --}}
+            @can('view-admin-medical-records')
+                <li><a href="{{ route('admin.benhan.index') }}">📋 Bệnh án</a></li>
+            @endcan
+            {{-- THÊM: Check permission cho menu Hóa đơn --}}
+            @can('view-admin-invoices')
+                <li><a href="{{ route('admin.hoadon.index') }}">💰 Hóa đơn</a></li>
+            @endcan
 
             <hr>
 
             <li><strong>Quản lý kho</strong></li>
-            <li><a href="{{ route('admin.thuoc.index') }}">💊 Thuốc</a></li>
+            {{-- THÊM: Check permission cho menu Thuốc --}}
+            @can('view-admin-medicines')
+                <li><a href="{{ route('admin.thuoc.index') }}">💊 Thuốc</a></li>
+            @endcan
             <li><a href="{{ route('admin.coupons.index') }}">🎫 Mã giảm giá</a></li>
             <li><a href="{{ route('admin.kho.index') }}">📦 Kho</a></li>
             <li><a href="{{ route('admin.kho.nhap.form') }}">📥 Nhập kho</a></li>
@@ -151,6 +175,14 @@
             <li><a href="{{ route('admin.users.index') }}">👤 Users</a></li>
             <li><a href="{{ route('admin.roles.index') }}">🎭 Vai trò</a></li>
             <li><a href="{{ route('admin.permissions.index') }}">🔐 Quyền</a></li>
+
+            <hr>
+
+            <li><strong>Thông báo</strong></li>
+            {{-- THÊM: Check permission cho menu Gửi thông báo --}}
+            @can('send-reminders')
+                <li><a href="{{ route('admin.notifications.send') }}">📢 Gửi thông báo</a></li>
+            @endcan
 
             <hr>
 

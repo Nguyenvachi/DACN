@@ -297,6 +297,17 @@
                 <i class="bi bi-person-gear"></i>
                 <span>Hồ sơ của tôi</span>
             </a>
+            <a href="{{ route('staff.notifications.index') }}"
+               class="menu-item {{ request()->routeIs('staff.notifications.*') ? 'active' : '' }}">
+                <i class="bi bi-bell-fill"></i>
+                <span>Thông báo</span>
+                @php
+                    $unreadNotifications = auth()->user()->unreadNotifications()->count();
+                @endphp
+                @if($unreadNotifications > 0)
+                    <span class="badge bg-danger rounded-pill ms-auto">{{ $unreadNotifications }}</span>
+                @endif
+            </a>
         </nav>
     </aside>
 
@@ -400,6 +411,49 @@
                 sidebar.classList.remove('show');
             }
         });
+
+        // Realtime notifications polling
+        let lastUnreadCount = 0;
+        function updateSidebarBadge(count) {
+            const sidebarBadge = document.querySelector('.staff-sidebar .badge');
+            if (sidebarBadge) {
+                if (count > 0) {
+                    sidebarBadge.textContent = count;
+                    sidebarBadge.style.display = 'inline-block';
+                } else {
+                    sidebarBadge.style.display = 'none';
+                }
+            }
+        }
+
+        async function fetchUnreadCount() {
+            try {
+                const response = await fetch('/notifications/unread-count', {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    credentials: 'same-origin'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const currentCount = data.count;
+
+                    if (currentCount !== lastUnreadCount) {
+                        updateSidebarBadge(currentCount);
+                        lastUnreadCount = currentCount;
+                    }
+                }
+            } catch (error) {
+                console.log('Error fetching unread count:', error);
+            }
+        }
+
+        // Initial fetch and poll every 200ms for ultra-fast realtime
+        fetchUnreadCount();
+        setInterval(fetchUnreadCount, 200);
     </script>
 
 </body>

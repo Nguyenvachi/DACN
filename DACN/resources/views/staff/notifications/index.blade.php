@@ -1,43 +1,31 @@
-@extends('layouts.patient-modern')
+@extends('layouts.staff')
 
 @section('title', 'Thông báo hệ thống')
 @section('page-title', 'Thông báo')
-@section('page-subtitle', 'Cập nhật tin tức, lịch hẹn và trạng thái hồ sơ')
+@section('page-subtitle', 'Cập nhật tin tức và trạng thái hệ thống')
 
 @section('content')
     <div class="container-fluid p-0">
         <div class="row g-4">
-            {{-- 1. Filter Section: Thiết kế lại dạng thanh công cụ --}}
+            {{-- 1. Filter Section --}}
             <div class="col-12">
                 <div class="card border-0 shadow-sm rounded-3">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-
                             <div class="nav nav-pills custom-pills">
-                                <a href="{{ route('patient.notifications') }}"
+                                <a href="{{ route('staff.notifications.index') }}"
                                     class="nav-link {{ !request('filter') ? 'active bg-primary text-white shadow-sm' : 'text-muted bg-light' }} me-2 mb-1">
-                                    <i class="fas fa-inbox me-1"></i> Tất cả <span
-                                        class="badge bg-white text-primary ms-1 rounded-pill">{{ $allCount }}</span>
+                                    <i class="fas fa-inbox me-1"></i> Tất cả
                                 </a>
-                                <a href="{{ route('patient.notifications', ['filter' => 'unread']) }}"
+                                <a href="{{ route('staff.notifications.index', ['filter' => 'unread']) }}"
                                     class="nav-link {{ request('filter') === 'unread' ? 'active bg-primary text-white shadow-sm' : 'text-muted bg-light' }} me-2 mb-1">
-                                    <i class="fas fa-envelope-open-text me-1"></i> Chưa đọc <span
-                                        class="badge bg-danger ms-1 rounded-pill">{{ $unreadCount }}</span>
+                                    <i class="fas fa-envelope-open-text me-1"></i> Chưa đọc
                                 </a>
-                                <a href="{{ route('patient.notifications', ['filter' => 'read']) }}"
+                                <a href="{{ route('staff.notifications.index', ['filter' => 'read']) }}"
                                     class="nav-link {{ request('filter') === 'read' ? 'active bg-primary text-white shadow-sm' : 'text-muted bg-light' }} mb-1">
                                     <i class="fas fa-check-circle me-1"></i> Đã đọc
                                 </a>
                             </div>
-
-                            @if ($unreadCount > 0)
-                                <form action="{{ route('patient.notifications.mark-all-read') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill hover-scale">
-                                        <i class="fas fa-check-double me-1"></i> Đánh dấu tất cả đã đọc
-                                    </button>
-                                </form>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -51,12 +39,10 @@
                         class="card mb-3 border-0 shadow-sm notification-card {{ $notification->read_at ? 'read-bg' : 'unread-border' }}">
                         <div class="card-body p-3">
                             <div class="d-flex align-items-start">
-
                                 <div class="flex-shrink-0 me-3">
                                     @php
                                         $icon = 'bell';
-                                        $bgClass = 'bg-primary'; // Mặc định
-
+                                        $bgClass = 'bg-primary';
                                         if (str_contains($notification->type, 'Appointment')) {
                                             $icon = 'calendar-check';
                                             $bgClass = 'bg-info';
@@ -66,9 +52,6 @@
                                         } elseif (str_contains($notification->type, 'Medical')) {
                                             $icon = 'notes-medical';
                                             $bgClass = 'bg-warning';
-                                        } elseif (str_contains($notification->type, 'Order')) {
-                                            $icon = 'pills';
-                                            $bgClass = 'bg-danger';
                                         }
                                     @endphp
                                     <div class="icon-square {{ $bgClass }} bg-opacity-10 text-{{ str_replace('bg-', '', $bgClass) }} rounded-circle d-flex align-items-center justify-content-center"
@@ -105,7 +88,7 @@
                                         @endif
 
                                         @if (!$notification->read_at)
-                                            <form action="{{ route('patient.notifications.mark-read', $notification) }}"
+                                            <form action="{{ route('staff.notifications.mark-read', $notification) }}"
                                                 method="POST">
                                                 @csrf
                                                 <button type="submit"
@@ -115,17 +98,6 @@
                                                 </button>
                                             </form>
                                         @endif
-
-                                        <form action="{{ route('patient.notifications.delete', $notification) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="btn btn-sm btn-link text-decoration-none text-danger p-0 ms-3"
-                                                onclick="return confirm('Xóa thông báo này?')" title="Xóa thông báo">
-                                                <i class="fas fa-trash-alt"></i> Xóa
-                                            </button>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -140,11 +112,7 @@
                                         width="100" class="opacity-50">
                                 </div>
                                 <h5 class="text-muted fw-bold">Chưa có thông báo nào</h5>
-                                <p class="text-muted mb-0">Bạn sẽ nhận được thông báo khi có lịch hẹn hoặc kết quả khám mới.
-                                </p>
-                                <a href="{{ route('home') }}" class="btn btn-primary mt-3 rounded-pill px-4">
-                                    Về trang chủ
-                                </a>
+                                <p class="text-muted mb-0">Bạn sẽ nhận được thông báo khi có cập nhật từ hệ thống.</p>
                             </div>
                         </div>
                     </div>
@@ -161,12 +129,11 @@
         </div>
     </div>
 
-    {{-- Style riêng cho trang này để tạo hiệu ứng đẹp --}}
+    {{-- Style --}}
     <style>
         .notification-card {
             transition: all 0.2s ease-in-out;
             border-left: 4px solid transparent;
-            /* Giữ chỗ cho border */
         }
 
         .notification-card:hover {
@@ -174,17 +141,13 @@
             box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08) !important;
         }
 
-        /* Style cho tin chưa đọc: Nổi bật hơn */
         .unread-border {
             border-left-color: #0d6efd !important;
-            /* Màu xanh primary */
             background-color: #ffffff;
         }
 
-        /* Style cho tin đã đọc: Màu nền hơi xám để làm chìm xuống */
         .read-bg {
             background-color: #f8f9fa;
-            /* Gray-100 */
             opacity: 0.85;
         }
 
@@ -198,15 +161,99 @@
             font-weight: 500;
             transition: all 0.2s;
         }
-
-        .hover-scale {
-            transition: transform 0.2s;
-        }
-
-        .hover-scale:hover {
-            transform: scale(1.05);
-        }
     </style>
+
+    {{-- Realtime polling script --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let lastUnreadCount = 0;
+            let lastNotificationsHtml = '';
+
+            // Function to update unread count in sidebar
+            function updateSidebarBadge(count) {
+                const sidebarBadge = document.querySelector('.staff-sidebar .badge');
+                if (sidebarBadge) {
+                    if (count > 0) {
+                        sidebarBadge.textContent = count;
+                        sidebarBadge.style.display = 'inline-block';
+                    } else {
+                        sidebarBadge.style.display = 'none';
+                    }
+                }
+            }
+
+            // Function to refresh notifications list
+            async function refreshNotifications() {
+                try {
+                    const currentFilter = new URLSearchParams(window.location.search).get('filter') || '';
+                    const response = await fetch(window.location.pathname + (currentFilter ? '?filter=' + currentFilter : ''), {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                        },
+                        credentials: 'same-origin'
+                    });
+
+                    if (response.ok) {
+                        const html = await response.text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newNotificationsHtml = doc.querySelector('.col-12 .row.g-4 .col-12:last-child')?.innerHTML || '';
+
+                        // Only update if content changed
+                        if (newNotificationsHtml && newNotificationsHtml !== lastNotificationsHtml) {
+                            const notificationsContainer = document.querySelector('.col-12 .row.g-4 .col-12:last-child');
+                            if (notificationsContainer) {
+                                notificationsContainer.innerHTML = newNotificationsHtml;
+                                lastNotificationsHtml = newNotificationsHtml;
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log('Error refreshing notifications:', error);
+                }
+            }
+
+            // Function to fetch unread count
+            async function fetchUnreadCount() {
+                try {
+                    const response = await fetch('/notifications/unread-count', {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                        },
+                        credentials: 'same-origin'
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const currentCount = data.count;
+
+                        // Update sidebar badge if count changed
+                        if (currentCount !== lastUnreadCount) {
+                            updateSidebarBadge(currentCount);
+                            lastUnreadCount = currentCount;
+                            // Refresh notifications list when count changes
+                            refreshNotifications();
+                        }
+                    }
+                } catch (error) {
+                    console.log('Error fetching unread count:', error);
+                }
+            }
+
+            // Initial setup
+            fetchUnreadCount();
+            refreshNotifications().then(() => {
+                lastNotificationsHtml = document.querySelector('.col-12 .row.g-4 .col-12:last-child')?.innerHTML || '';
+            });
+
+            // Poll every 200ms for ultra-fast realtime
+            setInterval(fetchUnreadCount, 200);
+        });
+    </script>
 @push('scripts')
 <script>
     $(document).ready(function() {
@@ -216,7 +263,7 @@
 
         // Function to update sidebar badge
         function updateSidebarBadge(count) {
-            const badge = document.querySelector('.nav-link .badge.bg-danger, .nav-link .badge.bg-white');
+            const badge = document.querySelector('.badge.bg-danger');
             if (badge) badge.textContent = count;
         }
 
@@ -271,7 +318,7 @@
 
                                 <div class="d-flex gap-2 mt-2">
                                     ${notification.data.action_url ? `<a href="${notification.data.action_url}" class="btn btn-sm btn-light text-primary rounded-pill px-3">Xem chi tiết <i class="fas fa-arrow-right ms-1"></i></a>` : ''}
-                                    ${!isRead ? `<form action="{{ route('patient.notifications.mark-read', ':id') }}".replace(':id', notification.id) method="POST" style="display: inline;">
+                                    ${!isRead ? `<form action="{{ route('staff.notifications.mark-read', ':id') }}".replace(':id', notification.id) method="POST" style="display: inline;">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-link text-decoration-none text-success p-0 ms-2" title="Đánh dấu đã đọc">
                                             <i class="fas fa-check"></i> Đã đọc
@@ -303,7 +350,7 @@
             isLoadingNotifications = true;
 
             $.ajax({
-                url: '{{ route("patient.notifications.fetch-new") }}',
+                url: '{{ route("staff.notifications.fetch-new") }}',
                 method: 'GET',
                 data: { last_id: lastNotificationId },
                 headers: {
@@ -327,19 +374,6 @@
                 },
                 error: function(xhr, status, error) {
                     console.log('Error loading new notifications:', error);
-                    isLoadingNotifications = false;
-                }
-            });
-        }
-
-                    if (hasNewNotifications) {
-                        // Update unread count
-                        fetchUnreadCount();
-                    }
-
-                    isLoadingNotifications = false;
-                },
-                error: function() {
                     isLoadingNotifications = false;
                 }
             });

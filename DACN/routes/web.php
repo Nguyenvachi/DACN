@@ -344,11 +344,13 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::delete('baiviet/{id}/force-delete', [\App\Http\Controllers\Admin\BaiVietController::class, 'forceDelete'])->name('baiviet.forceDelete');
     });
 
-    // Tools
-    Route::post('/tools/reminders/tomorrow', [\App\Http\Controllers\Admin\ReminderController::class, 'sendTomorrow'])->name('tools.reminders.tomorrow');
-    Route::post('/tools/reminders/next-3-hours', [\App\Http\Controllers\Admin\ReminderController::class, 'sendNext3Hours'])->name('tools.reminders.next3h');
-    Route::get('/tools/test-mail', [\App\Http\Controllers\Admin\TestMailController::class, 'index'])->name('tools.test-mail');
-    Route::post('/tools/test-mail/{id}', [\App\Http\Controllers\Admin\TestMailController::class, 'send'])->name('tools.test-mail.send');
+    // THÊM: Tools với middleware gửi thông báo
+    Route::middleware('can:send-reminders')->group(function () {
+        Route::post('/tools/reminders/tomorrow', [\App\Http\Controllers\Admin\ReminderController::class, 'sendTomorrow'])->name('tools.reminders.tomorrow');
+        Route::post('/tools/reminders/next-3-hours', [\App\Http\Controllers\Admin\ReminderController::class, 'sendNext3Hours'])->name('tools.reminders.next3h');
+        Route::get('/tools/test-mail', [\App\Http\Controllers\Admin\TestMailController::class, 'index'])->name('tools.test-mail');
+        Route::post('/tools/test-mail/{id}', [\App\Http\Controllers\Admin\TestMailController::class, 'send'])->name('tools.test-mail.send');
+    });
 
     // API Calendar
     Route::prefix('calendar/api')->group(function () {
@@ -359,6 +361,62 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::post('resize-update', [\App\Http\Controllers\Admin\CalendarController::class, 'apiDragUpdate'])->name('calendar.api.resize_update');
         Route::get('events2', [CalendarController::class, 'apiEventsV2'])->name('calendar.api.events2');
         Route::get('stats2', [CalendarController::class, 'apiStatsV2'])->name('calendar.api.stats2');
+    });
+
+    // THÊM: Nhóm middleware cho admin panel (áp dụng gates/policies trên)
+    Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name('admin.')->group(function () {
+        // THÊM: Route tổng hợp cho admin panel (fallback nếu routes cụ thể thiếu)
+        Route::get('/panel', function () {
+            return view('admin.panel');  // Tạo view mới nếu cần: resources/views/admin/panel.blade.php
+        })->name('panel')->middleware('can:access-admin-panel');
+
+        // THÊM: Bảo vệ routes admin còn thiếu (ví dụ: nếu route 'admin.bac-si.index' chưa có middleware)
+        Route::middleware('can:view-admin-doctors')->group(function () {
+            // Paste routes bác sĩ vào đây nếu chưa có middleware
+            Route::resource('bac-si', AdminBacSiController::class);
+        });
+
+        Route::middleware('can:view-admin-reports')->group(function () {
+            // Paste routes báo cáo vào đây
+            Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        });
+
+        // THÊM: Bảo vệ routes hóa đơn
+        Route::middleware('can:view-admin-invoices')->group(function () {
+            Route::resource('hoa-don', HoaDonController::class)->names(['index' => 'hoadon.index']);
+        });
+
+        // THÊM: Bảo vệ routes bệnh án
+        Route::middleware('can:view-admin-medical-records')->group(function () {
+            Route::resource('benh-an', BenhAnController::class)->names(['index' => 'benhan.index']);
+        });
+
+        // THÊM: Bảo vệ routes dịch vụ
+        Route::middleware('can:view-admin-services')->group(function () {
+            Route::resource('dich-vu', DichVuController::class);
+        });
+
+        // THÊM: Bảo vệ routes thuốc
+        Route::middleware('can:view-admin-medicines')->group(function () {
+            Route::resource('thuoc', \App\Http\Controllers\Admin\ThuocController::class)->names([
+                'index' => 'thuoc.index', 'create' => 'thuoc.create', 'store' => 'thuoc.store', 'show' => 'thuoc.show', 'edit' => 'thuoc.edit', 'update' => 'thuoc.update', 'destroy' => 'thuoc.destroy',
+            ]);
+        });
+
+        // THÊM: Bảo vệ routes nhân viên
+        Route::middleware('can:view-admin-staff')->group(function () {
+            Route::resource('nhanvien', NhanVienController::class);
+        });
+
+        // THÊM: Bảo vệ routes users
+        Route::middleware('can:view-admin-users')->group(function () {
+            Route::resource('users', \App\Http\Controllers\Admin\UserManagementController::class)->names(['index' => 'users.index']);  // Giả sử có controller này
+        });
+
+        // THÊM: Bảo vệ routes lịch hẹn
+        Route::middleware('can:view-admin-appointments')->group(function () {
+            Route::resource('lichhen', LichHenController::class);
+        });
     });
 });
 
@@ -411,6 +469,13 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
         Route::get('/{conversation}', [\App\Http\Controllers\Doctor\ChatController::class, 'show'])->name('show');
         Route::post('/{conversation}/send', [\App\Http\Controllers\Doctor\ChatController::class, 'sendMessage'])->name('send');
         Route::get('/{conversation}/messages', [\App\Http\Controllers\Doctor\ChatController::class, 'getMessages'])->name('messages');
+    });
+
+    // Thông báo - Notification Management (File mẹ: routes/web.php)
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\NotificationController::class, 'index'])->name('index');
+        Route::get('/fetch-new', [\App\Http\Controllers\Doctor\NotificationController::class, 'fetchNewNotifications'])->name('fetch-new');
+        Route::post('/{notification}/mark-read', [\App\Http\Controllers\Doctor\NotificationController::class, 'markRead'])->name('mark-read');
     });
 
     // Lịch hẹn - Appointment Management (File mẹ: routes/web.php)
@@ -552,9 +617,12 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
 
     // Patient Notifications Routes (File mẹ: routes/web.php)
     Route::get('/thong-bao', [\App\Http\Controllers\Patient\NotificationController::class, 'index'])->name('patient.notifications');
+    Route::get('/thong-bao/fetch-new', [\App\Http\Controllers\Patient\NotificationController::class, 'fetchNewNotifications'])->name('patient.notifications.fetch-new');
     Route::post('/thong-bao/mark-all-read', [\App\Http\Controllers\Patient\NotificationController::class, 'markAllRead'])->name('patient.notifications.mark-all-read');
     Route::post('/thong-bao/{notification}/mark-read', [\App\Http\Controllers\Patient\NotificationController::class, 'markRead'])->name('patient.notifications.mark-read');
     Route::delete('/thong-bao/{notification}', [\App\Http\Controllers\Patient\NotificationController::class, 'delete'])->name('patient.notifications.delete');
+
+
 
     // Patient Medical History Routes (File mẹ: routes/web.php)
     Route::get('/lich-su-kham', [\App\Http\Controllers\Patient\LichSuKhamController::class, 'index'])->name('patient.lich-su-kham');
@@ -570,6 +638,13 @@ Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->grou
         Route::get('/{benh_an}', [BenhAnController::class, 'show'])->name('show');
         Route::get('/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('files.download')->middleware('signed');
         Route::get('/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('xetnghiem.download')->middleware('signed');
+    });
+
+    // Thông báo - Notification Management (File mẹ: routes/web.php)
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Staff\NotificationController::class, 'index'])->name('index');
+        Route::get('/fetch-new', [\App\Http\Controllers\Staff\NotificationController::class, 'fetchNewNotifications'])->name('fetch-new');
+        Route::post('/{notification}/mark-read', [\App\Http\Controllers\Staff\NotificationController::class, 'markRead'])->name('mark-read');
     });
 });
 
@@ -649,3 +724,46 @@ Route::get('/tin-tuc', [\App\Http\Controllers\BlogController::class, 'index'])->
 
 // Sitemap.xml
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
+// THÊM: Route test trực tiếp (bypass middleware)
+Route::get('/test-notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'create'])->middleware('auth')->name('test.notifications');
+
+
+// Gửi thông báo (form + gửi) - CHỈ GIỮ 1 NHÓM, dùng đúng method store
+Route::middleware(['auth', 'can:send-reminders'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/notifications/send', [\App\Http\Controllers\Admin\NotificationController::class, 'create'])->name('notifications.send');
+    Route::post('/notifications/send', [\App\Http\Controllers\Admin\NotificationController::class, 'store'])->name('notifications.send.store');
+});
+
+// Polling route for realtime notifications
+Route::middleware('auth')->get('/notifications/unread-count', function () {
+    return response()->json([
+        'count' => auth()->user()->unreadNotifications()->count()
+    ]);
+});
+
+// Route to get latest notifications for realtime updates
+Route::middleware('auth')->get('/notifications/latest', function (Request $request) {
+    $user = auth()->user();
+    $lastId = $request->query('last_id', 0);
+
+    $notifications = $user->notifications()
+        ->where('id', '>', $lastId)
+        ->orderBy('id', 'asc')
+        ->get()
+        ->map(function ($notification) {
+            return [
+                'id' => $notification->id,
+                'type' => $notification->type,
+                'data' => $notification->data,
+                'read_at' => $notification->read_at,
+                'created_at' => $notification->created_at,
+                'updated_at' => $notification->updated_at,
+            ];
+        });
+
+    return response()->json([
+        'notifications' => $notifications,
+        'has_new' => $notifications->count() > 0
+    ]);
+});

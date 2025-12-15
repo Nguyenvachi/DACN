@@ -228,6 +228,7 @@
                                                 $statusConfig = match($appt->trang_thai) {
                                                     'Đã xác nhận' => ['class' => 'status-confirmed', 'icon' => 'check-circle'],
                                                     'Chờ xác nhận' => ['class' => 'status-pending', 'icon' => 'clock'],
+                                                    'Đã check-in' => ['class' => 'status-checked-in', 'icon' => 'check-circle'],
                                                     'Đã hủy' => ['class' => 'status-cancelled', 'icon' => 'times-circle'],
                                                     'Hoàn thành' => ['class' => 'status-completed', 'icon' => 'check-double'],
                                                     'Đang khám' => ['class' => 'status-in-progress', 'icon' => 'stethoscope'],
@@ -330,6 +331,7 @@
                                             $statusConfig = match($upcoming->trang_thai) {
                                                 'Đã xác nhận' => ['class' => 'status-confirmed', 'icon' => 'check-circle'],
                                                 'Chờ xác nhận' => ['class' => 'status-pending', 'icon' => 'clock'],
+                                                'Đã check-in' => ['class' => 'status-checked-in', 'icon' => 'check-circle'],
                                                 default => ['class' => 'status-badge', 'icon' => 'info-circle']
                                             };
                                         @endphp
