@@ -48,7 +48,7 @@
 
                         <div class="d-flex gap-2">
                             @if(!$lichHen->getIsPaidAttribute())
-                                <a href="{{ route('patient.payment', $lichHen) }}" class="btn btn-primary">
+                                <a href="{{ route('patient.lichhen.payment', $lichHen) }}" class="btn btn-primary">
                                     <i class="bi bi-credit-card me-1"></i> Thanh toán
                                 </a>
                             @endif

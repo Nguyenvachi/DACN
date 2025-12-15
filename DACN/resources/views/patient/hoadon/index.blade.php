@@ -163,7 +163,7 @@
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 @if (($hoaDon->so_tien_con_lai ?? 0) > 0)
-                                                    <a href="{{ route('patient.payment', $hoaDon->lichHen) }}"
+                                                    <a href="{{ route('patient.lichhen.payment', $hoaDon->lichHen) }}"
                                                         class="btn btn-outline-success" title="Thanh toán">
                                                         <i class="fas fa-credit-card"></i>
                                                     </a>

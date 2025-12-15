@@ -33,90 +33,95 @@
 
             {{-- 2. Danh sách thông báo --}}
             <div class="col-12">
-                <div class="notification-list">
+                {{-- Container chính có ID để Javascript dễ tìm --}}
+                <div id="notification-list" class="notification-list">
                     @forelse($notifications as $notification)
-                    <div
-                        class="card mb-3 border-0 shadow-sm notification-card {{ $notification->read_at ? 'read-bg' : 'unread-border' }}">
-                        <div class="card-body p-3">
-                            <div class="d-flex align-items-start">
-                                <div class="flex-shrink-0 me-3">
-                                    @php
-                                        $icon = 'bell';
-                                        $bgClass = 'bg-primary';
-                                        if (str_contains($notification->type, 'Appointment')) {
-                                            $icon = 'calendar-check';
-                                            $bgClass = 'bg-info';
-                                        } elseif (str_contains($notification->type, 'Payment')) {
-                                            $icon = 'file-invoice-dollar';
-                                            $bgClass = 'bg-success';
-                                        } elseif (str_contains($notification->type, 'Medical')) {
-                                            $icon = 'notes-medical';
-                                            $bgClass = 'bg-warning';
-                                        }
-                                    @endphp
-                                    <div class="icon-square {{ $bgClass }} bg-opacity-10 text-{{ str_replace('bg-', '', $bgClass) }} rounded-circle d-flex align-items-center justify-content-center"
-                                        style="width: 50px; height: 50px;">
-                                        <i class="fas fa-{{ $icon }} fs-4"></i>
+                        {{-- Item thông báo có class chung và data-id --}}
+                        <div class="card mb-3 border-0 shadow-sm notification-card notification-item {{ $notification->read_at ? 'read-bg' : 'unread-border' }}"
+                            data-id="{{ $notification->id }}">
+                            <div class="card-body p-3">
+                                <div class="d-flex align-items-start">
+                                    {{-- Icon --}}
+                                    <div class="flex-shrink-0 me-3">
+                                        @php
+                                            $icon = 'bell';
+                                            $bgClass = 'bg-primary';
+                                            if (str_contains($notification->type, 'Appointment')) {
+                                                $icon = 'calendar-check';
+                                                $bgClass = 'bg-info';
+                                            } elseif (str_contains($notification->type, 'Payment')) {
+                                                $icon = 'file-invoice-dollar';
+                                                $bgClass = 'bg-success';
+                                            } elseif (str_contains($notification->type, 'Medical')) {
+                                                $icon = 'notes-medical';
+                                                $bgClass = 'bg-warning';
+                                            }
+                                        @endphp
+                                        <div class="icon-square {{ $bgClass }} bg-opacity-10 text-{{ str_replace('bg-', '', $bgClass) }} rounded-circle d-flex align-items-center justify-content-center"
+                                            style="width: 50px; height: 50px;">
+                                            <i class="fas fa-{{ $icon }} fs-4"></i>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <h6
-                                            class="mb-1 fw-bold {{ $notification->read_at ? 'text-secondary' : 'text-dark' }}">
-                                            {{ $notification->data['title'] ?? 'Thông báo hệ thống' }}
-                                            @if (!$notification->read_at)
-                                                <span class="badge bg-danger badge-dot ms-1">Mới</span>
+                                    {{-- Content --}}
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <h6
+                                                class="mb-1 fw-bold {{ $notification->read_at ? 'text-secondary' : 'text-dark' }}">
+                                                {{ $notification->data['title'] ?? 'Thông báo hệ thống' }}
+                                                @if (!$notification->read_at)
+                                                    <span class="badge bg-danger badge-dot ms-1">Mới</span>
+                                                @endif
+                                            </h6>
+                                            <small class="text-muted d-flex align-items-center">
+                                                <i class="far fa-clock me-1"></i>
+                                                {{ $notification->created_at?->diffForHumans() }}
+                                            </small>
+                                        </div>
+
+                                        <p class="mb-2 text-muted small user-select-none" style="line-height: 1.5;">
+                                            {{ $notification->data['message'] ?? '' }}
+                                        </p>
+
+                                        <div class="d-flex gap-2 mt-2">
+                                            @if (isset($notification->data['action_url']))
+                                                <a href="{{ $notification->data['action_url'] }}"
+                                                    class="btn btn-sm btn-light text-primary rounded-pill px-3">
+                                                    Xem chi tiết <i class="fas fa-arrow-right ms-1"></i>
+                                                </a>
                                             @endif
-                                        </h6>
-                                        <small class="text-muted d-flex align-items-center">
-                                            <i class="far fa-clock me-1"></i>
-                                            {{ $notification->created_at?->diffForHumans() }}
-                                        </small>
-                                    </div>
 
-                                    <p class="mb-2 text-muted small user-select-none" style="line-height: 1.5;">
-                                        {{ $notification->data['message'] ?? '' }}
-                                    </p>
-
-                                    <div class="d-flex gap-2 mt-2">
-                                        @if (isset($notification->data['action_url']))
-                                            <a href="{{ $notification->data['action_url'] }}"
-                                                class="btn btn-sm btn-light text-primary rounded-pill px-3">
-                                                Xem chi tiết <i class="fas fa-arrow-right ms-1"></i>
-                                            </a>
-                                        @endif
-
-                                        @if (!$notification->read_at)
-                                            <form action="{{ route('staff.notifications.mark-read', $notification) }}"
-                                                method="POST">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-link text-decoration-none text-success p-0 ms-2"
-                                                    title="Đánh dấu đã đọc">
-                                                    <i class="fas fa-check"></i> Đã đọc
-                                                </button>
-                                            </form>
-                                        @endif
+                                            @if (!$notification->read_at)
+                                                <form action="{{ route('staff.notifications.mark-read', $notification) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-link text-decoration-none text-success p-0 ms-2"
+                                                        title="Đánh dấu đã đọc">
+                                                        <i class="fas fa-check"></i> Đã đọc
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @empty
-                    <div class="col-12">
-                        <div class="card border-0 shadow-sm text-center py-5 rounded-3">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" alt="No Notification"
-                                        width="100" class="opacity-50">
+                    @empty
+                        {{-- Empty State --}}
+                        <div class="col-12 empty-state">
+                            <div class="card border-0 shadow-sm text-center py-5 rounded-3">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"
+                                            alt="No Notification" width="100" class="opacity-50">
+                                    </div>
+                                    <h5 class="text-muted fw-bold">Chưa có thông báo nào</h5>
+                                    <p class="text-muted mb-0">Bạn sẽ nhận được thông báo khi có cập nhật từ hệ thống.</p>
                                 </div>
-                                <h5 class="text-muted fw-bold">Chưa có thông báo nào</h5>
-                                <p class="text-muted mb-0">Bạn sẽ nhận được thông báo khi có cập nhật từ hệ thống.</p>
                             </div>
                         </div>
-                    </div>
-                @endforelse
+                    @endforelse
                 </div>
 
                 {{-- Pagination --}}
@@ -163,249 +168,54 @@
         }
     </style>
 
-    {{-- Realtime polling script --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let lastUnreadCount = 0;
-            let lastNotificationsHtml = '';
+    {{-- Realtime Polling Script (200ms) --}}
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                // 1. Khởi tạo lastId từ các item đang hiển thị
+                let lastId = 0;
+                $('.notification-item').each(function() {
+                    let id = $(this).data('id');
+                    if (id > lastId) lastId = id;
+                });
 
-            // Function to update unread count in sidebar
-            function updateSidebarBadge(count) {
-                const sidebarBadge = document.querySelector('.staff-sidebar .badge');
-                if (sidebarBadge) {
-                    if (count > 0) {
-                        sidebarBadge.textContent = count;
-                        sidebarBadge.style.display = 'inline-block';
-                    } else {
-                        sidebarBadge.style.display = 'none';
-                    }
-                }
-            }
-
-            // Function to refresh notifications list
-            async function refreshNotifications() {
-                try {
-                    const currentFilter = new URLSearchParams(window.location.search).get('filter') || '';
-                    const response = await fetch(window.location.pathname + (currentFilter ? '?filter=' + currentFilter : ''), {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                // 2. Polling 200ms
+                setInterval(function() {
+                    $.ajax({
+                        url: "{{ route('staff.notifications.fetch-new') }}",
+                        method: "GET",
+                        data: {
+                            last_id: lastId
                         },
-                        credentials: 'same-origin'
-                    });
+                        success: function(response) {
+                            if (response.html && response.html.trim() !== "") {
+                                // Cập nhật lastId mới nhất
+                                lastId = response.last_id;
 
-                    if (response.ok) {
-                        const html = await response.text();
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(html, 'text/html');
-                        const newNotificationsHtml = doc.querySelector('.col-12 .row.g-4 .col-12:last-child')?.innerHTML || '';
+                                // Xóa thông báo "trống" nếu có
+                                $('.empty-state').remove();
 
-                        // Only update if content changed
-                        if (newNotificationsHtml && newNotificationsHtml !== lastNotificationsHtml) {
-                            const notificationsContainer = document.querySelector('.col-12 .row.g-4 .col-12:last-child');
-                            if (notificationsContainer) {
-                                notificationsContainer.innerHTML = newNotificationsHtml;
-                                lastNotificationsHtml = newNotificationsHtml;
+                                // Tìm container
+                                let container = $('#notification-list');
+
+                                // Hiệu ứng mượt: Thêm lên đầu -> Ẩn -> Hiện dần
+                                $(response.html).hide().prependTo(container).fadeIn(300);
+
+                                // Cập nhật Badge trên Sidebar (nếu có class .badge-notification-count)
+                                if (response.count_unread !== undefined) {
+                                    // Staff sidebar thường dùng class .badge hoặc .badge-notification-count
+                                    $('.staff-sidebar .badge').text(response.count_unread).show();
+                                    $('.badge-notification-count').text(response.count_unread);
+
+                                    if (response.count_unread == 0) {
+                                        $('.staff-sidebar .badge').hide();
+                                    }
+                                }
                             }
                         }
-                    }
-                } catch (error) {
-                    console.log('Error refreshing notifications:', error);
-                }
-            }
-
-            // Function to fetch unread count
-            async function fetchUnreadCount() {
-                try {
-                    const response = await fetch('/notifications/unread-count', {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                        },
-                        credentials: 'same-origin'
                     });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        const currentCount = data.count;
-
-                        // Update sidebar badge if count changed
-                        if (currentCount !== lastUnreadCount) {
-                            updateSidebarBadge(currentCount);
-                            lastUnreadCount = currentCount;
-                            // Refresh notifications list when count changes
-                            refreshNotifications();
-                        }
-                    }
-                } catch (error) {
-                    console.log('Error fetching unread count:', error);
-                }
-            }
-
-            // Initial setup
-            fetchUnreadCount();
-            refreshNotifications().then(() => {
-                lastNotificationsHtml = document.querySelector('.col-12 .row.g-4 .col-12:last-child')?.innerHTML || '';
+                }, 200); // Tốc độ siêu nhanh
             });
-
-            // Poll every 200ms for ultra-fast realtime
-            setInterval(fetchUnreadCount, 200);
-        });
-    </script>
-@push('scripts')
-<script>
-    $(document).ready(function() {
-        let lastNotificationId = {{ $notifications->max('id') ?? 0 }};
-        let lastUnreadCount = 0;
-        let isLoadingNotifications = false;
-
-        // Function to update sidebar badge
-        function updateSidebarBadge(count) {
-            const badge = document.querySelector('.badge.bg-danger');
-            if (badge) badge.textContent = count;
-        }
-
-        // Function to append notification to list
-        function appendNotification(notification) {
-            // Check if notification already exists
-            if ($('.notification-card[data-notification-id="' + notification.id + '"]').length > 0) {
-                return; // Already exists, skip
-            }
-
-            // Determine icon and color based on type
-            let icon = 'bell';
-            let bgClass = 'bg-primary';
-            if (notification.type.includes('Appointment')) {
-                icon = 'calendar-check';
-                bgClass = 'bg-info';
-            } else if (notification.type.includes('Payment')) {
-                icon = 'file-invoice-dollar';
-                bgClass = 'bg-success';
-            } else if (notification.type.includes('Medical')) {
-                icon = 'notes-medical';
-                bgClass = 'bg-warning';
-            }
-
-            const isRead = notification.read_at !== null;
-            const notificationHtml = `
-                <div class="card mb-3 border-0 shadow-sm notification-card ${isRead ? 'read-bg' : 'unread-border'}" data-notification-id="${notification.id}">
-                    <div class="card-body p-3">
-                        <div class="d-flex align-items-start">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="icon-square ${bgClass} bg-opacity-10 text-${bgClass.replace('bg-', '')} rounded-circle d-flex align-items-center justify-content-center"
-                                    style="width: 50px; height: 50px;">
-                                    <i class="fas fa-${icon} fs-4"></i>
-                                </div>
-                            </div>
-
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <h6 class="mb-1 fw-bold ${isRead ? 'text-secondary' : 'text-dark'}">
-                                        ${notification.data.title || 'Thông báo hệ thống'}
-                                        ${!isRead ? '<span class="badge bg-danger badge-dot ms-1">Mới</span>' : ''}
-                                    </h6>
-                                    <small class="text-muted d-flex align-items-center">
-                                        <i class="far fa-clock me-1"></i>
-                                        vừa xong
-                                    </small>
-                                </div>
-
-                                <p class="mb-2 text-muted small user-select-none" style="line-height: 1.5;">
-                                    ${notification.data.message || ''}
-                                </p>
-
-                                <div class="d-flex gap-2 mt-2">
-                                    ${notification.data.action_url ? `<a href="${notification.data.action_url}" class="btn btn-sm btn-light text-primary rounded-pill px-3">Xem chi tiết <i class="fas fa-arrow-right ms-1"></i></a>` : ''}
-                                    ${!isRead ? `<form action="{{ route('staff.notifications.mark-read', ':id') }}".replace(':id', notification.id) method="POST" style="display: inline;">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-link text-decoration-none text-success p-0 ms-2" title="Đánh dấu đã đọc">
-                                            <i class="fas fa-check"></i> Đã đọc
-                                        </button>
-                                    </form>` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Insert at the top of the notifications list
-            const notificationsContainer = document.querySelector('.col-12');
-            if (notificationsContainer) {
-                const firstCard = notificationsContainer.querySelector('.notification-card, .card');
-                if (firstCard) {
-                    firstCard.insertAdjacentHTML('beforebegin', notificationHtml);
-                } else {
-                    notificationsContainer.insertAdjacentHTML('afterbegin', notificationHtml);
-                }
-            }
-        }
-
-        // Function to load new notifications
-        function loadNewNotifications() {
-            if (isLoadingNotifications) return;
-
-            isLoadingNotifications = true;
-
-            $.ajax({
-                url: '{{ route("staff.notifications.fetch-new") }}',
-                method: 'GET',
-                data: { last_id: lastNotificationId },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    if (data.html && data.html.trim() !== '') {
-                        // Prepend new notifications with fadeIn effect (mượt like Chat)
-                        $(data.html).hide().prependTo('.notification-list').fadeIn('slow');
-
-                        // Update lastNotificationId to prevent duplicates
-                        if (data.last_id > lastNotificationId) {
-                            lastNotificationId = data.last_id;
-                        }
-
-                        // Update unread count in sidebar
-                        updateSidebarBadge(data.count_unread);
-                    }
-
-                    isLoadingNotifications = false;
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error loading new notifications:', error);
-                    isLoadingNotifications = false;
-                }
-            });
-        }
-
-        // Function to fetch unread count
-        function fetchUnreadCount() {
-            $.ajax({
-                url: '/notifications/unread-count',
-                method: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    const currentCount = data.count;
-                    if (currentCount !== lastUnreadCount) {
-                        updateSidebarBadge(currentCount);
-                        lastUnreadCount = currentCount;
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error fetching unread count:', error);
-                }
-            });
-        }
-
-        // Initialize
-        fetchUnreadCount();
-
-        // Poll for new notifications every 500ms (same as chat)
-        setInterval(loadNewNotifications, 500);
-    });
-</script>
-@endpush
+        </script>
+    @endpush
 @endsection

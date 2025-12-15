@@ -329,7 +329,7 @@ class LichHenController extends Controller
 
         // THÊM: Redirect sang trang thanh toán thay vì success
         if ($lichHen) {
-            return redirect()->route('patient.payment', $lichHen->id)->with('success', 'Đặt lịch thành công! Vui lòng thanh toán để hoàn tất.');
+            return redirect()->route('patient.lichhen.payment', $lichHen->id)->with('success', 'Đặt lịch thành công! Vui lòng thanh toán để hoàn tất.');
         }
 
         return redirect()->route('lichhen.thanhcong')->with('success', 'Đặt lịch thành công');

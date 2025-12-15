@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
@@ -461,7 +462,7 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::get('benh-an/{benh_an}/audit', [BenhAnController::class, 'auditLog'])->name('benhan.audit');
     Route::get('benh-an/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('benhan.exportPdf');
     Route::get('benh-an/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('benhan.files.download')->middleware('signed');
-    Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
+    Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('patient.benhan.xetnghiem.download')->middleware('signed');
 
     // Doctor Chat Routes (File mẹ: routes/web.php)
     Route::prefix('chat')->name('chat.')->group(function () {
@@ -627,8 +628,8 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
     // Patient Medical History Routes (File mẹ: routes/web.php)
     Route::get('/lich-su-kham', [\App\Http\Controllers\Patient\LichSuKhamController::class, 'index'])->name('patient.lich-su-kham');
 
-    Route::get('/lich-hen/{lichHen}/thanh-toan', [PatientPaymentController::class, 'show'])->name('patient.payment');
-    Route::post('/lich-hen/{lichHen}/thanh-toan/skip', [PatientPaymentController::class, 'skip'])->name('patient.payment.skip');
+    Route::get('/lich-hen/{lichHen}/thanh-toan', [PatientPaymentController::class, 'show'])->name('patient.lichhen.payment');
+    Route::post('/lich-hen/{lichHen}/thanh-toan/skip', [PatientPaymentController::class, 'skip'])->name('patient.lichhen.payment.skip');
 });
 
 // Staff: cho phép nhân viên xem Bệnh án (chỉ read/download)
@@ -679,17 +680,9 @@ Route::get('/doctor/benh-an/xet-nghiem/{xetNghiem}/download', [\App\Http\Control
     ->name('doctor.benhan.xetnghiem.download')
     ->middleware('signed');
 
-Route::get('/patient/benh-an/xet-nghiem/{xetNghiem}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXetNghiem'])
-    ->name('patient.benhan.xetnghiem.download')
-    ->middleware('signed');
-
 // Alias routes for file downloads so role-prefixed temporary signed routes resolve
 Route::get('/doctor/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadFile'])
     ->name('doctor.benhan.files.download')
-    ->middleware('signed');
-
-Route::get('/patient/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadFile'])
-    ->name('patient.benhan.files.download')
     ->middleware('signed');
 
 Route::get('/staff/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadFile'])
@@ -740,7 +733,7 @@ Route::middleware('auth')->get('/notifications/unread-count', function () {
     return response()->json([
         'count' => auth()->user()->unreadNotifications()->count()
     ]);
-});
+})->name('notifications.unread_count'); // <--- Thêm name để quản lý dễ hơn
 
 // Route to get latest notifications for realtime updates
 Route::middleware('auth')->get('/notifications/latest', function (Request $request) {

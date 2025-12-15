@@ -115,7 +115,7 @@
                         </form>
 
                         {{-- Thanh toán sau --}}
-                        <form method="POST" action="{{ route('patient.payment.skip', $lichHen) }}"
+                        <form method="POST" action="{{ route('patient.lichhen.payment.skip', $lichHen) }}"
                             class="border border-red-300 rounded-lg p-4"
                             onsubmit="return confirm('⚠️ CẢNH BÁO: Nếu bỏ qua thanh toán, lịch hẹn của bạn sẽ BỊ HỦY ngay lập tức!\n\nBạn có chắc muốn hủy lịch hẹn không?');">
                             @csrf
