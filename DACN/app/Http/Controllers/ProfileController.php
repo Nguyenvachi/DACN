@@ -173,7 +173,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         // Chỉ doctor mới được phép
-        if ($user->role !== 'doctor') {
+        if (!$user->isDoctor()) {
             abort(403, 'Unauthorized action.');
         }
 

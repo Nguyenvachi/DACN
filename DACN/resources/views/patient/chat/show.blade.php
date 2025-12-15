@@ -41,8 +41,7 @@
                     <!-- Messages Area -->
                     <div class="card-body bg-light" style="flex: 1; overflow-y: auto;" id="chatMessages">
                         @forelse($conversation->messages as $message)
-                            <div
-                                class="mb-3 d-flex {{ $message->user_id == auth()->id() ? 'justify-content-end' : 'justify-content-start' }}"
+                            <div class="mb-3 d-flex {{ $message->user_id == auth()->id() ? 'justify-content-end' : 'justify-content-start' }}"
                                 data-message-id="{{ $message->id }}">
                                 <div style="max-width: 70%;">
                                     @if ($message->user_id != auth()->id())
@@ -61,8 +60,8 @@
                                     @if ($message->hasAttachment())
                                         <div class="mt-2">
                                             @if ($message->isImage())
-                                                <img src="{{ $message->file_url }}" alt="Attachment" class="img-thumbnail"
-                                                    style="max-width: 300px;">
+                                                <img src="{{ $message->file_url }}" alt="Attachment"
+                                                    class="chat-msg-img img-thumbnail" style="max-width: 300px;">
                                             @else
                                                 <a href="{{ $message->file_url }}" target="_blank"
                                                     class="btn btn-sm {{ $message->user_id == auth()->id() ? 'btn-light' : 'btn-outline-secondary' }}">
@@ -116,6 +115,16 @@
                                 </div>
                                 <div id="filePreview" class="mt-2 small text-muted"></div>
                             </form>
+                            <!-- Custom controls overlay (added) -->
+                            <div class="custom-chat-controls" aria-hidden="true">
+                                <button type="button" id="customAttachBtn" class="btn btn-light attach-btn"
+                                    title="Đính kèm">
+                                    <i class="bi bi-paperclip"></i>
+                                </button>
+                                <button type="button" id="customSendBtn" class="btn btn-success send-btn" title="Gửi">
+                                    <i class="bi bi-send-fill text-white"></i>
+                                </button>
+                            </div>
                         </div>
                     @else
                         <div class="card-footer bg-light text-center">
@@ -127,6 +136,109 @@
             </div>
         </div>
     </div>
+
+    @push('styles')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <style>
+            /* Khoảng đệm đáy để nội dung không bị che bởi footer (message input) */
+            #chatMessages {
+                padding-bottom: 140px;
+            }
+
+            /* Bubbles & media */
+            .message-bubble {
+                border-radius: 12px;
+                padding: 0.75rem;
+                word-break: break-word;
+            }
+
+            .chat-msg-img {
+                max-width: 300px;
+                height: auto;
+                border-radius: 8px;
+                display: block;
+            }
+
+            /* Thu nhỏ nút gửi / file để tránh tràn layout */
+            #messageForm .btn {
+                min-width: 44px;
+            }
+
+            /* File preview text */
+            #filePreview {
+                word-break: break-all;
+                color: #6b7280;
+            }
+
+            @media (max-width: 768px) {
+                #chatMessages {
+                    padding-bottom: 180px;
+                }
+
+                .chat-msg-img {
+                    max-width: 240px;
+                }
+            }
+
+            /* Custom send/attach controls positioned inside footer */
+            .card-footer {
+                position: relative;
+            }
+
+            .custom-chat-controls {
+                position: absolute;
+                right: 16px;
+                top: 8px;
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .custom-chat-controls .attach-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .custom-chat-controls .send-btn {
+                width: 44px;
+                height: 44px;
+                border-radius: 999px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            }
+
+            /* Hide original small buttons visually but keep them for progressive enhancement/form semantics */
+            #messageForm .col-auto {
+                opacity: 0;
+                height: 0;
+                overflow: hidden;
+                position: absolute;
+                right: 12px;
+                top: 8px;
+            }
+
+            @media (min-width: 992px) {
+
+                /* keep original mobile-friendly controls visible on very small screens */
+                #messageForm .col-auto {
+                    opacity: 1;
+                    height: auto;
+                    position: static;
+                    overflow: visible;
+                }
+
+                .custom-chat-controls {
+                    display: none;
+                }
+            }
+        </style>
+    @endpush
 
     @push('scripts')
         <script>
@@ -145,13 +257,17 @@
                 // Auto scroll to bottom
                 function scrollToBottom(smooth = false) {
                     var chatMessages = document.getElementById('chatMessages');
-                    if (smooth) {
+                    if (!chatMessages) return;
+                    var footer = document.querySelector('.card-footer');
+                    var footerHeight = footer ? footer.offsetHeight + 16 : 140;
+                    var target = Math.max(0, chatMessages.scrollHeight - footerHeight);
+                    if (smooth && chatMessages.scrollTo) {
                         chatMessages.scrollTo({
-                            top: chatMessages.scrollHeight,
+                            top: target,
                             behavior: 'smooth'
                         });
                     } else {
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        chatMessages.scrollTop = target;
                     }
                 }
                 scrollToBottom();
@@ -164,6 +280,16 @@
                         $('#filePreview').html('<i class="bi bi-file-earmark"></i> ' + fileName + ' (' +
                             fileSize + ' MB)');
                     }
+                });
+
+                // Custom controls bindings
+                $('#customSendBtn').on('click', function() {
+                    // Trigger existing form submit
+                    $('#messageForm').submit();
+                });
+
+                $('#customAttachBtn').on('click', function() {
+                    $('#fileInput').trigger('click');
                 });
 
                 // Intercept form submit to use AJAX instead
@@ -255,7 +381,8 @@
                     var bgClass = isMyMessage ? 'bg-primary text-white' : 'bg-white';
                     var userName = message.user ? message.user.name : 'User';
 
-                    var messageHtml = '<div class="mb-3 d-flex ' + alignClass + '" data-message-id="' + message.id + '">';
+                    var messageHtml = '<div class="mb-3 d-flex ' + alignClass + '" data-message-id="' + message.id +
+                        '">';
                     messageHtml += '<div style="max-width: 70%;">';
 
                     if (!isMyMessage) {
@@ -263,20 +390,28 @@
                     }
 
                     if (message.noi_dung) {
-                        messageHtml += '<div class="p-3 rounded ' + bgClass + '">' + escapeHtml(message.noi_dung) + '</div>';
+                        messageHtml += '<div class="p-3 rounded ' + bgClass + '">' + escapeHtml(message.noi_dung) +
+                            '</div>';
                     }
 
                     if (message.file_path) {
                         var fileUrl = '{{ asset('storage') }}/' + message.file_path;
                         if (message.file_type === 'image') {
-                            messageHtml += '<div class="mt-2"><img src="' + fileUrl + '" class="img-thumbnail" style="max-width: 300px;"></div>';
+                            messageHtml += '<div class="mt-2"><img src="' + fileUrl +
+                                '" class="img-thumbnail" style="max-width: 300px;"></div>';
                         } else {
-                            messageHtml += '<div class="mt-2"><a href="' + fileUrl + '" target="_blank" class="btn btn-sm ' + (isMyMessage ? 'btn-light' : 'btn-outline-secondary') + '">';
-                            messageHtml += '<i class="bi bi-file-earmark"></i> ' + (message.file_name || 'File') + '</a></div>';
+                            messageHtml += '<div class="mt-2"><a href="' + fileUrl +
+                                '" target="_blank" class="btn btn-sm ' + (isMyMessage ? 'btn-light' :
+                                    'btn-outline-secondary') + '">';
+                            messageHtml += '<i class="bi bi-file-earmark"></i> ' + (message.file_name || 'File') +
+                                '</a></div>';
                         }
                     }
 
-                    var time = new Date(message.created_at).toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
+                    var time = new Date(message.created_at).toLocaleTimeString('vi-VN', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
                     messageHtml += '<div class="small text-muted mt-1 ' + (isMyMessage ? 'text-end' : '') + '">' + time;
                     if (isMyMessage && message.is_read) {
                         messageHtml += ' <i class="bi bi-check2-all text-primary"></i>';
@@ -295,7 +430,9 @@
                         '"': '&quot;',
                         "'": '&#039;'
                     };
-                    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+                    return text.replace(/[&<>"']/g, function(m) {
+                        return map[m];
+                    });
                 }
 
                 // Bổ sung: Real-time polling tối ưu 500ms với check duplicate

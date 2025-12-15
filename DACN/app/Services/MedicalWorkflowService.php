@@ -62,21 +62,59 @@ class MedicalWorkflowService
     }
 
     /**
+     * Check-in with actor (staff user) and saved checked_in_by
+     */
+    public function checkIn(LichHen $lichHen, $actor = null): bool
+    {
+        if (! $lichHen->isCheckinAllowed()) {
+            return false;
+        }
+
+        $lichHen->update([
+            'trang_thai' => LichHen::STATUS_CHECKED_IN_VN,
+            'checked_in_at' => now(),
+            'checked_in_by' => $actor ? ($actor->id ?? null) : null,
+        ]);
+
+        if (function_exists('activity')) {
+            try {
+                call_user_func('activity')->performedOn($lichHen)->causedBy($actor)->log('Nhân viên check-in bệnh nhân');
+            } catch (\Throwable $e) {
+                Log::warning('Activity log failed: ' . $e->getMessage());
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Bước 4: Bác sĩ bắt đầu khám - tạo bệnh án
      */
     public function startExamination(LichHen $lichHen, array $benhAnData): BenhAn
     {
-        if (!in_array($lichHen->trang_thai, [LichHen::STATUS_CHECKED_IN_VN, LichHen::STATUS_CONFIRMED_VN])) {
-            throw new \Exception("Lịch hẹn chưa được check-in");
+        if (!in_array($lichHen->trang_thai, [
+            LichHen::STATUS_CHECKED_IN_VN,
+            LichHen::STATUS_CONFIRMED_VN,
+            LichHen::STATUS_IN_PROGRESS_VN,
+        ])) {
+            throw new \Exception("Lịch hẹn chưa được check-in hoặc không hợp lệ");
         }
 
         return DB::transaction(function () use ($lichHen, $benhAnData) {
-            // Chuyển trạng thái sang "đang khám"
-            $lichHen->update([
-                'trang_thai' => LichHen::STATUS_IN_PROGRESS_VN,
-            ]);
+            // Chuyển trạng thái sang "đang khám" và đặt thời gian bắt đầu nếu chưa có
+            $updates = ['trang_thai' => LichHen::STATUS_IN_PROGRESS_VN];
+            if (empty($lichHen->thoi_gian_bat_dau_kham)) {
+                $updates['thoi_gian_bat_dau_kham'] = now();
+            }
+            $lichHen->update($updates);
 
             // Tạo bệnh án
+            // Nếu đã có bệnh án cho lịch hẹn thì trả về bệnh án hiện hữu (tránh tạo trùng)
+            $existing = BenhAn::where('lich_hen_id', $lichHen->id)->first();
+            if ($existing) {
+                return $existing;
+            }
+
             $benhAn = BenhAn::create([
                 'user_id' => $lichHen->user_id,
                 'bac_si_id' => $lichHen->bac_si_id,
@@ -166,6 +204,18 @@ class MedicalWorkflowService
 
             return true;
         });
+    }
+
+    /**
+     * Complete exam with actor
+     */
+    public function completeExam(LichHen $lichHen, $actor = null, array $finalData = []): bool
+    {
+        if ($lichHen->trang_thai !== LichHen::STATUS_IN_PROGRESS_VN) {
+            return false;
+        }
+
+        return $this->completeExamination($lichHen, $finalData);
     }
 
     /**

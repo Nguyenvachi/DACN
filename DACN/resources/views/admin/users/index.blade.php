@@ -72,6 +72,7 @@
                     <table id="usersTable" class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
+                                <th style="width:64px;">Ảnh</th>
                                 <th>Tên & Email</th>
                                 <th>Vai trò</th>
                                 <th>Trạng thái</th>
@@ -84,6 +85,31 @@
                             @forelse ($users as $user)
                                 <tr class="{{ $user->isLocked() ? 'table-danger' : '' }}">
 
+                                    {{-- Avatar --}}
+                                    <td class="align-middle text-center">
+                                            @php
+                                                $avatarUrl = null;
+                                                if (!empty($user->avatar)) {
+                                                    $avatarUrl = \Illuminate\Support\Facades\Storage::url($user->avatar);
+                                                } elseif ($user->relationLoaded('bacSi') ? $user->bacSi?->avatar : ($user->bacSi ?? false)) {
+                                                    // bacSi may have accessor avatar_url
+                                                    $avatarUrl = $user->bacSi->avatar_url ?? ($user->bacSi->avatar ? \Illuminate\Support\Facades\Storage::url($user->bacSi->avatar) : null);
+                                                } elseif ($user->relationLoaded('nhanVien') ? $user->nhanVien?->avatar_path : ($user->nhanVien ?? false)) {
+                                                    $avatarUrl = $user->nhanVien->avatar_path ? \Illuminate\Support\Facades\Storage::url($user->nhanVien->avatar_path) : null;
+                                                } elseif ($user->relationLoaded('patientProfile') ? $user->patientProfile?->avatar : ($user->patientProfile ?? false)) {
+                                                    $avatarUrl = $user->patientProfile->avatar ? \Illuminate\Support\Facades\Storage::url($user->patientProfile->avatar) : null;
+                                                }
+                                            @endphp
+
+                                            @if ($avatarUrl)
+                                                <img src="{{ $avatarUrl }}" alt="{{ $user->name }}" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;">
+                                            @else
+                                                <div class="rounded-circle bg-light text-muted d-inline-flex align-items-center justify-content-center" style="width:40px;height:40px;">
+                                                    <i class="bi bi-person"></i>
+                                                </div>
+                                            @endif
+                                    </td>
+
                                     {{-- Name + Email --}}
                                     <td>
                                         <div class="fw-semibold">{{ $user->name }}</div>
@@ -93,7 +119,8 @@
                                     {{-- Roles --}}
                                     <td>
                                         @forelse ($user->roles as $role)
-                                            <span class="badge bg-primary">{{ \Illuminate\Support\Facades\Lang::has('roles.' . $role->name) ? __('roles.' . $role->name) : $role->name }}</span>
+                                            <span
+                                                class="badge bg-primary">{{ \Illuminate\Support\Facades\Lang::has('roles.' . $role->name) ? __('roles.' . $role->name) : $role->name }}</span>
                                         @empty
                                             <span class="text-muted">Chưa gán</span>
                                         @endforelse
@@ -121,8 +148,7 @@
                                     <td class="text-center">
 
                                         <a href="{{ route('admin.users.edit', $user) }}"
-                                            class="btn btn-sm btn-outline-primary me-1"
-                                            title="Sửa">
+                                            class="btn btn-sm btn-outline-primary me-1" title="Sửa">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
 
@@ -140,8 +166,7 @@
                                                 class="d-inline">
                                                 @csrf
                                                 <button onclick="return confirm('Xác nhận khóa tài khoản này?')"
-                                                    class="btn btn-sm btn-outline-danger me-1"
-                                                    title="Khóa">
+                                                    class="btn btn-sm btn-outline-danger me-1" title="Khóa">
                                                     <i class="bi bi-lock"></i>
                                                 </button>
                                             </form>
@@ -161,7 +186,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-4 text-muted">
+                                    <td colspan="6" class="text-center py-4 text-muted">
                                         Không tìm thấy user nào
                                     </td>
                                 </tr>

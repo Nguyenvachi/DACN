@@ -21,4 +21,10 @@ class DichVu extends Model
     {
         return $this->hasMany(LichHen::class, 'dich_vu_id');
     }
+
+    // Quan hệ many-to-many với chuyên khoa
+    public function chuyenKhoas()
+    {
+        return $this->belongsToMany(ChuyenKhoa::class, 'chuyen_khoa_dich_vu');
+    }
 }

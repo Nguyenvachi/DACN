@@ -9,26 +9,26 @@ class BenhAnPolicy
 {
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['admin', 'staff', 'doctor', 'patient'], true);
+        return $user->isAdmin() || $user->isStaff() || $user->isDoctor() || $user->isPatient();
     }
 
     public function view(User $user, BenhAn $record): bool
     {
-        if (in_array($user->role, ['admin', 'staff'], true)) return true;
-        if ($user->role === 'doctor' && $user->bacSi && $user->bacSi->id === $record->bac_si_id) return true;
-        if ($user->role === 'patient' && $user->id === $record->user_id) return true;
+        if ($user->isAdmin() || $user->isStaff()) return true;
+        if ($user->isDoctor() && $user->bacSi && $user->bacSi->id === $record->bac_si_id) return true;
+        if ($user->isPatient() && $user->id === $record->user_id) return true;
         return false;
     }
 
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'doctor'], true);
+        return $user->isAdmin() || $user->isDoctor();
     }
 
     public function update(User $user, BenhAn $record): bool
     {
-        if ($user->role === 'admin') return true;
-        return $user->role === 'doctor' && $user->bacSi && $user->bacSi->id === $record->bac_si_id;
+        if ($user->isAdmin()) return true;
+        return $user->isDoctor() && $user->bacSi && $user->bacSi->id === $record->bac_si_id;
     }
 
     public function delete(User $user, BenhAn $record): bool

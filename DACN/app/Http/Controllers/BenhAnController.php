@@ -28,9 +28,9 @@ class BenhAnController extends Controller
 
         $query = BenhAn::with(['benhNhan', 'bacSi']);
 
-        if ($user->role === 'doctor' && $user->bacSi) {
+        if ($user->isDoctor() && $user->bacSi) {
             $query->where('bac_si_id', $user->bacSi->id);
-        } elseif ($user->role === 'patient') {
+        } elseif ($user->isPatient()) {
             $query->where('user_id', $user->id);
         }
 
@@ -126,7 +126,10 @@ class BenhAnController extends Controller
     {
         $benh_an->load(['benhNhan', 'bacSi', 'files', 'xetNghiems', 'donThuocs.items.thuoc']);
         $role = $this->getCurrentRole();
-        return view('benh_an.show', [
+        // Prefer new VietCare-styled view if available; fallback to legacy view
+        $preferredView = view()->exists('benh_an.show_vietcare') ? 'benh_an.show_vietcare' : 'benh_an.show';
+
+        return view($preferredView, [
             'record'  => $benh_an,
             'benhAn'  => $benh_an, // bổ sung alias để view cũ dùng $benhAn không lỗi
             'role'    => $role,
@@ -190,7 +193,10 @@ class BenhAnController extends Controller
     public function destroy(BenhAn $benh_an)
     {
         foreach ($benh_an->files as $f) {
-            Storage::disk('public')->delete($f->path);
+            $disk = $f->disk ?? $f->disk_name ?? 'public';
+            if (Storage::disk($disk)->exists($f->path)) {
+                Storage::disk($disk)->delete($f->path);
+            }
             $f->delete();
         }
         $benh_an->delete();
@@ -263,8 +269,11 @@ class BenhAnController extends Controller
 
         $fileName = $file->ten_file;
 
-        // BỔ SUNG: xóa file từ đúng disk
-        Storage::disk($file->disk_name)->delete($file->path);
+        // Delete file from the correct disk (fallback for legacy column name)
+        $disk = $file->disk ?? $file->disk_name ?? 'public';
+        if (Storage::disk($disk)->exists($file->path)) {
+            Storage::disk($disk)->delete($file->path);
+        }
         $file->delete();
 
         // BỔ SUNG: Ghi audit log cho xóa file
@@ -396,18 +405,20 @@ class BenhAnController extends Controller
 
     private function routeByRole(string $action): string
     {
-        $role = auth()->user()->role;
-        if ($role === 'admin')  return "admin.benhan.$action";
-        if ($role === 'doctor') return "doctor.benhan.$action";
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        if ($user->isAdmin())  return "admin.benhan.$action";
+        if ($user->isDoctor()) return "doctor.benhan.$action";
         return "patient.benhan.$action";
     }
 
     // THÊM METHOD NÀY
     private function getCurrentRole(): string
     {
-        $role = auth()->user()->role;
-        if ($role === 'admin')  return 'admin';
-        if ($role === 'doctor') return 'doctor';
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        if ($user->isAdmin())  return 'admin';
+        if ($user->isDoctor()) return 'doctor';
         return 'patient';
     }
 
@@ -433,15 +444,13 @@ class BenhAnController extends Controller
         $benhAn = $file->benhAn;
         $this->authorize('view', $benhAn);
 
-        if (!Storage::disk($file->disk_name)->exists($file->path)) {
+        $disk = $file->disk ?? $file->disk_name ?? 'public';
+        if (!Storage::disk($disk)->exists($file->path)) {
             abort(404, 'File không tồn tại');
         }
 
-        // Trả về file download từ storage
-        $filePath = storage_path('app/' . ($file->disk_name === 'public' ? 'public/' : 'benh_an/') . $file->path);
-
-        // Force download (bắt buộc tải về)
-        return response()->download($filePath, $file->ten_file);
+        // Use Storage download for correct disk
+        return Storage::disk($disk)->download($file->path, $file->ten_file);
     }
 
     // THÊM: download file xét nghiệm (bảo mật với signed URL)
@@ -451,17 +460,13 @@ class BenhAnController extends Controller
         $benhAn = $xetNghiem->benhAn;
         $this->authorize('view', $benhAn);
 
-        if (!Storage::disk($xetNghiem->disk_name)->exists($xetNghiem->file_path)) {
+        $disk = $xetNghiem->disk ?? $xetNghiem->disk_name ?? 'public';
+        if (!Storage::disk($disk)->exists($xetNghiem->file_path)) {
             abort(404, 'File không tồn tại');
         }
 
-        // Trả về file từ storage
-        $filePath = storage_path('app/' . ($xetNghiem->disk_name === 'public' ? 'public/' : 'benh_an/') . $xetNghiem->file_path);
-
-        // Lấy tên file từ path
+        // Use Storage download for correct disk
         $fileName = basename($xetNghiem->file_path);
-
-        // Force download (bắt buộc tải về)
-        return response()->download($filePath, $fileName);
+        return Storage::disk($disk)->download($xetNghiem->file_path, $fileName);
     }
 }

@@ -25,7 +25,7 @@ class BacSi extends Model
     protected static function booted()
     {
         static::created(function ($bacSi) {
-            if ($bacSi->user && $bacSi->user->role !== 'doctor') {
+            if ($bacSi->user && !$bacSi->user->isDoctor()) {
                 $bacSi->user->forceFill(['role' => 'doctor'])->save();
             }
         });

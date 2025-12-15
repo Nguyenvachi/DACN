@@ -13,7 +13,8 @@ class UserManagementController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::with(['roles', 'permissions']);
+        // Eager-load related profile models so avatar fallbacks don't cause N+1 queries
+        $query = User::with(['roles', 'permissions', 'bacSi', 'nhanVien', 'patientProfile']);
 
         if ($request->filled('search')) {
             $search = $request->search;

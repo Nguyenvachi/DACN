@@ -25,7 +25,7 @@ class PermissionSeeder extends Seeder
             'lock-users',
             'unlock-users',
             'assign-roles',
-            
+
             // Quản lý Roles & Permissions
             'view-roles',
             'create-roles',
@@ -34,33 +34,33 @@ class PermissionSeeder extends Seeder
             'view-permissions',
             'create-permissions',
             'delete-permissions',
-            
+
             // Quản lý Bác sĩ
             'view-doctors',
             'create-doctors',
             'edit-doctors',
             'delete-doctors',
             'manage-schedules',
-            
+
             // Quản lý Lịch hẹn
             'view-appointments',
             'create-appointments',
             'edit-appointments',
             'cancel-appointments',
             'confirm-appointments',
-            
+
             // Quản lý Bệnh án
             'view-medical-records',
             'create-medical-records',
             'edit-medical-records',
             'delete-medical-records',
-            
+
             // Quản lý Dịch vụ
             'view-services',
             'create-services',
             'edit-services',
             'delete-services',
-            
+
             // Quản lý Thuốc & Kho
             'view-medicines',
             'create-medicines',
@@ -68,7 +68,7 @@ class PermissionSeeder extends Seeder
             'delete-medicines',
             'manage-inventory',
             'view-inventory-reports',
-            
+
             // Quản lý Nhân viên
             'view-staff',
             'create-staff',
@@ -76,7 +76,7 @@ class PermissionSeeder extends Seeder
             'delete-staff',
             'view-staff-shifts',
             'assign-staff-shifts',
-            
+
             // Quản lý Hóa đơn & Thanh toán
             'view-invoices',
             'create-invoices',
@@ -85,12 +85,13 @@ class PermissionSeeder extends Seeder
             'process-payments',
             'refund-payments',
             'view-payment-logs',
-            
+
             // Báo cáo & Thống kê
             'view-reports',
             'view-revenue-reports',
             'view-appointment-reports',
             'export-data',
+            'view-dashboard',
         ];
 
         foreach ($permissions as $permission) {

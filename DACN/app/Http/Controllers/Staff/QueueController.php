@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LichHen;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use function activity;
+// Optional activity logging; use function_exists guards.
 
 class QueueController extends Controller
 {
@@ -58,6 +58,7 @@ class QueueController extends Controller
      */
     public function callNext(LichHen $lichhen)
     {
+        $this->authorize('callNext', $lichhen);
         if ($lichhen->trang_thai !== \App\Models\LichHen::STATUS_CHECKED_IN_VN) {
             return back()->with('error', 'Chỉ có thể gọi bệnh nhân đã check-in vào khám.');
         }
@@ -70,7 +71,7 @@ class QueueController extends Controller
         // Safe activity log: skip if helper not available to avoid fatal errors
         if (function_exists('activity')) {
             try {
-                activity()
+                call_user_func('activity')
                     ->performedOn($lichhen)
                     ->causedBy(auth()->user())
                     ->withProperties(['action' => 'call_next'])

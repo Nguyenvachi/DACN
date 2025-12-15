@@ -184,21 +184,15 @@
                                     </td>
                                     <td>
                                         @if($apt->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
-                                            <form method="POST" action="{{ route('staff.checkin.checkin', $apt->id) }}" class="d-inline checkin-form-{{ $apt->id }}">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-primary checkin-btn-{{ $apt->id }}">
-                                                    <i class="bi bi-check-circle me-1"></i>Check-in
-                                                </button>
-                                            </form>
+                                            <button type="button" class="btn btn-sm btn-primary checkin-btn-{{ $apt->id }}" onclick="singleCheckIn({{ $apt->id }}, '{{ addslashes($apt->user->name) }}')">
+                                                <i class="bi bi-check-circle me-1"></i>Check-in
+                                            </button>
                                         @elseif($apt->trang_thai === \App\Models\LichHen::STATUS_CHECKED_IN_VN)
                                             <div class="d-flex align-items-center gap-2">
                                                 <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i>{{ \App\Models\LichHen::STATUS_CHECKED_IN_VN }}</span>
-                                                <form method="POST" action="{{ route('staff.queue.call_next', $apt->id) }}" class="d-inline">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Gọi {{ $apt->user->name }} vào khám?')">
-                                                        <i class="bi bi-telephone-forward me-1"></i>Gọi vào
-                                                    </button>
-                                                </form>
+                                                <button type="button" class="btn btn-sm btn-success callnext-btn-{{ $apt->id }}" onclick="callNext({{ $apt->id }}, '{{ addslashes($apt->user->name) }}')">
+                                                    <i class="bi bi-telephone-forward me-1"></i>Gọi vào
+                                                </button>
                                             </div>
                                         @else
                                             <span class="text-muted">{{ \App\Models\LichHen::STATUS_PENDING_VN }}</span>
@@ -354,12 +348,9 @@ function performQuickSearch() {
                             <p class="mb-1"><strong>Dịch vụ:</strong> ${apt.service_name}</p>
                             <p class="mb-1"><strong>Thời gian:</strong> ${apt.time}</p>
                             ${apt.can_checkin ? `
-                                <form method="POST" action="{{ url('staff/checkin/checkin') }}/${apt.id}">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm mt-2">
-                                        <i class="bi bi-check-circle me-1"></i>Check-in Ngay
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="singleCheckIn(${apt.id}, '${apt.patient_name.replace(/'/g,'\\\'')}')">
+                                    <i class="bi bi-check-circle me-1"></i>Check-in Ngay
+                                </button>
                                         ` : '<span class="badge bg-success">{{ \App\Models\LichHen::STATUS_CHECKED_IN_VN }}</span>'}
                         </div>
                     </div>
@@ -375,6 +366,88 @@ function performQuickSearch() {
 document.getElementById('quickSearchInput')?.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') performQuickSearch();
 });
+
+// ========== ACTION API CALLS ==========
+function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+function showAlert(message, type = 'success') {
+    // Create bootstrap alert element
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+    const container = document.querySelector('.content-wrapper') || document.querySelector('.container-fluid');
+    if (container) container.prepend(wrapper);
+}
+
+async function singleCheckIn(lichHenId, patientName) {
+    if (!confirm('Xác nhận check-in cho bệnh nhân ' + patientName + '?')) return;
+
+    const btn = document.querySelector('.checkin-btn-' + lichHenId);
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang xử lý...';
+    }
+
+    try {
+        const res = await fetch(`{{ url('staff/checkin/checkin') }}/${lichHenId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': getCsrfToken(),
+                'Accept': 'application/json'
+            }
+            ,credentials: 'same-origin'
+        });
+
+        if (res.ok) {
+            // reload page to update table
+            location.reload();
+            return;
+        }
+
+        // Try to parse JSON error
+        const data = await res.json().catch(() => ({}));
+        const message = data.error || data.message || 'Có lỗi xảy ra. Vui lòng thử lại';
+        showAlert(message, 'danger');
+    } catch (err) {
+        showAlert('Không thể kết nối đến server', 'danger');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Check-in';
+        }
+    }
+}
+
+async function callNext(lichHenId, patientName) {
+    if (!confirm('Gọi ' + patientName + ' vào khám?')) return;
+
+    const btn = document.querySelector('.callnext-btn-' + lichHenId) || null;
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Đang xử lý...';
+    }
+    try {
+        const res = await fetch(`{{ url('staff/queue/call-next') }}/${lichHenId}`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': getCsrfToken(), 'Accept': 'application/json' }
+            ,credentials: 'same-origin'
+        });
+        if (res.ok) location.reload();
+        else {
+            const data = await res.json().catch(() => ({}));
+            showAlert(data.error || 'Không thể gọi vào khám', 'danger');
+        }
+    } catch (e) {
+        showAlert('Không thể kết nối đến server', 'danger');
+    }
+    finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-telephone-forward me-1"></i>Gọi vào';
+        }
+    }
+}
 </script>
 @endpush
 

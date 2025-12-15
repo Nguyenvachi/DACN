@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
 
 class NhanVienController extends Controller
 {
@@ -117,8 +118,13 @@ class NhanVienController extends Controller
             'avatar' => 'nullable|image|max:2048',
         ]);
         if ($r->hasFile('avatar')) {
+            // Xóa file cũ nếu có
+            if ($nhanvien->avatar_path && Storage::disk('public')->exists($nhanvien->avatar_path)) {
+                Storage::disk('public')->delete($nhanvien->avatar_path);
+            }
             $data['avatar_path'] = $r->file('avatar')->store('nv_avatar', 'public');
         }
+
         $nhanvien->fill($data)->save();
 
         // Cập nhật tên trong User nếu cần
@@ -132,8 +138,43 @@ class NhanVienController extends Controller
     public function destroy(NhanVien $nhanvien)
     {
         $this->authorize('delete', $nhanvien);
-        $nhanvien->delete();
-        return redirect()->route('admin.nhanvien.index')->with('status', 'Đã xóa');
+
+        try {
+            // Xóa avatar của nhân viên (nếu có)
+            if ($nhanvien->avatar_path) {
+                try {
+                    if (Storage::disk('public')->exists($nhanvien->avatar_path)) {
+                        Storage::disk('public')->delete($nhanvien->avatar_path);
+                    }
+                } catch (\Exception $e) {
+                    // ignore storage errors
+                    logger()->warning('Không thể xóa avatar nhân viên: ' . $e->getMessage());
+                }
+            }
+
+            // Xóa user liên quan (nếu có)
+            if ($nhanvien->user) {
+                // Xóa avatar của user nếu khác file nhân viên
+                if (!empty($nhanvien->user->avatar) && $nhanvien->user->avatar !== $nhanvien->avatar_path) {
+                    try {
+                        if (Storage::disk('public')->exists($nhanvien->user->avatar)) {
+                            Storage::disk('public')->delete($nhanvien->user->avatar);
+                        }
+                    } catch (\Exception $e) {
+                        logger()->warning('Không thể xóa avatar user nhân viên: ' . $e->getMessage());
+                    }
+                }
+                $nhanvien->user->delete();
+            }
+
+            // Xóa nhân viên (các ca làm việc có foreign key cascade sẽ tự xóa)
+            $nhanvien->delete();
+
+            return redirect()->route('admin.nhanvien.index')->with('status', 'Xóa nhân viên thành công!');
+        } catch (\Exception $e) {
+            logger()->error('Lỗi khi xóa nhân viên: ' . $e->getMessage());
+            return redirect()->route('admin.nhanvien.index')->with('error', 'Không thể xóa nhân viên này!');
+        }
     }
 
     /**

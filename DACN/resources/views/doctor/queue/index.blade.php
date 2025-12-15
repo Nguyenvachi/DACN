@@ -149,7 +149,7 @@
                                     </div>
                                 </div>
 
-                                <form action="{{ route('doctor.queue.start', $appt->id) }}" method="POST" class="start-exam-form">
+                                <form action="{{ route('doctor.queue.start', $appt->id) }}" method="POST" class="start-exam-form ajax-action" data-success-redirect="{{ route('doctor.benhan.edit', $appt->benhAn->id ?? '') }}">
                                     @csrf
                                     <button type="submit" class="btn vc-btn-primary w-100">
                                         <i class="fas fa-stethoscope me-1"></i>
@@ -222,12 +222,18 @@
                                         Tiếp tục khám
                                     </a>
                                 @else
-                                    <form action="{{ route('doctor.queue.start', $appt->id) }}" method="POST">
+                                    <form action="{{ route('doctor.queue.start', $appt->id) }}" method="POST" class="ajax-action" data-success-redirect="{{ route('doctor.benhan.edit', $appt->benhAn->id ?? '') }}">
                                         @csrf
                                         <button type="submit" class="btn vc-btn-primary w-100">
                                             <i class="fas fa-stethoscope me-1"></i>
                                             Tạo bệnh án
                                         </button>
+                                    </form>
+                                @endif
+                                @if($appt->trang_thai === \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
+                                    <form action="{{ route('doctor.lichhen.complete', $appt->id) }}" method="POST" class="mt-2 d-inline-block w-100">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Xác nhận hoàn tất khám?')">Hoàn tất khám</button>
                                     </form>
                                 @endif
                             </div>
@@ -299,7 +305,7 @@
                                     @if($appt->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
                                         <form action="{{ route('doctor.queue.checkin', $appt->id) }}"
                                               method="POST"
-                                              class="d-inline checkin-form">
+                                              class="d-inline checkin-form ajax-action">
                                             @csrf
                                             <button type="submit" class="btn btn-sm vc-btn-primary" title="Check-in">
                                                 <i class="fas fa-sign-in-alt me-1"></i>Check-in
@@ -329,20 +335,45 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Start examination confirmation
+    // Start examination confirmation & AJAX
     document.querySelectorAll('.start-exam-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
             if (!confirm('Bắt đầu khám bệnh nhân này?')) {
-                e.preventDefault();
+                return;
+            }
+            if (form.classList.contains('ajax-action')) {
+                try {
+                    const res = await fetch(form.action, {method: 'POST', headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),'Accept': 'application/json'}, credentials: 'same-origin'});
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.redirect) window.location.href = data.redirect;
+                        else window.location.reload();
+                        return;
+                    }
+                    const data = await res.json().catch(()=>({}));
+                    alert(data.error || data.message || 'Có lỗi');
+                } catch (e) { console.error(e); alert('Không thể kết nối server'); }
+            } else { // fallback submit
+                form.submit();
             }
         });
     });
 
-    // Check-in confirmation
+    // Check-in confirmation (AJAX-aware)
     document.querySelectorAll('.checkin-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            if (!confirm('Check-in bệnh nhân này?')) {
-                e.preventDefault();
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!confirm('Check-in bệnh nhân này?')) return;
+            if (form.classList.contains('ajax-action')) {
+                try {
+                    const res = await fetch(form.action, {method: 'POST', headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),'Accept':'application/json'}, credentials:'same-origin'});
+                    if (res.ok) { window.location.reload(); return; }
+                    const data = await res.json().catch(()=>({}));
+                    alert(data.error || data.message || 'Không thể Check-in');
+                } catch(e) { console.error(e); alert('Không thể kết nối tới server'); }
+            } else {
+                form.submit();
             }
         });
     });

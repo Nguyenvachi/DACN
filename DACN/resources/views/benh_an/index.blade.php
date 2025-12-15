@@ -1,5 +1,5 @@
 @php
-    $role = auth()->user()->role ?? 'patient';
+    $role = auth()->check() ? auth()->user()->roleKey() : 'patient';
 
     // Quy tắc: mỗi role có layout riêng — mapping rõ ràng, không phụ thuộc route
     $layout = match ($role) {
@@ -46,7 +46,7 @@
                         <input class="form-control" type="date" name="to" value="{{ request('to') }}">
                     </div>
 
-                    @if (auth()->user()->role === 'admin')
+                    @if (auth()->user()->isAdmin())
                         <div class="col-md-2">
                             <input class="form-control" type="number" name="patient_id" value="{{ request('patient_id') }}"
                                 placeholder="ID bệnh nhân">
@@ -63,7 +63,7 @@
 
         {{-- NÚT THÊM --}}
         @can('create', App\Models\BenhAn::class)
-            <a href="{{ route(auth()->user()->role . '.benhan.create') }}" class="btn btn-success mb-3">
+            <a href="{{ route(auth()->user()->roleKey() . '.benhan.create') }}" class="btn btn-success mb-3">
                 <i class="bi bi-plus-circle"></i> Thêm bệnh án
             </a>
         @endcan
@@ -93,14 +93,14 @@
                                 <td class="text-end">
 
                                     {{-- Xem --}}
-                                    <a href="{{ route(auth()->user()->role . '.benhan.show', $r) }}"
+                                    <a href="{{ route(auth()->user()->roleKey() . '.benhan.show', $r) }}"
                                         class="btn btn-sm btn-outline-primary">
                                         <i class="bi bi-eye"></i> Xem
                                     </a>
 
                                     {{-- Sửa --}}
-                                    @if (in_array(auth()->user()->role, ['admin', 'doctor']))
-                                        <a href="{{ route(auth()->user()->role . '.benhan.edit', $r) }}"
+                                    @if (auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isDoctor()))
+                                        <a href="{{ route(auth()->user()->roleKey() . '.benhan.edit', $r) }}"
                                             class="btn btn-sm btn-outline-success">
                                             <i class="bi bi-pencil"></i> Sửa
                                         </a>

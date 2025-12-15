@@ -94,6 +94,10 @@ class PaymentController extends Controller
                     'paid_at' => now(),
                 ]);
 
+                // Bổ sung: cập nhật lại tổng số tiền đã thanh toán trên hóa đơn
+                // và để model tự động cập nhật `trang_thai` thông qua `updatePaymentStatus`
+                $hoaDon->recalculatePaidAmount();
+
                 // THÊM: đồng bộ sang Lịch hẹn + gửi email biên lai
                 if ($hoaDon->lichHen) {
                     $lh = $hoaDon->lichHen;
@@ -110,7 +114,7 @@ class PaymentController extends Controller
             // Hiển thị thông báo thành công
             // THÊM: Check role để redirect đúng route
             $user = $hoaDon->user;
-            if ($user && $user->role === 'patient') {
+            if ($user && $user->isPatient()) {
                 return redirect()
                     ->route('lichhen.my')
                     ->with('success', 'Thanh toán thành công qua VNPay! Số tiền: ' . number_format($amount) . ' VNĐ');
@@ -190,6 +194,9 @@ class PaymentController extends Controller
                         'paid_at' => now(),
                         'payload' => $inputData,
                     ]);
+
+                    // Bổ sung: cập nhật lại số tiền đã thanh toán -> đảm bảo trạng thái chính xác
+                    $hoaDon->recalculatePaidAmount();
 
                     // THÊM: đồng bộ sang Lịch hẹn + gửi email biên lai
                     if ($hoaDon->lichHen) {
@@ -336,6 +343,9 @@ class PaymentController extends Controller
                     'paid_at' => now(),
                 ]);
 
+                // Bổ sung: cập nhật lại tổng số tiền đã thanh toán
+                $hoaDon->recalculatePaidAmount();
+
                 // THÊM: đồng bộ sang Lịch hẹn + gửi email biên lai
                 if ($hoaDon->lichHen) {
                     $lh = $hoaDon->lichHen;
@@ -351,7 +361,7 @@ class PaymentController extends Controller
 
             // THÊM: Check role để redirect đúng route
             $user = $hoaDon->user;
-            if ($user && $user->role === 'patient') {
+            if ($user && $user->isPatient()) {
                 return redirect()
                     ->route('lichhen.my')
                     ->with('success', 'Thanh toán thành công qua MoMo! Số tiền: ' . number_format($amount) . ' VNĐ');
@@ -436,6 +446,9 @@ class PaymentController extends Controller
                     'paid_at' => now(),
                     'payload' => $data,
                 ]);
+
+                // Bổ sung: cập nhật lại số tiền đã thanh toán và trạng thái hóa đơn
+                $hoaDon->recalculatePaidAmount();
 
                 if ($hoaDon->lichHen) {
                     $lh = $hoaDon->lichHen;

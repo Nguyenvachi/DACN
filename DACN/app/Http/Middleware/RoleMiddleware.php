@@ -15,7 +15,7 @@ class RoleMiddleware
         }
 
         $allowed = array_map('strtolower', $roles);
-        $userRole = strtolower((string) $user->role);
+        $userRole = strtolower((string) $user->roleKey());
 
         if (in_array($userRole, $allowed, true)) {
             return $next($request);

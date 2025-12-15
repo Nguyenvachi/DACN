@@ -17,7 +17,10 @@ class IsAdmin
         $role = strtolower((string) ($user->role ?? ''));
         $isAdminFlag = (bool) ($user->is_admin ?? false);
 
-        if (!($isAdminFlag || $role === 'admin')) {
+        // Consider spatie roles (admin or super-admin) and legacy flags/column
+        $isSpatieAdmin = method_exists($user, 'hasAnyRole') && $user->hasAnyRole(['admin', 'super-admin']);
+
+        if (!($isAdminFlag || $role === 'admin' || $isSpatieAdmin)) {
             abort(403, 'Forbidden');
         }
         return $next($request);

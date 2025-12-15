@@ -19,6 +19,7 @@ class LichHen extends Model
         'thoi_gian_hen',
         'ghi_chu',
         'trang_thai',
+        'checked_in_by',
         'checked_in_at',
         'thoi_gian_bat_dau_kham',
         'completed_at',
@@ -86,10 +87,50 @@ class LichHen extends Model
         'completed_at' => 'datetime',
     ];
 
+    /**
+     * Kiểm tra xem lịch hẹn có thể check-in (staff) hay không
+     */
+    public function isCheckinAllowed(): bool
+    {
+        // Check-in chỉ cho phép khi đã xác nhận và ngày hẹn là hôm nay
+        if ($this->trang_thai !== self::STATUS_CONFIRMED_VN) return false;
+        if (! $this->ngay_hen) return false;
+        try {
+            $date = \Carbon\Carbon::parse($this->ngay_hen);
+            return $date->isSameDay(today());
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Kiểm tra bác sĩ có thể bắt đầu khám cho lịch hẹn hay không
+     */
+    public function canStartExam(): bool
+    {
+        return in_array($this->trang_thai, [self::STATUS_CHECKED_IN_VN, self::STATUS_CONFIRMED_VN, self::STATUS_IN_PROGRESS_VN], true);
+    }
+
+    /**
+     * Kiểm tra có thể hoàn thành khám hay không
+     */
+    public function canCompleteExam(): bool
+    {
+        return $this->trang_thai === self::STATUS_IN_PROGRESS_VN;
+    }
+
     // Relations
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Who performed the check-in
+     */
+    public function checkedInBy()
+    {
+        return $this->belongsTo(User::class, 'checked_in_by');
     }
 
     public function bacSi()
@@ -110,6 +151,15 @@ class LichHen extends Model
     public function danhGia()
     {
         return $this->hasOne(DanhGia::class);
+    }
+
+    /**
+     * Relation to patient's medical record (Bệnh án) for this appointment.
+     * Some controllers call $lichHen->load('benhAn') so we expose that name here.
+     */
+    public function benhAn()
+    {
+        return $this->hasOne(BenhAn::class, 'lich_hen_id');
     }
 
     public function conversation()
@@ -134,8 +184,8 @@ class LichHen extends Model
 
     public function setTrangThaiAttribute($value)
     {
-        // Giữ nguyên giá trị tiếng Anh để thống nhất với chuẩn y tế
-        $this->attributes['trang_thai'] = $value ?: self::STATUS_PENDING;
+        // Normalize input status to Vietnamese label used across the app
+        $this->attributes['trang_thai'] = $value ? self::toVnLabel($value) : self::STATUS_PENDING_VN;
     }
 
     public function getThanhToanTrangThaiAttribute()

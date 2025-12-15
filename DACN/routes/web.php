@@ -33,9 +33,9 @@ use App\Http\Controllers\PatientDashboardController;
 Route::get('/', function () {
     // Nếu đã đăng nhập, redirect theo role
     if (auth()->check()) {
-        $user = auth()->user();
-        $role = strtolower($user->role ?? '');
-
+            /** @var \App\Models\User $user */
+            $user = auth()->user();
+            $role = strtolower($user->roleKey());
         return match ($role) {
             'admin' => redirect()->route('admin.dashboard'),
             'doctor' => redirect()->route('doctor.dashboard'),
@@ -55,8 +55,9 @@ Route::get('/home', function () {
         return redirect()->route('login');
     }
 
+    /** @var \App\Models\User $user */
     $user = auth()->user();
-    $role = strtolower($user->role ?? '');
+    $role = strtolower($user->roleKey());
 
     return match ($role) {
         'admin' => redirect()->route('admin.dashboard'),
@@ -80,11 +81,16 @@ Route::post('/payment/momo-ipn', [PaymentController::class, 'momoIpn'])->name('m
 // Nhóm tất cả các route yêu cầu xác thực (đăng nhập)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/api/bac-si/{bacSi}/thoi-gian-trong/{ngay}', [LichHenController::class, 'getAvailableTimeSlots'])->name('api.bacsi.slots');
+    Route::post('/api/slot-lock', [\App\Http\Controllers\Public\SlotLockController::class, 'lock'])->name('api.slot.lock');
+    Route::post('/api/slot-unlock', [\App\Http\Controllers\Public\SlotLockController::class, 'unlock'])->name('api.slot.unlock');
+    Route::post('/api/slot-check', [\App\Http\Controllers\Public\SlotLockController::class, 'check'])->name('api.slot.check');
+    Route::post('/api/coupons/validate', [\App\Http\Controllers\Patient\CouponController::class, 'check'])->name('api.coupons.validate');
 
     // Dashboard - Tự động chuyển theo role
     Route::get('/dashboard', function () {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
-        $role = strtolower($user->role ?? '');
+        $role = strtolower($user->roleKey());
 
         return match ($role) {
             'admin' => redirect()->route('admin.dashboard'),
@@ -111,6 +117,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dat-lich/{bacSi}', [LichHenController::class, 'create'])->name('lichhen.create');
     Route::post('/luu-lich-hen', [LichHenController::class, 'store'])->name('lichhen.store');
     Route::get('/dat-lich-thanh-cong', function () { return view('public.lichhen.success'); })->name('lichhen.thanhcong');
+
+    // Patient payment page (choose payment method) - used by invoice view
+    Route::get('/payment/{lichHen}', [\App\Http\Controllers\Patient\PaymentController::class, 'show'])->name('patient.payment');
+    Route::post('/payment/{lichHen}/skip', [\App\Http\Controllers\Patient\PaymentController::class, 'skip'])->name('patient.payment.skip');
 
     // Lịch rảnh bác sĩ theo tuần
     Route::get('/bac-si/{bacSi}/lich-ranh', [App\Http\Controllers\Public\BacSiScheduleController::class, 'weeklySchedule'])->name('public.bacsi.schedule');
@@ -229,6 +239,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::resource('benh-an', BenhAnController::class)->names([
             'index' => 'benhan.index', 'create' => 'benhan.create', 'store' => 'benhan.store', 'show' => 'benhan.show', 'edit' => 'benhan.edit', 'update' => 'benhan.update', 'destroy' => 'benhan.destroy',
         ]);
+        // Expose export-pdf for admin area so view can call route('admin.benhan.exportPdf')
+        Route::get('benh-an/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('benhan.exportPdf');
         Route::post('benh-an/{benh_an}/files', [BenhAnController::class, 'uploadFile'])->name('benhan.files.upload');
         Route::delete('benh-an/{benh_an}/files/{file}', [BenhAnController::class, 'destroyFile'])->name('benhan.files.destroy');
         Route::get('benh-an/{benh_an}/audit', [BenhAnController::class, 'auditLog'])->name('benhan.audit');

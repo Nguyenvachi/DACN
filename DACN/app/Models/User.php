@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'avatar',
         'password',
         'role', // Vẫn giữ cột role để lưu legacy nếu cần
         'so_dien_thoai',
@@ -64,7 +65,9 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         // Spatie sẽ tự check trong bảng phân quyền
-        return $this->hasRole('admin') || $this->role === 'admin';
+            // Spatie sẽ tự check trong bảng phân quyền
+            // Bao gồm 'super-admin' để siêu quản trị được coi là admin thực sự
+            return $this->hasAnyRole(['admin', 'super-admin']) || $this->role === 'admin';
         // (Thêm || check cột cũ để tương thích ngược dữ liệu cũ chưa migrate)
     }
 
@@ -81,6 +84,17 @@ class User extends Authenticatable
     public function isPatient(): bool
     {
         return $this->hasRole('patient') || $this->role === 'patient';
+    }
+
+    /**
+     * Return a canonical role key ('admin','doctor','staff','patient') for route generation
+     */
+    public function roleKey(): string
+    {
+        if ($this->isAdmin()) return 'admin';
+        if ($this->isDoctor()) return 'doctor';
+        if ($this->isStaff()) return 'staff';
+        return $this->role ?: 'patient';
     }
 
     // --- CÁC RELATIONSHIP KHÁC GIỮ NGUYÊN ---

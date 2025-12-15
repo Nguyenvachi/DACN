@@ -31,6 +31,7 @@ class RoleSeeder extends Seeder
             'view-staff', 'create-staff', 'edit-staff', 'view-staff-shifts', 'assign-staff-shifts',
             'view-invoices', 'create-invoices', 'edit-invoices', 'process-payments', 'view-payment-logs',
             'view-reports', 'view-revenue-reports', 'view-appointment-reports', 'export-data',
+            'view-dashboard',
         ]);
         $this->command->info('✅ Role: admin - Quản trị hệ thống');
 
@@ -44,6 +45,7 @@ class RoleSeeder extends Seeder
             'view-staff', 'view-staff-shifts',
             'view-invoices', 'process-payments',
             'view-reports', 'view-revenue-reports', 'view-appointment-reports',
+            'view-dashboard',
         ]);
         $this->command->info('✅ Role: manager - Quản lý phòng khám');
 
@@ -64,6 +66,7 @@ class RoleSeeder extends Seeder
             'view-medical-records',
             'view-services',
             'view-invoices',
+            'view-dashboard',
         ]);
         $this->command->info('✅ Role: staff - Nhân viên');
 

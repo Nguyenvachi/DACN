@@ -23,13 +23,16 @@
                 <x-patient.stat-card title="Tổng lịch hẹn" :value="$danhSachLichHen->count()" icon="fa-calendar-check" color="primary" />
             </div>
             <div class="col-md-3">
-                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_PENDING_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)->count()" icon="fa-clock" color="warning" />
+                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_PENDING_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_PENDING_VN)->count()" icon="fa-clock"
+                    color="warning" />
             </div>
             <div class="col-md-3">
-                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count()" icon="fa-check-circle" color="success" />
+                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_CONFIRMED_VN)->count()"
+                    icon="fa-check-circle" color="success" />
             </div>
             <div class="col-md-3">
-                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)->count()" icon="fa-check-double" color="info" />
+                <x-patient.stat-card title="{{ \App\Models\LichHen::STATUS_COMPLETED_VN }}" :value="$danhSachLichHen->where('trang_thai', \App\Models\LichHen::STATUS_COMPLETED_VN)->count()"
+                    icon="fa-check-double" color="info" />
             </div>
         </div>
 
@@ -125,10 +128,10 @@
                                     <!-- TRẠNG THÁI -->
                                     <td>
                                         <x-patient.status-badge :status="$lichHen->trang_thai" :type="match ($lichHen->trang_thai) {
-                                                \App\Models\LichHen::STATUS_PENDING_VN => 'warning',
-                                                \App\Models\LichHen::STATUS_CONFIRMED_VN => 'success',
-                                                \App\Models\LichHen::STATUS_CANCELLED_VN => 'danger',
-                                                \App\Models\LichHen::STATUS_COMPLETED_VN => 'info',
+                                            \App\Models\LichHen::STATUS_PENDING_VN => 'warning',
+                                            \App\Models\LichHen::STATUS_CONFIRMED_VN => 'success',
+                                            \App\Models\LichHen::STATUS_CANCELLED_VN => 'danger',
+                                            \App\Models\LichHen::STATUS_COMPLETED_VN => 'info',
                                             default => 'default',
                                         }" />
                                     </td>
@@ -171,11 +174,39 @@
                                             @endif
 
                                             <!-- CHAT -->
-                                            @if (in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_CONFIRMED_VN, \App\Models\LichHen::STATUS_COMPLETED_VN]))
+                                            @if (in_array($lichHen->trang_thai, [
+                                                    \App\Models\LichHen::STATUS_CONFIRMED_VN,
+                                                    \App\Models\LichHen::STATUS_COMPLETED_VN,
+                                                ]))
                                                 <a href="{{ route('patient.chat.create', $lichHen->bac_si_id) }}"
                                                     class="btn btn-sm btn-outline-info">
                                                     <i class="fas fa-comment-medical"></i>
                                                 </a>
+                                            @endif
+
+                                            {{-- ĐÁNH GIÁ: hiển thị khi lịch đã hoàn thành --}}
+                                            @if ($lichHen->trang_thai === \App\Models\LichHen::STATUS_COMPLETED_VN)
+                                                @php
+                                                    $existingReview = \App\Models\DanhGia::where(
+                                                        'lich_hen_id',
+                                                        $lichHen->id,
+                                                    )
+                                                        ->where('user_id', auth()->id())
+                                                        ->first();
+                                                @endphp
+
+                                                @if (!$existingReview)
+                                                    <a href="{{ route('patient.danhgia.create') }}?lich_hen_id={{ $lichHen->id }}"
+                                                        class="btn btn-sm btn-outline-success ms-1" title="Đánh giá bác sĩ">
+                                                        <i class="fas fa-star"></i>
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('patient.danhgia.edit', $existingReview->id) }}"
+                                                        class="btn btn-sm btn-outline-secondary ms-1"
+                                                        title="Chỉnh sửa đánh giá">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                @endif
                                             @endif
 
                                             <!-- HỦY -->

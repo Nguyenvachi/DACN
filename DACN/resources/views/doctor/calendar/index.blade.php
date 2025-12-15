@@ -1,6 +1,6 @@
 @php
     // Xác định layout theo role
-    $role = auth()->user()->role ?? 'doctor';
+    $role = auth()->check() ? auth()->user()->roleKey() : 'doctor';
     // Ưu tiên layout riêng cho bác sĩ, tránh thay đổi cấu trúc khác
     $layout = $role === 'doctor' ? 'layouts.doctor' : (in_array($role, ['admin']) ? 'layouts.admin' : 'layouts.app');
 @endphp

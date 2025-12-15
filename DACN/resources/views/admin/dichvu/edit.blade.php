@@ -85,6 +85,17 @@
                             @enderror
                         </div>
 
+                        {{-- Chuyên khoa liên quan --}}
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Chuyên khoa liên kết</label>
+                            <select name="chuyen_khoa_ids[]" class="form-select" multiple>
+                                @foreach($chuyenKhoas as $ck)
+                                    <option value="{{ $ck->id }}" {{ in_array($ck->id, $selectedChuyenKhoa ?? []) ? 'selected' : '' }}>{{ $ck->ten }}</option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">(Giữ Ctrl/Cmd để chọn nhiều chuyên khoa)</small>
+                        </div>
+
                     </div>
 
                     {{-- Nút hành động --}}

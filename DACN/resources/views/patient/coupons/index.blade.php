@@ -1,120 +1,165 @@
 @extends('layouts.patient-modern')
 
-@section('content')
-<div class="container py-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="h3 mb-3">
-                <i class="fas fa-ticket-alt text-primary me-2"></i>
-                Mã giảm giá
-            </h1>
-            <p class="text-muted">Sử dụng mã giảm giá khi mua thuốc để được ưu đãi đặc biệt</p>
-        </div>
-    </div>
+@section('title', 'Mã giảm giá')
+@section('page-title', 'Kho Voucher')
+@section('page-subtitle', 'Săn mã giảm giá để mua sắm tiết kiệm hơn')
 
-    @if($coupons->isEmpty())
-        <div class="card">
-            <div class="card-body text-center py-5">
-                <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-                <h5 class="text-muted">Hiện chưa có mã giảm giá nào</h5>
-                <p class="text-muted">Vui lòng quay lại sau để nhận ưu đãi hấp dẫn</p>
-            </div>
+@section('content')
+    <div class="container py-4">
+        {{-- Header --}}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-ticket-alt text-primary me-2"></i>Mã giảm giá của tôi</h5>
+            <a href="{{ route('patient.shop.index') }}" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-shopping-bag me-1"></i>Dùng ngay
+            </a>
         </div>
-    @else
-        <div class="row">
-            @foreach($coupons as $coupon)
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm hover-shadow" style="transition: all 0.3s;">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    @if($coupon->loai === 'percent')
-                                        <span class="badge bg-info bg-gradient">% Phần trăm</span>
-                                    @else
-                                        <span class="badge bg-success bg-gradient">Số tiền</span>
-                                    @endif
-                                </div>
-                                <div class="text-end">
-                                    <h3 class="mb-0 text-primary fw-bold">
-                                        @if($coupon->loai === 'percent')
+
+        @if ($coupons->isEmpty())
+            {{-- EMPTY STATE --}}
+            <div class="card shadow-sm border-0 py-5 text-center">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="fa-stack fa-3x">
+                            <i class="fas fa-circle fa-stack-2x text-light"></i>
+                            <i class="fas fa-ticket-alt fa-stack-1x text-secondary opacity-25"></i>
+                        </span>
+                    </div>
+                    <h5 class="text-muted fw-bold">Chưa có mã giảm giá nào</h5>
+                    <p class="text-muted">Hãy quay lại sau để nhận ưu đãi nhé!</p>
+                </div>
+            </div>
+        @else
+            <div class="row g-4">
+                @foreach ($coupons as $coupon)
+                    <div class="col-md-6 col-xl-4">
+                        {{-- VOUCHER CARD --}}
+                        <div
+                            class="card border-0 shadow-sm h-100 overflow-hidden position-relative voucher-card transition-all">
+                            <div class="row g-0 h-100">
+                                {{-- Cột trái: Giá trị giảm --}}
+                                <div
+                                    class="col-4 d-flex flex-column align-items-center justify-content-center text-white p-3 text-center position-relative
+                        {{ $coupon->loai === 'percent' ? 'bg-primary bg-gradient' : 'bg-success bg-gradient' }}">
+
+                                    {{-- Icon loại --}}
+                                    <div class="mb-2 opacity-50">
+                                        <i
+                                            class="fas {{ $coupon->loai === 'percent' ? 'fa-percent' : 'fa-money-bill-wave' }} fa-lg"></i>
+                                    </div>
+
+                                    {{-- Giá trị to --}}
+                                    <h3 class="fw-bold mb-0">
+                                        @if ($coupon->loai === 'percent')
                                             {{ $coupon->gia_tri }}%
                                         @else
-                                            {{ number_format($coupon->gia_tri/1000, 0) }}K
+                                            {{ number_format($coupon->gia_tri / 1000, 0) }}K
                                         @endif
                                     </h3>
-                                    <small class="text-muted">Giảm</small>
+                                    <small class="text-white-50 text-uppercase fw-bold" style="font-size: 0.7rem;">Giảm
+                                        giá</small>
+
+                                    {{-- Răng cưa trang trí --}}
+                                    <div class="voucher-sawtooth-right"></div>
+                                </div>
+
+                                {{-- Cột phải: Thông tin --}}
+                                <div
+                                    class="col-8 bg-white p-3 d-flex flex-column justify-content-between position-relative">
+                                    <div>
+                                        {{-- Tiêu đề có Link --}}
+                                        <h6 class="fw-bold mb-1 text-truncate">
+                                            <a href="{{ route('patient.coupons.show', $coupon) }}"
+                                                class="text-dark text-decoration-none stretched-link">
+                                                {{ $coupon->ten }}
+                                            </a>
+                                        </h6>
+
+                                        {{-- Điều kiện --}}
+                                        <div class="small text-muted mb-2">
+                                            @if ($coupon->gia_tri_toi_thieu)
+                                                Đơn tối thiểu {{ number_format($coupon->gia_tri_toi_thieu / 1000, 0) }}K
+                                            @else
+                                                Cho mọi đơn hàng
+                                            @endif
+                                        </div>
+
+                                        {{-- Hạn sử dụng --}}
+                                        <div
+                                            class="d-flex align-items-center small {{ $coupon->ngay_ket_thuc && $coupon->ngay_ket_thuc->isPast() ? 'text-danger' : 'text-secondary' }}">
+                                            <i class="far fa-clock me-1"></i>
+                                            @if ($coupon->ngay_ket_thuc)
+                                                HSD: {{ $coupon->ngay_ket_thuc->format('d/m/Y') }}
+                                            @else
+                                                Vô thời hạn
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    {{-- Copy Code (Cần đặt z-index cao hơn stretched-link để bấm được) --}}
+                                    <div class="mt-3 d-flex align-items-center justify-content-between bg-light rounded p-2 border border-dashed position-relative"
+                                        style="z-index: 2;">
+                                        <code class="text-primary fw-bold mb-0 ps-1">{{ $coupon->ma }}</code>
+                                        <button class="btn btn-sm btn-white border shadow-sm btn-copy fw-bold text-primary"
+                                            data-code="{{ $coupon->ma }}" title="Sao chép">
+                                            Copy
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-
-                            <h5 class="card-title mb-2">{{ $coupon->ten }}</h5>
-
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <input type="text" class="form-control bg-light" value="{{ $coupon->ma }}" readonly>
-                                    <button class="btn btn-outline-primary btn-copy" type="button" data-code="{{ $coupon->ma }}" title="Sao chép mã">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <ul class="list-unstyled small text-muted mb-3">
-                                @if($coupon->gia_tri_toi_thieu)
-                                    <li><i class="fas fa-check-circle text-success me-2"></i>Đơn tối thiểu: <strong>{{ number_format($coupon->gia_tri_toi_thieu, 0, ',', '.') }}đ</strong></li>
-                                @else
-                                    <li><i class="fas fa-check-circle text-success me-2"></i>Không giới hạn đơn hàng</li>
-                                @endif
-
-                                @if($coupon->ngay_ket_thuc)
-                                    <li><i class="far fa-clock text-warning me-2"></i>Hết hạn: {{ $coupon->ngay_ket_thuc->format('d/m/Y') }}</li>
-                                @else
-                                    <li><i class="fas fa-infinity text-info me-2"></i>Không giới hạn thời gian</li>
-                                @endif
-
-                                @if($coupon->so_lan_su_dung)
-                                    <li><i class="fas fa-users text-primary me-2"></i>Còn {{ $coupon->so_lan_su_dung }} lượt</li>
-                                @endif
-                            </ul>
-
-                            <a href="{{ route('patient.coupons.show', $coupon) }}" class="btn btn-sm btn-outline-primary w-100">
-                                <i class="fas fa-info-circle me-1"></i> Chi tiết
-                            </a>
                         </div>
                     </div>
-                </div>
-            @endforeach
-        </div>
-    @endif
-</div>
+                @endforeach
+            </div>
+        @endif
+    </div>
 
-@push('styles')
-<style>
-.hover-shadow:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15)!important;
-    transform: translateY(-5px);
-}
-</style>
-@endpush
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('.btn-copy').click(function() {
+                    const code = $(this).data('code');
+                    const button = $(this);
+                    const originalText = button.text();
 
-@push('scripts')
-<script>
-$(document).ready(function() {
-    $('.btn-copy').click(function() {
-        const code = $(this).data('code');
-        const button = $(this);
+                    // Copy to clipboard
+                    navigator.clipboard.writeText(code).then(function() {
+                        button.removeClass('text-primary').addClass('text-success').html(
+                            '<i class="fas fa-check"></i>');
 
-        // Copy to clipboard
-        navigator.clipboard.writeText(code).then(function() {
-            const originalHtml = button.html();
-            button.html('<i class="fas fa-check"></i>');
-            button.removeClass('btn-outline-primary').addClass('btn-success');
+                        setTimeout(function() {
+                            button.html(originalText).removeClass('text-success').addClass(
+                                'text-primary');
+                        }, 1500);
+                    });
+                });
+            });
+        </script>
+    @endpush
 
-            setTimeout(function() {
-                button.html(originalHtml);
-                button.removeClass('btn-success').addClass('btn-outline-primary');
-            }, 1500);
-        });
-    });
-});
-</script>
-@endpush
+    @push('styles')
+        <style>
+            .transition-all:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+            }
+
+            .border-dashed {
+                border-style: dashed !important;
+            }
+
+            /* Tạo hiệu ứng răng cưa bên phải cột màu */
+            .voucher-sawtooth-right {
+                position: absolute;
+                right: -6px;
+                top: 0;
+                bottom: 0;
+                width: 12px;
+                background-image: radial-gradient(#fff 50%, transparent 50%);
+                background-size: 12px 12px;
+                background-position: left center;
+                background-repeat: repeat-y;
+                z-index: 1;
+            }
+        </style>
+    @endpush
 @endsection

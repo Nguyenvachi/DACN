@@ -37,4 +37,90 @@ body { font-family: var(--vc-font); color: #1f2937; }
   .vc-section-title{ font-size:1.4rem; }
 }
 
+/* Avatar helpers: uniform modern crop */
+.avatar-card {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 220px;
+  overflow: hidden;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.vc-avatar-sm { width:48px; height:48px; border-radius:50%; overflow:hidden; display:inline-block; }
+.vc-avatar-sm img{ width:100%; height:100%; object-fit:cover; }
+
+.avatar-img[src=""] { display:none; }
+
+/* Remove padding around doctor images */
+.doctor-card .doctor-image {
+    padding: 0 !important;
+    background: transparent !important;
+    height: auto;
+    display: block;
+}
+
+/* Make avatar-card display the full image */
+.doctor-card .avatar-card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: unset;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+}
+
+/* SHOW IMAGE FULL — NO CROP */
+.doctor-card .avatar-card .avatar-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain !important;   /* <-- full ảnh */
+    object-position: center top;
+    display: block;
+    max-height: 700px;
+}
+
+@media (max-width: 576px) {
+  .avatar-card { max-height: 160px; aspect-ratio: 3 / 2; }
+}
+
+/* FIX: Hiển thị full ảnh bác sĩ, không cắt mặt */
+.doctor-card .doctor-image {
+    padding: 0 !important;
+    background: transparent !important;
+    height: auto !important;
+}
+
+.doctor-card .avatar-card {
+    width: 100%;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    height: auto !important;
+    aspect-ratio: unset !important;
+    overflow: visible !important;
+}
+
+.doctor-card .avatar-card .avatar-img {
+    width: 100%;
+    height: auto !important;
+    object-fit: contain !important;
+    object-position: top center !important;
+    display: block;
+    max-height: none !important; /* Không giới hạn chiều cao */
+}
+
 /* End design-system-unified.css */

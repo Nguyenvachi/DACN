@@ -1,5 +1,5 @@
 @php
-    $role = auth()->user()->role ?? 'patient';
+    $role = auth()->check() ? auth()->user()->roleKey() : 'patient';
     $layout = match ($role) {
         'admin' => 'layouts.admin',
         'doctor' => 'layouts.doctor',
@@ -22,6 +22,21 @@
         </div>
 
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-5">
+            @php
+                $benhAn = $record;
+                $actionButtons = '';
+                if (auth()->check()) {
+                    if (auth()->user()->isDoctor() && $benhAn->lichHen) {
+                        if ($benhAn->lichHen->canCompleteExam()) {
+                            $actionButtons .= '<form method="POST" action="' . route('doctor.lichhen.complete', $benhAn->lichHen->id) . '" class="d-inline me-2">' . csrf_field() . '<button class="btn btn-danger">Hoàn tất khám</button></form>';
+                        }
+                    }
+                    if (auth()->user()->isAdmin() || auth()->user()->isDoctor()) {
+                        $actionButtons .= '<a href="' . route(auth()->user()->isAdmin() ? 'admin.benhan.audit' : 'doctor.benhan.audit', $benhAn) . '" class="btn btn-secondary">Lịch sử</a>';
+                    }
+                }
+            @endphp
+            @include('benh_an._header', ['actionButtons' => $actionButtons, 'benhAn' => $benhAn])
 
             {{-- Hiển thị lỗi --}}
             @if ($errors->any())
@@ -36,7 +51,7 @@
             @endif
 
             <form method="POST" enctype="multipart/form-data"
-                action="{{ route(auth()->user()->role === 'admin' ? 'admin.benhan.update' : 'doctor.benhan.update', $record) }}">
+                action="{{ route(auth()->user()->isAdmin() ? 'admin.benhan.update' : 'doctor.benhan.update', $record) }}">
                 @csrf
                 @method('PUT')
 
@@ -45,7 +60,7 @@
 
                 {{-- Buttons --}}
                 <div class="mt-4 d-flex justify-content-end gap-2">
-                    <a href="{{ route(auth()->user()->role === 'admin' ? 'admin.benhan.index' : 'doctor.benhan.index') }}"
+                    <a href="{{ route(auth()->user()->isAdmin() ? 'admin.benhan.index' : 'doctor.benhan.index') }}"
                         class="btn btn-light">
                         <i class="bi bi-arrow-left"></i> Quay lại
                     </a>

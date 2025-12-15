@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\BenhAn;
 use App\Models\NhanVien;
+use App\Models\LichHen;
 use App\Policies\BenhAnPolicy;
 use App\Policies\NhanVienPolicy;
+use App\Policies\LichHenPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -20,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Model' => 'App\Policies\ModelPolicy',
         BenhAn::class => BenhAnPolicy::class,
         NhanVien::class => NhanVienPolicy::class,
+        LichHen::class => LichHenPolicy::class,
     ];
 
     /**
@@ -41,6 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage-settings', fn($user) => $user->isAdmin());
 
         \Illuminate\Support\Facades\Gate::policy(NhanVien::class, NhanVienPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(LichHen::class, LichHenPolicy::class);
 
         // Phân quyền kho thuốc: nhập / xuất (có thể tinh chỉnh sau)
         Gate::define('kho-nhap', function($user){

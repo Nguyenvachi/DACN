@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DichVu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use App\Models\ChuyenKhoa;
 
 class DichVuController extends Controller
 {
@@ -13,8 +14,8 @@ class DichVuController extends Controller
      */
     public function index()
     {
-        //Lấy tất cả dịch vụ từ database
-        $danhSachDichVu = DichVu::paginate(15); // THAY ĐỔI: Thêm phân trang
+        // Lấy tất cả dịch vụ từ database, show newest first and eager-load chuyên khoa
+        $danhSachDichVu = DichVu::with('chuyenKhoas')->orderBy('created_at', 'desc')->paginate(25); // phân trang 25
 
         //Trả về view và truyền danh sách dịch vụ ra view
         return view('admin.dichvu.index', ['dsDichVu' => $danhSachDichVu]);
@@ -26,7 +27,8 @@ class DichVuController extends Controller
     public function create()
     {
         //Chỉ đơn giản là trả về view chứa form
-        return view('admin.dichvu.create');
+        $chuyenKhoas = ChuyenKhoa::orderBy('ten')->get();
+        return view('admin.dichvu.create', compact('chuyenKhoas'));
     }
 
     /**
@@ -34,7 +36,7 @@ class DichVuController extends Controller
      */
     public function store(Request $request)
     {
-        //1. Validate dữ liệu (bắt buộc nhập, định dạng...) 
+        //1. Validate dữ liệu (bắt buộc nhập, định dạng...)
         $request->validate([
             'ten_dich_vu' => 'required|string|max:255',
             'mo_ta' => 'nullable|string',
@@ -43,7 +45,13 @@ class DichVuController extends Controller
         ]);
 
         //2. Lấy tất cả dữ liệu từ form và tạo dịch vụ mới
-        DichVu::create($request->all());
+        $data = $request->only(['ten_dich_vu','mo_ta','gia','thoi_gian_uoc_tinh']);
+        $dichVu = DichVu::create($data);
+
+        // Sync chuyên khoa nếu có
+        if ($request->has('chuyen_khoa_ids')) {
+            $dichVu->chuyenKhoas()->sync($request->input('chuyen_khoa_ids', []));
+        }
 
         //3. Chuyển hướng về trang danh sách
         return redirect()->route('admin.dich-vu.index')
@@ -63,7 +71,10 @@ class DichVuController extends Controller
      */
     public function edit(DichVu $dichVu)
     {
-        return view('admin.dichvu.edit', ['dichVu' => $dichVu]);
+        $chuyenKhoas = ChuyenKhoa::orderBy('ten')->get();
+        // Qualify column to avoid ambiguous `id` when joining pivot table
+        $selected = $dichVu->chuyenKhoas()->pluck('chuyen_khoas.id')->toArray();
+        return view('admin.dichvu.edit', ['dichVu' => $dichVu, 'chuyenKhoas' => $chuyenKhoas, 'selectedChuyenKhoa' => $selected]);
     }
 
     /**
@@ -80,7 +91,11 @@ class DichVuController extends Controller
         ]);
 
         // Cập nhật
-        $dichVu->update($request->all());
+        $dichVu->update($request->only(['ten_dich_vu','mo_ta','gia','thoi_gian_uoc_tinh']));
+
+        if ($request->has('chuyen_khoa_ids')) {
+            $dichVu->chuyenKhoas()->sync($request->input('chuyen_khoa_ids', []));
+        }
 
         return redirect()->route('admin.dich-vu.index')
             ->with('success', 'Cập nhật dịch vụ thành công!');

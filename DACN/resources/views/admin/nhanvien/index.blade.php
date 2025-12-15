@@ -54,6 +54,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 70px;">ID</th>
+                                <th style="width:64px;">Ảnh</th>
                                 <th>Họ tên</th>
                                 <th>Chức vụ</th>
                                 <th>Email công việc</th>
@@ -80,7 +81,7 @@
                             {{-- Flash messages --}}
                             @if (session('status'))
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="7">
                                         <div class="alert alert-success mb-0">{{ session('status') }}</div>
                                     </td>
                                 </tr>
@@ -89,6 +90,16 @@
                             @forelse($items as $nv)
                                 <tr>
                                     <td class="fw-semibold">{{ $nv->id }}</td>
+
+                                    <td style="vertical-align: middle;">
+                                        @if($nv->avatar_path)
+                                            <img src="{{ \Illuminate\Support\Facades\Storage::url($nv->avatar_path) }}" alt="{{ $nv->ho_ten }}" class="rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+                                        @else
+                                            <div class="rounded-circle bg-light text-muted d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                                                <i class="bi bi-person"></i>
+                                            </div>
+                                        @endif
+                                    </td>
 
                                     <td>{{ $nv->ho_ten }}</td>
 
@@ -142,6 +153,20 @@
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
 
+                                        {{-- XÓA (chỉ hiện cho người có quyền) --}}
+                                        @can('delete', $nv)
+                                            <form action="{{ route('admin.nhanvien.destroy', $nv) }}" method="POST"
+                                                class="d-inline ms-1"
+                                                onsubmit="return confirm('Bạn có chắc muốn xóa nhân viên này?')">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    title="Xóa">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     </td>
 
                                 </tr>

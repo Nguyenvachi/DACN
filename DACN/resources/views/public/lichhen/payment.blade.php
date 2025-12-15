@@ -4,7 +4,7 @@
     Purpose: Trang chọn phương thức thanh toán cho bệnh nhân
 --}}
 @php
-    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+    $isPatient = auth()->check() && auth()->user()->isPatient();
 @endphp
 
 @if($isPatient)

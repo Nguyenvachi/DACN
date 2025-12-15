@@ -166,6 +166,7 @@ class LichKhamService
         $override = CaDieuChinhBacSi::query()
             ->where('bac_si_id', $bacSiId)
             ->whereDate('ngay', $date)
+            ->where('hanh_dong', 'remove')
             ->where(function ($q) use ($startTime, $endTime) {
                 $q->where('gio_bat_dau', '<', $endTime)
                     ->where('gio_ket_thuc', '>', $startTime);

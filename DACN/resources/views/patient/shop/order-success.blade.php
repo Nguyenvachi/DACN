@@ -1,71 +1,116 @@
 @extends('layouts.patient-modern')
 
+@section('title', 'Đặt hàng thành công')
+
 @section('content')
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="text-center mb-4">
-                <div class="mb-4">
-                    <i class="fas fa-check-circle fa-5x text-success"></i>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                {{-- Success Icon & Message --}}
+                <div class="text-center mb-5">
+                    <div class="mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success"
+                            style="width: 80px; height: 80px;">
+                            <i class="fas fa-check fa-3x"></i>
+                        </div>
+                    </div>
+                    <h2 class="fw-bold text-dark mb-2">Đặt hàng thành công!</h2>
+                    <p class="text-muted">Cảm ơn bạn đã tin tưởng Healthcare Clinic.<br>Đơn hàng của bạn đang được xử lý.</p>
                 </div>
-                <h2 class="text-success mb-3">Đặt hàng thành công!</h2>
-                <p class="lead text-muted">Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất.</p>
-            </div>
 
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Thông tin đơn hàng</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-sm-4"><strong>Mã đơn hàng:</strong></div>
-                        <div class="col-sm-8"><code>{{ $donHang->ma_don_hang }}</code></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-4"><strong>Ngày đặt:</strong></div>
-                        <div class="col-sm-8">{{ $donHang->ngay_dat->format('d/m/Y H:i') }}</div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-4"><strong>Địa chỉ giao:</strong></div>
-                        <div class="col-sm-8">{{ $donHang->dia_chi_giao }}</div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-4"><strong>SĐT:</strong></div>
-                        <div class="col-sm-8">{{ $donHang->sdt_nguoi_nhan }}</div>
-                    </div>
+                {{-- Receipt Card --}}
+                <div class="card shadow-sm border-0 mb-4 position-relative overflow-hidden receipt-card">
+                    {{-- Decorative Top Border --}}
+                    <div class="position-absolute top-0 start-0 w-100 bg-success" style="height: 6px;"></div>
 
-                    <hr>
+                    <div class="card-body p-4 pt-5">
+                        <div class="text-center mb-4">
+                            <small class="text-muted text-uppercase fw-bold ls-1">Mã đơn hàng</small>
+                            <h4 class="fw-bold text-primary my-1">#{{ $donHang->id }}</h4> {{-- Hoặc $donHang->ma_don_hang nếu có --}}
+                            <small class="text-muted">{{ $donHang->created_at->format('d/m/Y H:i') }}</small>
+                        </div>
 
-                    <div class="row mb-2">
-                        <div class="col-sm-4"><strong>Tạm tính:</strong></div>
-                        <div class="col-sm-8">{{ number_format($donHang->tong_tien, 0, ',', '.') }}đ</div>
-                    </div>
+                        <hr class="border-dashed my-4">
 
-                    @if($donHang->coupon_id && $donHang->giam_gia > 0)
-                        <div class="row mb-2 text-success">
-                            <div class="col-sm-4"><strong><i class="fas fa-tag me-1"></i>Giảm giá:</strong></div>
-                            <div class="col-sm-8">
-                                -{{ number_format($donHang->giam_gia, 0, ',', '.') }}đ
-                                <small class="text-muted">(Mã: {{ $donHang->coupon->ma }})</small>
+                        {{-- Thông tin giao hàng --}}
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3 small text-uppercase text-muted"><i
+                                    class="fas fa-map-marker-alt me-2"></i>Giao đến</h6>
+                            <div class="d-flex mb-2">
+                                <i class="fas fa-user text-muted mt-1 me-3" style="width: 16px;"></i>
+                                <span class="fw-semibold">{{ $donHang->nguoiNhan->name ?? auth()->user()->name }}</span>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <i class="fas fa-phone text-muted mt-1 me-3" style="width: 16px;"></i>
+                                <span>{{ $donHang->sdt_nguoi_nhan }}</span>
+                            </div>
+                            <div class="d-flex">
+                                <i class="fas fa-home text-muted mt-1 me-3" style="width: 16px;"></i>
+                                <span>{{ $donHang->dia_chi_giao }}</span>
                             </div>
                         </div>
-                    @endif
 
-                    <hr>
+                        <hr class="border-dashed my-4">
 
-                    <div class="row">
-                        <div class="col-sm-4"><h5>Tổng thanh toán:</h5></div>
-                        <div class="col-sm-8"><h5 class="text-primary">{{ number_format($donHang->thanh_toan, 0, ',', '.') }}đ</h5></div>
+                        {{-- Tóm tắt thanh toán --}}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Tạm tính</span>
+                            <span
+                                class="fw-semibold">{{ number_format($donHang->tong_tien + ($donHang->giam_gia ?? 0), 0, ',', '.') }}đ</span>
+                        </div>
+
+                        @if ($donHang->giam_gia > 0)
+                            <div class="d-flex justify-content-between mb-2 text-success">
+                                <span><i class="fas fa-ticket-alt me-1"></i>Giảm giá</span>
+                                <span>-{{ number_format($donHang->giam_gia, 0, ',', '.') }}đ</span>
+                            </div>
+                        @endif
+
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="text-muted">Phí vận chuyển</span>
+                            <span class="text-success fw-bold">Miễn phí</span>
+                        </div>
+
+                        <div class="p-3 bg-light rounded d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-dark">Tổng thanh toán</span>
+                            <span
+                                class="fs-4 fw-bold text-primary">{{ number_format($donHang->tong_tien, 0, ',', '.') }}đ</span>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="text-center mt-4">
-                <a href="{{ route('patient.shop.index') }}" class="btn btn-primary">
-                    <i class="fas fa-shopping-bag me-2"></i>Tiếp tục mua sắm
-                </a>
+                    {{-- Decorative Bottom (Optional: Zigzag image background or just rounded) --}}
+                </div>
+
+                {{-- Actions --}}
+                <div class="d-grid gap-2">
+                    <a href="{{ route('patient.shop.index') }}" class="btn btn-primary btn-lg shadow-sm">
+                        <i class="fas fa-shopping-bag me-2"></i>Tiếp tục mua sắm
+                    </a>
+                    <a href="{{ route('patient.shop.orders') }}" class="btn btn-link text-muted text-decoration-none">
+                        Xem lịch sử đơn hàng
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    @push('styles')
+        <style>
+            .ls-1 {
+                letter-spacing: 1px;
+            }
+
+            .border-dashed {
+                border-top: 2px dashed #e9ecef;
+                opacity: 1;
+            }
+
+            .receipt-card {
+                background-image: radial-gradient(circle at 0 0, transparent 10px, #fff 11px), radial-gradient(circle at 100% 0, transparent 10px, #fff 11px), radial-gradient(circle at 100% 100%, transparent 10px, #fff 11px), radial-gradient(circle at 0 100%, transparent 10px, #fff 11px);
+                background-position: top left, top right, bottom right, bottom left;
+                background-size: 51% 51%;
+                background-repeat: no-repeat;
+            }
+        </style>
+    @endpush
 @endsection

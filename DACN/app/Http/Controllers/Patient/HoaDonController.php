@@ -16,22 +16,29 @@ class HoaDonController extends Controller
 
         // Filter by status
         if ($request->has('status') && $request->status != '') {
-            $query->where('trang_thai', $request->status);
+            $status = $request->status;
+            $englishStatuses = ['unpaid', 'paid', 'partial', 'partial_refund', 'refunded', 'cancelled'];
+            if (in_array($status, $englishStatuses, true)) {
+                $query->where('status', $status);
+            } else {
+                $query->where('trang_thai', $status);
+            }
         }
 
         $hoaDons = $query->paginate(15);
 
         // Statistics
+        // Use `status` column (english keys) for reliable statistics
         $statistics = [
             'total' => HoaDon::where('user_id', auth()->id())->count(),
             'unpaid' => HoaDon::where('user_id', auth()->id())
-                ->whereIn('trang_thai', ['chua_thanh_toan', 'thanh_toan_mot_phan'])
+                ->where('status', 'unpaid')
                 ->count(),
             'paid' => HoaDon::where('user_id', auth()->id())
-                ->where('trang_thai', 'da_thanh_toan')
+                ->where('status', 'paid')
                 ->count(),
             'total_amount' => HoaDon::where('user_id', auth()->id())
-                ->where('trang_thai', 'da_thanh_toan')
+                ->where('status', 'paid')
                 ->sum('tong_tien'),
         ];
 
@@ -42,6 +49,8 @@ class HoaDonController extends Controller
     {
         abort_if($hoaDon->user_id !== auth()->id(), 403);
 
+        // Refresh model from DB to ensure we have latest computed fields (paid/refund amounts)
+        $hoaDon->refresh();
         $hoaDon->load(['lichHen.bacSi', 'lichHen.dichVu', 'thanhToans', 'hoanTiens', 'paymentLogs']);
 
         return view('patient.hoadon.show', compact('hoaDon'));

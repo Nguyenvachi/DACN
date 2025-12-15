@@ -46,10 +46,11 @@
                         <thead class="table-light">
                             <tr>
                                 <th width="5%">ID</th>
-                                <th width="25%">Tên dịch vụ</th>
-                                <th width="35%">Mô tả</th>
-                                <th width="10%">Thời gian<br>(phút)</th>
-                                <th width="15%">Giá (VNĐ)</th>
+                                <th width="22%">Tên dịch vụ</th>
+                                <th width="28%">Mô tả</th>
+                                <th width="15%">Chuyên khoa</th>
+                                <th width="8%">Thời gian<br>(phút)</th>
+                                <th width="12%">Giá (VNĐ)</th>
                                 <th width="10%" class="text-center">Hành động</th>
                             </tr>
                         </thead>
@@ -64,6 +65,10 @@
                                     </td>
 
                                     <td>{{ Str::limit($dichVu->mo_ta, 100) }}</td>
+
+                                    <td>
+                                        {{ $dichVu->chuyenKhoas && $dichVu->chuyenKhoas->isNotEmpty() ? $dichVu->chuyenKhoas->pluck('ten')->join(', ') : '-' }}
+                                    </td>
 
                                     <td>{{ $dichVu->thoi_gian_uoc_tinh }}</td>
 
