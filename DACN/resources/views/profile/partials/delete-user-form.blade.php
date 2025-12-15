@@ -29,6 +29,9 @@
             @csrf
             @method('delete')
 
+            {{-- Hidden username for accessibility / password managers --}}
+            <input type="text" name="username" value="{{ old('email', auth()->user()->email ?? '') }}" autocomplete="username" class="d-none" aria-hidden="true" tabindex="-1">
+
             <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-red-500" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
@@ -45,10 +48,10 @@
 
             {{-- PASSWORD INPUT --}}
             <div class="mt-4">
-                <x-input-label for="password" value="Mật khẩu" class="font-semibold" />
-                <x-text-input id="password" name="password" type="password"
+                <x-input-label for="password_delete" value="Mật khẩu" class="font-semibold" />
+                <x-text-input id="password_delete" name="password" type="password"
                     class="mt-2 block w-3/4 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500"
-                    placeholder="Nhập mật khẩu của bạn..." />
+                    placeholder="Nhập mật khẩu của bạn..." autocomplete="current-password" />
 
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
             </div>

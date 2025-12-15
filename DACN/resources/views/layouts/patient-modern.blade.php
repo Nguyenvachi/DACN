@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +10,14 @@
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
+        integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous">
+    </script>
     {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -189,12 +195,14 @@
         }
     </style>
 </head>
+
 <body>
     {{-- Sidebar --}}
     <aside class="sidebar" id="sidebar">
         <div class="p-4">
             <div class="d-flex align-items-center gap-3 mb-4">
-                <div style="width: 48px; height: 48px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <div
+                    style="width: 48px; height: 48px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                     <i class="fas fa-hospital-alt" style="font-size: 1.5rem; color: #10b981;"></i>
                 </div>
                 <div>
@@ -204,19 +212,35 @@
             </div>
 
             {{-- User Info --}}
-            <div style="background: rgba(255, 255, 255, 0.1); border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+            <div
+                style="background: rgba(255, 255, 255, 0.1); border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
                 <div class="d-flex align-items-center gap-3">
                     <div style="width: 48px; height: 48px; background: white; border-radius: 50%; overflow: hidden;">
-                        @if(auth()->user()->avatar)
-                            <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                        @php
+                            $avatarUrl = null;
+                            $user = auth()->user();
+                            if (! empty($user->avatar)) {
+                                $avatarUrl = Storage::url($user->avatar);
+                            } elseif ($user->relationLoaded('bacSi') ? ($user->bacSi?->avatar_url ?? false) : ($user->bacSi ?? false)) {
+                                $avatarUrl = $user->bacSi->avatar_url ?? ($user->bacSi->avatar ? Storage::url($user->bacSi->avatar) : null);
+                            } elseif ($user->relationLoaded('nhanVien') ? ($user->nhanVien?->avatar_path ?? false) : ($user->nhanVien ?? false)) {
+                                $avatarUrl = $user->nhanVien->avatar_path ? Storage::url($user->nhanVien->avatar_path) : null;
+                            } elseif ($user->relationLoaded('patientProfile') ? ($user->patientProfile?->avatar ?? false) : ($user->patientProfile ?? false)) {
+                                $avatarUrl = $user->patientProfile->avatar ? Storage::url($user->patientProfile->avatar) : null;
+                            }
+                        @endphp
+
+                        @if ($avatarUrl)
+                            <img src="{{ $avatarUrl }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
                         @else
                             <div style="width: 100%; height: 100%; background: #10b981; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
-                                {{ substr(auth()->user()->name, 0, 1) }}
+                                {{ substr($user->name, 0, 1) }}
                             </div>
                         @endif
                     </div>
                     <div class="flex-grow-1">
-                        <p class="text-white mb-0" style="font-weight: 600; font-size: 0.875rem;">{{ auth()->user()->name }}</p>
+                        <p class="text-white mb-0" style="font-weight: 600; font-size: 0.875rem;">
+                            {{ auth()->user()->name }}</p>
                         <p class="mb-0" style="color: #d1fae5; font-size: 0.75rem;">Bệnh nhân</p>
                     </div>
                 </div>
@@ -224,99 +248,117 @@
 
             {{-- Navigation Menu --}}
             <nav>
-                <a href="{{ route('patient.dashboard.health') }}" class="sidebar-link {{ request()->routeIs('patient.dashboard.health') ? 'active' : '' }}">
+                <a href="{{ route('patient.dashboard.health') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.dashboard.health') ? 'active' : '' }}">
                     <i class="fas fa-th-large" style="width: 20px;"></i>
                     <span>Tổng quan</span>
                 </a>
 
-                <a href="{{ route('lichhen.my') }}" class="sidebar-link {{ request()->routeIs('lichhen.my') ? 'active' : '' }}">
+                <a href="{{ route('lichhen.my') }}"
+                    class="sidebar-link {{ request()->routeIs('lichhen.my') ? 'active' : '' }}">
                     <i class="fas fa-calendar-check" style="width: 20px;"></i>
                     <span>Lịch hẹn khám</span>
                     @php
                         $pendingCount = auth()->user()->lichHens()->where('trang_thai', 'cho_xac_nhan')->count();
                     @endphp
-                    @if($pendingCount > 0)
-                        <span class="ms-auto" style="background: #ef4444; color: white; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 9999px;">{{ $pendingCount }}</span>
+                    @if ($pendingCount > 0)
+                        <span class="ms-auto"
+                            style="background: #ef4444; color: white; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 9999px;">{{ $pendingCount }}</span>
                     @endif
                 </a>
 
-                <a href="{{ route('patient.benhan.index') }}" class="sidebar-link {{ request()->routeIs('patient.benhan.*') ? 'active' : '' }}">
+                <a href="{{ route('patient.benhan.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.benhan.*') ? 'active' : '' }}">
                     <i class="fas fa-file-medical" style="width: 20px;"></i>
                     <span>Hồ sơ bệnh án</span>
                 </a>
 
-                <a href="{{ route('patient.donthuoc.index') }}" class="sidebar-link {{ request()->routeIs('patient.donthuoc.*') ? 'active' : '' }}">
+                <a href="{{ route('patient.donthuoc.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.donthuoc.*') ? 'active' : '' }}">
                     <i class="fas fa-prescription" style="width: 20px;"></i>
                     <span>Đơn thuốc</span>
                 </a>
 
-                <a href="{{ route('patient.xetnghiem.index') }}" class="sidebar-link {{ request()->routeIs('patient.xetnghiem.*') ? 'active' : '' }}">
+                <a href="{{ route('patient.xetnghiem.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.xetnghiem.*') ? 'active' : '' }}">
                     <i class="fas fa-flask" style="width: 20px;"></i>
                     <span>Kết quả xét nghiệm</span>
                 </a>
 
-                <a href="{{ route('patient.hoadon.index') }}" class="sidebar-link {{ request()->routeIs('patient.hoadon.*') ? 'active' : '' }}">
+                <a href="{{ route('patient.hoadon.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.hoadon.*') ? 'active' : '' }}">
                     <i class="fas fa-file-invoice-dollar" style="width: 20px;"></i>
                     <span>Hóa đơn</span>
                 </a>
 
                 <div style="border-top: 1px solid rgba(255, 255, 255, 0.2); margin: 1rem 0;"></div>
 
-                <a href="{{ route('patient.shop.index') }}" class="sidebar-link {{ request()->routeIs('patient.shop.index') ? 'active' : '' }}">
+                <a href="{{ route('patient.shop.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.shop.index') ? 'active' : '' }}">
                     <i class="fas fa-shopping-cart" style="width: 20px;"></i>
                     <span>Cửa hàng thuốc</span>
                 </a>
 
-                <a href="{{ route('patient.shop.orders') }}" class="sidebar-link {{ request()->routeIs('patient.shop.orders') ? 'active' : '' }}">
+                <a href="{{ route('patient.shop.orders') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.shop.orders') ? 'active' : '' }}">
                     <i class="fas fa-box" style="width: 20px;"></i>
                     <span>Đơn hàng của tôi</span>
                 </a>
 
-                <a href="{{ route('patient.coupons.index') }}" class="sidebar-link {{ request()->routeIs('patient.coupons.*') ? 'active' : '' }}">
+                <a href="{{ route('patient.coupons.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.coupons.*') ? 'active' : '' }}">
                     <i class="fas fa-ticket-alt" style="width: 20px;"></i>
                     <span>Mã giảm giá</span>
                 </a>
 
                 <div style="border-top: 1px solid rgba(255, 255, 255, 0.2); margin: 1rem 0;"></div>
 
-                <a href="{{ route('public.bacsi.index') }}" class="sidebar-link {{ request()->routeIs('public.bacsi.*') ? 'active' : '' }}">
+                <a href="{{ route('public.bacsi.index') }}"
+                    class="sidebar-link {{ request()->routeIs('public.bacsi.*') ? 'active' : '' }}">
                     <i class="fas fa-user-md" style="width: 20px;"></i>
                     <span>Danh sách bác sĩ</span>
                 </a>
 
-                <a href="{{ route('patient.chat.index') }}" class="sidebar-link {{ request()->routeIs('patient.chat.*') ? 'active' : '' }}">
+                <a href="{{ route('patient.chat.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.chat.*') ? 'active' : '' }}">
                     <i class="fas fa-comments" style="width: 20px;"></i>
                     <span>Tư vấn online</span>
                 </a>
 
-                <a href="{{ route('patient.danhgia.index') }}" class="sidebar-link {{ request()->routeIs('patient.danhgia.*') ? 'active' : '' }}">
+                <a href="{{ route('patient.danhgia.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.danhgia.*') ? 'active' : '' }}">
                     <i class="fas fa-star" style="width: 20px;"></i>
                     <span>Đánh giá của tôi</span>
                 </a>
 
-                <a href="{{ route('patient.lich-su-kham') }}" class="sidebar-link {{ request()->routeIs('patient.lich-su-kham') ? 'active' : '' }}">
+                <a href="{{ route('patient.lich-su-kham') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.lich-su-kham') ? 'active' : '' }}">
                     <i class="fas fa-history" style="width: 20px;"></i>
                     <span>Lịch sử khám</span>
                 </a>
 
                 {{-- Family menu removed --}}
 
-                <a href="{{ route('patient.notifications') }}" class="sidebar-link {{ request()->routeIs('patient.notifications') ? 'active' : '' }}">
+                <a href="{{ route('patient.notifications') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.notifications') ? 'active' : '' }}">
                     <i class="fas fa-bell" style="width: 20px;"></i>
                     <span>Thông báo</span>
-                    @if(auth()->user()->unreadNotifications->count() > 0)
-                        <span class="ms-auto" style="background: #ef4444; color: white; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 9999px;">{{ auth()->user()->unreadNotifications->count() }}</span>
+                    @if (auth()->user()->unreadNotifications->count() > 0)
+                        <span class="ms-auto"
+                            style="background: #ef4444; color: white; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 9999px;">{{ auth()->user()->unreadNotifications->count() }}</span>
                     @endif
                 </a>
 
-                <a href="{{ route('profile.edit') }}" class="sidebar-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                <a href="{{ route('profile.edit') }}"
+                    class="sidebar-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
                     <i class="fas fa-cog" style="width: 20px;"></i>
                     <span>Cài đặt</span>
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}" class="mt-3">
                     @csrf
-                    <button type="submit" class="sidebar-link w-100 text-start border-0" style="background: transparent;">
+                    <button type="submit" class="sidebar-link w-100 text-start border-0"
+                        style="background: transparent;">
                         <i class="fas fa-sign-out-alt" style="width: 20px;"></i>
                         <span>Đăng xuất</span>
                     </button>
@@ -334,7 +376,8 @@
                     <i class="fas fa-bars fs-5"></i>
                 </button>
                 <div>
-                    <h2 class="mb-0" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">@yield('page-title', 'Dashboard')</h2>
+                    <h2 class="mb-0" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">@yield('page-title', 'Dashboard')
+                    </h2>
                     <p class="mb-0" style="font-size: 0.875rem; color: #6b7280;">@yield('page-subtitle', 'Chào mừng bạn trở lại')</p>
                 </div>
             </div>
@@ -342,16 +385,19 @@
             <div class="d-flex align-items-center gap-3">
                 {{-- Search --}}
                 <div class="position-relative d-none d-md-block">
-                    <input type="text" placeholder="Tìm kiếm..." class="form-control" style="padding-left: 2.5rem; border-radius: 0.5rem;">
-                    <i class="fas fa-search position-absolute" style="left: 0.75rem; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                    <input type="text" placeholder="Tìm kiếm..." class="form-control"
+                        style="padding-left: 2.5rem; border-radius: 0.5rem;">
+                    <i class="fas fa-search position-absolute"
+                        style="left: 0.75rem; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
                 </div>
 
                 {{-- Notifications --}}
                 <div class="position-relative">
                     <a href="{{ route('patient.notifications') }}" class="btn p-2" style="color: #6b7280;">
                         <i class="fas fa-bell fs-5"></i>
-                        @if(auth()->user()->unreadNotifications->count() > 0)
-                            <span class="position-absolute top-0 end-0" style="width: 20px; height: 20px; background: #ef4444; color: white; font-size: 0.75rem; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        @if (auth()->user()->unreadNotifications->count() > 0)
+                            <span class="position-absolute top-0 end-0"
+                                style="width: 20px; height: 20px; background: #ef4444; color: white; font-size: 0.75rem; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                 {{ auth()->user()->unreadNotifications->count() }}
                             </span>
                         @endif
@@ -361,11 +407,25 @@
                 {{-- User Menu --}}
                 <div class="d-flex align-items-center gap-2">
                     <div style="width: 40px; height: 40px; background: #10b981; border-radius: 50%; overflow: hidden;">
-                        @if(auth()->user()->avatar)
-                            <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                        @php
+                            $avatarUrlSmall = null;
+                            $user = auth()->user();
+                            if (! empty($user->avatar)) {
+                                $avatarUrlSmall = Storage::url($user->avatar);
+                            } elseif ($user->relationLoaded('bacSi') ? ($user->bacSi?->avatar_url ?? false) : ($user->bacSi ?? false)) {
+                                $avatarUrlSmall = $user->bacSi->avatar_url ?? ($user->bacSi->avatar ? Storage::url($user->bacSi->avatar) : null);
+                            } elseif ($user->relationLoaded('nhanVien') ? ($user->nhanVien?->avatar_path ?? false) : ($user->nhanVien ?? false)) {
+                                $avatarUrlSmall = $user->nhanVien->avatar_path ? Storage::url($user->nhanVien->avatar_path) : null;
+                            } elseif ($user->relationLoaded('patientProfile') ? ($user->patientProfile?->avatar ?? false) : ($user->patientProfile ?? false)) {
+                                $avatarUrlSmall = $user->patientProfile->avatar ? Storage::url($user->patientProfile->avatar) : null;
+                            }
+                        @endphp
+
+                        @if ($avatarUrlSmall)
+                            <img src="{{ $avatarUrlSmall }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
                         @else
                             <div style="width: 100%; height: 100%; background: #10b981; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
-                                {{ substr(auth()->user()->name, 0, 1) }}
+                                {{ substr($user->name, 0, 1) }}
                             </div>
                         @endif
                     </div>
@@ -375,7 +435,7 @@
 
         {{-- Page Content --}}
         <div class="content-wrapper">
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success border-0 shadow-sm mb-4" style="border-left: 4px solid #10b981;">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-check-circle text-success me-3"></i>
@@ -384,7 +444,7 @@
                 </div>
             @endif
 
-            @if(session('error'))
+            @if (session('error'))
                 <div class="alert alert-danger border-0 shadow-sm mb-4" style="border-left: 4px solid #ef4444;">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-exclamation-circle text-danger me-3"></i>
@@ -393,14 +453,14 @@
                 </div>
             @endif
 
-            @if($errors->any())
+            @if ($errors->any())
                 <div class="alert alert-danger border-0 shadow-sm mb-4" style="border-left: 4px solid #ef4444;">
                     <div class="d-flex align-items-center mb-2">
                         <i class="fas fa-exclamation-triangle text-danger me-3"></i>
                         <p class="mb-0 fw-semibold">Có lỗi xảy ra:</p>
                     </div>
                     <ul class="mb-0 ms-4">
-                        @foreach($errors->all() as $error)
+                        @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -457,7 +517,10 @@
             if (active) {
                 try {
                     // center the active item inside the sidebar
-                    active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    active.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
                 } catch (e) {
                     // fallback: instant
                     active.scrollIntoView(false);
@@ -480,5 +543,7 @@
     </script>
 
     @stack('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

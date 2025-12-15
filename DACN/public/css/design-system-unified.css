@@ -25,6 +25,60 @@ body { font-family: var(--vc-font); color: #1f2937; }
 /* Form */
 .form-control-lg { padding: .65rem .9rem; border-radius: 10px; }
 
+/* Form controls: unified appearance for inputs across layouts */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea,
+.form-control,
+.form-control-lg {
+  padding: .65rem .9rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  font-size: 0.95rem;
+  color: #1f2937;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus,
+.form-control:focus {
+  border-color: var(--vc-primary);
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(16,185,129,0.06);
+}
+
+/* Make inputs full-width when inside cards/forms */
+.vc-card input[type="text"],
+.vc-card input[type="email"],
+.vc-card input[type="password"],
+.vc-card select,
+.vc-card textarea,
+.vc-card .form-control {
+  width: 100%;
+  display: block;
+}
+
+/* Specific: ensure doctor layout uses same input appearance */
+.doctor-main input[type="text"],
+.doctor-main input[type="email"],
+.doctor-main input[type="password"],
+.doctor-main select,
+.doctor-main textarea,
+.doctor-main .form-control {
+  background: #f8fafc;
+  border-color: #e5e7eb;
+  border-radius: 8px;
+}
+
 /* Section title */
 .vc-section-title { font-size: 1.8rem; font-weight:800; color:var(--vc-primary); }
 

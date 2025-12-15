@@ -48,6 +48,7 @@
 
         <form method="POST" action="{{ route('patient.shop.place-order') }}" id="checkoutForm">
             @csrf
+            <input type="hidden" name="gateway" id="gatewayInput" value="">
             <div class="row g-4">
                 {{-- CỘT TRÁI: THÔNG TIN GIAO HÀNG --}}
                 <div class="col-lg-7">
@@ -114,6 +115,7 @@
                                 toán</h5>
                         </div>
                         <div class="card-body p-4">
+                            {{-- COD --}}
                             <div class="form-check mb-3">
                                 <input class="form-check-input" type="radio" name="payment_method" id="cod"
                                     value="cod" checked>
@@ -123,12 +125,35 @@
                                 <div class="text-muted small ms-4">Bạn sẽ thanh toán tiền mặt cho shipper khi nhận được
                                     hàng.</div>
                             </div>
-                            <div class="form-check disabled">
+
+                            {{-- Online --}}
+                            <div class="form-check">
                                 <input class="form-check-input" type="radio" name="payment_method" id="online"
-                                    value="online" disabled>
-                                <label class="form-check-label text-muted" for="online">
-                                    <i class="fas fa-qrcode me-2"></i>Thanh toán Online (Đang bảo trì)
+                                    value="online">
+                                <label class="form-check-label fw-bold" for="online">
+                                    <i class="fas fa-qrcode me-2"></i>Thanh toán Online (VNPay / MoMo)
                                 </label>
+                                <div class="text-muted small ms-4">Thanh toán ngay qua cổng VNPay hoặc MoMo.</div>
+                            </div>
+
+                            {{-- Hiển thị nút thanh toán online khi chọn --}}
+                            <div id="online-payment-options" class="mt-3" style="display: none;">
+                                <div class="row g-2">
+                                    {{-- VNPay --}}
+                                    <div class="col-6">
+                                        <button type="button" id="btnVnpayCheckout" class="btn btn-outline-primary w-100 py-2">
+                                            <img src="https://vnpay.vn/assets/images/logo-icon/logo-primary.svg" alt="VNPay" style="height: 20px;">
+                                            <div class="small mt-1">VNPAY</div>
+                                        </button>
+                                    </div>
+                                    {{-- MoMo --}}
+                                    <div class="col-6">
+                                        <button type="button" id="btnMomoCheckout" class="btn btn-outline-danger w-100 py-2">
+                                            <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo" style="height: 20px;">
+                                            <div class="small mt-1">MoMo</div>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -276,6 +301,28 @@
                     $('#finalTotal').text(subtotal.toLocaleString('vi-VN') + 'đ');
                     $('#hiddenCouponCode').val('');
                 }
+
+                // Toggle thanh toán online
+                $('input[name="payment_method"]').change(function() {
+                    if ($(this).val() === 'online') {
+                        $('#online-payment-options').slideDown();
+                    } else {
+                        $('#online-payment-options').slideUp();
+                    }
+                });
+
+                // Handle quick checkout via gateway buttons: set gateway and submit main checkout form
+                $('#btnVnpayCheckout').click(function() {
+                    $('#gatewayInput').val('vnpay');
+                    $('input[name="payment_method"][value="online"]').prop('checked', true).trigger('change');
+                    $('#checkoutForm').submit();
+                });
+
+                $('#btnMomoCheckout').click(function() {
+                    $('#gatewayInput').val('momo');
+                    $('input[name="payment_method"][value="online"]').prop('checked', true).trigger('change');
+                    $('#checkoutForm').submit();
+                });
             });
         </script>
     @endpush
