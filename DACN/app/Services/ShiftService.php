@@ -58,11 +58,12 @@ class ShiftService
      * @param int $ngayTrongTuan
      * @param string $batDau (H:i)
      * @param string $ketThuc (H:i)
+     * @param string|null $thangs Danh sách tháng áp dụng (comma-separated: "1,2,3"), null = tất cả tháng
      * @param int|null $excludeId
      * @return void
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function checkConflictForRecurring(int $bacSiId, int $ngayTrongTuan, string $batDau, string $ketThuc, ?int $excludeId = null): void
+    public function checkConflictForRecurring(int $bacSiId, int $ngayTrongTuan, string $batDau, string $ketThuc, ?string $thangs = null, ?int $excludeId = null): void
     {
         $query = \App\Models\LichLamViec::where('bac_si_id', $bacSiId)
             ->where('ngay_trong_tuan', $ngayTrongTuan);
@@ -76,13 +77,36 @@ class ShiftService
         $newStart = Carbon::createFromFormat('H:i', $batDau);
         $newEnd = Carbon::createFromFormat('H:i', $ketThuc);
 
+        // Chuyển tháng mới thành array
+        $newMonths = !empty($thangs) ? explode(',', $thangs) : null;
+
         foreach ($existing as $shift) {
+            // Kiểm tra xung đột tháng
+            $existingMonths = !empty($shift->thangs) ? explode(',', $shift->thangs) : null;
+
+            // Có xung đột tháng nếu:
+            // - Một trong 2 là null (tất cả tháng)
+            // - Hoặc có tháng chung
+            $hasMonthConflict = false;
+            if ($newMonths === null || $existingMonths === null) {
+                $hasMonthConflict = true; // Một trong 2 áp dụng tất cả tháng
+            } else {
+                // Kiểm tra có tháng chung không
+                $commonMonths = array_intersect($newMonths, $existingMonths);
+                $hasMonthConflict = !empty($commonMonths);
+            }
+
+            if (!$hasMonthConflict) {
+                continue; // Không xung đột nếu không có tháng chung
+            }
+
             $existingStart = $this->parseTimeFlexible($shift->thoi_gian_bat_dau);
             $existingEnd = $this->parseTimeFlexible($shift->thoi_gian_ket_thuc);
 
             if ($newStart->lt($existingEnd) && $newEnd->gt($existingStart)) {
+                $monthsText = $existingMonths ? ' (Tháng: ' . implode(', ', $existingMonths) . ')' : ' (Tất cả tháng)';
                 throw ValidationException::withMessages([
-                    'thoi_gian_bat_dau' => ["Lịch làm việc trùng với lịch hiện có: {$shift->thoi_gian_bat_dau} - {$shift->thoi_gian_ket_thuc}"],
+                    'thoi_gian_bat_dau' => ["Lịch làm việc trùng với lịch hiện có: {$shift->thoi_gian_bat_dau} - {$shift->thoi_gian_ket_thuc}{$monthsText}"],
                 ]);
             }
         }

@@ -83,7 +83,7 @@
                     <div class="row g-3">
 
                         {{-- Ngày trong tuần --}}
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Ngày trong tuần <span class="text-danger">*</span></label>
                             <select name="ngay_trong_tuan" class="form-select" required>
                                 <option value="">-- Chọn --</option>
@@ -97,20 +97,40 @@
                             </select>
                         </div>
 
-                        {{-- Bắt đầu --}}
+                        {{-- Tháng áp dụng --}}
                         <div class="col-md-3">
+                            <label class="form-label">Tháng áp dụng</label>
+                            <select name="thangs[]" class="form-select" multiple size="4" style="height: auto;">
+                                <option value="1">Tháng 1</option>
+                                <option value="2">Tháng 2</option>
+                                <option value="3">Tháng 3</option>
+                                <option value="4">Tháng 4</option>
+                                <option value="5">Tháng 5</option>
+                                <option value="6">Tháng 6</option>
+                                <option value="7">Tháng 7</option>
+                                <option value="8">Tháng 8</option>
+                                <option value="9">Tháng 9</option>
+                                <option value="10">Tháng 10</option>
+                                <option value="11">Tháng 11</option>
+                                <option value="12">Tháng 12</option>
+                            </select>
+                            <small class="text-muted">Giữ Ctrl/Cmd để chọn nhiều. Để trống = tất cả tháng</small>
+                        </div>
+
+                        {{-- Bắt đầu --}}
+                        <div class="col-md-2">
                             <label class="form-label">Giờ bắt đầu <span class="text-danger">*</span></label>
                             <input type="time" name="thoi_gian_bat_dau" class="form-control" required value="08:00">
                         </div>
 
                         {{-- Kết thúc --}}
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Giờ kết thúc <span class="text-danger">*</span></label>
                             <input type="time" name="thoi_gian_ket_thuc" class="form-control" required value="17:00">
                         </div>
 
                         {{-- Phòng --}}
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Phòng</label>
                             <select name="phong_id" class="form-select">
                                 <option value="">-- Không chỉ định --</option>
@@ -121,10 +141,10 @@
                         </div>
 
                         {{-- Nút --}}
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <label class="d-block">&nbsp;</label>
                             <button type="submit" class="btn btn-primary w-100">
-                                <i class="bi bi-plus-lg"></i> Thêm
+                                <i class="bi bi-plus-lg"></i>
                             </button>
                         </div>
 
@@ -146,6 +166,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Ngày</th>
+                                <th>Tháng áp dụng</th>
                                 <th>Giờ bắt đầu</th>
                                 <th>Giờ kết thúc</th>
                                 <th>Phòng</th>
@@ -173,6 +194,19 @@
                                         {{ $daysMap[$lich->ngay_trong_tuan] }}
                                     </td>
 
+                                    <td>
+                                        @if(empty($lich->thangs))
+                                            <span class="badge bg-secondary">Tất cả tháng</span>
+                                        @else
+                                            @php
+                                                $monthsList = explode(',', $lich->thangs);
+                                            @endphp
+                                            @foreach($monthsList as $m)
+                                                <span class="badge bg-info me-1">T{{ trim($m) }}</span>
+                                            @endforeach
+                                        @endif
+                                    </td>
+
                                     <td>{{ $lich->thoi_gian_bat_dau }}</td>
                                     <td>{{ $lich->thoi_gian_ket_thuc }}</td>
                                     <td>{{ $lich->phong->ten ?? '-' }}</td>
@@ -193,7 +227,7 @@
 
                                 {{-- EMPTY --}}
                                 <tr>
-                                    <td colspan="5" class="text-center py-5 text-muted">
+                                    <td colspan="6" class="text-center py-5 text-muted">
                                         <i class="bi bi-calendar-x fs-1 d-block mb-3"></i>
                                         <p class="mb-0">Chưa có lịch làm việc nào.</p>
                                     </td>

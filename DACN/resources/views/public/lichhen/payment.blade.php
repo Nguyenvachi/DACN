@@ -19,7 +19,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Thanh toán lịch hẹn #{{ $lichHen->id }}
+            Thanh toán lịch hẹn LH-{{ str_pad($lichHen->id, 4, '0', STR_PAD_LEFT) }}
         </h2>
     </x-slot>
 @endif

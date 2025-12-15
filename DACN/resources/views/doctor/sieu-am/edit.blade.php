@@ -287,6 +287,10 @@
                     </div>
                 </div>
 
+                {{-- Hidden fields - auto set values --}}
+                <input type="hidden" name="trang_thai" value="Hoàn thành">
+                <input type="hidden" name="ngay_thuc_hien" value="{{ now()->format('Y-m-d') }}">
+
                 {{-- Buttons --}}
                 <div class="d-flex gap-2 justify-content-end mb-4">
                     <a href="{{ route('doctor.benhan.edit', $sieuAm->benh_an_id) }}" class="btn btn-outline-secondary">

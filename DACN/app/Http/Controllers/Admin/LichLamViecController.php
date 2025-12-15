@@ -22,7 +22,7 @@ class LichLamViecController extends Controller
     {
         $phongs = \App\Models\Phong::orderBy('ten')->get();
         // Trả về view và truyền thông tin bác sĩ ra
-        return view('admin.lichlamviec.index', compact('bacSi','phongs'));
+        return view('admin.lichlamviec.index', compact('bacSi', 'phongs'));
     }
 
     public function store(Request $request, BacSi $bacSi)
@@ -30,21 +30,33 @@ class LichLamViecController extends Controller
         // Validate dữ liệu
         $validated = $request->validate([
             'ngay_trong_tuan' => 'required|integer|between:0,6',
+            'thangs' => 'nullable|array',
+            'thangs.*' => 'integer|between:1,12',
             'thoi_gian_bat_dau' => 'required|date_format:H:i',
             'thoi_gian_ket_thuc' => 'required|date_format:H:i|after:thoi_gian_bat_dau',
             'phong_id' => 'nullable|integer|exists:phongs,id',
         ]);
+
+        // Chuyển mảng tháng thành chuỗi comma-separated
+        $thangsString = !empty($validated['thangs']) ? implode(',', $validated['thangs']) : null;
 
         // Kiểm tra xung đột
         $this->shiftService->checkConflictForRecurring(
             $bacSi->id,
             $validated['ngay_trong_tuan'],
             $validated['thoi_gian_bat_dau'],
-            $validated['thoi_gian_ket_thuc']
+            $validated['thoi_gian_ket_thuc'],
+            $thangsString
         );
 
-        // Dùng relationship để tạo lịch làm việc mới cho bác sĩ này
-        $bacSi->lichLamViecs()->create($validated);
+        // Tạo lịch làm việc mới
+        $bacSi->lichLamViecs()->create([
+            'ngay_trong_tuan' => $validated['ngay_trong_tuan'],
+            'thangs' => $thangsString,
+            'thoi_gian_bat_dau' => $validated['thoi_gian_bat_dau'],
+            'thoi_gian_ket_thuc' => $validated['thoi_gian_ket_thuc'],
+            'phong_id' => $validated['phong_id'] ?? null,
+        ]);
 
         return back()->with('success', 'Đã thêm lịch làm việc thành công!');
     }
@@ -136,7 +148,7 @@ class LichLamViecController extends Controller
             $file = fopen('php://output', 'w');
 
             // BOM để Excel hiển thị đúng UTF-8
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
             // Header
             fputcsv($file, ['BÁO CÁO LỊCH LÀM VIỆC']);
@@ -198,4 +210,3 @@ class LichLamViecController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 }
-

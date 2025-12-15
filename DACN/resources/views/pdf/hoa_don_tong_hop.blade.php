@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Hóa đơn tổng hợp #{{ $hoaDon->id }}</title>
+    <title>Hóa đơn tổng hợp HD-{{ str_pad($hoaDon->id, 4, '0', STR_PAD_LEFT) }}</title>
     <style>
         /* 1. CẤU HÌNH STYLE ĐỒNG BỘ (Serif Font - Chuẩn Y Dược) */
         body {
@@ -140,7 +140,7 @@
                     <img src="{{ qr_code_data_uri('HD#' . $hoaDon->id . '|' . ($hoaDon->tong_tien ?? 0) . '|' . optional($hoaDon->updated_at ?? $hoaDon->created_at)->format('Y-m-d')) }}" alt="QR" style="width:65px;height:65px;object-fit:cover;" />
                 </div>
                 <div style="clear:both; text-align: right; margin-top: 5px; font-weight: bold; color: #cc0000;">
-                    #{{ $hoaDon->id }}
+                    HD-{{ str_pad($hoaDon->id, 4, '0', STR_PAD_LEFT) }}
                 </div>
             </td>
         </tr>
@@ -158,7 +158,7 @@
             <tr>
                 <td width="55%">
                     <span class="label">Họ tên/Name:</span>
-                    <span class="value">{{ optional($hoaDon->user)->name ?? '#' . $hoaDon->user_id }}</span>
+                    <span class="value">{{ optional($hoaDon->user)->name ?? 'BN-' . str_pad($hoaDon->user_id, 4, '0', STR_PAD_LEFT) }}</span>
                 </td>
                 <td width="20%">
                     <span class="label">Mã BN:</span>
@@ -175,7 +175,7 @@
                     {{ optional(optional($hoaDon->lichHen)->dichVu)->ten ?? 'Điều trị ngoại trú' }}
                 </td>
                 <td colspan="2">
-                    <span class="label">Mã Lịch Hẹn:</span> #{{ $hoaDon->lich_hen_id }}
+                    <span class="label">Mã Lịch Hẹn:</span> LH-{{ str_pad($hoaDon->lich_hen_id, 4, '0', STR_PAD_LEFT) }}
                 </td>
             </tr>
         </table>

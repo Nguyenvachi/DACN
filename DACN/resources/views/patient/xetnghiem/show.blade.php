@@ -10,7 +10,7 @@
                 <i class="fas fa-arrow-left me-1"></i>Quay lại
             </a>
             <h4 class="mb-0">
-                <i class="fas fa-flask me-2"></i>Kết Quả Xét Nghiệm #{{ str_pad($xetNghiem->id, 5, '0', STR_PAD_LEFT) }}
+                <i class="fas fa-flask me-2"></i>Kết Quả Xét Nghiệm XN-{{ str_pad($xetNghiem->id, 4, '0', STR_PAD_LEFT) }}
             </h4>
         </div>
         @if($xetNghiem->file_path)
@@ -84,9 +84,9 @@
 
                     @if($xetNghiem->benhAn)
                         <div class="mt-4 p-3 bg-light rounded">
-                            <p class="mb-2"><strong><i class="fas fa-link me-2"></i>Liên quan đến bệnh án:</strong></p>
+                            <p class="mb-2"><strong><i class="fas fa-link me-2"></i>Liên quan đến hồ sơ:</strong></p>
                             <a href="{{ route('patient.benhan.show', $xetNghiem->benhAn) }}" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-file-medical me-1"></i>Xem bệnh án
+                                <i class="fas fa-file-medical me-1"></i>Xem hồ sơ
                             </a>
                         </div>
                     @endif

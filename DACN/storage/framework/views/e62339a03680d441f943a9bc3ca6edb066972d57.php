@@ -1,10 +1,10 @@
-@extends('layouts.doctor')
 
-@section('title', 'Chỉ định thủ thuật')
 
-@section('content')
+<?php $__env->startSection('title', 'Chỉ định thủ thuật'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid py-4">
-    {{-- Header --}}
+    
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h4 class="mb-1 fw-bold" style="color: #1f2937;">
@@ -13,20 +13,20 @@
             </h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('doctor.benhan.edit', $benhAn->id) }}">Bệnh án #{{ $benhAn->id }}</a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('doctor.dashboard')); ?>">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('doctor.benhan.edit', $benhAn->id)); ?>">Bệnh án #<?php echo e($benhAn->id); ?></a></li>
                     <li class="breadcrumb-item active">Chỉ định thủ thuật</li>
                 </ol>
             </nav>
         </div>
-        <a href="{{ route('doctor.benhan.edit', $benhAn->id) }}" class="btn btn-outline-secondary">
+        <a href="<?php echo e(route('doctor.benhan.edit', $benhAn->id)); ?>" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-2"></i>Quay lại
         </a>
     </div>
 
     <div class="row">
         <div class="col-lg-8">
-            {{-- Thông tin bệnh nhân --}}
+            
             <div class="card vc-card mb-4">
                 <div class="card-body">
                     <h5 class="card-title mb-3">
@@ -35,16 +35,17 @@
                     </h5>
                     <div class="row">
                         <div class="col-md-6">
-                            <p class="mb-2"><strong>Họ tên:</strong> {{ $benhAn->user->name }}</p>
-                            <p class="mb-2"><strong>Mã BN:</strong> #{{ $benhAn->user->id }}</p>
-                            <p class="mb-2"><strong>Ngày khám:</strong> {{ \Carbon\Carbon::parse($benhAn->ngay_kham)->format('d/m/Y H:i') }}</p>
+                            <p class="mb-2"><strong>Họ tên:</strong> <?php echo e($benhAn->user->name); ?></p>
+                            <p class="mb-2"><strong>Mã BN:</strong> #<?php echo e($benhAn->user->id); ?></p>
+                            <p class="mb-2"><strong>Ngày khám:</strong> <?php echo e(\Carbon\Carbon::parse($benhAn->ngay_kham)->format('d/m/Y H:i')); ?></p>
                         </div>
                         <div class="col-md-6">
-                            <p class="mb-2"><strong>Chẩn đoán:</strong> {{ $benhAn->chuan_doan ?? 'Chưa có' }}</p>
-                            <p class="mb-2"><strong>Dịch vụ:</strong> {{ $benhAn->lichHen->dichVu->ten_dich_vu ?? 'N/A' }}</p>
+                            <p class="mb-2"><strong>Chẩn đoán:</strong> <?php echo e($benhAn->chuan_doan ?? 'Chưa có'); ?></p>
+                            <p class="mb-2"><strong>Dịch vụ:</strong> <?php echo e($benhAn->lichHen->dichVu->ten_dich_vu ?? 'N/A'); ?></p>
                             <p class="mb-2"><strong>Trạng thái:</strong>
-                                <span class="vc-badge vc-badge-{{ $benhAn->lichHen->trang_thai === 'Hoàn thành' ? 'success' : 'warning' }}">
-                                    {{ $benhAn->lichHen->trang_thai }}
+                                <span class="vc-badge vc-badge-<?php echo e($benhAn->lichHen->trang_thai === 'Hoàn thành' ? 'success' : 'warning'); ?>">
+                                    <?php echo e($benhAn->lichHen->trang_thai); ?>
+
                                 </span>
                             </p>
                         </div>
@@ -52,7 +53,7 @@
                 </div>
             </div>
 
-            {{-- Form chỉ định --}}
+            
             <div class="card vc-card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0">
@@ -61,43 +62,65 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('doctor.thu-thuat.store', $benhAn->id) }}" method="POST">
-                        @csrf
+                    <form action="<?php echo e(route('doctor.thu-thuat.store', $benhAn->id)); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
 
                         <div class="mb-3">
                             <label class="form-label">Loại thủ thuật <span class="text-danger">*</span></label>
                             <select name="dich_vu_id" class="form-select" required id="thuThuatSelect">
                                 <option value="">-- Chọn loại thủ thuật --</option>
-                                @foreach($dichVuThuThuat as $thuThuat)
-                                <option value="{{ $thuThuat->id }}" 
-                                        data-gia="{{ number_format($thuThuat->gia_tien, 0, ',', '.') }}"
-                                        {{ old('dich_vu_id') == $thuThuat->id ? 'selected' : '' }}>
-                                    {{ $thuThuat->ten }}
+                                <?php $__currentLoopData = $dichVuThuThuat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $thuThuat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($thuThuat->id); ?>" 
+                                        data-gia="<?php echo e(number_format($thuThuat->gia_tien, 0, ',', '.')); ?>"
+                                        <?php echo e(old('dich_vu_id') == $thuThuat->id ? 'selected' : ''); ?>>
+                                    <?php echo e($thuThuat->ten); ?>
+
                                 </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
-                            @error('dich_vu_id')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
+                            <?php $__errorArgs = ['dich_vu_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback d-block"><?php echo e($message); ?></div>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Chi tiết trước thủ thuật <span class="text-danger">*</span></label>
                             <textarea name="chi_tiet_truoc_thu_thuat" class="form-control" rows="4" required
-                                      placeholder="Ghi rõ: tình trạng bệnh nhân, lý do chỉ định, các xét nghiệm chuẩn bị...">{{ old('chi_tiet_truoc_thu_thuat') }}</textarea>
+                                      placeholder="Ghi rõ: tình trạng bệnh nhân, lý do chỉ định, các xét nghiệm chuẩn bị..."><?php echo e(old('chi_tiet_truoc_thu_thuat')); ?></textarea>
                             <small class="text-muted">Mô tả tình trạng bệnh nhân và lý do thực hiện thủ thuật</small>
-                            @error('chi_tiet_truoc_thu_thuat')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
+                            <?php $__errorArgs = ['chi_tiet_truoc_thu_thuat'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback d-block"><?php echo e($message); ?></div>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Ghi chú thêm</label>
                             <textarea name="ghi_chu" class="form-control" rows="2"
-                                      placeholder="Các lưu ý đặc biệt, yêu cầu chuẩn bị...">{{ old('ghi_chu') }}</textarea>
-                            @error('ghi_chu')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
+                                      placeholder="Các lưu ý đặc biệt, yêu cầu chuẩn bị..."><?php echo e(old('ghi_chu')); ?></textarea>
+                            <?php $__errorArgs = ['ghi_chu'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback d-block"><?php echo e($message); ?></div>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
                         <div class="alert alert-warning">
@@ -106,7 +129,7 @@
                         </div>
 
                         <div class="d-flex gap-2 justify-content-end">
-                            <a href="{{ route('doctor.benhan.edit', $benhAn->id) }}" class="btn btn-outline-secondary">
+                            <a href="<?php echo e(route('doctor.benhan.edit', $benhAn->id)); ?>" class="btn btn-outline-secondary">
                                 <i class="fas fa-times me-2"></i>Hủy
                             </a>
                             <button type="submit" class="btn vc-btn-primary">
@@ -119,7 +142,7 @@
         </div>
 
         <div class="col-lg-4">
-            {{-- Danh sách thủ thuật đã chỉ định --}}
+            
             <div class="card vc-card">
                 <div class="card-header">
                     <h5 class="mb-0">
@@ -128,75 +151,76 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    @if($existingThuThuat->isEmpty())
+                    <?php if($existingThuThuat->isEmpty()): ?>
                     <div class="text-center py-4">
                         <i class="fas fa-procedures fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Chưa có thủ thuật nào</p>
                     </div>
-                    @else
+                    <?php else: ?>
                     <div class="list-group list-group-flush">
-                        @foreach($existingThuThuat as $thuThuat)
+                        <?php $__currentLoopData = $existingThuThuat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $thuThuat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="list-group-item px-0">
                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h6 class="mb-0">{{ $thuThuat->ten_thu_thuat }}</h6>
-                                @if($thuThuat->trang_thai === 'Đã hoàn thành')
+                                <h6 class="mb-0"><?php echo e($thuThuat->ten_thu_thuat); ?></h6>
+                                <?php if($thuThuat->trang_thai === 'Đã hoàn thành'): ?>
                                 <span class="badge bg-success">
                                     <i class="fas fa-check me-1"></i>Hoàn thành
                                 </span>
-                                @elseif($thuThuat->trang_thai === 'Đang thực hiện')
+                                <?php elseif($thuThuat->trang_thai === 'Đang thực hiện'): ?>
                                 <span class="badge bg-warning">
                                     <i class="fas fa-clock me-1"></i>Đang thực hiện
                                 </span>
-                                @else
+                                <?php else: ?>
                                 <span class="badge bg-secondary">
                                     <i class="fas fa-hourglass-start me-1"></i>Chờ thực hiện
                                 </span>
-                                @endif
+                                <?php endif; ?>
                             </div>
 
-                            @if($thuThuat->chi_tiet_truoc_thu_thuat)
-                            <p class="mb-2 small text-muted">{{ Str::limit($thuThuat->chi_tiet_truoc_thu_thuat, 80) }}</p>
-                            @endif
+                            <?php if($thuThuat->chi_tiet_truoc_thu_thuat): ?>
+                            <p class="mb-2 small text-muted"><?php echo e(Str::limit($thuThuat->chi_tiet_truoc_thu_thuat, 80)); ?></p>
+                            <?php endif; ?>
 
                             <small class="text-muted">
                                 <i class="far fa-calendar me-1"></i>
-                                {{ \Carbon\Carbon::parse($thuThuat->ngay_chi_dinh)->format('d/m/Y H:i') }}
+                                <?php echo e(\Carbon\Carbon::parse($thuThuat->ngay_chi_dinh)->format('d/m/Y H:i')); ?>
+
                             </small>
 
-                            @if($thuThuat->gia_tien)
+                            <?php if($thuThuat->gia_tien): ?>
                             <div class="mt-2">
                                 <span class="badge bg-info">
                                     <i class="fas fa-money-bill-wave me-1"></i>
-                                    {{ number_format($thuThuat->gia_tien, 0, ',', '.') }} VNĐ
+                                    <?php echo e(number_format($thuThuat->gia_tien, 0, ',', '.')); ?> VNĐ
                                 </span>
-                                @if($thuThuat->trang_thai_thanh_toan === 'Đã thanh toán')
+                                <?php if($thuThuat->trang_thai_thanh_toan === 'Đã thanh toán'): ?>
                                 <span class="badge bg-success">
                                     <i class="fas fa-check-circle me-1"></i>Đã thanh toán
                                 </span>
-                                @else
+                                <?php else: ?>
                                 <span class="badge bg-warning">
                                     <i class="fas fa-clock me-1"></i>Chưa thanh toán
                                 </span>
-                                @endif
+                                <?php endif; ?>
                             </div>
-                            @endif
+                            <?php endif; ?>
 
-                            @if($thuThuat->trang_thai !== 'Chờ thực hiện')
+                            <?php if($thuThuat->trang_thai !== 'Chờ thực hiện'): ?>
                             <div class="mt-2">
-                                <a href="{{ route('doctor.thu-thuat.edit', $thuThuat->id) }}" 
+                                <a href="<?php echo e(route('doctor.thu-thuat.edit', $thuThuat->id)); ?>" 
                                    class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-eye me-1"></i>Xem chi tiết
                                 </a>
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
-            {{-- Các loại thủ thuật phổ biến --}}
+            
             <div class="card vc-card mt-3">
                 <div class="card-body">
                     <h6 class="card-title">
@@ -214,7 +238,7 @@
                 </div>
             </div>
 
-            {{-- Lưu ý an toàn --}}
+            
             <div class="card vc-card mt-3">
                 <div class="card-body">
                     <h6 class="card-title text-danger">
@@ -233,4 +257,6 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.doctor', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\WORKING\DACN\DACN\resources\views/doctor/thu-thuat/create.blade.php ENDPATH**/ ?>

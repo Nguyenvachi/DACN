@@ -97,8 +97,8 @@
                 </div>
                 <div class="card-body">
                     <p class="mb-2">
-                        <strong>Mã bệnh án:</strong><br>
-                        <span class="text-muted">#{{ $sieuAm->benhAn->id }}</span>
+                        <strong>Mã hồ sơ:</strong><br>
+                        <span class="text-muted">HS-{{ str_pad($sieuAm->benhAn->id, 4, '0', STR_PAD_LEFT) }}</span>
                     </p>
                     <p class="mb-2">
                         <strong>Ngày khám:</strong><br>

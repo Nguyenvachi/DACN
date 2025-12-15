@@ -79,6 +79,20 @@ class SieuAmController extends Controller
     }
 
     /**
+     * Hiển thị chi tiết siêu âm
+     */
+    public function show(SieuAm $sieuAm)
+    {
+        $bacSi = BacSi::where('user_id', Auth::id())->first();
+        if (!$bacSi) {
+            abort(403);
+        }
+
+        $sieuAm->load(['benhAn.user', 'bacSi']);
+        return view('doctor.sieu-am.show', compact('sieuAm'));
+    }
+
+    /**
      * Trang nhập kết quả siêu âm
      */
     public function edit(SieuAm $sieuAm)

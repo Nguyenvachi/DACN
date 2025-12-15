@@ -10,7 +10,7 @@
                 <i class="fas fa-arrow-left me-1"></i>Quay lại
             </a>
             <h4 class="mb-0">
-                <i class="fas fa-file-medical me-2"></i>Bệnh Án #{{ str_pad($benhAn->id, 5, '0', STR_PAD_LEFT) }}
+                <i class="fas fa-file-medical me-2"></i>Hồ Sơ Bệnh Án HS-{{ str_pad($benhAn->id, 4, '0', STR_PAD_LEFT) }}
             </h4>
         </div>
         <div>

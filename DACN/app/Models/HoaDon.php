@@ -54,6 +54,33 @@ class HoaDon extends Model
         static::saving(function ($hoaDon) {
             $hoaDon->updatePaymentStatus();
         });
+
+        // Tự động đồng bộ trạng thái thanh toán với lịch hẹn sau khi lưu
+        static::saved(function ($hoaDon) {
+            if ($hoaDon->lichHen) {
+                $lichHen = $hoaDon->lichHen;
+
+                // Cập nhật trạng thái thanh toán của lịch hẹn
+                if ($hoaDon->status === 'paid') {
+                    $lichHen->payment_status = self::STATUS_PAID_VN;
+                    if (!$lichHen->paid_at) {
+                        $lichHen->paid_at = now();
+                    }
+                } elseif ($hoaDon->status === 'partial') {
+                    $lichHen->payment_status = self::STATUS_PARTIAL_VN;
+                } elseif ($hoaDon->status === 'unpaid') {
+                    $lichHen->payment_status = self::STATUS_UNPAID_VN;
+                }
+
+                // Cập nhật phương thức thanh toán nếu có
+                if ($hoaDon->phuong_thuc) {
+                    $lichHen->payment_method = $hoaDon->phuong_thuc;
+                }
+
+                // Lưu mà không trigger event để tránh vòng lặp
+                $lichHen->saveQuietly();
+            }
+        });
     }
 
     /**

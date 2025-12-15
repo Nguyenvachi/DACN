@@ -14,20 +14,23 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('doctor.xetnghiem.index') }}">Xét nghiệm</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('doctor.xet-nghiem.index') }}">Xét nghiệm</a></li>
                     <li class="breadcrumb-item active">Chi tiết #XN{{ $xetNghiem->id }}</li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex gap-2">
+            <a href="{{ route('doctor.xet-nghiem.edit', $xetNghiem) }}" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Nhập kết quả
+            </a>
             @if($xetNghiem->trang_thai === 'completed' && $xetNghiem->file_path)
-            <a href="{{ route('doctor.xetnghiem.download', $xetNghiem->id) }}"
+            <a href="{{ route('doctor.xet-nghiem.download', $xetNghiem->id) }}"
                class="btn btn-success"
                target="_blank">
                 <i class="fas fa-download me-2"></i>Tải kết quả
             </a>
             @endif
-            <a href="{{ route('doctor.xetnghiem.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('doctor.xet-nghiem.index') }}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-2"></i>Quay lại
             </a>
         </div>
@@ -51,24 +54,9 @@
                             <p class="mb-2"><strong>Ngày chỉ định:</strong> {{ $xetNghiem->created_at->format('d/m/Y H:i') }}</p>
                         </div>
                         <div class="col-md-6">
-                            <p class="mb-2"><strong>Trạng thái:</strong>
-                                @if($xetNghiem->trang_thai === 'pending')
-                                    <span class="badge bg-warning">
-                                        <i class="fas fa-hourglass-half me-1"></i>Chờ thực hiện
-                                    </span>
-                                @elseif($xetNghiem->trang_thai === 'processing')
-                                    <span class="badge bg-info">
-                                        <i class="fas fa-spinner me-1"></i>Đang xử lý
-                                    </span>
-                                @elseif($xetNghiem->trang_thai === 'completed')
-                                    <span class="badge bg-success">
-                                        <i class="fas fa-check-circle me-1"></i>Đã có kết quả
-                                    </span>
-                                @endif
-                            </p>
-                            <p class="mb-2"><strong>Bệnh án:</strong>
-                                <a href="{{ route('doctor.benhan.show', $xetNghiem->benh_an_id) }}" class="text-primary">
-                                    #BA{{ $xetNghiem->benh_an_id }}
+                            <p class="mb-2"><strong>Mã hồ sơ:</strong>
+                                <a href="{{ route('doctor.benhan.edit', $xetNghiem->benh_an_id) }}" class="text-primary">
+                                    HS-{{ str_pad($xetNghiem->benh_an_id, 4, '0', STR_PAD_LEFT) }}
                                 </a>
                             </p>
                         </div>

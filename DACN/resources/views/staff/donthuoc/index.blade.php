@@ -164,12 +164,12 @@
                     <tbody>
                         @foreach($donThuocs as $dt)
                         <tr>
-                            <td><strong>#{{ str_pad($dt->id, 4, '0', STR_PAD_LEFT) }}</strong></td>
+                            <td><strong>DT-{{ str_pad($dt->id, 4, '0', STR_PAD_LEFT) }}</strong></td>
                             <td>
                                 <div>{{ $dt->benhAn->user->name ?? 'N/A' }}</div>
                                 <small class="text-muted">{{ $dt->benhAn->user->so_dien_thoai ?? '' }}</small>
                             </td>
-                            <td>{{ $dt->benhAn->bacSi->hoten ?? 'N/A' }}</td>
+                            <td>{{ $dt->benhAn->bacSi->ho_ten ?? 'N/A' }}</td>
                             <td>{{ $dt->created_at->format('d/m/Y') }}</td>
                             <td><span class="badge bg-info">{{ $dt->items->count() }} loại</span></td>
                             <td>

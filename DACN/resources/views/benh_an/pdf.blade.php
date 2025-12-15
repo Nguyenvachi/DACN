@@ -124,7 +124,7 @@
     <!-- Header -->
     <div class="header">
         <h1>BỆNH ÁN KHÁM BỆNH</h1>
-        <p>Mã bệnh án: #{{ $benh_an->id }}</p>
+        <p>Mã hồ sơ: HS-{{ str_pad($benh_an->id, 4, '0', STR_PAD_LEFT) }}</p>
         <p>Ngày in: {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
     </div>
 

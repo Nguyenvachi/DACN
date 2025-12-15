@@ -12,7 +12,7 @@
                 <div class="card-header bg-white">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="mb-1">Đơn thuốc #{{ $donThuoc->id }}</h5>
+                            <h5 class="mb-1">Đơn thuốc DT-{{ str_pad($donThuoc->id, 4, '0', STR_PAD_LEFT) }}</h5>
                             <p class="text-muted mb-0">
                                 <i class="fas fa-calendar me-2"></i>{{ $donThuoc->created_at?->format('d/m/Y') }}
                             </p>
@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <p class="mb-1"><strong><i class="fas fa-calendar-check me-2"></i>Ngày khám:</strong> {{ $donThuoc->benhAn->ngay_kham?->format('d/m/Y') ?? 'N/A' }}</p>
-                                    <p class="mb-0"><strong><i class="fas fa-file-medical me-2"></i>Mã bệnh án:</strong> #{{ $donThuoc->benh_an_id }}</p>
+                                    <p class="mb-0"><strong><i class="fas fa-file-medical me-2"></i>Mã hồ sơ:</strong> HS-{{ str_pad($donThuoc->benh_an_id, 4, '0', STR_PAD_LEFT) }}</p>
                                 </div>
                             </div>
                         </div>

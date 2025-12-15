@@ -73,7 +73,7 @@
                                 <option value="">-- Không chọn dịch vụ cụ thể --</option>
                                 @foreach($dichVuNoiSoi as $dichVu)
                                 <option value="{{ $dichVu->id }}" {{ old('dich_vu_id') == $dichVu->id ? 'selected' : '' }}>
-                                    {{ $dichVu->ten_dich_vu }} - {{ number_format($dichVu->gia_tien, 0, ',', '.') }} VNĐ
+                                    {{ $dichVu->ten_dich_vu }}
                                 </option>
                                 @endforeach
                             </select>

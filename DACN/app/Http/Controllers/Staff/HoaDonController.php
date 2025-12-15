@@ -194,7 +194,7 @@ class HoaDonController extends Controller
         $hoaDon->so_tien_da_thanh_toan += $data['so_tien'];
         $hoaDon->phuong_thuc = 'Tiền mặt';
         $hoaDon->ghi_chu = trim(($hoaDon->ghi_chu ? $hoaDon->ghi_chu . ' | ' : '') . ($data['ghi_chu'] ?? ''));
-        $hoaDon->save();
+        $hoaDon->save(); // Tự động cập nhật status + đồng bộ LichHen qua model event
 
         return back()->with('success', 'Đã ghi nhận thanh toán tiền mặt (#' . $payment->id . ')');
     }

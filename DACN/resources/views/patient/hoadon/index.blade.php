@@ -108,7 +108,7 @@
                         <tbody>
                             @forelse($hoaDons as $hoaDon)
                                 <tr>
-                                    <td><strong>#{{ $hoaDon->id }}</strong></td>
+                                    <td><strong>HD-{{ str_pad($hoaDon->id, 4, '0', STR_PAD_LEFT) }}</strong></td>
                                     <td>{{ $hoaDon->created_at?->format('d/m/Y H:i') }}</td>
                                     <td>
                                         @if($hoaDon->lichHen)

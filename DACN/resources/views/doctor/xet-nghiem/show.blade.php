@@ -17,7 +17,7 @@
                             <i class="bi bi-pencil"></i> Nhập Kết Quả
                         </a>
                         @endif
-                        <a href="{{ route('doctor.benh-an.show', $xetNghiem->benh_an_id) }}" class="btn btn-sm btn-light">
+                        <a href="{{ route('doctor.benhan.edit', $xetNghiem->benh_an_id) }}" class="btn btn-sm btn-light">
                             <i class="bi bi-arrow-left"></i> Quay lại
                         </a>
                     </div>
@@ -97,41 +97,19 @@
                         <table class="table table-bordered table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th width="30%">Chỉ Số</th>
-                                    <th width="20%" class="text-center">Kết Quả</th>
+                                    <th width="35%">Chỉ Số</th>
+                                    <th width="25%" class="text-center">Kết Quả</th>
                                     <th width="15%" class="text-center">Đơn Vị</th>
                                     <th width="25%" class="text-center">Giá Trị Bình Thường</th>
-                                    <th width="10%" class="text-center">Đánh Giá</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($xetNghiem->chi_so as $chiSo)
-                                @php
-                                    // Simple comparison logic - can be enhanced
-                                    $status = '';
-                                    if (!empty($chiSo['ket_qua']) && !empty($chiSo['gia_tri_bt'])) {
-                                        $ketQua = (float)$chiSo['ket_qua'];
-                                        $giaTri = $chiSo['gia_tri_bt'];
-                                        
-                                        if (preg_match('/(\d+\.?\d*)\s*-\s*(\d+\.?\d*)/', $giaTri, $matches)) {
-                                            $min = (float)$matches[1];
-                                            $max = (float)$matches[2];
-                                            if ($ketQua < $min) {
-                                                $status = '<span class="badge bg-primary">Thấp</span>';
-                                            } elseif ($ketQua > $max) {
-                                                $status = '<span class="badge bg-danger">Cao</span>';
-                                            } else {
-                                                $status = '<span class="badge bg-success">BT</span>';
-                                            }
-                                        }
-                                    }
-                                @endphp
                                 <tr>
                                     <td>{{ $chiSo['ten'] ?? '' }}</td>
                                     <td class="text-center"><strong>{{ $chiSo['ket_qua'] ?? '' }}</strong></td>
                                     <td class="text-center">{{ $chiSo['don_vi'] ?? '' }}</td>
                                     <td class="text-center">{{ $chiSo['gia_tri_bt'] ?? '' }}</td>
-                                    <td class="text-center">{!! $status !!}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

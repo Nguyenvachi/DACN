@@ -17,6 +17,15 @@ class BenhAn extends Model
         'dieu_tri',
         'ghi_chu',
         'trang_thai',
+        // Vital signs
+        'huyet_ap',
+        'nhip_tim',
+        'nhiet_do',
+        'nhip_tho',
+        'can_nang',
+        'chieu_cao',
+        'bmi',
+        'spo2',
     ];
 
     protected $casts = [

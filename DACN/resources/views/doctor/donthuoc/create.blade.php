@@ -56,7 +56,7 @@
     @if($existingDonThuoc)
     <div class="alert alert-warning" role="alert">
         <i class="fas fa-exclamation-triangle me-2"></i>
-        <strong>Đã có đơn thuốc!</strong> Bệnh án này đã có đơn thuốc #{{ $existingDonThuoc->id }}.
+        <strong>Đã có đơn thuốc!</strong> Bệnh án này đã có đơn thuốc DT-{{ str_pad($existingDonThuoc->id, 4, '0', STR_PAD_LEFT) }}.
         Nếu lưu lại, đơn cũ sẽ bị ghi đè.
         <a href="{{ route('doctor.donthuoc.show', $existingDonThuoc->id) }}" class="alert-link ms-2" target="_blank">
             Xem đơn cũ <i class="fas fa-external-link-alt ms-1"></i>

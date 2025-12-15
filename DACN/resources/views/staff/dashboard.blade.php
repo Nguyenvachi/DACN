@@ -1,308 +1,263 @@
 @extends('layouts.staff')
 
-@section('page-title', 'Dashboard Nhân viên')
+@section('page-title', 'Tổng Quan')
 
 @section('content')
-{{-- ENHANCED: Modern dashboard with VietCare design (Parent: staff/dashboard.blade.php) --}}
 
-    @if (!$nhanVien)
-        <x-alert type="warning" title="Chưa có hồ sơ nhân viên" :dismissible="false">
-            Tài khoản của bạn chưa được liên kết với hồ sơ nhân viên. Vui lòng liên hệ quản trị viên.
-        </x-alert>
-    @else
-        @php
-            $roleLabels = [
-                'admin' => 'Quản trị',
-                'doctor' => 'Bác sĩ',
-                'staff' => 'Nhân viên',
-                'patient' => 'Bệnh nhân',
-            ];
-            $currentRole = optional($nhanVien->user)->role;
-            $currentRoleLabel = $roleLabels[$currentRole ?? ''] ?? ($currentRole ? ucfirst($currentRole) : 'Nhân viên');
-        @endphp
-        {{-- Welcome Section --}}
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    <div class="card-body text-white p-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h2 class="mb-1 fw-bold">👋 Xin chào, {{ $nhanVien->ho_ten }}!</h2>
-                                <p class="mb-0 opacity-90">{{ $currentRoleLabel }} • {{ now()->isoFormat('dddd, D MMMM YYYY') }}</p>
-                            </div>
-                            <div class="text-end d-none d-md-block">
-                                <div class="fs-1 fw-bold">{{ now()->format('H:i') }}</div>
-                                <small class="opacity-90">Thời gian hiện tại</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+@if (!$nhanVien)
+    <x-alert type="warning" title="Chưa có hồ sơ nhân viên" :dismissible="false">
+        Tài khoản của bạn chưa được liên kết với hồ sơ nhân viên. Vui lòng liên hệ quản trị viên.
+    </x-alert>
+@else
+    @php
+        $roleLabels = [
+            'admin' => 'Quản trị viên',
+            'doctor' => 'Bác sĩ',
+            'staff' => 'Nhân viên',
+            'patient' => 'Bệnh nhân',
+        ];
+        $currentRole = optional($nhanVien->user)->role;
+        $currentRoleLabel = $roleLabels[$currentRole ?? ''] ?? 'Nhân viên';
+    @endphp
 
-        {{-- Quick Stats --}}
-        <div class="row mb-4 g-4">
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 h-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
-                    <div class="card-body text-white p-4">
-                        <div class="d-flex align-items-center">
-                            <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                                <i class="bi bi-calendar-check fs-2"></i>
-                            </div>
-                            <div class="ms-3">
-                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Lịch hẹn hôm nay</p>
-                                <h3 class="mb-0 fw-bold">{{ $statistics['lich_hen_hom_nay'] ?? 0 }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 h-100" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
-                    <div class="card-body text-white p-4">
-                        <a href="{{ route('staff.donthuoc.dang-cho') }}" class="text-white text-decoration-none">
+    {{-- Header Section --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm overflow-hidden" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
                             <div class="d-flex align-items-center">
-                                <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                                    <i class="bi bi-prescription2 fs-2"></i>
+                                <div class="me-3">
+                                    <div class="rounded-circle bg-white bg-opacity-25 p-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                                        <i class="bi bi-person-circle fs-1 text-white"></i>
+                                    </div>
                                 </div>
-                                <div class="ms-3">
-                                    <p class="text-white text-opacity-75 mb-1 small fw-medium">Đơn thuốc chờ cấp</p>
-                                    <h3 class="mb-0 fw-bold">{{ \App\Models\DonThuoc::whereNull('ngay_cap_thuoc')->count() }}</h3>
+                                <div class="text-white">
+                                    <h3 class="mb-1 fw-bold">Xin chào, {{ $nhanVien->ho_ten }}! 👋</h3>
+                                    <p class="mb-0 opacity-90 fs-6">
+                                        <span class="badge bg-white bg-opacity-25 text-white me-2">{{ $currentRoleLabel }}</span>
+                                        {{ now()->locale('vi')->isoFormat('dddd, D MMMM YYYY') }}
+                                    </p>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 h-100" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);">
-                    <div class="card-body text-white p-4">
-                        <div class="d-flex align-items-center">
-                            <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                                <i class="bi bi-exclamation-triangle fs-2"></i>
-                            </div>
-                            <div class="ms-3">
-                                <p class="text-white text-opacity-75 mb-1 small fw-medium">HĐ chưa thanh toán</p>
-                                <h3 class="mb-0 fw-bold">{{ $statistics['hoa_don_chua_thanh_toan'] ?? 0 }}</h3>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 h-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
-                    <div class="card-body text-white p-4">
-                        <div class="d-flex align-items-center">
-                            <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                                <i class="bi bi-check-circle fs-2"></i>
-                            </div>
-                            <div class="ms-3">
-                                <p class="text-white text-opacity-75 mb-1 small fw-medium">Đã cấp hôm nay</p>
-                                <h3 class="mb-0 fw-bold">{{ \App\Models\DonThuoc::whereDate('ngay_cap_thuoc', today())->count() }}</h3>
+                        <div class="col-lg-4 text-lg-end text-start mt-3 mt-lg-0">
+                            <div class="text-white">
+                                <div class="fs-2 fw-bold mb-1" id="currentTime">{{ now()->format('H:i:s') }}</div>
+                                <small class="opacity-90">Giờ hệ thống</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        {{-- Main Content Row --}}
-        <div class="row">
-            {{-- Bệnh án cần tạo hóa đơn --}}
-            <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-0 pt-4 pb-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0 fw-bold">
-                                <i class="bi bi-receipt text-warning me-2"></i>Bệnh án cần tạo hóa đơn
-                            </h5>
-                            <span class="badge bg-warning">{{ $benhAnCanXuLy->count() }}</span>
+    {{-- Statistics Cards --}}
+    <div class="row g-3 mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                 style="width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <i class="bi bi-calendar-check text-white fs-3"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <small class="text-muted text-uppercase d-block mb-1" style="font-size: 0.75rem; font-weight: 600;">Lịch hẹn hôm nay</small>
+                            <h3 class="mb-0 fw-bold">{{ $statistics['lich_hen_hom_nay'] ?? 0 }}</h3>
                         </div>
                     </div>
-                    <div class="card-body">
-                        @if ($benhAnCanXuLy->isEmpty())
-                            <x-empty-state
-                                icon="bi-check-circle"
-                                title="Không có bệnh án cần xử lý"
-                                description="Tất cả bệnh án đã hoàn thành đều có hóa đơn!"
-                            />
-                        @else
-                            <div class="list-group list-group-flush">
-                                @foreach ($benhAnCanXuLy as $ba)
-                                    <div class="list-group-item px-0">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h6 class="mb-1">
-                                                    <i class="bi bi-person-circle text-primary me-1"></i>
-                                                    {{ $ba->benhNhan->name ?? 'N/A' }}
-                                                </h6>
-                                                <p class="mb-1 small text-muted">
-                                                    <i class="bi bi-calendar3 me-1"></i>{{ $ba->ngay_kham }}
-                                                    <span class="mx-2">•</span>
-                                                    <i class="bi bi-person-badge me-1"></i>{{ $ba->bacSi->ten ?? 'N/A' }}
-                                                </p>
-                                                <p class="mb-0 small">
-                                                    <span class="badge bg-success">Hoàn thành khám</span>
-                                                </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body p-4">
+                    <a href="{{ route('staff.donthuoc.dang-cho') }}" class="text-decoration-none text-dark">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                     style="width: 56px; height: 56px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                                    <i class="bi bi-prescription2 text-white fs-3"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <small class="text-muted text-uppercase d-block mb-1" style="font-size: 0.75rem; font-weight: 600;">Đơn thuốc chờ cấp</small>
+                                <h3 class="mb-0 fw-bold">{{ \App\Models\DonThuoc::whereNull('ngay_cap_thuoc')->count() }}</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                 style="width: 56px; height: 56px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                                <i class="bi bi-exclamation-triangle text-white fs-3"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <small class="text-muted text-uppercase d-block mb-1" style="font-size: 0.75rem; font-weight: 600;">HĐ chưa thanh toán</small>
+                            <h3 class="mb-0 fw-bold">{{ $statistics['hoa_don_chua_thanh_toan'] ?? 0 }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 hover-lift">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                 style="width: 56px; height: 56px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                                <i class="bi bi-check-circle text-white fs-3"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <small class="text-muted text-uppercase d-block mb-1" style="font-size: 0.75rem; font-weight: 600;">Đã cấp hôm nay</small>
+                            <h3 class="mb-0 fw-bold">{{ \App\Models\DonThuoc::whereDate('ngay_cap_thuoc', today())->count() }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div class="row g-4 mb-4">
+        {{-- Left Column --}}
+        <div class="col-lg-6">
+            {{-- Bệnh án cần tạo hóa đơn --}}
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-receipt text-warning me-2"></i>Bệnh án cần xử lý
+                        </h5>
+                        <span class="badge bg-warning rounded-pill px-3">{{ $benhAnCanXuLy->count() }}</span>
+                    </div>
+                </div>
+                <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                    @if ($benhAnCanXuLy->isEmpty())
+                        <div class="text-center py-5">
+                            <i class="bi bi-check-circle-fill text-success d-block mb-3" style="font-size: 3rem;"></i>
+                            <h6 class="text-muted">Không có bệnh án cần xử lý</h6>
+                            <p class="text-muted small mb-0">Tất cả bệnh án đã có hóa đơn</p>
+                        </div>
+                    @else
+                        <div class="list-group list-group-flush">
+                            @foreach ($benhAnCanXuLy as $ba)
+                                <div class="list-group-item border-0 px-0 py-3">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                                <i class="bi bi-person-fill text-primary fs-5"></i>
                                             </div>
-                                            <div class="btn-group">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1 fw-semibold">{{ $ba->benhNhan->name ?? 'N/A' }}</h6>
+                                            <div class="small text-muted mb-2">
+                                                <i class="bi bi-calendar3 me-1"></i>{{ $ba->ngay_kham }}
+                                                <span class="mx-2">•</span>
+                                                <i class="bi bi-person-badge me-1"></i>{{ $ba->bacSi->ho_ten ?? 'N/A' }}
+                                            </div>
+                                            <span class="badge bg-success-subtle text-success border border-success">
+                                                <i class="bi bi-check-circle me-1"></i>Hoàn thành khám
+                                            </span>
+                                        </div>
+                                        <div class="flex-shrink-0 ms-3">
+                                            <div class="btn-group-vertical btn-group-sm">
                                                 <a href="{{ route('staff.benhan.toa-thuoc', $ba) }}" 
-                                                   class="btn btn-sm btn-info" title="Xem toa thuốc">
-                                                    <i class="bi bi-prescription2"></i> Toa
+                                                   class="btn btn-outline-info" title="Xem toa thuốc">
+                                                    <i class="bi bi-prescription2 me-1"></i>Toa
                                                 </a>
                                                 <a href="{{ route('staff.hoadon.create-from-benh-an', $ba) }}" 
-                                                   class="btn btn-sm btn-warning" title="Tạo hóa đơn">
-                                                    <i class="bi bi-receipt"></i> HĐ
+                                                   class="btn btn-outline-warning" title="Tạo hóa đơn">
+                                                    <i class="bi bi-receipt me-1"></i>HĐ
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
-                            @if($statistics['benh_an_can_tao_hoa_don'] > 5)
-                                <div class="text-center mt-3">
-                                    <a href="{{ route('admin.benhan.index') }}" class="btn btn-sm btn-outline-primary">
-                                        Xem tất cả {{ $statistics['benh_an_can_tao_hoa_don'] }} bệnh án
-                                    </a>
                                 </div>
-                            @endif
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            {{-- Ca làm việc hôm nay --}}
-            <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-0 pt-4 pb-3">
-                        <h5 class="mb-0 fw-bold">
-                            <i class="bi bi-calendar-check text-primary me-2"></i>Ca làm việc hôm nay
-                        </h5>
-                        <small class="text-muted">{{ now()->format('d/m/Y') }}</small>
-                    </div>
-                    <div class="card-body">
-                        @if ($caHomNay->isEmpty())
-                            <x-empty-state
-                                icon="bi-calendar-x"
-                                title="Không có ca làm việc"
-                                description="Bạn không có ca làm việc hôm nay!"
-                            />
-                        @else
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th><i class="bi bi-clock me-1"></i>Giờ bắt đầu</th>
-                                            <th><i class="bi bi-clock-fill me-1"></i>Giờ kết thúc</th>
-                                            <th><i class="bi bi-sticky me-1"></i>Ghi chú</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($caHomNay as $ca)
-                                            <tr>
-                                                <td><span class="badge bg-primary">{{ \Carbon\Carbon::parse($ca->bat_dau)->format('H:i') }}</span></td>
-                                                <td><span class="badge bg-success">{{ \Carbon\Carbon::parse($ca->ket_thuc)->format('H:i') }}</span></td>
-                                                <td>{{ $ca->ghi_chu ?? '—' }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                            @endforeach
+                        </div>
+                        @if($statistics['benh_an_can_tao_hoa_don'] > 5)
+                            <div class="text-center border-top pt-3 mt-2">
+                                <a href="{{ route('admin.benhan.index') }}" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-arrow-right-circle me-1"></i>
+                                    Xem tất cả {{ $statistics['benh_an_can_tao_hoa_don'] }} bệnh án
+                                </a>
                             </div>
                         @endif
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
 
-        {{-- Quick Actions --}}
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-white border-0 pt-4 pb-3">
-                        <h5 class="mb-0 fw-bold">
-                            <i class="bi bi-lightning-charge text-warning me-2"></i>Thao tác nhanh
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-3">
-                                <a href="{{ route('staff.checkin.index') }}" class="btn btn-outline-primary w-100 py-3">
-                                    <i class="bi bi-person-check-fill d-block fs-3 mb-2"></i>
-                                    Check-in bệnh nhân
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="{{ route('staff.hoadon.index') }}" class="btn btn-outline-success w-100 py-3">
-                                    <i class="bi bi-receipt d-block fs-3 mb-2"></i>
-                                    Quản lý hóa đơn
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="{{ route('admin.benhan.index') }}" class="btn btn-outline-info w-100 py-3">
-                                    <i class="bi bi-journal-medical d-block fs-3 mb-2"></i>
-                                    Danh sách bệnh án
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="{{ route('staff.queue.index') }}" class="btn btn-outline-warning w-100 py-3">
-                                    <i class="bi bi-list-ol d-block fs-3 mb-2"></i>
-                                    Hàng đợi khám
-                                </a>
+        {{-- Right Column --}}
+        <div class="col-lg-6">
+            {{-- Thông tin cá nhân --}}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-person-badge text-success me-2"></i>Thông tin cá nhân
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-person-circle fs-2 text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted text-uppercase d-block mb-1" style="font-size: 0.7rem;">Họ và tên</small>
+                                    <div class="fw-semibold">{{ $nhanVien->ho_ten }}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Thông tin cá nhân --}}
-        <div class="row mb-4">
-            <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-0 pt-4 pb-3">
-                        <h5 class="mb-0 fw-bold">
-                            <i class="bi bi-person-badge text-success me-2"></i>Thông tin cá nhân
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <div class="d-flex align-items-center p-3 bg-light rounded">
-                                    <i class="bi bi-person-circle fs-3 text-primary me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Họ tên</small>
-                                        <strong>{{ $nhanVien->ho_ten }}</strong>
-                                    </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-briefcase fs-2 text-success"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted text-uppercase d-block mb-1" style="font-size: 0.7rem;">Chức vụ</small>
+                                    <div class="fw-semibold">{{ $currentRoleLabel }}</div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="d-flex align-items-center p-3 bg-light rounded">
-                                    <i class="bi bi-briefcase fs-3 text-success me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Chức vụ</small>
-                                        <strong>{{ $currentRoleLabel }}</strong>
-                                    </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-envelope fs-4 text-info"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted text-uppercase d-block mb-1" style="font-size: 0.7rem;">Email</small>
+                                    <div class="fw-semibold small">{{ $nhanVien->email_cong_viec }}</div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center p-3 bg-light rounded">
-                                    <i class="bi bi-envelope fs-4 text-info me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Email</small>
-                                        <strong class="small">{{ $nhanVien->email_cong_viec }}</strong>
-                                    </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-telephone fs-4 text-warning"></i>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center p-3 bg-light rounded">
-                                    <i class="bi bi-telephone fs-4 text-warning me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Điện thoại</small>
-                                        <strong>{{ $nhanVien->so_dien_thoai ?? 'Chưa cập nhật' }}</strong>
-                                    </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted text-uppercase d-block mb-1" style="font-size: 0.7rem;">Điện thoại</small>
+                                    <div class="fw-semibold">{{ $nhanVien->so_dien_thoai ?? 'Chưa cập nhật' }}</div>
                                 </div>
                             </div>
                         </div>
@@ -310,64 +265,143 @@
                 </div>
             </div>
 
-        {{-- Lịch tuần này --}}
-        <div class="card border-0 shadow-sm" id="lich">
-            <div class="card-header bg-white border-0 pt-4 pb-3">
-                <h5 class="mb-0 fw-bold">
-                    <i class="bi bi-calendar3 text-info me-2"></i>Lịch làm việc tuần này
-                </h5>
-                <small class="text-muted">Từ {{ \Carbon\Carbon::now()->startOfWeek()->format('d/m') }} đến {{ \Carbon\Carbon::now()->endOfWeek()->format('d/m/Y') }}</small>
+            {{-- Quick Actions --}}
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-lightning-charge text-warning me-2"></i>Thao tác nhanh
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <a href="{{ route('staff.checkin.index') }}" class="btn btn-outline-primary w-100 py-3 d-flex flex-column align-items-center">
+                                <i class="bi bi-person-check-fill fs-2 mb-2"></i>
+                                <span class="small">Check-in</span>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ route('staff.hoadon.index') }}" class="btn btn-outline-success w-100 py-3 d-flex flex-column align-items-center">
+                                <i class="bi bi-receipt fs-2 mb-2"></i>
+                                <span class="small">Hóa đơn</span>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ route('admin.benhan.index') }}" class="btn btn-outline-info w-100 py-3 d-flex flex-column align-items-center">
+                                <i class="bi bi-journal-medical fs-2 mb-2"></i>
+                                <span class="small">Bệnh án</span>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ route('staff.queue.index') }}" class="btn btn-outline-warning w-100 py-3 d-flex flex-column align-items-center">
+                                <i class="bi bi-list-ol fs-2 mb-2"></i>
+                                <span class="small">Hàng đợi</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                @if ($caTuanNay->isEmpty())
-                    <x-empty-state
-                        icon="bi-calendar2-x"
-                        title="Không có lịch"
-                        description="Không có ca làm việc nào trong tuần này."
-                    />
-                @else
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th><i class="bi bi-calendar3 me-1"></i>Ngày</th>
-                                    <th><i class="bi bi-calendar-day me-1"></i>Thứ</th>
-                                    <th><i class="bi bi-clock me-1"></i>Giờ làm việc</th>
-                                    <th><i class="bi bi-sticky me-1"></i>Ghi chú</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($caTuanNay as $ca)
-                                    <tr class="{{ \Carbon\Carbon::parse($ca->ngay)->isToday() ? 'table-warning' : '' }}">
-                                        <td>
-                                            <strong>{{ \Carbon\Carbon::parse($ca->ngay)->format('d/m/Y') }}</strong>
-                                            @if(\Carbon\Carbon::parse($ca->ngay)->isToday())
-                                                <span class="badge bg-warning ms-2">Hôm nay</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ \Carbon\Carbon::parse($ca->ngay)->isoFormat('dddd') }}</td>
-                                        <td>
-                                            <span class="badge bg-primary">{{ \Carbon\Carbon::parse($ca->bat_dau)->format('H:i') }}</span>
-                                            <i class="bi bi-arrow-right mx-1"></i>
-                                            <span class="badge bg-success">{{ \Carbon\Carbon::parse($ca->ket_thuc)->format('H:i') }}</span>
-                                        </td>
-                                        <td>{{ $ca->ghi_chu ?? '—' }}</td>
+        </div>
+    </div>
+
+    {{-- Lịch làm việc tuần này --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1 fw-bold">
+                                <i class="bi bi-calendar3 text-info me-2"></i>Lịch làm việc tuần này
+                            </h5>
+                            <small class="text-muted">
+                                Từ {{ \Carbon\Carbon::now()->startOfWeek()->format('d/m') }} 
+                                đến {{ \Carbon\Carbon::now()->endOfWeek()->format('d/m/Y') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if ($caTuanNay->isEmpty())
+                        <div class="text-center py-5">
+                            <i class="bi bi-calendar2-x text-muted d-block mb-3" style="font-size: 3rem;"></i>
+                            <h6 class="text-muted">Không có ca làm việc</h6>
+                            <p class="text-muted small mb-0">Không có lịch nào trong tuần này</p>
+                        </div>
+                    @else
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th><i class="bi bi-calendar3 me-1"></i>Ngày</th>
+                                        <th><i class="bi bi-calendar-day me-1"></i>Thứ</th>
+                                        <th><i class="bi bi-clock me-1"></i>Giờ làm việc</th>
+                                        <th><i class="bi bi-sticky me-1"></i>Ghi chú</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @endif
+                                </thead>
+                                <tbody>
+                                    @foreach ($caTuanNay as $ca)
+                                        <tr class="{{ \Carbon\Carbon::parse($ca->ngay)->isToday() ? 'table-warning' : '' }}">
+                                            <td>
+                                                <strong>{{ \Carbon\Carbon::parse($ca->ngay)->format('d/m/Y') }}</strong>
+                                                @if(\Carbon\Carbon::parse($ca->ngay)->isToday())
+                                                    <span class="badge bg-warning text-dark ms-2">
+                                                        <i class="bi bi-star-fill me-1"></i>Hôm nay
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::parse($ca->ngay)->locale('vi')->isoFormat('dddd') }}</td>
+                                            <td>
+                                                <span class="badge bg-primary rounded-pill">{{ \Carbon\Carbon::parse($ca->bat_dau)->format('H:i') }}</span>
+                                                <i class="bi bi-arrow-right mx-2"></i>
+                                                <span class="badge bg-success rounded-pill">{{ \Carbon\Carbon::parse($ca->ket_thuc)->format('H:i') }}</span>
+                                            </td>
+                                            <td>{{ $ca->ghi_chu ?? '—' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
-    @endif
+    </div>
+@endif
+
 @endsection
 
-<style>
-.card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+@push('scripts')
+<script>
+// Update time every second
+function updateTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
 }
-.card:hover {
-    transform: translateY(-2px);
+
+setInterval(updateTime, 1000);
+updateTime();
+</script>
+@endpush
+
+<style>
+.hover-lift {
+    transition: all 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+.card {
+    transition: all 0.2s ease;
+}
+.list-group-item {
+    transition: background-color 0.2s ease;
+}
+.list-group-item:hover {
+    background-color: #f8f9fa;
 }
 </style>

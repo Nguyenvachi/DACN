@@ -51,6 +51,103 @@
         required>
 </div>
 
+{{-- Chỉ số sinh tồn --}}
+<div class="mt-4">
+    <h5 class="mb-3"><i class="bi bi-heart-pulse text-danger me-2"></i>Chỉ số sinh tồn <span class="badge bg-secondary">Chỉ xem</span></h5>
+    <div class="alert alert-info mb-3">
+        <i class="bi bi-info-circle me-2"></i>Chỉ bác sĩ khám mới có thể nhập chỉ số sinh tồn. Admin/Staff chỉ được xem.
+    </div>
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Huyết áp</label>
+            <input type="text" class="form-control bg-light" 
+                   value="{{ old('huyet_ap', $record->huyet_ap ?? '--') }}"
+                   readonly>
+            <small class="text-muted">mmHg</small>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Nhịp tim</label>
+            <input type="text" class="form-control bg-light" 
+                   value="{{ old('nhip_tim', $record->nhip_tim ?? '--') }}"
+                   readonly>
+            <small class="text-muted">lần/phút</small>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Nhiệt độ</label>
+            <input type="text" class="form-control bg-light" 
+                   value="{{ old('nhiet_do', $record->nhiet_do ?? '--') }}"
+                   readonly>
+            <small class="text-muted">°C</small>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Nhịp thở</label>
+            <input type="text" class="form-control bg-light" 
+                   value="{{ old('nhip_tho', $record->nhip_tho ?? '--') }}"
+                   readonly>
+            <small class="text-muted">lần/phút</small>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Cân nặng</label>
+            <input type="text" class="form-control bg-light" 
+                   value="{{ old('can_nang', $record->can_nang ?? '--') }}"
+                   readonly>
+            <small class="text-muted">kg</small>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Chiều cao</label>
+            <input type="text" class="form-control bg-light" 
+                   value="{{ old('chieu_cao', $record->chieu_cao ?? '--') }}"
+                   readonly>
+            <small class="text-muted">cm</small>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">BMI</label>
+            <input type="text" class="form-control bg-light" 
+                   value="{{ old('bmi', $record->bmi ?? '--') }}"
+                   readonly>
+            <small class="text-muted">kg/m²</small>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">SpO2</label>
+            <input type="text" class="form-control bg-light" 
+                   value="{{ old('spo2', $record->spo2 ?? '--') }}"
+                   readonly>
+            <small class="text-muted">%</small>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto calculate BMI
+    document.addEventListener('DOMContentLoaded', function() {
+        const canNang = document.getElementById('can_nang');
+        const chieuCao = document.getElementById('chieu_cao');
+        const bmi = document.getElementById('bmi');
+        
+        function calculateBMI() {
+            const weight = parseFloat(canNang.value);
+            const height = parseFloat(chieuCao.value) / 100; // convert cm to m
+            
+            if (weight && height && height > 0) {
+                const bmiValue = weight / (height * height);
+                bmi.value = bmiValue.toFixed(1);
+            } else {
+                bmi.value = '';
+            }
+        }
+        
+        canNang.addEventListener('input', calculateBMI);
+        chieuCao.addEventListener('input', calculateBMI);
+    });
+</script>
+
 {{-- 3 cột nội dung --}}
 <div class="row mt-4 g-3">
 
@@ -75,13 +172,6 @@
 <div class="mt-4">
     <label class="form-label fw-semibold">Ghi chú</label>
     <textarea name="ghi_chu" class="form-control" rows="3">{{ old('ghi_chu', $record->ghi_chu ?? '') }}</textarea>
-</div>
-
-{{-- File upload --}}
-<div class="mt-4">
-    <label class="form-label fw-semibold">Tệp đính kèm</label>
-    <input type="file" name="files[]" multiple class="form-control">
-    <small class="text-muted">Bạn có thể chọn nhiều tệp</small>
 </div>
 
 

@@ -70,7 +70,7 @@
                                 <option value="">-- Chọn xét nghiệm --</option>
                                 @foreach($danhMucXetNghiem as $xn)
                                 <option value="{{ $xn->id }}" data-gia="{{ $xn->gia_tien }}" {{ old('danh_muc_xet_nghiem_id') == $xn->id ? 'selected' : '' }}>
-                                    {{ $xn->ten_xet_nghiem }} - {{ number_format($xn->gia_tien, 0, ',', '.') }} đ
+                                    {{ $xn->ten_xet_nghiem }}
                                 </option>
                                 @endforeach
                             </select>

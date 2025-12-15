@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold mb-0">
             <i class="bi bi-receipt"></i>
-            Tạo hóa đơn từ bệnh án #{{ $benhAn->id }}
+            Tạo hóa đơn từ bệnh án HS-{{ str_pad($benhAn->id, 4, '0', STR_PAD_LEFT) }}
         </h2>
         <a href="{{ route('admin.benhan.show', $benhAn) }}" class="btn btn-secondary btn-sm">
             <i class="bi bi-arrow-left"></i> Quay lại

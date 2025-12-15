@@ -221,6 +221,7 @@
                     <table class="table table-sm table-hover mb-0">
                         <thead class="table-light">
                             <tr>
+                                <th>Mã BN</th>
                                 <th>Bệnh Nhân</th>
                                 <th>Bác Sĩ</th>
                                 <th>Dịch Vụ</th>
@@ -230,6 +231,7 @@
                         <tbody>
                             @foreach($completed as $apt)
                                 <tr>
+                                    <td><span class="badge bg-secondary">BN-{{ str_pad($apt->user_id, 4, '0', STR_PAD_LEFT) }}</span></td>
                                     <td>{{ $apt->user->name }}</td>
                                     <td>BS. {{ $apt->bacSi->ho_ten }}</td>
                                     <td>{{ $apt->dichVu->ten_dich_vu }}</td>

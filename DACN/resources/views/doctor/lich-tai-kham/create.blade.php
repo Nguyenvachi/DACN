@@ -40,7 +40,7 @@
                 @else
                     <div class="mb-3">
                         <label for="benh_an_id" class="form-label">
-                            Mã bệnh án <span class="text-danger">*</span>
+                            Mã hồ sơ <span class="text-danger">*</span>
                         </label>
                         <input type="number" 
                                class="form-control @error('benh_an_id') is-invalid @enderror" 

@@ -43,7 +43,15 @@
         <div class="card shadow-sm border-0 mb-4" style="border-radius: 15px; overflow: hidden;">
             <div class="card-body p-4">
                 <form method="GET" class="row g-3">
-                    <div class="col-md-4">
+                    <div class="col-lg-2 col-md-4">
+                        <label class="form-label fw-semibold small mb-2">
+                            <i class="fas fa-hashtag me-1 text-info"></i>Mã hồ sơ
+                        </label>
+                        <input class="form-control" type="text" name="ma" value="{{ request('ma') }}"
+                            placeholder="VD: 0001, 123...">
+                    </div>
+
+                    <div class="col-lg-3 col-md-4">
                         <label class="form-label fw-semibold small mb-2">
                             <i class="fas fa-search me-1 text-primary"></i>Tìm kiếm
                         </label>
@@ -51,21 +59,21 @@
                             placeholder="Tiêu đề, triệu chứng, chẩn đoán...">
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-4">
                         <label class="form-label fw-semibold small mb-2">
                             <i class="fas fa-calendar-alt me-1 text-success"></i>Từ ngày
                         </label>
                         <input class="form-control" type="date" name="from" value="{{ request('from') }}">
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6">
                         <label class="form-label fw-semibold small mb-2">
                             <i class="fas fa-calendar-check me-1 text-success"></i>Đến ngày
                         </label>
                         <input class="form-control" type="date" name="to" value="{{ request('to') }}">
                     </div>
 
-                    <div class="col-md-2 d-flex align-items-end">
+                    <div class="col-lg-1 col-md-6 d-flex align-items-end">
                         <button class="btn btn-primary w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                             <i class="fas fa-search me-2"></i>Lọc
                         </button>
@@ -80,7 +88,8 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                         <tr>
-                            <th class="border-0 py-3 ps-4">Ngày khám</th>
+                            <th class="border-0 py-3 ps-4">Mã hồ sơ</th>
+                            <th class="border-0 py-3">Ngày khám</th>
                             <th class="border-0 py-3">Tiêu đề</th>
                             <th class="border-0 py-3">Bệnh nhân</th>
                             <th class="border-0 py-3">Bác sĩ</th>
@@ -92,6 +101,9 @@
                         @forelse ($records as $r)
                             <tr class="border-bottom">
                                 <td class="py-3 ps-4">
+                                    <span class="badge bg-secondary">HS-{{ str_pad($r->id, 4, '0', STR_PAD_LEFT) }}</span>
+                                </td>
+                                <td class="py-3">
                                     <span class="fw-semibold">{{ $r->ngay_kham->format('d/m/Y') }}</span>
                                 </td>
                                 <td class="py-3">
@@ -124,7 +136,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-5">
+                                <td colspan="6" class="text-center py-5">
                                     <i class="fas fa-folder-open fa-3x text-muted mb-3 d-block"></i>
                                     <h5 class="text-muted">Không có hồ sơ bệnh án</h5>
                                 </td>

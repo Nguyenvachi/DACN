@@ -21,18 +21,18 @@ class HoaDonController extends Controller
 
         $hoaDons = $query->paginate(15);
 
-        // Statistics
+        // Statistics - Tính toán chính xác dựa trên số tiền
+        $allHoaDons = HoaDon::where('user_id', auth()->id())->get();
+
         $statistics = [
-            'total' => HoaDon::where('user_id', auth()->id())->count(),
-            'unpaid' => HoaDon::where('user_id', auth()->id())
-                ->whereIn('trang_thai', ['chua_thanh_toan', 'thanh_toan_mot_phan'])
-                ->count(),
-            'paid' => HoaDon::where('user_id', auth()->id())
-                ->where('trang_thai', 'da_thanh_toan')
-                ->count(),
-            'total_amount' => HoaDon::where('user_id', auth()->id())
-                ->where('trang_thai', 'da_thanh_toan')
-                ->sum('tong_tien'),
+            'total' => $allHoaDons->count(),
+            'unpaid' => $allHoaDons->filter(function ($hd) {
+                return $hd->so_tien_con_lai > 0;
+            })->count(),
+            'paid' => $allHoaDons->filter(function ($hd) {
+                return $hd->so_tien_con_lai == 0 && $hd->tong_tien > 0;
+            })->count(),
+            'total_amount' => $allHoaDons->sum('tong_tien'),
         ];
 
         return view('patient.hoadon.index', compact('hoaDons', 'statistics'));
@@ -47,4 +47,3 @@ class HoaDonController extends Controller
         return view('patient.hoadon.show', compact('hoaDon'));
     }
 }
-

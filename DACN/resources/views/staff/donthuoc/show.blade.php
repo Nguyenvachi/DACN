@@ -1,6 +1,6 @@
 @extends('layouts.staff')
 
-@section('title', 'Chi Tiết Đơn Thuốc #' . $donThuoc->id)
+@section('title', 'Chi Tiết Đơn Thuốc DT-' . str_pad($donThuoc->id, 4, '0', STR_PAD_LEFT))
 
 @section('content')
 <div class="container-fluid py-4">
@@ -9,7 +9,7 @@
         <div>
             <h2 class="fw-bold mb-1">
                 <i class="bi bi-prescription2 text-primary me-2"></i>
-                Đơn Thuốc #{{ str_pad($donThuoc->id, 4, '0', STR_PAD_LEFT) }}
+                Đơn Thuốc DT-{{ str_pad($donThuoc->id, 4, '0', STR_PAD_LEFT) }}
             </h2>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
@@ -73,7 +73,7 @@
                         <div class="col-md-6">
                             <p class="mb-2"><strong>Bác sĩ khám:</strong> BS. {{ $donThuoc->benhAn->bacSi->ho_ten ?? 'N/A' }}</p>
                             <p class="mb-2"><strong>Ngày khám:</strong> {{ $donThuoc->benhAn->created_at->format('d/m/Y H:i') }}</p>
-                            <p class="mb-2"><strong>Mã bệnh án:</strong> #{{ $donThuoc->benh_an_id }}</p>
+                            <p class="mb-2"><strong>Mã hồ sơ:</strong> HS-{{ str_pad($donThuoc->benh_an_id, 4, '0', STR_PAD_LEFT) }}</p>
                         </div>
                         <div class="col-md-6">
                             <p class="mb-2"><strong>Triệu chứng:</strong> 
@@ -194,7 +194,7 @@
                     <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Thông Tin</h5>
                 </div>
                 <div class="card-body">
-                    <p class="mb-2"><strong>Mã đơn thuốc:</strong> #{{ str_pad($donThuoc->id, 4, '0', STR_PAD_LEFT) }}</p>
+                    <p class="mb-2"><strong>Mã đơn thuốc:</strong> DT-{{ str_pad($donThuoc->id, 4, '0', STR_PAD_LEFT) }}</p>
                     <p class="mb-2"><strong>Ngày kê đơn:</strong> {{ $donThuoc->created_at->format('d/m/Y H:i') }}</p>
                     <p class="mb-2"><strong>Số loại thuốc:</strong> {{ $donThuoc->items->count() }}</p>
                     <p class="mb-0"><strong>Tổng số lượng:</strong> {{ $donThuoc->items->sum('so_luong') }}</p>

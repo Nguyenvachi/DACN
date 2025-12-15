@@ -97,7 +97,7 @@
                             @if($xetNghiem->benhAn)
                                 <div class="mb-3">
                                     <p class="mb-1"><strong><i class="fas fa-user-md me-2"></i>Bác sĩ chỉ định:</strong> {{ $xetNghiem->bacSiChiDinh->ho_ten ?? ($xetNghiem->benhAn->bacSi->ho_ten ?? 'N/A') }}</p>
-                                    <p class="mb-1"><strong><i class="fas fa-file-medical me-2"></i>Bệnh án:</strong> #{{ $xetNghiem->benh_an_id }}</p>
+                                    <p class="mb-1"><strong><i class="fas fa-file-medical me-2"></i>Mã hồ sơ:</strong> HS-{{ str_pad($xetNghiem->benh_an_id, 4, '0', STR_PAD_LEFT) }}</p>
                                     <p class="mb-0"><strong><i class="fas fa-stethoscope me-2"></i>Chẩn đoán:</strong> {{ $xetNghiem->benhAn->chan_doan ?? 'N/A' }}</p>
                                 </div>
                             @endif
@@ -128,7 +128,7 @@
                                 <div class="card-body">
                                     <h6 class="card-title"><i class="fas fa-info-circle me-2"></i>Thông tin xét nghiệm</h6>
                                     <hr>
-                                    <p class="mb-2"><strong>Mã XN:</strong> #{{ $xetNghiem->id }}</p>
+                                    <p class="mb-2"><strong>Mã XN:</strong> XN-{{ str_pad($xetNghiem->id, 4, '0', STR_PAD_LEFT) }}</p>
                                     <p class="mb-2"><strong>Ngày XN:</strong> {{ $xetNghiem->created_at?->format('d/m/Y') }}</p>
                                     @if($xetNghiem->file_ket_qua)
                                         <p class="mb-2"><strong>File đính kèm:</strong></p>

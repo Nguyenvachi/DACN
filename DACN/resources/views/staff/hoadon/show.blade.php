@@ -9,35 +9,14 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold mb-0">
                 <i class="fas fa-file-invoice-dollar me-2"></i>
-                Hóa đơn {{ $hoaDon->ma_hoa_don ?? '#' . $hoaDon->id }}
+                Hóa đơn {{ $hoaDon->ma_hoa_don ?? 'HD-' . str_pad($hoaDon->id, 4, '0', STR_PAD_LEFT) }}
             </h2>
             <div class="d-flex gap-2">
-                @if(isset($hoaDon->so_tien_da_thanh_toan) && $hoaDon->so_tien_da_thanh_toan > 0 && $hoaDon->status != 'refunded')
-                    <a href="{{ route('staff.hoadon.refund.form', $hoaDon->id) }}" class="btn btn-warning btn-sm">
-                        <i class="bi bi-arrow-return-left"></i> Hoàn tiền
-                    </a>
-                @endif
-                @if($hoaDon->hoanTiens && $hoaDon->hoanTiens->count() > 0)
-                    <a href="{{ route('staff.hoadon.refunds.list', $hoaDon->id) }}" class="btn btn-info btn-sm">
-                        <i class="bi bi-clock-history"></i> Lịch sử hoàn tiền
-                    </a>
-                @endif
                 <a href="{{ route('staff.hoadon.index') }}" class="btn btn-secondary btn-sm">
                     <i class="fas fa-arrow-left me-1"></i> Quay lại
                 </a>
             </div>
         </div>
-
-        {{-- ============================
-         🔥 ALERT
-    ============================= --}}
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ session('success') }}
-                <button class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
 
         {{-- ============================
          🔥 THÔNG TIN HÓA ĐƠN
@@ -58,13 +37,13 @@
 
                     <div class="col-md-6">
                         <h6 class="text-muted">Mã hóa đơn</h6>
-                        <p class="fw-bold mb-2">{{ $hoaDon->ma_hoa_don ?? '#' . $hoaDon->id }}</p>
+                        <p class="fw-bold mb-2">{{ $hoaDon->ma_hoa_don ?? 'HD-' . str_pad($hoaDon->id, 4, '0', STR_PAD_LEFT) }}</p>
 
                         <h6 class="text-muted">Lịch hẹn</h6>
-                        <p class="fw-bold mb-2">#{{ $hoaDon->lich_hen_id }}</p>
+                        <p class="fw-bold mb-2">LH-{{ str_pad($hoaDon->lich_hen_id, 4, '0', STR_PAD_LEFT) }}</p>
 
                         <h6 class="text-muted">Bệnh nhân</h6>
-                        <p class="fw-bold mb-2">{{ optional($hoaDon->user)->name ?? '#' . $hoaDon->user_id }}</p>
+                        <p class="fw-bold mb-2">{{ optional($hoaDon->user)->name ?? 'BN-' . str_pad($hoaDon->user_id, 4, '0', STR_PAD_LEFT) }}</p>
 
                         <h6 class="text-muted">Tổng tiền</h6>
                         <p class="fw-bold text-primary fs-5 mb-2">
@@ -204,7 +183,7 @@
                     @if($hoaDon->lichHen)
                         <p class="mb-2">
                             <i class="bi bi-info-circle me-1"></i>
-                            Thông tin dịch vụ có thể xem tại: <strong>Lịch hẹn #{{ $hoaDon->lich_hen_id }}</strong>
+                            Thông tin dịch vụ có thể xem tại: <strong>Lịch hẹn LH-{{ str_pad($hoaDon->lich_hen_id, 4, '0', STR_PAD_LEFT) }}</strong>
                         </p>
                         @php
                             $benhAn = \App\Models\BenhAn::where('lich_hen_id', $hoaDon->lich_hen_id)->first();
@@ -380,3 +359,4 @@
 
     </div>
 @endsection
+

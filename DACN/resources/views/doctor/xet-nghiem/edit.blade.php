@@ -11,7 +11,7 @@
                     <h5 class="mb-0">
                         <i class="bi bi-file-earmark-medical"></i> Nhập Kết Quả Xét Nghiệm
                     </h5>
-                    <a href="{{ route('doctor.benhan.show', $xetNghiem->benh_an_id) }}" class="btn btn-sm btn-light">
+                    <a href="{{ route('doctor.benhan.edit', $xetNghiem->benh_an_id) }}" class="btn btn-sm btn-light">
                         <i class="bi bi-arrow-left"></i> Quay lại
                     </a>
                 </div>
@@ -41,20 +41,8 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Trạng Thái <span class="text-danger">*</span></label>
-                            <select name="trang_thai" class="form-select @error('trang_thai') is-invalid @enderror" required>
-                                <option value="">-- Chọn trạng thái --</option>
-                                <option value="Chờ lấy mẫu" {{ old('trang_thai', $xetNghiem->trang_thai) == 'Chờ lấy mẫu' ? 'selected' : '' }}>Chờ lấy mẫu</option>
-                                <option value="Đã lấy mẫu" {{ old('trang_thai', $xetNghiem->trang_thai) == 'Đã lấy mẫu' ? 'selected' : '' }}>Đã lấy mẫu</option>
-                                <option value="Đang xét nghiệm" {{ old('trang_thai', $xetNghiem->trang_thai) == 'Đang xét nghiệm' ? 'selected' : '' }}>Đang xét nghiệm</option>
-                                <option value="Có kết quả" {{ old('trang_thai', $xetNghiem->trang_thai) == 'Có kết quả' ? 'selected' : '' }}>Có kết quả</option>
-                                <option value="Đã hủy" {{ old('trang_thai', $xetNghiem->trang_thai) == 'Đã hủy' ? 'selected' : '' }}>Đã hủy</option>
-                            </select>
-                            @error('trang_thai')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        {{-- Auto set status to completed when saving results --}}
+                        <input type="hidden" name="trang_thai" value="Có kết quả">
 
                         <hr class="my-4">
                         <h6 class="mb-3">Chỉ Số Xét Nghiệm</h6>
@@ -165,7 +153,7 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="{{ route('doctor.benhan.show', $xetNghiem->benh_an_id) }}" class="btn btn-secondary">
+                            <a href="{{ route('doctor.benhan.edit', $xetNghiem->benh_an_id) }}" class="btn btn-secondary">
                                 <i class="bi bi-x-circle"></i> Hủy
                             </a>
                             <button type="submit" class="btn btn-danger">

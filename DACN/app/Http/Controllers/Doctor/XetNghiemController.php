@@ -14,6 +14,26 @@ use Illuminate\Support\Facades\DB;
 class XetNghiemController extends Controller
 {
     /**
+     * Danh sách xét nghiệm
+     */
+    public function index(Request $request)
+    {
+        $bacSi = BacSi::where('user_id', Auth::id())->first();
+        if (!$bacSi) {
+            abort(403);
+        }
+
+        $xetNghiems = XetNghiem::whereHas('benhAn', function ($q) use ($bacSi) {
+            $q->where('bac_si_id', $bacSi->id);
+        })
+            ->with(['benhAn.user'])
+            ->orderByDesc('created_at')
+            ->paginate(20);
+
+        return view('doctor.xetnghiem.index', compact('xetNghiems'));
+    }
+
+    /**
      * Trang chỉ định xét nghiệm cho bệnh án
      */
     public function create(Request $request)
@@ -109,6 +129,7 @@ class XetNghiemController extends Controller
             abort(403);
         }
 
+        $xetNghiem->load(['benhAn.user']);
         return view('doctor.xet-nghiem.edit', compact('xetNghiem'));
     }
 
@@ -123,13 +144,17 @@ class XetNghiemController extends Controller
         }
 
         $validated = $request->validate([
-            'ngay_lay_mau' => 'nullable|date',
             'ngay_tra_ket_qua' => 'nullable|date',
-            'trang_thai' => 'required|in:Chờ lấy mẫu,Đã lấy mẫu,Đang xét nghiệm,Có kết quả,Đã hủy',
+            'ngay_lay_mau' => 'nullable|date',
             'chi_so' => 'nullable|array',
+            'chi_so.*.ten' => 'required|string',
+            'chi_so.*.ket_qua' => 'required',
+            'chi_so.*.don_vi' => 'nullable|string',
+            'chi_so.*.gia_tri_bt' => 'nullable|string',
+            'chi_so.*.min' => 'nullable|numeric',
+            'chi_so.*.max' => 'nullable|numeric',
             'nhan_xet' => 'nullable|string',
             'ket_luan' => 'nullable|string',
-            'ghi_chu' => 'nullable|string',
             'file_ket_qua.*' => 'nullable|file|max:10240', // 10MB
         ]);
 
@@ -137,10 +162,12 @@ class XetNghiemController extends Controller
             DB::beginTransaction();
 
             $data = $validated;
+            // Tự động set trạng thái thành Có kết quả khi lưu kết quả
+            $data['trang_thai'] = 'Có kết quả';
 
             // Xử lý upload file kết quả
             if ($request->hasFile('file_ket_qua')) {
-                $filePaths = [];
+                $filePaths = $xetNghiem->file_ket_qua ?? [];
                 foreach ($request->file('file_ket_qua') as $file) {
                     $path = $file->store('xet-nghiem', 'public');
                     $filePaths[] = $path;
@@ -152,7 +179,7 @@ class XetNghiemController extends Controller
 
             DB::commit();
 
-            return redirect()->route('doctor.benhan.show', $xetNghiem->benh_an_id)
+            return redirect()->route('doctor.benhan.edit', $xetNghiem->benh_an_id)
                 ->with('success', 'Đã cập nhật kết quả xét nghiệm thành công!');
         } catch (\Exception $e) {
             DB::rollBack();

@@ -23,7 +23,7 @@
 
     {{-- Statistics Cards --}}
     <div class="row mb-4 g-4">
-        <div class="col-lg-3 col-md-6">
+        <div class="col-lg-4 col-md-4">
             <div class="card border-0 h-100 stat-card-modern"
                  style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
                 <div class="card-body text-white p-4">
@@ -40,7 +40,24 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6">
+        <div class="col-lg-4 col-md-4">
+            <div class="card border-0 h-100 stat-card-modern"
+                 style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
+                <div class="card-body text-white p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="p-3 rounded-circle bg-white bg-opacity-25">
+                            <i class="bi bi-hourglass-split fs-2"></i>
+                        </div>
+                        <div class="ms-3">
+                            <p class="text-white text-opacity-75 mb-1 small">Chưa check-in</p>
+                            <h3 class="mb-0 fw-bold">{{ $statistics['waiting'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4">
             <div class="card border-0 h-100 stat-card-modern"
                  style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
                 <div class="card-body text-white p-4">
@@ -51,40 +68,6 @@
                         <div class="ms-3">
                             <p class="text-white text-opacity-75 mb-1 small">Đã check-in</p>
                             <h3 class="mb-0 fw-bold">{{ $statistics['checked_in'] }}</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card border-0 h-100 stat-card-modern"
-                 style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
-                <div class="card-body text-white p-4">
-                    <div class="d-flex align-items-center">
-                        <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                            <i class="bi bi-hourglass-split fs-2"></i>
-                        </div>
-                        <div class="ms-3">
-                            <p class="text-white text-opacity-75 mb-1 small">Chờ check-in</p>
-                            <h3 class="mb-0 fw-bold">{{ $statistics['waiting'] }}</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card border-0 h-100 stat-card-modern"
-                 style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
-                <div class="card-body text-white p-4">
-                    <div class="d-flex align-items-center">
-                        <div class="p-3 rounded-circle bg-white bg-opacity-25">
-                            <i class="bi bi-person-hearts fs-2"></i>
-                        </div>
-                        <div class="ms-3">
-                            <p class="text-white text-opacity-75 mb-1 small">Đang khám</p>
-                            <h3 class="mb-0 fw-bold">{{ $statistics['in_progress'] }}</h3>
                         </div>
                     </div>
                 </div>
@@ -128,22 +111,14 @@
     {{-- Appointments Table --}}
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-bottom">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold"><i class="bi bi-list-ul me-2"></i>Danh Sách Lịch Hẹn Hôm Nay</h5>
-                <button type="button" class="btn btn-sm btn-outline-primary" onclick="selectAllCheckboxes()">
-                    <i class="bi bi-check-all me-1"></i>Chọn tất cả
-                </button>
-            </div>
+            <h5 class="mb-0 fw-bold"><i class="bi bi-list-ul me-2"></i>Danh Sách Lịch Hẹn Hôm Nay</h5>
         </div>
 
         <div class="card-body p-0">
-            <form id="bulkCheckInForm" method="POST" action="{{ route('staff.checkin.bulk') }}">
-                @csrf
-                <div class="table-responsive">
+            <div class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th width="50"><input type="checkbox" id="selectAll" class="form-check-input"></th>
                                 <th>Mã Lịch Hẹn</th>
                                 <th>Bệnh Nhân</th>
                                 <th>Số Điện Thoại</th>
@@ -159,12 +134,7 @@
                         <tbody>
                             @forelse($appointments as $apt)
                                 <tr>
-                                    <td>
-                                        @if($apt->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
-                                            <input type="checkbox" name="appointment_ids[]" value="{{ $apt->id }}" class="form-check-input appointment-checkbox">
-                                        @endif
-                                    </td>
-                                    <td><span class="badge bg-secondary">{{ $apt->ma_lich_hen }}</span></td>
+                                    <td><span class="badge bg-secondary">LH-{{ str_pad($apt->id, 4, '0', STR_PAD_LEFT) }}</span></td>
                                     <td>
                                         <strong>{{ $apt->user->name }}</strong>
                                         @if($apt->user->ngay_sinh)
@@ -199,13 +169,13 @@
                                     </td>
                                     <td>
                                         @if($apt->trang_thai === \App\Models\LichHen::STATUS_CHECKED_IN_VN)
-                                            <span class="badge bg-success">{{ \App\Models\LichHen::STATUS_CHECKED_IN_VN }}</span>
+                                            <span class="badge bg-success">Đã check-in</span>
                                         @elseif($apt->trang_thai === \App\Models\LichHen::STATUS_IN_PROGRESS_VN)
-                                            <span class="badge bg-info">{{ \App\Models\LichHen::STATUS_IN_PROGRESS_VN }}</span>
+                                            <span class="badge bg-success">Đã check-in</span>
                                         @elseif($apt->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN)
-                                            <span class="badge bg-primary">{{ \App\Models\LichHen::STATUS_CONFIRMED_VN }}</span>
+                                            <span class="badge bg-warning">Chưa check-in</span>
                                         @else
-                                            <span class="badge bg-warning">{{ $apt->trang_thai }}</span>
+                                            <span class="badge bg-warning">Chưa check-in</span>
                                         @endif
                                     </td>
                                     <td>
@@ -225,7 +195,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="11" class="text-center py-4 text-muted">
+                                    <td colspan="10" class="text-center py-4 text-muted">
                                         <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                                         Không có lịch hẹn nào hôm nay
                                     </td>
@@ -233,16 +203,7 @@
                             @endforelse
                         </tbody>
                     </table>
-                </div>
-
-                @if($appointments->isNotEmpty())
-                    <div class="card-footer bg-white border-top">
-                        <button type="submit" class="btn btn-primary" id="bulkCheckInBtn" style="display:none;">
-                            <i class="bi bi-check-all me-1"></i>Check-in Hàng Loạt (<span id="selectedCount">0</span>)
-                        </button>
-                    </div>
-                @endif
-            </form>
+            </div>
         </div>
     </div>
 
@@ -285,35 +246,6 @@
 
 @push('scripts')
 <script>
-// Select all checkbox
-document.getElementById('selectAll')?.addEventListener('change', function() {
-    document.querySelectorAll('.appointment-checkbox').forEach(cb => cb.checked = this.checked);
-    updateBulkButton();
-});
-
-function selectAllCheckboxes() {
-    document.getElementById('selectAll').checked = true;
-    document.getElementById('selectAll').dispatchEvent(new Event('change'));
-}
-
-// Update bulk button visibility
-document.querySelectorAll('.appointment-checkbox').forEach(cb => {
-    cb.addEventListener('change', updateBulkButton);
-});
-
-function updateBulkButton() {
-    const checked = document.querySelectorAll('.appointment-checkbox:checked').length;
-    const btn = document.getElementById('bulkCheckInBtn');
-    const countSpan = document.getElementById('selectedCount');
-
-    if (checked > 0) {
-        btn.style.display = 'inline-block';
-        countSpan.textContent = checked;
-    } else {
-        btn.style.display = 'none';
-    }
-}
-
 // Quick search
 function performQuickSearch() {
     const keyword = document.getElementById('quickSearchInput').value.trim();

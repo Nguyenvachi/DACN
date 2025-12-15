@@ -83,6 +83,20 @@ class ThuThuatController extends Controller
     }
 
     /**
+     * Hiển thị chi tiết thủ thuật
+     */
+    public function show(ThuThuat $thuThuat)
+    {
+        $bacSi = BacSi::where('user_id', Auth::id())->first();
+        if (!$bacSi) {
+            abort(403);
+        }
+
+        $thuThuat->load(['benhAn.user', 'bacSi']);
+        return view('doctor.thu-thuat.show', compact('thuThuat'));
+    }
+
+    /**
      * Trang nhập kết quả thủ thuật
      */
     public function edit(ThuThuat $thuThuat)

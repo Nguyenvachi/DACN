@@ -58,7 +58,7 @@
     @php
         $inProgressAppointments = \App\Models\LichHen::where('bac_si_id', $bacSi->id)
             ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_IN_PROGRESS_VN])
-            ->with(['user.benh_nhan', 'dichVu', 'benhAn'])
+            ->with(['user', 'dichVu', 'benhAn'])
             ->orderBy('updated_at', 'desc')
             ->get();
     @endphp

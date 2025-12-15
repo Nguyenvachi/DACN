@@ -21,7 +21,7 @@
                                         {{ \Carbon\Carbon::parse($benhAn->ngay_kham)->format('d/m/Y') }}
                                     </h5>
                                     <p class="text-muted small mb-0">
-                                        Mã BA: #{{ str_pad($benhAn->id, 5, '0', STR_PAD_LEFT) }}
+                                        Mã HS: HS-{{ str_pad($benhAn->id, 4, '0', STR_PAD_LEFT) }}
                                     </p>
                                 </div>
                                 <span class="badge bg-primary">{{ $benhAn->dichVu->ten ?? 'N/A' }}</span>

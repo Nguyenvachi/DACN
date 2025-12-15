@@ -72,7 +72,9 @@ class LichHenController extends Controller
 
         // tính weekday (Carbon::dayOfWeek : 0=Sun..6=Sat)
         try {
-            $weekday = Carbon::parse($date)->dayOfWeek;
+            $dateCarbon = Carbon::parse($date);
+            $weekday = $dateCarbon->dayOfWeek;
+            $currentMonth = (int) $dateCarbon->format('n'); // Tháng hiện tại (1-12)
         } catch (\Exception $e) {
             $errorMsg = 'Ngày không hợp lệ';
             if ($request->ajax() || $request->wantsJson()) {
@@ -81,12 +83,17 @@ class LichHenController extends Controller
             return redirect()->back()->withErrors(['ngay_hen' => $errorMsg])->withInput();
         }
 
+        // Tìm lịch làm việc phù hợp: chỉ lấy lịch có chứa tháng hiện tại hoặc thangs = null
         $lichLamViec = LichLamViec::where('bac_si_id', $bacSiId)
             ->where('ngay_trong_tuan', $weekday)
+            ->where(function ($q) use ($currentMonth) {
+                $q->whereNull('thangs')
+                    ->orWhereRaw('FIND_IN_SET(?, thangs) > 0', [$currentMonth]);
+            })
             ->first();
 
         if (! $lichLamViec) {
-            $errorMsg = 'Bác sĩ không làm việc vào ngày này';
+            $errorMsg = 'Bác sĩ không làm việc vào ngày này (Tháng ' . $currentMonth . ')';
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json(['success' => false, 'message' => $errorMsg], 422);
             }
@@ -342,9 +349,16 @@ class LichHenController extends Controller
         }
 
         // ✅ KIỂM TRA XUNG ĐỘT PHÒNG
-        $weekday = Carbon::parse($request->ngay_hen)->dayOfWeek;
+        $dateCarbon = Carbon::parse($request->ngay_hen);
+        $weekday = $dateCarbon->dayOfWeek;
+        $currentMonth = (int) $dateCarbon->format('n');
+
         $lichLamViec = LichLamViec::where('bac_si_id', $lichHen->bac_si_id)
             ->where('ngay_trong_tuan', $weekday)
+            ->where(function ($q) use ($currentMonth) {
+                $q->whereNull('thangs')
+                    ->orWhereRaw('FIND_IN_SET(?, thangs) > 0', [$currentMonth]);
+            })
             ->first();
 
         if ($lichLamViec && $lichLamViec->phong_id) {
@@ -543,13 +557,20 @@ class LichHenController extends Controller
 
         // Kiểm tra bác sĩ có làm việc vào ngày này không
         $weekday = $date->dayOfWeek; // 0=CN, 1=T2, ..., 6=T7
+        $currentMonth = (int) $date->format('n'); // Tháng hiện tại (1-12)
+
+        // Tìm lịch làm việc phù hợp: chỉ lấy lịch có chứa tháng hiện tại hoặc thangs = null (tất cả tháng)
         $lichLamViec = LichLamViec::where('bac_si_id', $bacSi->id)
             ->where('ngay_trong_tuan', $weekday)
+            ->where(function ($q) use ($currentMonth) {
+                $q->whereNull('thangs')
+                    ->orWhereRaw('FIND_IN_SET(?, thangs) > 0', [$currentMonth]);
+            })
             ->first();
 
         if (!$lichLamViec) {
             return response()->json([
-                'message' => 'Bác sĩ không làm việc vào ngày này',
+                'message' => 'Bác sĩ không làm việc vào ngày này (Tháng ' . $currentMonth . ')',
                 'slots' => []
             ]);
         }
@@ -564,18 +585,43 @@ class LichHenController extends Controller
             ->whereIn('trang_thai', [\App\Models\LichHen::STATUS_PENDING_VN, \App\Models\LichHen::STATUS_CONFIRMED_VN])
             ->get();
 
-        // Tạo danh sách khung giờ trống (mỗi 30 phút)
+        // Tạo danh sách khung giờ trống (mỗi 40 phút)
+        $slotDuration = 40; // Mỗi slot kéo dài 40 phút
         $slots = [];
         $current = $shiftStart->copy();
         $now = Carbon::now();
 
-        while ($current->copy()->addMinutes($duration)->lte($shiftEnd)) {
-            $slotEnd = $current->copy()->addMinutes($duration);
+        // Định nghĩa thời gian nghỉ
+        $lunchBreakStart = Carbon::parse($date->format('Y-m-d') . ' 12:00');
+        $lunchBreakEnd = Carbon::parse($date->format('Y-m-d') . ' 13:00');
+        $dinnerBreakStart = Carbon::parse($date->format('Y-m-d') . ' 17:00');
+        $dinnerBreakEnd = Carbon::parse($date->format('Y-m-d') . ' 18:00');
+
+        while ($current->copy()->addMinutes($slotDuration)->lte($shiftEnd)) {
+            $slotEnd = $current->copy()->addMinutes($slotDuration);
 
             // Chỉ hiển thị slot nếu thời gian bắt đầu >= thời gian hiện tại
             if ($current->lt($now)) {
-                $current->addMinutes(30);
+                $current->addMinutes($slotDuration);
                 continue;
+            }
+
+            // Bỏ qua khung giờ nghỉ trưa (12:00-13:00)
+            if ($current->lt($lunchBreakEnd) && $slotEnd->gt($lunchBreakStart)) {
+                // Nếu slot overlap với giờ nghỉ trưa, nhảy sang sau giờ nghỉ
+                if ($current->lt($lunchBreakEnd)) {
+                    $current = $lunchBreakEnd->copy();
+                    continue;
+                }
+            }
+
+            // Bỏ qua khung giờ nghỉ tối (17:00-18:00)
+            if ($current->lt($dinnerBreakEnd) && $slotEnd->gt($dinnerBreakStart)) {
+                // Nếu slot overlap với giờ nghỉ tối, nhảy sang sau giờ nghỉ
+                if ($current->lt($dinnerBreakEnd)) {
+                    $current = $dinnerBreakEnd->copy();
+                    continue;
+                }
             }
 
             // Kiểm tra xem khung giờ này có bị trùng với lịch hẹn nào không
@@ -599,7 +645,7 @@ class LichHenController extends Controller
                 ];
             }
 
-            $current->addMinutes(30); // Mỗi slot cách nhau 30 phút
+            $current->addMinutes($slotDuration); // Mỗi slot cách nhau 40 phút
         }
 
         return response()->json([

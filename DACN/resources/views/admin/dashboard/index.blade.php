@@ -95,15 +95,22 @@
                         @php
                             $change = $comparison['changes']['appointments'] ?? 0;
                         @endphp
-                        @if ($change != 0)
-                            <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
-                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center">
-                                    <i class="bi {{ $change > 0 ? 'bi-arrow-up' : 'bi-arrow-down' }} me-1"></i>
-                                    <span class="small fw-bold">{{ abs($change) }}%</span>
-                                </div>
-                                <span class="text-white text-opacity-75 small ms-2">so với kỳ trước</span>
+                        <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
+                            <div class="px-2 py-1 rounded d-inline-flex align-items-center"
+                                 style="background: rgba(255,255,255,0.2);">
+                                @if($change > 0)
+                                    <i class="bi bi-arrow-up text-white me-1"></i>
+                                    <span class="small fw-bold text-white">+{{ abs($change) }}%</span>
+                                @elseif($change < 0)
+                                    <i class="bi bi-arrow-down text-white me-1"></i>
+                                    <span class="small fw-bold text-white">-{{ abs($change) }}%</span>
+                                @else
+                                    <i class="bi bi-dash text-white me-1"></i>
+                                    <span class="small fw-bold text-white">0%</span>
+                                @endif
                             </div>
-                        @endif
+                            <span class="text-white text-opacity-75 small ms-2">so với kỳ trước</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,15 +134,22 @@
                         @php
                             $change = $comparison['changes']['revenue'] ?? 0;
                         @endphp
-                        @if ($change != 0)
-                            <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
-                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center">
-                                    <i class="bi {{ $change > 0 ? 'bi-arrow-up' : 'bi-arrow-down' }} me-1"></i>
-                                    <span class="small fw-bold">{{ abs($change) }}%</span>
-                                </div>
-                                <span class="text-white text-opacity-75 small ms-2">so với kỳ trước</span>
+                        <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
+                            <div class="px-2 py-1 rounded d-inline-flex align-items-center"
+                                 style="background: rgba(255,255,255,0.2);">
+                                @if($change > 0)
+                                    <i class="bi bi-arrow-up text-white me-1"></i>
+                                    <span class="small fw-bold text-white">+{{ abs($change) }}%</span>
+                                @elseif($change < 0)
+                                    <i class="bi bi-arrow-down text-white me-1"></i>
+                                    <span class="small fw-bold text-white">-{{ abs($change) }}%</span>
+                                @else
+                                    <i class="bi bi-dash text-white me-1"></i>
+                                    <span class="small fw-bold text-white">0%</span>
+                                @endif
                             </div>
-                        @endif
+                            <span class="text-white text-opacity-75 small ms-2">so với kỳ trước</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -159,15 +173,22 @@
                         @php
                             $change = $comparison['changes']['paid_invoices'] ?? 0;
                         @endphp
-                        @if ($change != 0)
-                            <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
-                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center">
-                                    <i class="bi {{ $change > 0 ? 'bi-arrow-up' : 'bi-arrow-down' }} me-1"></i>
-                                    <span class="small fw-bold">{{ abs($change) }}%</span>
-                                </div>
-                                <span class="text-white text-opacity-75 small ms-2">so với kỳ trước</span>
+                        <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
+                            <div class="px-2 py-1 rounded d-inline-flex align-items-center"
+                                 style="background: rgba(255,255,255,0.2);">
+                                @if($change > 0)
+                                    <i class="bi bi-arrow-up text-white me-1"></i>
+                                    <span class="small fw-bold text-white">+{{ abs($change) }}%</span>
+                                @elseif($change < 0)
+                                    <i class="bi bi-arrow-down text-white me-1"></i>
+                                    <span class="small fw-bold text-white">-{{ abs($change) }}%</span>
+                                @else
+                                    <i class="bi bi-dash text-white me-1"></i>
+                                    <span class="small fw-bold text-white">0%</span>
+                                @endif
                             </div>
-                        @endif
+                            <span class="text-white text-opacity-75 small ms-2">so với kỳ trước</span>
+                        </div>
                     </div>
                 </div>
             </div>

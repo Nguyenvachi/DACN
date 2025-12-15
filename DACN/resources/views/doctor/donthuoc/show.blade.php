@@ -1,6 +1,6 @@
 @extends('layouts.doctor')
 
-@section('title', 'Đơn thuốc #' . $donThuoc->id)
+@section('title', 'Đơn thuốc DT-' . str_pad($donThuoc->id, 4, '0', STR_PAD_LEFT))
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,7 +10,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="mb-0 fw-bold" style="color: #1f2937;">
                     <i class="fas fa-prescription-bottle-alt me-2" style="color: #10b981;"></i>
-                    Đơn thuốc #{{ $donThuoc->id }}
+                    Đơn thuốc DT-{{ str_pad($donThuoc->id, 4, '0', STR_PAD_LEFT) }}
                 </h4>
                 <div class="d-flex gap-2">
                     <button onclick="window.print()" class="btn btn-outline-primary">

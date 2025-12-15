@@ -35,6 +35,14 @@ class BenhAnController extends Controller
         }
 
         // THÊM: bộ lọc
+        if ($request->filled('ma')) {
+            $ma = trim($request->ma);
+            // Loại bỏ prefix HS- hoặc # nếu có và tìm theo ID
+            $ma = str_replace(['HS-', 'hs-', '#'], '', $ma);
+            if (is_numeric($ma)) {
+                $query->where('id', (int)$ma);
+            }
+        }
         if ($request->filled('patient_id')) {
             $query->where('user_id', (int)$request->patient_id);
         }
@@ -99,6 +107,15 @@ class BenhAnController extends Controller
             'dieu_tri'    => ['nullable', 'string'],
             'ghi_chu'     => ['nullable', 'string'],
             'files.*'     => ['nullable', 'file', 'max:8192'],
+            // Vital signs
+            'huyet_ap'    => ['nullable', 'string', 'max:20'],
+            'nhip_tim'    => ['nullable', 'integer', 'min:0', 'max:300'],
+            'nhiet_do'    => ['nullable', 'numeric', 'min:30', 'max:45'],
+            'nhip_tho'    => ['nullable', 'integer', 'min:0', 'max:100'],
+            'can_nang'    => ['nullable', 'numeric', 'min:0', 'max:500'],
+            'chieu_cao'   => ['nullable', 'numeric', 'min:0', 'max:300'],
+            'bmi'         => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'spo2'        => ['nullable', 'integer', 'min:0', 'max:100'],
         ]);
 
         // Tự động lấy tiêu đề từ dịch vụ nếu có lịch hẹn
@@ -188,6 +205,15 @@ class BenhAnController extends Controller
             'dieu_tri'    => ['nullable', 'string'],
             'ghi_chu'     => ['nullable', 'string'],
             'files.*'     => ['nullable', 'file', 'max:8192'],
+            // Vital signs
+            'huyet_ap'    => ['nullable', 'string', 'max:20'],
+            'nhip_tim'    => ['nullable', 'integer', 'min:0', 'max:300'],
+            'nhiet_do'    => ['nullable', 'numeric', 'min:30', 'max:45'],
+            'nhip_tho'    => ['nullable', 'integer', 'min:0', 'max:100'],
+            'can_nang'    => ['nullable', 'numeric', 'min:0', 'max:500'],
+            'chieu_cao'   => ['nullable', 'numeric', 'min:0', 'max:300'],
+            'bmi'         => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'spo2'        => ['nullable', 'integer', 'min:0', 'max:100'],
         ]);
 
         $benh_an->update($data);

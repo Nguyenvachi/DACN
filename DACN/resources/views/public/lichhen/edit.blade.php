@@ -7,7 +7,7 @@
 
 @section('content')
 <div class="container">
-    <h4>Sửa lịch hẹn #{{ $lichHen->id }}</h4>
+    <h4>Sửa lịch hẹn LH-{{ str_pad($lichHen->id, 4, '0', STR_PAD_LEFT) }}</h4>
     <form method="POST" action="{{ route('lichhen.update', $lichHen) }}">
         @csrf
         @method('PATCH')

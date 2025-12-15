@@ -557,6 +557,7 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
 
     // Xét nghiệm - Lab Test Management (File mẹ: routes/web.php)
     Route::prefix('xet-nghiem')->name('xet-nghiem.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'index'])->name('index');
         Route::get('/create', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'store'])->name('store');
         Route::get('/{xetNghiem}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'show'])->name('show');
@@ -568,6 +569,7 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::prefix('sieu-am')->name('sieu-am.')->group(function () {
         Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\SieuAmController::class, 'create'])->name('create');
         Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\SieuAmController::class, 'store'])->name('store');
+        Route::get('/{sieuAm}', [\App\Http\Controllers\Doctor\SieuAmController::class, 'show'])->name('show');
         Route::get('/{sieuAm}/edit', [\App\Http\Controllers\Doctor\SieuAmController::class, 'edit'])->name('edit');
         Route::put('/{sieuAm}', [\App\Http\Controllers\Doctor\SieuAmController::class, 'update'])->name('update');
     });
@@ -576,6 +578,7 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::prefix('thu-thuat')->name('thu-thuat.')->group(function () {
         Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'create'])->name('create');
         Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'store'])->name('store');
+        Route::get('/{thuThuat}', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'show'])->name('show');
         Route::get('/{thuThuat}/edit', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'edit'])->name('edit');
         Route::put('/{thuThuat}', [\App\Http\Controllers\Doctor\ThuThuatController::class, 'update'])->name('update');
     });

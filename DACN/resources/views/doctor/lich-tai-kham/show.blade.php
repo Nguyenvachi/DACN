@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-md-6">
                             <p><strong>Email:</strong> {{ $lichTaiKham->benhNhan->email }}</p>
-                            <p><strong>Mã bệnh án:</strong> <a href="{{ route('doctor.benhan.show', $lichTaiKham->benh_an_id) }}">#{{ $lichTaiKham->benh_an_id }}</a></p>
+                            <p><strong>Mã hồ sơ:</strong> <a href="{{ route('doctor.benhan.show', $lichTaiKham->benh_an_id) }}">HS-{{ str_pad($lichTaiKham->benh_an_id, 4, '0', STR_PAD_LEFT) }}</a></p>
                         </div>
                     </div>
                 </div>

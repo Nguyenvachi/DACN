@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold mb-0">
             <i class="bi bi-prescription2 text-primary me-2"></i>
-            Toa Thuốc - Bệnh Án #{{ $benhAn->id }}
+            Toa Thuốc - Hồ Sơ Bệnh Án HS-{{ str_pad($benhAn->id, 4, '0', STR_PAD_LEFT) }}
         </h2>
         <div>
             <a href="{{ route('staff.dashboard') }}" class="btn btn-secondary">
