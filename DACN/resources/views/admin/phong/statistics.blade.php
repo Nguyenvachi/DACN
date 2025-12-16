@@ -212,23 +212,31 @@
         </div>
         <div class="card-body">
             <div class="row">
-                @foreach($stats['doctors'] as $doctor)
-                <div class="col-md-4 mb-3">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width: 50px; height: 50px;">
-                                <i class="bi bi-person-circle fs-4"></i>
+                @if(is_iterable($stats['doctors']))
+                    @forelse($stats['doctors'] as $doctor)
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width: 50px; height: 50px;">
+                                        <i class="bi bi-person-circle fs-4"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <strong>{{ data_get($doctor, 'name') ?? data_get($doctor, 'ho_ten') ?? data_get($doctor, 'ten') }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ data_get($doctor, 'count') ?? data_get($doctor, 'luot') ?? '—' }} lượt sử dụng</small>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex-grow-1 ms-3">
-                            <strong>{{ $doctor['name'] }}</strong>
-                            <br>
-                            <small class="text-muted">{{ $doctor['count'] }} lượt sử dụng</small>
-                        </div>
+                    @empty
+                        <div class="text-center text-muted py-4">Chưa có dữ liệu</div>
+                    @endforelse
+                @else
+                    <div class="col-12">
+                        <p class="text-muted mb-0">Số bác sĩ sử dụng phòng: <strong>{{ $stats['doctors'] }}</strong></p>
                     </div>
-                </div>
-                @endforeach
+                @endif
             </div>
         </div>
     </div>

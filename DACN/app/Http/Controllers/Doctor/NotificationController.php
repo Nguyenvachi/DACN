@@ -88,8 +88,8 @@ class NotificationController extends Controller
                                     </small>
                                 </div>
 
-                                <p class="mb-2 text-muted small user-select-none" style="line-height: 1.5;">
-                                    '.($notification->data['message'] ?? '').'
+                                <p class="mb-2 text-muted small notification-message" style="line-height: 1.5;">
+                                    '.nl2br(e($notification->data['message'] ?? '')).'
                                 </p>
 
                                 <div class="d-flex gap-2 mt-2">

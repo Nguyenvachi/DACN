@@ -8,11 +8,15 @@ use Illuminate\Notifications\Notification;
 
 class CustomNotification extends Notification
 {
-    public $data;
+    public string $title;
+    public string $message;
+    public ?string $action_url;
 
-    public function __construct($data)
+    public function __construct(string $title, string $message = '', ?string $action_url = null)
     {
-        $this->data = $data;
+        $this->title = $title;
+        $this->message = $message;
+        $this->action_url = $action_url;
     }
 
     public function via($notifiable)
@@ -22,6 +26,10 @@ class CustomNotification extends Notification
 
     public function toArray($notifiable)
     {
-        return $this->data;
+        return [
+            'title' => $this->title,
+            'message' => $this->message,
+            'action_url' => $this->action_url,
+        ];
     }
 }

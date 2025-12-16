@@ -4,6 +4,7 @@
 
 @section('content')
     <div class="container-fluid">
+        {{-- Breadcrumb --}}
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
@@ -21,6 +22,7 @@
                     </div>
 
                     <div class="card-body">
+                        {{-- Alert Success --}}
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
@@ -30,10 +32,13 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('admin.notifications.send.store') }}" method="POST">
+                        {{-- Form --}}
+                        <form action="{{ route('admin.notifications.send.store') }}" method="POST"
+                            id="send-notification-form">
                             @csrf
 
                             <div class="row">
+                                {{-- Cột Trái: Chọn đối tượng --}}
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="font-weight-bold">
@@ -51,6 +56,7 @@
                                             này.</small>
                                     </div>
 
+                                    {{-- Select User (Ẩn/Hiện) --}}
                                     <div class="form-group" id="user-select"
                                         style="display:none; transition: all 0.3s ease;">
                                         <label class="font-weight-bold text-primary">
@@ -69,6 +75,7 @@
                                     </div>
                                 </div>
 
+                                {{-- Cột Phải: Nội dung --}}
                                 <div class="col-md-8 border-left">
                                     <div class="form-group">
                                         <label class="font-weight-bold">
@@ -88,13 +95,16 @@
                                 </div>
                             </div>
 
+                            {{-- Footer Buttons --}}
                             <div class="row mt-4">
                                 <div class="col-12 text-right">
                                     <a href="{{ url()->previous() }}" class="btn btn-secondary mr-2">
                                         <i class="fas fa-arrow-left"></i> Quay lại
                                     </a>
-                                    <button type="submit" class="btn btn-primary px-4 py-2">
-                                        <i class="fas fa-paper-plane"></i> Gửi Ngay
+                                    <button type="submit" class="btn btn-primary px-4 py-2" id="btn-submit">
+                                        <span class="btn-text"><i class="fas fa-paper-plane"></i> Gửi Ngay</span>
+                                        <span class="btn-loading d-none"><i class="fas fa-spinner fa-spin"></i> Đang
+                                            gửi...</span>
                                     </button>
                                 </div>
                             </div>
@@ -106,33 +116,51 @@
         </div>
     </div>
 
-    {{-- Script: Giữ nguyên logic, thêm DOMContentLoaded để an toàn hơn --}}
+    {{-- Script: Xử lý UX --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const recipientSelect = document.getElementById('recipient_type');
             const userSelectDiv = document.getElementById('user-select');
+            const form = document.getElementById('send-notification-form');
+            const btnSubmit = document.getElementById('btn-submit');
 
-            // Hàm xử lý hiển thị
+            // 1. Hàm xử lý hiển thị Select User
             function toggleUserSelect() {
                 if (recipientSelect.value === 'specific') {
+                    // Hiệu ứng Fade In
                     userSelectDiv.style.display = 'block';
-                    // Thêm hiệu ứng fade-in nhẹ nếu muốn
                     userSelectDiv.style.opacity = 0;
                     setTimeout(() => userSelectDiv.style.opacity = 1, 50);
+                    // Required field khi chọn specific
+                    userSelectDiv.querySelector('select').setAttribute('required', 'required');
                 } else {
                     userSelectDiv.style.display = 'none';
+                    // Bỏ required để không bị lỗi form
+                    userSelectDiv.querySelector('select').removeAttribute('required');
                 }
             }
 
             // Lắng nghe sự kiện change
             recipientSelect.addEventListener('change', toggleUserSelect);
 
-            // Chạy một lần khi load trang (đề phòng trường hợp trình duyệt lưu cache giá trị select)
+            // Chạy một lần khi load trang
             toggleUserSelect();
+
+            // 2. Xử lý nút Submit (Tránh double click)
+            form.addEventListener('submit', function() {
+                const btnText = btnSubmit.querySelector('.btn-text');
+                const btnLoading = btnSubmit.querySelector('.btn-loading');
+
+                // Disable nút và hiện loading
+                btnSubmit.disabled = true;
+                btnSubmit.classList.add('disabled');
+                btnText.classList.add('d-none');
+                btnLoading.classList.remove('d-none');
+            });
         });
     </script>
 
-    {{-- Thêm style nội bộ nhỏ để đảm bảo hiển thị đúng --}}
+    {{-- Style nội bộ --}}
     <style>
         .card {
             border-radius: 10px;
@@ -152,6 +180,11 @@
 
         #user-select {
             transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Loading button style */
+        .btn-loading {
+            font-weight: 600;
         }
     </style>
 
