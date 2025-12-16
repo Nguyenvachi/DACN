@@ -14,6 +14,9 @@ use App\Services\LichKhamService;
 use App\Models\HoaDon;
 use App\Services\RoomAvailabilityService;
 use App\Services\MedicalWorkflowService;
+use App\Models\HoanTien;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\HoaDonHoanTien;
 
 class LichHenController extends Controller
 {
@@ -404,7 +407,43 @@ class LichHenController extends Controller
             return back()->with('error', 'Không thể hủy lịch hẹn này');
         }
 
+        // Cập nhật trạng thái hủy
         $lichHen->update(['trang_thai' => \App\Models\LichHen::STATUS_CANCELLED_VN]);
+
+        // Xử lý hoàn tiền tự động nếu đã thanh toán
+        if ($lichHen->payment_status === 'Đã thanh toán' && $lichHen->hoaDon) {
+            $hoaDon = $lichHen->hoaDon;
+            $soTienHoan = $hoaDon->so_tien_da_thanh_toan - $hoaDon->so_tien_da_hoan;
+
+            if ($soTienHoan > 0) {
+                // Tạo yêu cầu hoàn tiền
+                $hoanTien = HoanTien::create([
+                    'hoa_don_id' => $hoaDon->id,
+                    'so_tien' => $soTienHoan,
+                    'ly_do' => 'Hủy lịch hẹn',
+                    'trang_thai' => 'Đang xử lý',
+                    'provider' => $hoaDon->phuong_thuc ?? 'CASH',
+                    'provider_ref' => 'REFUND-' . now()->format('YmdHis') . '-' . $hoaDon->id,
+                ]);
+
+                // Cập nhật hóa đơn
+                $hoaDon->so_tien_da_hoan += $soTienHoan;
+                $hoaDon->trang_thai = 'Đã hủy';
+                $hoaDon->save();
+
+                // Gửi email thông báo
+                try {
+                    if ($lichHen->user && $lichHen->user->email) {
+                        Mail::to($lichHen->user->email)->send(new HoaDonHoanTien($hoaDon, $hoanTien));
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Send refund email failed: ' . $e->getMessage());
+                }
+
+                return redirect()->route('patient.lichhen.index')
+                    ->with('success', 'Đã hủy lịch hẹn thành công. Yêu cầu hoàn tiền ' . number_format($soTienHoan) . ' VNĐ đang được xử lý.');
+            }
+        }
 
         return redirect()->route('patient.lichhen.index')->with('success', 'Đã hủy lịch hẹn thành công');
     }
@@ -424,7 +463,42 @@ class LichHenController extends Controller
             return back()->with('error', 'Không thể hủy lịch hẹn này');
         }
 
+        // Cập nhật trạng thái hủy
         $lichHen->update(['trang_thai' => \App\Models\LichHen::STATUS_CANCELLED_VN]);
+
+        // Xử lý hoàn tiền tự động nếu đã thanh toán
+        if ($lichHen->payment_status === 'Đã thanh toán' && $lichHen->hoaDon) {
+            $hoaDon = $lichHen->hoaDon;
+            $soTienHoan = $hoaDon->so_tien_da_thanh_toan - $hoaDon->so_tien_da_hoan;
+
+            if ($soTienHoan > 0) {
+                // Tạo yêu cầu hoàn tiền
+                $hoanTien = HoanTien::create([
+                    'hoa_don_id' => $hoaDon->id,
+                    'so_tien' => $soTienHoan,
+                    'ly_do' => 'Hủy lịch hẹn',
+                    'trang_thai' => 'Đang xử lý',
+                    'provider' => $hoaDon->phuong_thuc ?? 'CASH',
+                    'provider_ref' => 'REFUND-' . now()->format('YmdHis') . '-' . $hoaDon->id,
+                ]);
+
+                // Cập nhật hóa đơn
+                $hoaDon->so_tien_da_hoan += $soTienHoan;
+                $hoaDon->trang_thai = 'Đã hủy';
+                $hoaDon->save();
+
+                // Gửi email thông báo
+                try {
+                    if ($lichHen->user && $lichHen->user->email) {
+                        Mail::to($lichHen->user->email)->send(new HoaDonHoanTien($hoaDon, $hoanTien));
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Send refund email failed: ' . $e->getMessage());
+                }
+
+                return back()->with('success', 'Đã hủy lịch hẹn. Yêu cầu hoàn tiền ' . number_format($soTienHoan) . ' VNĐ đang được xử lý.');
+            }
+        }
 
         return back()->with('success', 'Đã hủy lịch hẹn');
     }

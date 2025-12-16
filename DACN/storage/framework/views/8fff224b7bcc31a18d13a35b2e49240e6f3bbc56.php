@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title>Nhân viên - <?php echo e(config('app.name')); ?></title>
+
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+
+    <?php echo $__env->yieldPushContent('styles'); ?>
+
+    <!-- ADDED: Unified design system -->
+    <link rel="stylesheet" href="<?php echo e(asset('css/design-system-unified.css')); ?>">
+
+    <style>
+        /* ENHANCED: Modern VietCare Design System for Staff (Parent: layouts/staff.blade.php) */
+        :root {
+            --vietcare-green: #10b981;
+            --vietcare-green-dark: #059669;
+            --primary-purple: #667eea;
+            --primary-blue: #3b82f6;
+            --warning-orange: #f59e0b;
+            --sidebar-width: 260px;
+        }
+
+        body {
+            background: #f5f6fa;
+            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* Sidebar with VietCare styling */
+        .staff-sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+            border-right: 1px solid #e5e7eb;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .staff-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .staff-sidebar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--vietcare-green) 0%, var(--vietcare-green-dark) 100%);
+            border-radius: 10px;
+        }
+
+        /* Brand Header */
+        .sidebar-brand {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--vietcare-green) 0%, var(--vietcare-green-dark) 100%);
+            color: white;
+            text-align: center;
+            border-bottom: 3px solid var(--vietcare-green-dark);
+        }
+
+        .sidebar-brand h4 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .sidebar-brand small {
+            opacity: 0.9;
+            font-size: 0.85rem;
+        }
+
+        /* Menu Groups */
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-group-title {
+            padding: 0.75rem 1.5rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #6b7280;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .menu-item i {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%);
+            color: var(--vietcare-green);
+            transform: translateX(5px);
+        }
+
+        .menu-item:hover i {
+            transform: scale(1.15);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: var(--vietcare-green);
+            font-weight: 600;
+            border-left: 4px solid var(--vietcare-green);
+        }
+
+        .menu-item.active::before {
+            content: '';
+            position: absolute;
+            right: 1.5rem;
+            width: 8px;
+            height: 8px;
+            background: var(--vietcare-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--vietcare-green);
+        }
+
+        /* Main Content */
+        .staff-main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navbar */
+        .staff-topbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--vietcare-green) 0%, var(--vietcare-green-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 0.75rem;
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        /* Footer */
+        .staff-footer {
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .staff-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .staff-sidebar.show {
+                transform: translateX(0);
+            }
+
+            .staff-main-content {
+                margin-left: 0;
+            }
+
+            .mobile-toggle {
+                display: block !important;
+            }
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: var(--vietcare-green);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    
+    
+    <aside class="staff-sidebar" id="staffSidebar">
+        
+        <div class="sidebar-brand">
+            <i class="fas fa-hospital fs-3 mb-2"></i>
+            <h4>VietCare</h4>
+            <small>Hệ thống Nhân viên</small>
+        </div>
+
+        
+        <nav class="sidebar-menu">
+            
+            <div class="menu-group-title">
+                <i class="bi bi-grid-fill me-1"></i> Dashboard
+            </div>
+            <a href="<?php echo e(route('staff.dashboard')); ?>"
+               class="menu-item <?php echo e(request()->routeIs('staff.dashboard') ? 'active' : ''); ?>">
+                <i class="bi bi-speedometer2"></i>
+                <span>Tổng quan</span>
+            </a>
+
+            
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-person-badge-fill me-1"></i> Tiếp tân
+            </div>
+            <a href="<?php echo e(route('staff.checkin.index')); ?>"
+               class="menu-item <?php echo e(request()->routeIs('staff.checkin.*') ? 'active' : ''); ?>">
+                <i class="bi bi-person-check-fill"></i>
+                <span>Check-in Bệnh nhân</span>
+            </a>
+            <a href="<?php echo e(route('staff.queue.index')); ?>"
+               class="menu-item <?php echo e(request()->routeIs('staff.queue.*') ? 'active' : ''); ?>">
+                <i class="bi bi-people-fill"></i>
+                <span>Quản lý Hàng đợi</span>
+            </a>
+
+            
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-prescription2 me-1"></i> Quản lý Đơn thuốc
+            </div>
+            <a href="<?php echo e(route('staff.donthuoc.index')); ?>"
+               class="menu-item <?php echo e(request()->routeIs('staff.donthuoc.index') ? 'active' : ''); ?>">
+                <i class="bi bi-list-ul"></i>
+                <span>Tất cả đơn thuốc</span>
+            </a>
+            <a href="<?php echo e(route('staff.donthuoc.dang-cho')); ?>"
+               class="menu-item <?php echo e(request()->routeIs('staff.donthuoc.dang-cho') ? 'active' : ''); ?>">
+                <i class="bi bi-hourglass-split"></i>
+                <span>Đơn chờ cấp</span>
+                <?php $dangCho = \App\Models\DonThuoc::whereNull('ngay_cap_thuoc')->count(); ?>
+                <?php if($dangCho > 0): ?>
+                    <span class="badge bg-warning text-dark ms-auto"><?php echo e($dangCho); ?></span>
+                <?php endif; ?>
+            </a>
+            <a href="<?php echo e(route('staff.donthuoc.da-cap')); ?>"
+               class="menu-item <?php echo e(request()->routeIs('staff.donthuoc.da-cap') ? 'active' : ''); ?>">
+                <i class="bi bi-check-circle"></i>
+                <span>Đã cấp thuốc</span>
+            </a>
+
+            
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-receipt me-1"></i> Quản lý Hóa đơn
+            </div>
+            <a href="<?php echo e(route('staff.hoadon.index')); ?>"
+               class="menu-item <?php echo e(request()->routeIs('staff.hoadon.*') ? 'active' : ''); ?>">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Hóa đơn</span>
+            </a>
+
+            
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-calendar-week-fill me-1"></i> Lịch làm việc
+            </div>
+            <a href="<?php echo e(route('staff.dashboard')); ?>#lich"
+               class="menu-item">
+                <i class="bi bi-calendar3"></i>
+                <span>Lịch của tôi</span>
+            </a>
+
+            
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-person-fill me-1"></i> Cá nhân
+            </div>
+            <a href="<?php echo e(route('profile.edit')); ?>"
+               class="menu-item">
+                <i class="bi bi-person-gear"></i>
+                <span>Hồ sơ của tôi</span>
+            </a>
+        </nav>
+    </aside>
+
+    
+    <div class="staff-main-content">
+        
+        <header class="staff-topbar">
+            <div class="d-flex align-items-center">
+                <button class="mobile-toggle me-3" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                </button>
+                <h1 class="topbar-title"><?php echo $__env->yieldContent('page-title', 'Dashboard'); ?></h1>
+            </div>
+
+            <div class="topbar-user">
+                <div class="dropdown">
+                    <button class="btn btn-link text-decoration-none d-flex align-items-center gap-2"
+                            type="button"
+                            data-bs-toggle="dropdown">
+                        <div class="user-avatar">
+                            <?php echo e(strtoupper(substr(auth()->user()->name, 0, 1))); ?>
+
+                        </div>
+                        <div class="text-start d-none d-md-block">
+                            <div class="fw-semibold text-dark"><?php echo e(auth()->user()->name); ?></div>
+                            <small class="text-muted">Nhân viên</small>
+                        </div>
+                        <i class="bi bi-chevron-down text-muted"></i>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="<?php echo e(route('profile.edit')); ?>">
+                                <i class="bi bi-person-gear me-2"></i>Hồ sơ của tôi
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="POST" action="<?php echo e(route('logout')); ?>">
+                                <?php echo csrf_field(); ?>
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        
+        <main class="content-wrapper">
+            <?php if(session('status')): ?>
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i><?php echo e(session('status')); ?>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if(session('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i><?php echo e(session('success')); ?>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if(session('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo e(session('error')); ?>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php echo $__env->yieldContent('content'); ?>
+        </main>
+
+        
+        <footer class="staff-footer">
+            <p class="mb-0">&copy; <?php echo e(date('Y')); ?> VietCare Healthcare System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <?php echo $__env->yieldPushContent('scripts'); ?>
+
+    <script>
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('staffSidebar').classList.toggle('show');
+        }
+
+        // Close sidebar on outside click (mobile)
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('staffSidebar');
+            const toggle = document.querySelector('.mobile-toggle');
+
+            if (window.innerWidth <= 768 &&
+                !sidebar.contains(event.target) &&
+                !toggle.contains(event.target) &&
+                sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
+<?php /**PATH F:\WORKING\DACN\DACN\resources\views/layouts/staff.blade.php ENDPATH**/ ?>

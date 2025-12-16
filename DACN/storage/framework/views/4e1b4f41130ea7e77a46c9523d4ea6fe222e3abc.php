@@ -21,7 +21,7 @@
             </nav>
         </div>
         <div class="d-flex gap-2">
-            <?php if($record->lichHen && $record->lichHen->trang_thai === 'Đang khám'): ?>
+            <?php if($record->trang_thai === 'Đang khám'): ?>
             <button type="button" class="btn btn-success" id="completeExamBtn">
                 <i class="fas fa-check-circle me-2"></i>Hoàn thành khám
             </button>
@@ -36,7 +36,7 @@
     <div class="card vc-card mb-4">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <h5 class="mb-3">
                         <i class="fas fa-user-injured me-2" style="color: #3b82f6;"></i>
                         <?php echo e($record->user->name ?? 'N/A'); ?>
@@ -62,29 +62,6 @@
                             </p>
                             <?php endif; ?>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4 text-end">
-                    
-                    <div class="d-grid gap-2">
-                        <a href="<?php echo e(route('doctor.donthuoc.create', $record->id)); ?>" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-prescription-bottle-alt me-2"></i>Kê đơn thuốc
-                        </a>
-                        <a href="<?php echo e(route('doctor.xet-nghiem.create', ['benh_an_id' => $record->id])); ?>" class="btn btn-outline-danger btn-sm">
-                            <i class="fas fa-flask me-2"></i>Xét nghiệm
-                        </a>
-                        <a href="<?php echo e(route('doctor.sieu-am.create', $record->id)); ?>" class="btn btn-outline-info btn-sm">
-                            <i class="fas fa-baby me-2"></i>Siêu âm
-                        </a>
-                        <a href="<?php echo e(route('doctor.noi-soi.create', $record->id)); ?>" class="btn btn-outline-success btn-sm">
-                            <i class="fas fa-microscope me-2"></i>Nội soi
-                        </a>
-                        <a href="<?php echo e(route('doctor.x-quang.create', $record->id)); ?>" class="btn btn-outline-warning btn-sm">
-                            <i class="fas fa-x-ray me-2"></i>X-quang
-                        </a>
-                        <a href="<?php echo e(route('doctor.thu-thuat.create', $record->id)); ?>" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-syringe me-2"></i>Thủ thuật
-                        </a>
                     </div>
                 </div>
             </div>
@@ -247,6 +224,30 @@
                                       placeholder="Ghi chú khác..."><?php echo e(old('ghi_chu', $record->ghi_chu)); ?></textarea>
                         </div>
 
+                        
+                        <div class="card border-primary mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Lịch hẹn tái khám</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Ngày hẹn tái khám</label>
+                                        <input type="date" name="ngay_hen_tai_kham" class="form-control" 
+                                               value="<?php echo e(old('ngay_hen_tai_kham', $record->ngay_hen_tai_kham ? $record->ngay_hen_tai_kham->format('Y-m-d') : '')); ?>"
+                                               min="<?php echo e(date('Y-m-d')); ?>">
+                                        <small class="text-muted">Để trống nếu không cần tái khám</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Lý do tái khám</label>
+                                        <input type="text" name="ly_do_tai_kham" class="form-control" 
+                                               value="<?php echo e(old('ly_do_tai_kham', $record->ly_do_tai_kham)); ?>"
+                                               placeholder="VD: Kiểm tra lại, xem kết quả XN...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Tệp đính kèm mới</label>
                             <input type="file" name="files[]" multiple class="form-control">
@@ -396,7 +397,7 @@
                             <div class="d-flex justify-content-between align-items-start mb-1">
                                 <h6 class="mb-0 small"><?php echo e($xn->loai ?? $xn->loai_xet_nghiem ?? 'Xét nghiệm'); ?></h6>
                                 <div>
-                                    <?php if(in_array($xn->trang_thai, ['Có kết quả', 'Đã có kết quả', 'completed']) || $xn->trang_thai_xn === 'Đã có kết quả'): ?>
+                                    <?php if(in_array($xn->trang_thai, ['Có kết quả', 'Đã có kết quả', 'completed']) || $xn->trang_thai_xn === 'Đã có kết quả' || $xn->chi_so): ?>
                                     <span class="badge bg-success"><i class="fas fa-check me-1"></i>Hoàn thành</span>
                                     <?php elseif($xn->trang_thai_xn === 'Đang xử lý' || $xn->trang_thai === 'processing' || $xn->trang_thai === 'Đang xét nghiệm'): ?>
                                     <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Đang xử lý</span>
@@ -412,7 +413,7 @@
                             <p class="mb-2 small text-muted"><?php echo e(Str::limit($xn->mo_ta, 60)); ?></p>
                             <?php endif; ?>
                             <div class="d-flex gap-2">
-                                <?php if(in_array($xn->trang_thai, ['Có kết quả', 'Đã có kết quả', 'completed']) || $xn->trang_thai_xn === 'Đã có kết quả'): ?>
+                                <?php if(in_array($xn->trang_thai, ['Có kết quả', 'Đã có kết quả', 'completed']) || $xn->trang_thai_xn === 'Đã có kết quả' || $xn->chi_so): ?>
                                 <a href="<?php echo e(route('doctor.xet-nghiem.show', $xn->id)); ?>" class="btn btn-sm btn-success">
                                     <i class="fas fa-eye me-1"></i>Xem chi tiết
                                 </a>
@@ -460,7 +461,7 @@
                             <div class="d-flex justify-content-between align-items-start mb-1">
                                 <h6 class="mb-0 small"><?php echo e($sa->loai_sieu_am); ?></h6>
                                 <div>
-                                    <?php if($sa->trang_thai === 'Đã có kết quả'): ?>
+                                    <?php if($sa->trang_thai === 'Đã có kết quả' || $sa->trang_thai === 'Hoàn thành' || $sa->ket_qua): ?>
                                     <span class="badge bg-success"><i class="fas fa-check me-1"></i>Hoàn thành</span>
                                     <?php elseif($sa->trang_thai === 'Đang thực hiện'): ?>
                                     <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Đang thực hiện</span>
@@ -482,7 +483,7 @@
                             </small>
                             <?php endif; ?>
                             <div class="mt-2 d-flex gap-2">
-                                <?php if($sa->trang_thai === 'Đã có kết quả' || $sa->trang_thai === 'Hoàn thành'): ?>
+                                <?php if($sa->trang_thai === 'Đã có kết quả' || $sa->trang_thai === 'Hoàn thành' || $sa->ket_qua): ?>
                                 <a href="<?php echo e(route('doctor.sieu-am.show', $sa->id)); ?>" class="btn btn-sm btn-success">
                                     <i class="fas fa-eye me-1"></i>Xem chi tiết
                                 </a>
@@ -500,6 +501,220 @@
                         <i class="fas fa-baby fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Chưa chỉ định siêu âm</p>
                         <a href="<?php echo e(route('doctor.sieu-am.create', $record->id)); ?>" class="btn btn-sm vc-btn-primary">
+                            <i class="fas fa-plus me-2"></i>Chỉ định ngay
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            
+            <div class="card vc-card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-heartbeat me-2" style="color: #ec4899;"></i>
+                        Theo dõi thai kỳ
+                    </h5>
+                    <a href="<?php echo e(route('doctor.theo-doi-thai-ky.create', ['benh_an_id' => $record->id])); ?>" class="btn btn-sm vc-btn-primary">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <?php
+                        $theoDoiThaiKys = $record->theoDoiThaiKy ?? collect();
+                    ?>
+
+                    <?php if($theoDoiThaiKys->count() > 0): ?>
+                    <div class="list-group list-group-flush">
+                        <?php $__currentLoopData = $theoDoiThaiKys; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tdtk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="mb-0 small">Ngày khám: <?php echo e(\Carbon\Carbon::parse($tdtk->ngay_kham)->format('d/m/Y')); ?></h6>
+                                <div>
+                                    <?php if($tdtk->trang_thai_thanh_toan === 'Đã thanh toán'): ?>
+                                    <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Đã thanh toán</span>
+                                    <?php else: ?>
+                                    <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Chưa thanh toán</span>
+                                    <?php endif; ?>
+                                    <?php if($tdtk->goi_dich_vu): ?>
+                                    <span class="badge bg-info ms-1"><?php echo e($tdtk->goi_dich_vu); ?></span>
+                                    <?php endif; ?>
+                                    <?php if($tdtk->gia_tien): ?>
+                                    <span class="badge bg-primary ms-1"><?php echo e(number_format($tdtk->gia_tien, 0, ',', '.')); ?> đ</span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <?php if($tdtk->tuoi_thai): ?>
+                            <p class="mb-1 small text-muted">
+                                <i class="fas fa-calendar-alt me-1"></i>Tuổi thai: <?php echo e($tdtk->tuoi_thai); ?> tuần
+                            </p>
+                            <?php endif; ?>
+                            <?php if($tdtk->can_nang): ?>
+                            <p class="mb-1 small text-muted">
+                                <i class="fas fa-weight me-1"></i>Cân nặng: <?php echo e($tdtk->can_nang); ?> kg
+                            </p>
+                            <?php endif; ?>
+                            <?php if($tdtk->huyet_ap): ?>
+                            <p class="mb-1 small text-muted">
+                                <i class="fas fa-heartbeat me-1"></i>Huyết áp: <?php echo e($tdtk->huyet_ap); ?>
+
+                            </p>
+                            <?php endif; ?>
+                            <?php if($tdtk->tim_thai): ?>
+                            <p class="mb-2 small text-muted">
+                                <i class="fas fa-heart me-1"></i>Tim thai: <?php echo e($tdtk->tim_thai); ?> nhịp/phút
+                            </p>
+                            <?php endif; ?>
+                            <div class="mt-2 d-flex gap-2">
+                                <a href="<?php echo e(route('doctor.theo-doi-thai-ky.show', $tdtk->id)); ?>" class="btn btn-sm btn-success">
+                                    <i class="fas fa-eye me-1"></i>Xem chi tiết
+                                </a>
+                                <a href="<?php echo e(route('doctor.theo-doi-thai-ky.edit', $tdtk->id)); ?>" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit me-1"></i>Cập nhật
+                                </a>
+                            </div>
+                        </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </div>
+                    <?php else: ?>
+                    <div class="text-center py-4">
+                        <i class="fas fa-heartbeat fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa có theo dõi thai kỳ</p>
+                        <a href="<?php echo e(route('doctor.theo-doi-thai-ky.create', ['benh_an_id' => $record->id])); ?>" class="btn btn-sm vc-btn-primary">
+                            <i class="fas fa-plus me-2"></i>Thêm theo dõi ngay
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            
+            <div class="card vc-card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-x-ray me-2" style="color: #f59e0b;"></i>
+                        X-quang
+                    </h5>
+                    <a href="<?php echo e(route('doctor.x-quang.create', $record->id)); ?>" class="btn btn-sm vc-btn-primary">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <?php
+                        $xQuangs = $record->xQuangs ?? collect();
+                    ?>
+
+                    <?php if($xQuangs->count() > 0): ?>
+                    <div class="list-group list-group-flush">
+                        <?php $__currentLoopData = $xQuangs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $xq): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="mb-0 small"><?php echo e($xq->loai_x_quang); ?></h6>
+                                <div>
+                                    <?php if($xq->trang_thai === 'Đã có kết quả' || $xq->trang_thai === 'Hoàn thành' || $xq->ket_qua): ?>
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i>Hoàn thành</span>
+                                    <?php elseif($xq->trang_thai === 'Đang thực hiện' || $xq->trang_thai === 'Đang chụp'): ?>
+                                    <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Đang thực hiện</span>
+                                    <?php else: ?>
+                                    <span class="badge bg-secondary"><i class="fas fa-hourglass-start me-1"></i>Chờ chụp</span>
+                                    <?php endif; ?>
+                                    <?php if($xq->gia_tien): ?>
+                                    <span class="badge bg-info ms-1"><?php echo e(number_format($xq->gia_tien, 0, ',', '.')); ?> đ</span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <?php if($xq->vi_tri): ?>
+                            <p class="mb-2 small text-muted">Vị trí: <?php echo e($xq->vi_tri); ?></p>
+                            <?php endif; ?>
+                            <?php if($xq->chi_dinh): ?>
+                            <p class="mb-2 small text-muted"><?php echo e(Str::limit($xq->chi_dinh, 60)); ?></p>
+                            <?php endif; ?>
+                            <div class="mt-2 d-flex gap-2">
+                                <?php if($xq->trang_thai === 'Đã có kết quả' || $xq->trang_thai === 'Hoàn thành' || $xq->ket_qua): ?>
+                                <a href="<?php echo e(route('doctor.x-quang.show', $xq->id)); ?>" class="btn btn-sm btn-success">
+                                    <i class="fas fa-eye me-1"></i>Xem chi tiết
+                                </a>
+                                <?php else: ?>
+                                <a href="<?php echo e(route('doctor.x-quang.edit', $xq->id)); ?>" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit me-1"></i>Nhập kết quả
+                                </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </div>
+                    <?php else: ?>
+                    <div class="text-center py-4">
+                        <i class="fas fa-x-ray fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa chỉ định X-quang</p>
+                        <a href="<?php echo e(route('doctor.x-quang.create', $record->id)); ?>" class="btn btn-sm vc-btn-primary">
+                            <i class="fas fa-plus me-2"></i>Chỉ định ngay
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            
+            <div class="card vc-card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-microscope me-2" style="color: #10b981;"></i>
+                        Nội soi
+                    </h5>
+                    <a href="<?php echo e(route('doctor.noi-soi.create', $record->id)); ?>" class="btn btn-sm vc-btn-primary">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <?php
+                        $noiSois = $record->noiSois ?? collect();
+                    ?>
+
+                    <?php if($noiSois->count() > 0): ?>
+                    <div class="list-group list-group-flush">
+                        <?php $__currentLoopData = $noiSois; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ns): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="mb-0 small"><?php echo e($ns->loai_noi_soi); ?></h6>
+                                <div>
+                                    <?php if($ns->trang_thai === 'Đã có kết quả' || $ns->trang_thai === 'Hoàn thành' || $ns->ket_qua): ?>
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i>Hoàn thành</span>
+                                    <?php elseif($ns->trang_thai === 'Đang thực hiện'): ?>
+                                    <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Đang thực hiện</span>
+                                    <?php else: ?>
+                                    <span class="badge bg-secondary"><i class="fas fa-hourglass-start me-1"></i>Chờ thực hiện</span>
+                                    <?php endif; ?>
+                                    <?php if($ns->gia_tien): ?>
+                                    <span class="badge bg-info ms-1"><?php echo e(number_format($ns->gia_tien, 0, ',', '.')); ?> đ</span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <?php if($ns->chi_dinh): ?>
+                            <p class="mb-2 small text-muted"><?php echo e(Str::limit($ns->chi_dinh, 60)); ?></p>
+                            <?php endif; ?>
+                            <?php if($ns->chuan_bi): ?>
+                            <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Chuẩn bị: <?php echo e(Str::limit($ns->chuan_bi, 40)); ?></small>
+                            <?php endif; ?>
+                            <div class="mt-2 d-flex gap-2">
+                                <?php if($ns->trang_thai === 'Đã có kết quả' || $ns->trang_thai === 'Hoàn thành' || $ns->ket_qua): ?>
+                                <a href="<?php echo e(route('doctor.noi-soi.show', $ns->id)); ?>" class="btn btn-sm btn-success">
+                                    <i class="fas fa-eye me-1"></i>Xem chi tiết
+                                </a>
+                                <?php else: ?>
+                                <a href="<?php echo e(route('doctor.noi-soi.edit', $ns->id)); ?>" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit me-1"></i>Nhập kết quả
+                                </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </div>
+                    <?php else: ?>
+                    <div class="text-center py-4">
+                        <i class="fas fa-microscope fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa chỉ định nội soi</p>
+                        <a href="<?php echo e(route('doctor.noi-soi.create', $record->id)); ?>" class="btn btn-sm vc-btn-primary">
                             <i class="fas fa-plus me-2"></i>Chỉ định ngay
                         </a>
                     </div>
@@ -530,7 +745,7 @@
                             <div class="d-flex justify-content-between align-items-start mb-1">
                                 <h6 class="mb-0 small"><?php echo e($tt->ten_thu_thuat); ?></h6>
                                 <div>
-                                    <?php if($tt->trang_thai === 'Đã hoàn thành'): ?>
+                                    <?php if($tt->trang_thai === 'Đã hoàn thành' || $tt->trang_thai === 'Hoàn thành' || $tt->ket_qua): ?>
                                     <span class="badge bg-success"><i class="fas fa-check me-1"></i>Hoàn thành</span>
                                     <?php elseif($tt->trang_thai === 'Đang thực hiện'): ?>
                                     <span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Đang thực hiện</span>
@@ -546,7 +761,7 @@
                             <p class="mb-2 small text-muted"><?php echo e(Str::limit($tt->chi_tiet_truoc_thu_thuat, 60)); ?></p>
                             <?php endif; ?>
                             <div class="mt-2 d-flex gap-2">
-                                <?php if($tt->trang_thai === 'Đã hoàn thành' || $tt->trang_thai === 'Hoàn thành'): ?>
+                                <?php if($tt->trang_thai === 'Đã hoàn thành' || $tt->trang_thai === 'Hoàn thành' || $tt->ket_qua): ?>
                                 <a href="<?php echo e(route('doctor.thu-thuat.show', $tt->id)); ?>" class="btn btn-sm btn-success">
                                     <i class="fas fa-eye me-1"></i>Xem chi tiết
                                 </a>

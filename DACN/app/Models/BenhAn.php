@@ -17,6 +17,8 @@ class BenhAn extends Model
         'dieu_tri',
         'ghi_chu',
         'trang_thai',
+        'ngay_hen_tai_kham',
+        'ly_do_tai_kham',
         // Vital signs
         'huyet_ap',
         'nhip_tim',
@@ -30,6 +32,7 @@ class BenhAn extends Model
 
     protected $casts = [
         'ngay_kham' => 'date',
+        'ngay_hen_tai_kham' => 'date',
     ];
 
     public function benhNhan()
@@ -117,6 +120,11 @@ class BenhAn extends Model
         return $this->hasMany(XQuang::class);
     }
 
+    public function theoDoiThaiKy()
+    {
+        return $this->hasMany(TheoDoiThaiKy::class);
+    }
+
     // ✅ Helper: Tính tổng tiền tất cả dịch vụ đã chỉ định
     public function tongTienDichVu()
     {
@@ -124,7 +132,8 @@ class BenhAn extends Model
         $tongSieuAm = $this->sieuAms()->sum('gia_tien') ?? 0;
         $tongThuThuat = $this->thuThuats()->sum('gia_tien') ?? 0;
         $tongDichVuNangCao = $this->dichVuNangCao()->sum('gia_tien') ?? 0;
+        $tongTheoDoiThaiKy = $this->theoDoiThaiKy()->sum('gia_tien') ?? 0;
 
-        return $tongXetNghiem + $tongSieuAm + $tongThuThuat + $tongDichVuNangCao;
+        return $tongXetNghiem + $tongSieuAm + $tongThuThuat + $tongDichVuNangCao + $tongTheoDoiThaiKy;
     }
 }

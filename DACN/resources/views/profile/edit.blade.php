@@ -148,6 +148,16 @@
         @if($role === 'doctor')
         {{-- TAB THÔNG TIN CHUYÊN MÔN CHO BÁC SĨ --}}
         <div class="tab-pane fade" id="professional" role="tabpanel">
+            @php
+                $bacSi = \App\Models\BacSi::where('user_id', auth()->id())->first();
+            @endphp
+            
+            @if(!$bacSi)
+                <div class="alert alert-danger">
+                    <strong>Debug:</strong> Không tìm thấy hồ sơ bác sĩ cho user_id: {{ auth()->id() }}
+                </div>
+            @endif
+            
             <div class="row g-4">
                 <div class="col-lg-8">
                     <div class="card border-0 shadow-sm">
@@ -157,10 +167,6 @@
                             </h5>
                         </div>
                         <div class="card-body p-4">
-                            @php
-                                $bacSi = \App\Models\BacSi::where('user_id', auth()->id())->first();
-                            @endphp
-
                             @if($bacSi)
                             <form action="{{ route('profile.updateDoctor') }}" method="POST" enctype="multipart/form-data">
                                 @csrf

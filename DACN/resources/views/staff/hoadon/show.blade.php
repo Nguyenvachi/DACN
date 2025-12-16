@@ -274,6 +274,15 @@
                             <i class="fas fa-hand-holding-usd me-2 text-success"></i>Thu tiền mặt
                         </h5>
 
+                        @php
+                            $daThanhtoan = $hoaDon->trang_thai === 'Đã thanh toán';
+                        @endphp
+
+                        @if($daThanhtoan)
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i>Hóa đơn đã được thanh toán
+                            </div>
+                        @else
                         <form method="POST" action="{{ route('staff.hoadon.cash_collect', $hoaDon) }}" class="row g-3">
                             @csrf
                             <div class="col-12">
@@ -293,6 +302,7 @@
                                 </button>
                             </div>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -305,13 +315,17 @@
                             <i class="fas fa-credit-card me-2 text-primary"></i>Thanh toán Online
                         </h5>
 
+                        @php
+                            $daThanhtoan = $hoaDon->trang_thai === 'Đã thanh toán';
+                        @endphp
+
                         {{-- VNPay --}}
                         <form method="POST" action="{{ route('vnpay.create') }}" class="mb-2">
                             @csrf
                             <input type="hidden" name="hoa_don_id" value="{{ $hoaDon->id }}">
                             <input type="hidden" name="amount" value="{{ $hoaDon->tong_tien }}">
-                            <button class="btn btn-primary w-100" {{ $hoaDon->tong_tien == 0 ? 'disabled' : '' }}>
-                                Thanh toán qua VNPay
+                            <button class="btn btn-primary w-100" {{ ($hoaDon->tong_tien == 0 || $daThanhtoan) ? 'disabled' : '' }}>
+                                {{ $daThanhtoan ? 'Đã thanh toán' : 'Thanh toán qua VNPay' }}
                             </button>
                         </form>
 
@@ -320,8 +334,8 @@
                             @csrf
                             <input type="hidden" name="hoa_don_id" value="{{ $hoaDon->id }}">
                             <input type="hidden" name="amount" value="{{ $hoaDon->tong_tien }}">
-                            <button class="btn btn-danger w-100" {{ $hoaDon->tong_tien == 0 ? 'disabled' : '' }}>
-                                Thanh toán qua MoMo
+                            <button class="btn btn-danger w-100" {{ ($hoaDon->tong_tien == 0 || $daThanhtoan) ? 'disabled' : '' }}>
+                                {{ $daThanhtoan ? 'Đã thanh toán' : 'Thanh toán qua MoMo' }}
                             </button>
                         </form>
 

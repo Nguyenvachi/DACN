@@ -12,6 +12,14 @@
                 Hóa đơn {{ $hoaDon->ma_hoa_don ?? '#' . $hoaDon->id }}
             </h2>
             <div class="d-flex gap-2">
+                @if($hoaDon->hoanTiens && $hoaDon->hoanTiens->count() > 0)
+                    <a href="{{ route('admin.hoadon.refunds.list', $hoaDon) }}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-undo me-1"></i> Lịch sử hoàn tiền
+                    </a>
+                @endif
+                <a href="{{ route('admin.hoadon.refund.form', $hoaDon) }}" class="btn btn-danger btn-sm">
+                    <i class="fas fa-hand-holding-usd me-1"></i> Hoàn tiền
+                </a>
                 <a href="{{ route('admin.hoadon.index') }}" class="btn btn-secondary btn-sm">
                     <i class="fas fa-arrow-left me-1"></i> Quay lại
                 </a>

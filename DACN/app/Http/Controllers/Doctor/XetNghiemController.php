@@ -95,7 +95,7 @@ class XetNghiemController extends Controller
 
             DB::commit();
 
-            return redirect()->route('doctor.benhan.show', $benhAn->id)
+            return redirect()->route('doctor.benhan.edit', $benhAn->id)
                 ->with('success', 'Đã chỉ định xét nghiệm thành công!')
                 ->with('show_quick_actions', true)
                 ->with('benh_an_id', $benhAn->id);

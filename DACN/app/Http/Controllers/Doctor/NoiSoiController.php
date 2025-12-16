@@ -17,9 +17,8 @@ class NoiSoiController extends Controller
     /**
      * Trang chỉ định nội soi cho bệnh án
      */
-    public function create(Request $request)
+    public function create($benhAnId)
     {
-        $benhAnId = $request->get('benh_an_id');
         $benhAn = BenhAn::findOrFail($benhAnId);
 
         $bacSi = BacSi::where('user_id', Auth::id())->first();
@@ -27,16 +26,7 @@ class NoiSoiController extends Controller
             abort(403, 'Bạn không có quyền chỉ định nội soi cho bệnh án này.');
         }
 
-        $dichVuNoiSoi = DichVu::where('loai', 'Nâng cao')
-            ->where('hoat_dong', true)
-            ->where(function ($q) {
-                $q->where('ten_dich_vu', 'like', '%nội soi%')
-                    ->orWhere('ten_dich_vu', 'like', '%Nội soi%');
-            })
-            ->orderBy('ten_dich_vu')
-            ->get();
-
-        return view('doctor.noi-soi.create', compact('benhAn', 'dichVuNoiSoi'));
+        return view('doctor.noi-soi.create', compact('benhAn'));
     }
 
     /**
@@ -65,7 +55,7 @@ class NoiSoiController extends Controller
 
             NoiSoi::create([
                 'benh_an_id' => $validated['benh_an_id'],
-                'dich_vu_id' => $validated['dich_vu_id'],
+                'dich_vu_id' => $validated['dich_vu_id'] ?? null,
                 'loai_noi_soi' => $validated['loai_noi_soi'],
                 'ngay_chi_dinh' => $validated['ngay_chi_dinh'],
                 'bac_si_chi_dinh_id' => $bacSi->id,
@@ -76,7 +66,7 @@ class NoiSoiController extends Controller
 
             DB::commit();
 
-            return redirect()->route('doctor.benhan.show', $benhAn->id)
+            return redirect()->route('doctor.benhan.edit', $benhAn->id)
                 ->with('success', 'Đã chỉ định nội soi thành công!')
                 ->with('show_quick_actions', true)
                 ->with('benh_an_id', $benhAn->id);

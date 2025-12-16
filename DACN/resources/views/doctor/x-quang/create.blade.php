@@ -13,12 +13,12 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('doctor.benhan.show', $benhAn->id) }}">Bệnh án #{{ $benhAn->id }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('doctor.benhan.edit', $benhAn->id) }}">Bệnh án #{{ $benhAn->id }}</a></li>
                     <li class="breadcrumb-item active">Chỉ định X-quang</li>
                 </ol>
             </nav>
         </div>
-        <a href="{{ route('doctor.benhan.show', $benhAn->id) }}" class="btn btn-outline-secondary">
+        <a href="{{ route('doctor.benhan.edit', $benhAn->id) }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-2"></i>Quay lại
         </a>
     </div>
@@ -63,19 +63,6 @@
                     <form action="{{ route('doctor.x-quang.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="benh_an_id" value="{{ $benhAn->id }}">
-
-                        <div class="mb-3">
-                            <label class="form-label">Dịch vụ X-quang</label>
-                            <select name="dich_vu_id" class="form-select">
-                                <option value="">-- Không chọn dịch vụ cụ thể --</option>
-                                @foreach($dichVuXQuang as $dichVu)
-                                <option value="{{ $dichVu->id }}" {{ old('dich_vu_id') == $dichVu->id ? 'selected' : '' }}>
-                                    {{ $dichVu->ten_dich_vu }}
-                                </option>
-                                @endforeach
-                            </select>
-                            <small class="text-muted">Chọn dịch vụ nếu có trong danh sách</small>
-                        </div>
 
                         <div class="mb-3">
                             <label class="form-label">Loại X-quang <span class="text-danger">*</span></label>
@@ -127,7 +114,7 @@
                             <button type="submit" class="btn btn-warning">
                                 <i class="bi bi-check-circle me-2"></i>Chỉ định
                             </button>
-                            <a href="{{ route('doctor.benhan.show', $benhAn->id) }}" class="btn btn-secondary">
+                            <a href="{{ route('doctor.benhan.edit', $benhAn->id) }}" class="btn btn-secondary">
                                 <i class="bi bi-x-circle me-2"></i>Hủy
                             </a>
                         </div>

@@ -10,6 +10,9 @@
             <h2 class="fw-bold mb-0">
                 <i class="fas fa-file-invoice-dollar me-2"></i>Quản lý Hóa đơn
             </h2>
+            <a href="{{ route('admin.hoadon.all-refunds') }}" class="btn btn-warning">
+                <i class="fas fa-undo me-1"></i> Quản lý hoàn tiền
+            </a>
         </div>
 
         {{-- ============================

@@ -41,11 +41,17 @@
                         @if($user)
                         {{-- Nếu đã có bệnh nhân được chọn --}}
                         <input type="hidden" name="user_id" value="{{ $user->id }}">
+                        @if(isset($benhAn))
+                        <input type="hidden" name="benh_an_id" value="{{ $benhAn->id }}">
+                        @endif
                         <div class="alert alert-info">
                             <strong>Bệnh nhân:</strong> {{ $user->name }}<br>
                             <strong>Email:</strong> {{ $user->email }}<br>
                             @if($user->so_dien_thoai)
                             <strong>SĐT:</strong> {{ $user->so_dien_thoai }}<br>
+                            @endif
+                            @if(isset($benhAn))
+                            <strong>Bệnh án:</strong> #{{ str_pad($benhAn->id, 4, '0', STR_PAD_LEFT) }}<br>
                             @endif
                         </div>
                         @else
@@ -236,6 +242,44 @@
                     </div>
                 </div>
 
+                {{-- Thông tin dịch vụ --}}
+                <div class="card vc-card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-dollar-sign me-2" style="color: #f59e0b;"></i>
+                            Thông tin dịch vụ
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Gói dịch vụ</label>
+                            <select name="goi_dich_vu" class="form-select" id="goiDichVu">
+                                <option value="Gói theo dõi thai kỳ cơ bản" data-price="3000000">Gói cơ bản - 3,000,000đ</option>
+                                <option value="Gói theo dõi thai kỳ tiêu chuẩn" data-price="5000000">Gói tiêu chuẩn - 5,000,000đ</option>
+                                <option value="Gói theo dõi thai kỳ cao cấp" data-price="8000000">Gói cao cấp - 8,000,000đ</option>
+                                <option value="Gói theo dõi thai kỳ VIP" data-price="12000000">Gói VIP - 12,000,000đ</option>
+                            </select>
+                            <small class="text-muted">Chọn gói dịch vụ theo dõi thai kỳ phù hợp</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Giá tiền (VNĐ)</label>
+                            <input type="number" name="gia_tien" class="form-control" 
+                                   value="{{ old('gia_tien', 3000000) }}" min="0" step="1000" id="giaTien">
+                            @error('gia_tien')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="alert alert-info mb-0">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i>
+                                Gói dịch vụ bao gồm theo dõi định kỳ, tư vấn sức khỏe, lịch tiêm chủng và các dịch vụ khác theo từng gói.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Buttons --}}
                 <div class="d-flex gap-2 justify-content-end mb-4">
                     <a href="{{ route('doctor.theo-doi-thai-ky.index') }}" class="btn btn-outline-secondary">
@@ -310,4 +354,13 @@
         </div>
     </form>
 </div>
+
+<script>
+    // Tự động cập nhật giá khi chọn gói dịch vụ
+    document.getElementById('goiDichVu').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
+        document.getElementById('giaTien').value = price;
+    });
+</script>
 @endsection

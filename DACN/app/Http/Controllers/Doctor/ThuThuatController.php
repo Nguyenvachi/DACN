@@ -74,7 +74,7 @@ class ThuThuatController extends Controller
 
             DB::commit();
 
-            return redirect()->route('doctor.benhan.show', $benhAn->id)
+            return redirect()->route('doctor.benhan.edit', $benhAn->id)
                 ->with('success', 'Đã chỉ định thủ thuật thành công!');
         } catch (\Exception $e) {
             DB::rollBack();

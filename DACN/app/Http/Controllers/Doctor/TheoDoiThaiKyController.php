@@ -58,11 +58,16 @@ class TheoDoiThaiKyController extends Controller
 
         // Nếu có user_id từ request (từ trang bệnh án)
         $user = null;
+        $benhAn = null;
         if ($request->filled('user_id')) {
             $user = User::find($request->user_id);
         }
+        if ($request->filled('benh_an_id')) {
+            $benhAn = \App\Models\BenhAn::find($request->benh_an_id);
+            $user = $benhAn->benhNhan ?? null;
+        }
 
-        return view('doctor.theo-doi-thai-ky.create', compact('user'));
+        return view('doctor.theo-doi-thai-ky.create', compact('user', 'benhAn'));
     }
 
     /**
@@ -77,6 +82,7 @@ class TheoDoiThaiKyController extends Controller
 
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
+            'benh_an_id' => 'nullable|exists:benh_ans,id',
             'ngay_kinh_cuoi' => 'required|date',
             'so_lan_mang_thai' => 'required|integer|min:1',
             'so_lan_sinh' => 'required|integer|min:0',
@@ -90,7 +96,19 @@ class TheoDoiThaiKyController extends Controller
             'tien_su_benh_ly' => 'nullable|string',
             'di_ung' => 'nullable|string',
             'ghi_chu' => 'nullable|string',
+            'gia_tien' => 'nullable|numeric|min:0',
+            'goi_dich_vu' => 'nullable|string',
         ]);
+
+        // Kiểm tra xem bệnh nhân đã có hồ sơ đang theo dõi chưa
+        $hoSoDangTheoDoi = TheoDoiThaiKy::where('user_id', $validated['user_id'])
+            ->where('trang_thai', 'Đang theo dõi')
+            ->first();
+
+        if ($hoSoDangTheoDoi) {
+            return back()->with('error', 'Bệnh nhân đã có hồ sơ theo dõi thai kỳ đang hoạt động (Hồ sơ #' . $hoSoDangTheoDoi->id . '). Vui lòng hoàn thành hồ sơ cũ trước khi tạo hồ sơ mới.')
+                ->withInput();
+        }
 
         try {
             DB::beginTransaction();
@@ -108,6 +126,7 @@ class TheoDoiThaiKyController extends Controller
             $theoDoiThaiKy = TheoDoiThaiKy::create([
                 'user_id' => $validated['user_id'],
                 'bac_si_id' => $bacSi->id,
+                'benh_an_id' => $validated['benh_an_id'] ?? null,
                 'ngay_kinh_cuoi' => $validated['ngay_kinh_cuoi'],
                 'ngay_du_sinh' => $ngayDuSinh,
                 'so_lan_mang_thai' => $validated['so_lan_mang_thai'],
@@ -124,12 +143,23 @@ class TheoDoiThaiKyController extends Controller
                 'di_ung' => $validated['di_ung'] ?? null,
                 'trang_thai' => 'Đang theo dõi',
                 'ghi_chu' => $validated['ghi_chu'] ?? null,
+                'gia_tien' => $validated['gia_tien'] ?? 0,
+                'trang_thai_thanh_toan' => 'Chưa thanh toán',
+                'ngay_bat_dau' => now(),
+                'goi_dich_vu' => $validated['goi_dich_vu'] ?? 'Gói theo dõi thai kỳ cơ bản',
             ]);
 
             // Tự động tạo lịch tiêm chủng khuyến cáo
             $this->taoLichTiemChungTuDong($theoDoiThaiKy);
 
             DB::commit();
+
+            // Nếu có benh_an_id thì quay về trang chỉnh sửa bệnh án
+            if ($theoDoiThaiKy->benh_an_id) {
+                return redirect()->route('doctor.benhan.edit', $theoDoiThaiKy->benh_an_id)
+                    ->with('success', 'Đã tạo hồ sơ theo dõi thai kỳ thành công!')
+                    ->with('show_quick_actions', true);
+            }
 
             return redirect()->route('doctor.theo-doi-thai-ky.show', $theoDoiThaiKy->id)
                 ->with('success', 'Đã tạo hồ sơ theo dõi thai kỳ thành công!');
@@ -149,25 +179,21 @@ class TheoDoiThaiKyController extends Controller
             abort(403);
         }
 
+        // Load relationships
         $theoDoiThaiKy->load([
             'user',
-            'bacSi',
-            'lichKhamThai' => function ($q) {
-                $q->orderBy('ngay_kham', 'desc');
+            'bacSi.user',
+            'benhAn',
+            'lichKhamThai' => function ($query) {
+                $query->orderBy('ngay_kham', 'desc');
             },
-            'tiemChung' => function ($q) {
-                $q->orderBy('ngay_du_kien', 'asc');
-            },
-            'theoDoiHauSan' => function ($q) {
-                $q->orderBy('ngay_kham', 'desc');
-            }
+            'lichKhamThai.bacSi.user'
         ]);
 
         // Tính tuổi thai hiện tại
-        $tuoiThai = $theoDoiThaiKy->tuoiThaiHienTai();
-        $soNgayConLai = $theoDoiThaiKy->soNgayConLai();
+        $tuoiThaiHienTai = TheoDoiThaiKy::tinhTuoiThai($theoDoiThaiKy->ngay_kinh_cuoi);
 
-        return view('doctor.theo-doi-thai-ky.show', compact('theoDoiThaiKy', 'tuoiThai', 'soNgayConLai'));
+        return view('doctor.theo-doi-thai-ky.show', compact('theoDoiThaiKy', 'tuoiThaiHienTai'));
     }
 
     /**
@@ -238,7 +264,13 @@ class TheoDoiThaiKyController extends Controller
                 'ghi_chu' => $validated['ghi_chu'] ?? null,
             ]);
 
-            return redirect()->route('doctor.theo-doi-thai-ky.show', $theoDoiThaiKy->id)
+            // Nếu có benh_an_id thì quay về trang bệnh án
+            if ($theoDoiThaiKy->benh_an_id) {
+                return redirect()->route('doctor.benhan.show', $theoDoiThaiKy->benh_an_id)
+                    ->with('success', 'Đã cập nhật gói theo dõi thai kỳ thành công!');
+            }
+
+            return redirect()->route('doctor.theo-doi-thai-ky.index')
                 ->with('success', 'Đã cập nhật hồ sơ thành công!');
         } catch (\Exception $e) {
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage())->withInput();

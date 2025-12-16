@@ -10,6 +10,7 @@ use App\Models\LichHen;
 use App\Models\ThanhToan;
 use App\Models\PaymentLog;
 use App\Models\DichVu;
+use App\Models\HoanTien;
 use App\Mail\HoaDonHoanTien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -134,17 +135,25 @@ class HoaDonController extends Controller
             'provider' => $validated['phuong_thuc'],
             'provider_ref' => 'REFUND-' . now()->format('YmdHis') . '-' . $hoaDon->id,
             'payload' => [
-                'user_id' => auth()->id(),
-                'user_name' => auth()->user()->name,
+                'created_by' => auth()->id(),
+                'created_by_name' => auth()->user()->name,
                 'created_at' => now()->toDateTimeString(),
             ],
         ]);
 
-        // Cập nhật trạng thái hoàn tiền thành công (trong thực tế có thể cần xử lý với payment gateway)
-        $hoanTien->update(['trang_thai' => 'Hoàn thành']);
+        // Admin tự tạo yêu cầu có thể tự động phê duyệt
+        $hoanTien->update([
+            'trang_thai' => 'Hoàn thành',
+            'payload' => array_merge($hoanTien->payload ?? [], [
+                'approved_by' => auth()->id(),
+                'approved_by_name' => auth()->user()->name,
+                'approved_at' => now()->toDateTimeString(),
+            ]),
+        ]);
 
         // Cập nhật số tiền đã hoàn và tính lại trạng thái hóa đơn
-        $hoaDon->recalculatePaidAmount();
+        $hoaDon->so_tien_da_hoan += $soTienHoan;
+        $hoaDon->save();
 
         // Gửi email thông báo cho bệnh nhân
         try {
@@ -167,6 +176,87 @@ class HoaDonController extends Controller
     {
         $hoanTiens = $hoaDon->hoanTiens()->orderByDesc('created_at')->get();
         return view('admin.hoadon.refunds_list', compact('hoaDon', 'hoanTiens'));
+    }
+
+    /**
+     * Danh sách tất cả yêu cầu hoàn tiền (trang tổng hợp)
+     */
+    public function allRefunds(Request $request)
+    {
+        $query = HoanTien::with(['hoaDon.user', 'hoaDon.lichHen']);
+
+        // Lọc theo trạng thái
+        if ($request->filled('trang_thai')) {
+            $query->where('trang_thai', $request->trang_thai);
+        }
+
+        // Sắp xếp theo thời gian mới nhất
+        $hoanTiens = $query->orderByDesc('created_at')->paginate(20);
+
+        return view('admin.hoadon.all_refunds', compact('hoanTiens'));
+    }
+
+    /**
+     * Phê duyệt yêu cầu hoàn tiền
+     */
+    public function approveRefund(HoanTien $hoanTien)
+    {
+        if ($hoanTien->trang_thai !== 'Đang xử lý') {
+            return back()->with('error', 'Yêu cầu hoàn tiền này đã được xử lý.');
+        }
+
+        $hoanTien->update([
+            'trang_thai' => 'Hoàn thành',
+            'payload' => array_merge($hoanTien->payload ?? [], [
+                'approved_by' => auth()->id(),
+                'approved_by_name' => auth()->user()->name,
+                'approved_at' => now()->toDateTimeString(),
+            ]),
+        ]);
+
+        // Gửi email thông báo
+        try {
+            $hoaDon = $hoanTien->hoaDon;
+            $user = $hoaDon->user;
+            if ($user && $user->email) {
+                Mail::to($user->email)->send(new HoaDonHoanTien($hoaDon, $hoanTien));
+            }
+        } catch (\Exception $e) {
+            Log::error('Lỗi gửi email hoàn tiền: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Đã phê duyệt hoàn tiền ' . number_format($hoanTien->so_tien, 0, ',', '.') . ' VNĐ');
+    }
+
+    /**
+     * Từ chối yêu cầu hoàn tiền
+     */
+    public function rejectRefund(Request $request, HoanTien $hoanTien)
+    {
+        $request->validate([
+            'ly_do_tu_choi' => 'required|string|max:500',
+        ]);
+
+        if ($hoanTien->trang_thai !== 'Đang xử lý') {
+            return back()->with('error', 'Yêu cầu hoàn tiền này đã được xử lý.');
+        }
+
+        $hoanTien->update([
+            'trang_thai' => 'Từ chối',
+            'payload' => array_merge($hoanTien->payload ?? [], [
+                'rejected_by' => auth()->id(),
+                'rejected_by_name' => auth()->user()->name,
+                'rejected_at' => now()->toDateTimeString(),
+                'ly_do_tu_choi' => $request->ly_do_tu_choi,
+            ]),
+        ]);
+
+        // Cập nhật lại hóa đơn (không hoàn tiền nữa)
+        $hoaDon = $hoanTien->hoaDon;
+        $hoaDon->so_tien_da_hoan -= $hoanTien->so_tien;
+        $hoaDon->save();
+
+        return back()->with('success', 'Đã từ chối yêu cầu hoàn tiền');
     }
 
     /**

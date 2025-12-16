@@ -13,12 +13,12 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('doctor.benhan.show', $benhAn->id) }}">Bệnh án #{{ $benhAn->id }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('doctor.benhan.edit', $benhAn->id) }}">Bệnh án #{{ $benhAn->id }}</a></li>
                     <li class="breadcrumb-item active">Chỉ định xét nghiệm</li>
                 </ol>
             </nav>
         </div>
-        <a href="{{ route('doctor.benhan.show', $benhAn->id) }}" class="btn btn-outline-secondary">
+        <a href="{{ route('doctor.benhan.edit', $benhAn->id) }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-2"></i>Quay lại
         </a>
     </div>
@@ -120,7 +120,7 @@
                             <button type="submit" class="btn btn-danger">
                                 <i class="bi bi-check-circle me-2"></i>Chỉ định
                             </button>
-                            <a href="{{ route('doctor.benhan.show', $benhAn->id) }}" class="btn btn-secondary">
+                            <a href="{{ route('doctor.benhan.edit', $benhAn->id) }}" class="btn btn-secondary">
                                 <i class="bi bi-x-circle me-2"></i>Hủy
                             </a>
                         </div>

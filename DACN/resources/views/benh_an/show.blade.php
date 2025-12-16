@@ -16,16 +16,31 @@
     .simple-card {
         background: white;
         border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    
+    .card-header-custom {
+        padding: 0.875rem 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-bottom: none;
+    }
+    
+    .card-header-custom h5 {
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin: 0;
     }
     
     .info-table {
         width: 100%;
+        font-size: 0.875rem;
     }
     
     .info-table td {
-        padding: 0.75rem;
+        padding: 0.625rem 1rem;
         border-bottom: 1px solid #f3f4f6;
     }
     
@@ -36,49 +51,102 @@
     .info-table td:first-child {
         color: #6b7280;
         font-weight: 500;
-        width: 35%;
+        width: 40%;
     }
     
     .info-table td:last-child {
         color: #111827;
+        font-weight: 600;
+    }
+    
+    .vital-sign-box {
+        text-align: center;
+        padding: 0.875rem;
+        border-radius: 8px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        transition: all 0.2s;
+    }
+    
+    .vital-sign-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .vital-sign-box i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .vital-sign-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        display: block;
+        margin: 0.25rem 0;
+    }
+    
+    .vital-sign-label {
+        font-size: 0.75rem;
+        color: #6b7280;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+    
+    .vital-sign-unit {
+        font-size: 0.7rem;
+        color: #9ca3af;
     }
     
     .clinical-section {
-        padding: 1rem;
+        padding: 0.875rem;
         background: #f9fafb;
-        border-radius: 6px;
-        margin-bottom: 1rem;
+        border-left: 3px solid #3b82f6;
+        border-radius: 4px;
+        margin-bottom: 0.75rem;
     }
     
     .clinical-section h6 {
         color: #374151;
-        font-size: 0.875rem;
-        font-weight: 600;
+        font-size: 0.8rem;
+        font-weight: 700;
         margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     .clinical-section p {
         color: #1f2937;
         margin: 0;
         line-height: 1.6;
+        font-size: 0.875rem;
     }
     
     .action-btn-simple {
-        display: block;
-        padding: 1rem;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
         background: white;
-        border: 2px solid #e5e7eb;
-        border-radius: 6px;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 8px;
         color: #374151;
         text-decoration: none;
         transition: all 0.2s;
+        font-size: 0.875rem;
+        font-weight: 600;
     }
     
     .action-btn-simple:hover {
         border-color: #3b82f6;
-        background: #eff6ff;
-        color: #2563eb;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transform: translateX(4px);
+    }
+    
+    .action-btn-simple i {
+        font-size: 1.1rem;
     }
     
     .medicine-list {
@@ -88,10 +156,12 @@
     }
     
     .medicine-list li {
-        padding: 0.75rem;
+        padding: 0.625rem 0.875rem;
         background: #f9fafb;
-        border-radius: 4px;
+        border-radius: 6px;
         margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        border-left: 3px solid #10b981;
     }
     
     .service-count {
@@ -282,6 +352,25 @@
                         <h6><i class="bi bi-heart-pulse text-success me-2"></i>Điều trị</h6>
                         <p>{{ $benhAn->dieu_tri ?? 'Chưa có thông tin' }}</p>
                     </div>
+
+                    @if($benhAn->ngay_hen_tai_kham)
+                    <div class="clinical-section" style="border-left-color: #3b82f6; background: #eff6ff;">
+                        <h6><i class="bi bi-calendar-check me-1"></i>Lịch hẹn tái khám</h6>
+                        <p class="mb-1">
+                            <strong>Ngày hẹn:</strong> {{ $benhAn->ngay_hen_tai_kham->format('d/m/Y') }}
+                            @if($benhAn->ngay_hen_tai_kham->isFuture())
+                            <span class="badge bg-info ms-2">Còn {{ $benhAn->ngay_hen_tai_kham->diffForHumans() }}</span>
+                            @elseif($benhAn->ngay_hen_tai_kham->isToday())
+                            <span class="badge bg-warning ms-2">Hôm nay</span>
+                            @else
+                            <span class="badge bg-secondary ms-2">Đã qua</span>
+                            @endif
+                        </p>
+                        @if($benhAn->ly_do_tai_kham)
+                        <p class="mb-0"><strong>Lý do:</strong> {{ $benhAn->ly_do_tai_kham }}</p>
+                        @endif
+                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -344,12 +433,12 @@
                             <strong>Siêu âm</strong>
                         </a>
                         
-                        <a href="{{ route('doctor.noi-soi.create', ['benh_an_id' => $benhAn->id]) }}" class="action-btn-simple">
+                        <a href="{{ route('doctor.noi-soi.create', $benhAn->id) }}" class="action-btn-simple">
                             <i class="bi bi-camera-video-fill fs-5 d-block mb-1"></i>
                             <strong>Nội soi</strong>
                         </a>
                         
-                        <a href="{{ route('doctor.x-quang.create', ['benh_an_id' => $benhAn->id]) }}" class="action-btn-simple">
+                        <a href="{{ route('doctor.x-quang.create', $benhAn->id) }}" class="action-btn-simple">
                             <i class="bi bi-file-medical-fill fs-5 d-block mb-1"></i>
                             <strong>X-quang</strong>
                         </a>
@@ -357,6 +446,11 @@
                         <a href="{{ route('doctor.thu-thuat.create', $benhAn->id) }}" class="action-btn-simple">
                             <i class="bi bi-scissors fs-5 d-block mb-1"></i>
                             <strong>Thủ thuật</strong>
+                        </a>
+
+                        <a href="{{ route('doctor.theo-doi-thai-ky.create', ['benh_an_id' => $benhAn->id]) }}" class="action-btn-simple">
+                            <i class="bi bi-heart-pulse fs-5 d-block mb-1"></i>
+                            <strong>Theo dõi thai kỳ</strong>
                         </a>
                     </div>
                 </div>
@@ -512,6 +606,34 @@
                                 <i class="bi bi-pencil"></i> Nhập KQ
                             </a>
                             @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
+                    
+                    {{-- Theo dõi thai kỳ --}}
+                    @if(isset($benhAn->theoDoiThaiKy) && count($benhAn->theoDoiThaiKy) > 0)
+                    @php $hasServices = true; @endphp
+                    <div class="mb-3">
+                        <h6 class="text-info mb-2"><i class="bi bi-heart-pulse me-2"></i>Theo dõi thai kỳ ({{ count($benhAn->theoDoiThaiKy) }})</h6>
+                        @foreach($benhAn->theoDoiThaiKy as $tdtk)
+                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                            <div class="flex-grow-1">
+                                <small class="fw-bold d-block">{{ $tdtk->goi_dich_vu ?? 'Gói theo dõi thai kỳ' }}</small>
+                                @if($tdtk->trang_thai === 'Đang theo dõi')
+                                <span class="badge bg-success" style="font-size: 0.7rem;">Đang theo dõi</span>
+                                @elseif($tdtk->trang_thai === 'Đã sinh')
+                                <span class="badge bg-info" style="font-size: 0.7rem;">Đã sinh</span>
+                                @else
+                                <span class="badge bg-secondary" style="font-size: 0.7rem;">{{ $tdtk->trang_thai }}</span>
+                                @endif
+                                @if($tdtk->gia_tien)
+                                <span class="badge bg-warning text-dark ms-1" style="font-size: 0.7rem;">{{ number_format($tdtk->gia_tien, 0, ',', '.') }} đ</span>
+                                @endif
+                                @if($tdtk->ngay_du_sinh)
+                                <small class="text-muted d-block mt-1">Dự sinh: {{ $tdtk->ngay_du_sinh->format('d/m/Y') }}</small>
+                                @endif
+                            </div>
                         </div>
                         @endforeach
                     </div>

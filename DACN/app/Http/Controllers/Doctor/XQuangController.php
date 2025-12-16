@@ -16,9 +16,8 @@ class XQuangController extends Controller
     /**
      * Trang chỉ định X-quang cho bệnh án
      */
-    public function create(Request $request)
+    public function create($benhAnId)
     {
-        $benhAnId = $request->get('benh_an_id');
         $benhAn = BenhAn::findOrFail($benhAnId);
 
         $bacSi = BacSi::where('user_id', Auth::id())->first();
@@ -26,17 +25,7 @@ class XQuangController extends Controller
             abort(403, 'Bạn không có quyền chỉ định X-quang cho bệnh án này.');
         }
 
-        $dichVuXQuang = DichVu::where('loai', 'Nâng cao')
-            ->where('hoat_dong', true)
-            ->where(function ($q) {
-                $q->where('ten_dich_vu', 'like', '%x-quang%')
-                    ->orWhere('ten_dich_vu', 'like', '%X-quang%')
-                    ->orWhere('ten_dich_vu', 'like', '%xquang%');
-            })
-            ->orderBy('ten_dich_vu')
-            ->get();
-
-        return view('doctor.x-quang.create', compact('benhAn', 'dichVuXQuang'));
+        return view('doctor.x-quang.create', compact('benhAn'));
     }
 
     /**
@@ -65,7 +54,7 @@ class XQuangController extends Controller
 
             XQuang::create([
                 'benh_an_id' => $validated['benh_an_id'],
-                'dich_vu_id' => $validated['dich_vu_id'],
+                'dich_vu_id' => $validated['dich_vu_id'] ?? null,
                 'loai_x_quang' => $validated['loai_x_quang'],
                 'vi_tri' => $validated['vi_tri'],
                 'ngay_chi_dinh' => $validated['ngay_chi_dinh'],
@@ -76,7 +65,7 @@ class XQuangController extends Controller
 
             DB::commit();
 
-            return redirect()->route('doctor.benhan.show', $benhAn->id)
+            return redirect()->route('doctor.benhan.edit', $benhAn->id)
                 ->with('success', 'Đã chỉ định X-quang thành công!')
                 ->with('show_quick_actions', true)
                 ->with('benh_an_id', $benhAn->id);

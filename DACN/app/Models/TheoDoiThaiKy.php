@@ -15,6 +15,7 @@ class TheoDoiThaiKy extends Model
     protected $fillable = [
         'user_id',
         'bac_si_id',
+        'benh_an_id',
         'ngay_kinh_cuoi',
         'ngay_du_sinh',
         'so_lan_mang_thai',
@@ -33,15 +34,21 @@ class TheoDoiThaiKy extends Model
         'ngay_ket_thuc',
         'ket_qua_thai_ky',
         'ghi_chu',
+        'gia_tien',
+        'trang_thai_thanh_toan',
+        'ngay_bat_dau',
+        'goi_dich_vu',
     ];
 
     protected $casts = [
         'ngay_kinh_cuoi' => 'date',
         'ngay_du_sinh' => 'date',
         'ngay_ket_thuc' => 'date',
+        'ngay_bat_dau' => 'date',
         'can_nang_truoc_mang_thai' => 'decimal:2',
         'chieu_cao' => 'decimal:2',
         'bmi_truoc_mang_thai' => 'decimal:2',
+        'gia_tien' => 'decimal:2',
     ];
 
     // Relationships
@@ -53,6 +60,11 @@ class TheoDoiThaiKy extends Model
     public function bacSi()
     {
         return $this->belongsTo(BacSi::class);
+    }
+
+    public function benhAn()
+    {
+        return $this->belongsTo(BenhAn::class);
     }
 
     public function lichKhamThai()
@@ -93,6 +105,25 @@ class TheoDoiThaiKy extends Model
     public static function tinhNgayDuSinh($ngayKinhCuoi)
     {
         return Carbon::parse($ngayKinhCuoi)->addDays(280);
+    }
+
+    // Helper: Tính tuổi thai từ ngày kinh cuối (static method)
+    public static function tinhTuoiThai($ngayKinhCuoi)
+    {
+        if (!$ngayKinhCuoi) {
+            return ['tuan' => 0, 'ngay' => 0, 'tong_ngay' => 0];
+        }
+
+        $ngayKinhCuoi = Carbon::parse($ngayKinhCuoi);
+        $soNgay = $ngayKinhCuoi->diffInDays(now());
+        $soTuan = floor($soNgay / 7);
+        $soNgayLe = $soNgay % 7;
+
+        return [
+            'tuan' => $soTuan,
+            'ngay' => $soNgayLe,
+            'tong_ngay' => $soNgay,
+        ];
     }
 
     // Helper: Số ngày còn lại đến ngày dự sinh

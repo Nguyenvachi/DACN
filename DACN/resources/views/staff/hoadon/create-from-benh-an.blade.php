@@ -137,12 +137,12 @@
                                     <input type="checkbox" class="dv-checkbox" checked
                                         data-loai="xet_nghiem"
                                         data-id="{{ $xn->id }}"
-                                        data-ten="Xét nghiệm - {{ $xn->loai }}"
+                                        data-ten="Xét nghiệm - {{ $xn->ten_xet_nghiem ?? $xn->loai_xet_nghiem }}"
                                         data-soluong="1"
                                         data-dongia="200000">
                                 </td>
                                 <td><span class="badge bg-primary">Xét nghiệm</span></td>
-                                <td><strong>{{ $xn->loai }}</strong></td>
+                                <td><strong>{{ $xn->ten_xet_nghiem ?? $xn->loai_xet_nghiem ?? 'Xét nghiệm' }}</strong></td>
                                 <td><input type="number" class="form-control form-control-sm sl-input" value="1" min="1" style="width: 80px;"></td>
                                 <td><input type="number" class="form-control form-control-sm dg-input" value="200000" min="0" step="1000" style="width: 150px;"></td>
                                 <td class="tt-cell fw-bold text-end">200,000</td>

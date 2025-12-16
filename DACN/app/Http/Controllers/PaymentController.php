@@ -18,8 +18,19 @@ class PaymentController extends Controller
      */
     public function createVnpayPayment(Request $request)
     {
-        $vnp_Amount = $request->input('amount') * 100; // Số tiền thanh toán, nhân 100 theo quy định của VNPay
         $vnp_TxnRef = $request->input('hoa_don_id'); // Lấy mã hóa đơn từ form
+
+        // Kiểm tra hóa đơn đã thanh toán chưa
+        $hoaDon = HoaDon::find($vnp_TxnRef);
+        if (!$hoaDon) {
+            return redirect()->back()->with('error', 'Không tìm thấy hóa đơn');
+        }
+
+        if ($hoaDon->trang_thai === 'Đã thanh toán') {
+            return redirect()->back()->with('error', 'Hóa đơn này đã được thanh toán');
+        }
+
+        $vnp_Amount = $request->input('amount') * 100; // Số tiền thanh toán, nhân 100 theo quy định của VNPay
         $vnp_OrderInfo = "Thanh toan hoa don #" . $vnp_TxnRef;
         $vnp_OrderType = 'billpayment';
         $vnp_Locale = 'vn';
@@ -220,15 +231,25 @@ class PaymentController extends Controller
      */
     public function createMomoPayment(Request $request)
     {
+        // Lấy ID hóa đơn gốc
+        $hoaDonIdGoc = $request->input('hoa_don_id');
+
+        // Kiểm tra hóa đơn đã thanh toán chưa
+        $hoaDon = HoaDon::find($hoaDonIdGoc);
+        if (!$hoaDon) {
+            return redirect()->back()->with('error', 'Không tìm thấy hóa đơn');
+        }
+
+        if ($hoaDon->trang_thai === 'Đã thanh toán') {
+            return redirect()->back()->with('error', 'Hóa đơn này đã được thanh toán');
+        }
+
         $partnerCode = config('momo.partner_code');
         $accessKey = config('momo.access_key');
         $secretKey = config('momo.secret_key');
         $endpoint = config('momo.endpoint');
         $returnUrl = config('momo.return_url');
         $notifyUrl = config('momo.ipn_url');
-
-        // Lấy ID hóa đơn gốc
-        $hoaDonIdGoc = $request->input('hoa_don_id');
 
         // SỬA LỖI 1: Ép kiểu amount về (string) của (int)
         $amount = (string)(int)$request->input('amount');

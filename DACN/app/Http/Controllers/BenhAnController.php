@@ -178,6 +178,18 @@ class BenhAnController extends Controller
     {
         $role = $this->getCurrentRole();
 
+        // Chỉ cho phép chỉnh sửa bệnh án đang khám
+        if ($benh_an->trang_thai !== 'Đang khám') {
+            return redirect()->route($this->routeByRole('show'), $benh_an)
+                ->with('warning', 'Chỉ có thể xem lại bệnh án đã hoàn thành, không thể chỉnh sửa.');
+        }
+
+        // Chỉ cho phép chỉnh sửa bệnh án được tạo trong ngày hôm nay
+        if (!$benh_an->created_at->isToday()) {
+            return redirect()->route($this->routeByRole('show'), $benh_an)
+                ->with('warning', 'Chỉ có thể chỉnh sửa bệnh án được tạo trong ngày hôm nay.');
+        }
+
         // Load relationships cần thiết
         $benh_an->load(['user', 'bacSi', 'lichHen.dichVu', 'files', 'xetNghiems', 'donThuocs.items.thuoc']);
 
@@ -194,6 +206,18 @@ class BenhAnController extends Controller
 
     public function update(Request $request, BenhAn $benh_an)
     {
+        // Chỉ cho phép cập nhật bệnh án đang khám
+        if ($benh_an->trang_thai !== 'Đang khám') {
+            return redirect()->route($this->routeByRole('show'), $benh_an)
+                ->with('error', 'Không thể chỉnh sửa bệnh án đã hoàn thành.');
+        }
+
+        // Chỉ cho phép cập nhật bệnh án được tạo trong ngày hôm nay
+        if (!$benh_an->created_at->isToday()) {
+            return redirect()->route($this->routeByRole('show'), $benh_an)
+                ->with('error', 'Chỉ có thể chỉnh sửa bệnh án được tạo trong ngày hôm nay.');
+        }
+
         $data = $request->validate([
             'user_id'     => ['required', 'exists:users,id'],
             'bac_si_id'   => ['required', 'exists:bac_sis,id'],
@@ -214,6 +238,9 @@ class BenhAnController extends Controller
             'chieu_cao'   => ['nullable', 'numeric', 'min:0', 'max:300'],
             'bmi'         => ['nullable', 'numeric', 'min:0', 'max:100'],
             'spo2'        => ['nullable', 'integer', 'min:0', 'max:100'],
+            // Follow-up appointment
+            'ngay_hen_tai_kham' => ['nullable', 'date', 'after_or_equal:today'],
+            'ly_do_tai_kham'    => ['nullable', 'string', 'max:500'],
         ]);
 
         $benh_an->update($data);
@@ -234,7 +261,7 @@ class BenhAnController extends Controller
             }
         }
 
-        return redirect()->route($this->routeByRole('show'), $benh_an)->with('status', 'Đã cập nhật.');
+        return redirect()->route($this->routeByRole('edit'), $benh_an)->with('status', 'Đã cập nhật.');
     }
 
     public function destroy(BenhAn $benh_an)

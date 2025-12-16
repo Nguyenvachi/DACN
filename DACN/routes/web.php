@@ -178,6 +178,14 @@ Route::middleware(['auth', 'custom_role:admin,staff'])->prefix('admin')->name('a
             'destroy' => 'chuyenkhoa.destroy',
         ])->parameters(['chuyen-khoa' => 'chuyenkhoa']);
 
+        // Quản lý hoàn tiền
+        Route::get('danh-sach-hoan-tien', [\App\Http\Controllers\Admin\HoaDonController::class, 'allRefunds'])->name('hoadon.all-refunds');
+        Route::post('hoan-tien/{hoanTien}/phe-duyet', [\App\Http\Controllers\Admin\HoaDonController::class, 'approveRefund'])->name('hoadon.refund.approve');
+        Route::post('hoan-tien/{hoanTien}/tu-choi', [\App\Http\Controllers\Admin\HoaDonController::class, 'rejectRefund'])->name('hoadon.refund.reject');
+        Route::get('hoadon/{hoaDon}/hoan-tien', [\App\Http\Controllers\Admin\HoaDonController::class, 'showRefundForm'])->name('hoadon.refund.form');
+        Route::post('hoadon/{hoaDon}/hoan-tien', [\App\Http\Controllers\Admin\HoaDonController::class, 'refund'])->name('hoadon.refund.process');
+        Route::get('hoadon/{hoaDon}/danh-sach-hoan-tien', [\App\Http\Controllers\Admin\HoaDonController::class, 'refundsList'])->name('hoadon.refunds.list');
+
         // Routes quản lý loại phòng
         Route::resource('loai-phong', \App\Http\Controllers\Admin\LoaiPhongController::class)->names([
             'index' => 'loaiphong.index',
@@ -585,7 +593,7 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
 
     // Nội soi - Endoscopy Management
     Route::prefix('noi-soi')->name('noi-soi.')->group(function () {
-        Route::get('/create', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'create'])->name('create');
+        Route::get('/create/{benhAnId}', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'store'])->name('store');
         Route::get('/{noiSoi}', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'show'])->name('show');
         Route::get('/{noiSoi}/edit', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'edit'])->name('edit');
@@ -594,7 +602,7 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
 
     // X-quang - X-ray Management
     Route::prefix('x-quang')->name('x-quang.')->group(function () {
-        Route::get('/create', [\App\Http\Controllers\Doctor\XQuangController::class, 'create'])->name('create');
+        Route::get('/create/{benhAnId}', [\App\Http\Controllers\Doctor\XQuangController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\Doctor\XQuangController::class, 'store'])->name('store');
         Route::get('/{xQuang}', [\App\Http\Controllers\Doctor\XQuangController::class, 'show'])->name('show');
         Route::get('/{xQuang}/edit', [\App\Http\Controllers\Doctor\XQuangController::class, 'edit'])->name('edit');
