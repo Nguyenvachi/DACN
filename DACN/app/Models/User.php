@@ -159,6 +159,17 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\BenhAn::class, 'user_id');
     }
 
+    // THÊM: Relationship với Siêu âm (File con: app/Models/SieuAm.php)
+    public function sieuAms()
+    {
+        return $this->hasMany(\App\Models\SieuAm::class, 'user_id');
+    }
+
+    public function xetNghiems()
+    {
+        return $this->hasMany(\App\Models\XetNghiem::class, 'user_id');
+    }
+
     public function hoaDons()
     {
         return $this->hasMany(\App\Models\HoaDon::class, 'user_id');

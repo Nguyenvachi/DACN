@@ -119,6 +119,9 @@
             {{-- THÊM: Check permission cho menu Dịch vụ --}}
             @can('view-admin-services')
                 <li><a href="{{ route('admin.dich-vu.index') }}">🏥 Dịch vụ</a></li>
+                <li><a href="{{ route('admin.loai-xet-nghiem.index') }}">🧪 Loại xét nghiệm</a></li>
+                <li><a href="{{ route('admin.loai-sieu-am.index') }}">📹 Loại siêu âm</a></li>
+                <li><a href="{{ route('admin.loai-x-quang.index') }}">🩻 Loại X-Quang</a></li>
             @endcan
             <li><a href="{{ route('admin.chuyenkhoa.index') }}">🔬 Chuyên khoa</a></li>
             <li><a href="{{ route('admin.phong.index') }}">🚪 Phòng khám</a></li>
@@ -137,7 +140,7 @@
 
             <hr>
 
-            <li><strong>Bệnh án & Hóa đơn</strong></li>
+            <li><strong>Bệnh-Hóa-Lâm...</strong></li>
             {{-- THÊM: Check permission cho menu Bệnh án --}}
             @can('view-admin-medical-records')
                 <li><a href="{{ route('admin.benhan.index') }}">📋 Bệnh án</a></li>
@@ -145,6 +148,13 @@
             {{-- THÊM: Check permission cho menu Hóa đơn --}}
             @can('view-admin-invoices')
                 <li><a href="{{ route('admin.hoadon.index') }}">💰 Hóa đơn</a></li>
+            @endcan
+            @can('view-admin-medical-records')
+                <li><a href="{{ route('admin.xetnghiem.index') }}">🧪 Xét nghiệm</a></li>
+                <li><a href="{{ route('admin.sieuam.index') }}">📹 Siêu âm</a></li>
+                <li><a href="{{ route('admin.xquang.index') }}">🩻 X-Quang</a></li>
+                <li><a href="{{ route('admin.theodoithaiky.index') }}">👶 Theo dõi thai kỳ</a></li>
+                <li><a href="{{ route('admin.taikham.index') }}">📅 Tái khám</a></li>
             @endcan
 
             <hr>

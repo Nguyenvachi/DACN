@@ -1,3 +1,4 @@
+{{-- Parent file: resources/views/layouts/patient-modern.blade.php --}}
 @extends('layouts.patient-modern')
 
 @section('title', 'Kết quả xét nghiệm')
@@ -9,12 +10,12 @@
         {{-- PHẦN 1: THỐNG KÊ (Dashboard Mini) --}}
         <div class="col-12">
             <div class="row g-4">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-sm border-0 h-100 bg-primary bg-opacity-10">
                         <div class="card-body d-flex align-items-center justify-content-between p-4">
                             <div>
-                                <p class="text-primary fw-bold mb-1 text-uppercase small">Tổng số xét nghiệm</p>
-                                <h2 class="mb-0 fw-bold text-dark">{{ $xetNghiems->total() }}</h2>
+                                <p class="text-primary fw-bold mb-1 text-uppercase small">Tổng số</p>
+                                <h2 class="mb-0 fw-bold text-dark">{{ $stats['total'] }}</h2>
                             </div>
                             <div class="bg-white rounded-circle p-3 shadow-sm text-primary">
                                 <i class="fas fa-flask fa-2x"></i>
@@ -23,33 +24,100 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0 h-100 bg-success bg-opacity-10">
+                <div class="col-md-3">
+                    <div class="card shadow-sm border-0 h-100 bg-secondary bg-opacity-10">
                         <div class="card-body d-flex align-items-center justify-content-between p-4">
                             <div>
-                                <p class="text-success fw-bold mb-1 text-uppercase small">Tháng này</p>
-                                <h2 class="mb-0 fw-bold text-dark">
-                                    {{ $xetNghiems->where('created_at', '>=', now()->startOfMonth())->count() }}</h2>
+                                <p class="text-secondary fw-bold mb-1 text-uppercase small">Chờ xử lý</p>
+                                <h2 class="mb-0 fw-bold text-dark">{{ $stats['pending'] }}</h2>
                             </div>
-                            <div class="bg-white rounded-circle p-3 shadow-sm text-success">
-                                <i class="fas fa-calendar-check fa-2x"></i>
+                            <div class="bg-white rounded-circle p-3 shadow-sm text-secondary">
+                                <i class="fas fa-clock fa-2x"></i>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-sm border-0 h-100 bg-warning bg-opacity-10">
                         <div class="card-body d-flex align-items-center justify-content-between p-4">
                             <div>
-                                <p class="text-warning-dark fw-bold mb-1 text-uppercase small">Đang chờ kết quả</p>
-                                <h2 class="mb-0 fw-bold text-dark">{{ $xetNghiems->whereNull('ket_qua')->count() }}</h2>
+                                <p class="text-warning-dark fw-bold mb-1 text-uppercase small">Đang xử lý</p>
+                                <h2 class="mb-0 fw-bold text-dark">{{ $stats['processing'] }}</h2>
                             </div>
                             <div class="bg-white rounded-circle p-3 shadow-sm text-warning">
-                                <i class="fas fa-hourglass-half fa-2x"></i>
+                                <i class="fas fa-spinner fa-2x"></i>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card shadow-sm border-0 h-100 bg-success bg-opacity-10">
+                        <div class="card-body d-flex align-items-center justify-content-between p-4">
+                            <div>
+                                <p class="text-success fw-bold mb-1 text-uppercase small">Đã hoàn thành</p>
+                                <h2 class="mb-0 fw-bold text-dark">{{ $stats['completed'] }}</h2>
+                            </div>
+                            <div class="bg-white rounded-circle p-3 shadow-sm text-success">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- PHẦN 2: BỘ LỌC --}}
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <form method="GET" action="{{ route('patient.xetnghiem.index') }}" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold">Tìm bác sĩ</label>
+                            <input type="text" name="search" class="form-control"
+                                   placeholder="Tên bác sĩ..."
+                                   value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-semibold">Trạng thái</label>
+                            <select name="status" class="form-select">
+                                <option value="">-- Tất cả --</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
+                                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Đã hoàn thành</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-semibold">Loại XN</label>
+                            <select name="loai" class="form-select">
+                                <option value="">-- Tất cả --</option>
+                                @foreach($loaiXetNghiems as $loai)
+                                    <option value="{{ $loai }}" {{ request('loai') == $loai ? 'selected' : '' }}>
+                                        {{ $loai }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-semibold">Từ ngày</label>
+                            <input type="date" name="from_date" class="form-control"
+                                   value="{{ request('from_date') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-semibold">Đến ngày</label>
+                            <input type="date" name="to_date" class="form-control"
+                                   value="{{ request('to_date') }}">
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end gap-2">
+                            <button type="submit" class="btn btn-primary flex-fill">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                            <a href="{{ route('patient.xetnghiem.index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-redo"></i>
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

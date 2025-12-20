@@ -27,6 +27,7 @@ class RoleSeeder extends Seeder
             'view-users', 'create-users', 'edit-users', 'lock-users', 'unlock-users',
             'view-doctors', 'create-doctors', 'edit-doctors', 'manage-schedules',
             'view-appointments', 'create-appointments', 'edit-appointments', 'cancel-appointments', 'confirm-appointments',
+            'view-medical-records', 'create-medical-records', 'edit-medical-records', 'delete-medical-records',
             'view-services', 'create-services', 'edit-services',
             'view-staff', 'create-staff', 'edit-staff', 'view-staff-shifts', 'assign-staff-shifts',
             'view-invoices', 'create-invoices', 'edit-invoices', 'process-payments', 'view-payment-logs',

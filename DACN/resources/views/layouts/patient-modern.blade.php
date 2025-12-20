@@ -206,8 +206,8 @@
                     <i class="fas fa-hospital-alt" style="font-size: 1.5rem; color: #10b981;"></i>
                 </div>
                 <div>
-                    <h1 class="text-white mb-0" style="font-size: 1.25rem; font-weight: 700;">HealthCare</h1>
-                    <p class="mb-0" style="color: #d1fae5; font-size: 0.75rem;">Phòng khám đa khoa</p>
+                    <h1 class="text-white mb-0" style="font-size: 1.25rem; font-weight: 700;">VietCare</h1>
+                    <p class="mb-0" style="color: #d1fae5; font-size: 0.75rem;">Phòng khám Sản-Phụ Khoa</p>
                 </div>
             </div>
 
@@ -219,21 +219,41 @@
                         @php
                             $avatarUrl = null;
                             $user = auth()->user();
-                            if (! empty($user->avatar)) {
+                            if (!empty($user->avatar)) {
                                 $avatarUrl = Storage::url($user->avatar);
-                            } elseif ($user->relationLoaded('bacSi') ? ($user->bacSi?->avatar_url ?? false) : ($user->bacSi ?? false)) {
-                                $avatarUrl = $user->bacSi->avatar_url ?? ($user->bacSi->avatar ? Storage::url($user->bacSi->avatar) : null);
-                            } elseif ($user->relationLoaded('nhanVien') ? ($user->nhanVien?->avatar_path ?? false) : ($user->nhanVien ?? false)) {
-                                $avatarUrl = $user->nhanVien->avatar_path ? Storage::url($user->nhanVien->avatar_path) : null;
-                            } elseif ($user->relationLoaded('patientProfile') ? ($user->patientProfile?->avatar ?? false) : ($user->patientProfile ?? false)) {
-                                $avatarUrl = $user->patientProfile->avatar ? Storage::url($user->patientProfile->avatar) : null;
+                            } elseif (
+                                $user->relationLoaded('bacSi')
+                                    ? $user->bacSi?->avatar_url ?? false
+                                    : $user->bacSi ?? false
+                            ) {
+                                $avatarUrl =
+                                    $user->bacSi->avatar_url ??
+                                    ($user->bacSi->avatar ? Storage::url($user->bacSi->avatar) : null);
+                            } elseif (
+                                $user->relationLoaded('nhanVien')
+                                    ? $user->nhanVien?->avatar_path ?? false
+                                    : $user->nhanVien ?? false
+                            ) {
+                                $avatarUrl = $user->nhanVien->avatar_path
+                                    ? Storage::url($user->nhanVien->avatar_path)
+                                    : null;
+                            } elseif (
+                                $user->relationLoaded('patientProfile')
+                                    ? $user->patientProfile?->avatar ?? false
+                                    : $user->patientProfile ?? false
+                            ) {
+                                $avatarUrl = $user->patientProfile->avatar
+                                    ? Storage::url($user->patientProfile->avatar)
+                                    : null;
                             }
                         @endphp
 
                         @if ($avatarUrl)
-                            <img src="{{ $avatarUrl }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ $avatarUrl }}" alt="Avatar"
+                                style="width: 100%; height: 100%; object-fit: cover;">
                         @else
-                            <div style="width: 100%; height: 100%; background: #10b981; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
+                            <div
+                                style="width: 100%; height: 100%; background: #10b981; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
                                 {{ substr($user->name, 0, 1) }}
                             </div>
                         @endif
@@ -283,6 +303,30 @@
                     class="sidebar-link {{ request()->routeIs('patient.xetnghiem.*') ? 'active' : '' }}">
                     <i class="fas fa-flask" style="width: 20px;"></i>
                     <span>Kết quả xét nghiệm</span>
+                </a>
+
+                <a href="{{ route('patient.sieuam.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.sieuam.*') ? 'active' : '' }}">
+                    <i class="fas fa-notes-medical" style="width: 20px;"></i>
+                    <span>Kết quả siêu âm</span>
+                </a>
+
+                <a href="{{ route('patient.xquang.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.xquang.*') ? 'active' : '' }}">
+                    <i class="fas fa-x-ray" style="width: 20px;"></i>
+                    <span>Kết quả X-Quang</span>
+                </a>
+
+                <a href="{{ route('patient.theodoithaiky.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.theodoithaiky.*') ? 'active' : '' }}">
+                    <i class="fas fa-baby" style="width: 20px;"></i>
+                    <span>Theo dõi thai kỳ</span>
+                </a>
+
+                <a href="{{ route('patient.taikham.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.taikham.*') ? 'active' : '' }}">
+                    <i class="fas fa-calendar-check" style="width: 20px;"></i>
+                    <span>Tái khám</span>
                 </a>
 
                 <a href="{{ route('patient.hoadon.index') }}"
@@ -410,21 +454,41 @@
                         @php
                             $avatarUrlSmall = null;
                             $user = auth()->user();
-                            if (! empty($user->avatar)) {
+                            if (!empty($user->avatar)) {
                                 $avatarUrlSmall = Storage::url($user->avatar);
-                            } elseif ($user->relationLoaded('bacSi') ? ($user->bacSi?->avatar_url ?? false) : ($user->bacSi ?? false)) {
-                                $avatarUrlSmall = $user->bacSi->avatar_url ?? ($user->bacSi->avatar ? Storage::url($user->bacSi->avatar) : null);
-                            } elseif ($user->relationLoaded('nhanVien') ? ($user->nhanVien?->avatar_path ?? false) : ($user->nhanVien ?? false)) {
-                                $avatarUrlSmall = $user->nhanVien->avatar_path ? Storage::url($user->nhanVien->avatar_path) : null;
-                            } elseif ($user->relationLoaded('patientProfile') ? ($user->patientProfile?->avatar ?? false) : ($user->patientProfile ?? false)) {
-                                $avatarUrlSmall = $user->patientProfile->avatar ? Storage::url($user->patientProfile->avatar) : null;
+                            } elseif (
+                                $user->relationLoaded('bacSi')
+                                    ? $user->bacSi?->avatar_url ?? false
+                                    : $user->bacSi ?? false
+                            ) {
+                                $avatarUrlSmall =
+                                    $user->bacSi->avatar_url ??
+                                    ($user->bacSi->avatar ? Storage::url($user->bacSi->avatar) : null);
+                            } elseif (
+                                $user->relationLoaded('nhanVien')
+                                    ? $user->nhanVien?->avatar_path ?? false
+                                    : $user->nhanVien ?? false
+                            ) {
+                                $avatarUrlSmall = $user->nhanVien->avatar_path
+                                    ? Storage::url($user->nhanVien->avatar_path)
+                                    : null;
+                            } elseif (
+                                $user->relationLoaded('patientProfile')
+                                    ? $user->patientProfile?->avatar ?? false
+                                    : $user->patientProfile ?? false
+                            ) {
+                                $avatarUrlSmall = $user->patientProfile->avatar
+                                    ? Storage::url($user->patientProfile->avatar)
+                                    : null;
                             }
                         @endphp
 
                         @if ($avatarUrlSmall)
-                            <img src="{{ $avatarUrlSmall }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ $avatarUrlSmall }}" alt="Avatar"
+                                style="width: 100%; height: 100%; object-fit: cover;">
                         @else
-                            <div style="width: 100%; height: 100%; background: #10b981; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
+                            <div
+                                style="width: 100%; height: 100%; background: #10b981; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
                                 {{ substr($user->name, 0, 1) }}
                             </div>
                         @endif

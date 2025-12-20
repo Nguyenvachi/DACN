@@ -5,9 +5,38 @@ namespace App\Http\Controllers\Patient;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
+use Carbon\Carbon;
 
 class NotificationController extends Controller
 {
+    // ADDED: notifications.id thường là UUID (string) => không thể where('id','>',...)
+    private function isUuidLike($value): bool
+    {
+        return is_string($value) && (bool) preg_match(
+            '/^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$/',
+            $value
+        );
+    }
+
+    // ADDED: lấy mốc created_at từ last_id (UUID) để polling ổn định
+    private function resolveCursorCreatedAtFromLastId($lastId): ?Carbon
+    {
+        if (!$this->isUuidLike($lastId)) {
+            return null;
+        }
+
+        $last = auth()->user()
+            ->notifications()
+            ->where('id', $lastId)
+            ->first();
+
+        if (!$last || !$last->created_at) {
+            return null;
+        }
+
+        return Carbon::parse($last->created_at);
+    }
+
     public function index(Request $request)
     {
         $filter = $request->get('filter');
@@ -60,6 +89,29 @@ class NotificationController extends Controller
             ->where('id', '>', $lastId)
             ->orderBy('created_at', 'desc')
             ->get();
+
+        // ADDED: hỗ trợ cursor theo thời gian để không phụ thuộc so sánh UUID id
+        $cursorCreatedAtInput = $request->input('last_created_at');
+        $cursorCreatedAt = null;
+
+        if (!empty($cursorCreatedAtInput)) {
+            try {
+                $cursorCreatedAt = Carbon::parse($cursorCreatedAtInput);
+            } catch (\Exception $e) {
+                $cursorCreatedAt = null;
+            }
+        }
+
+        if (!$cursorCreatedAt) {
+            $cursorCreatedAt = $this->resolveCursorCreatedAtFromLastId($lastId);
+        }
+
+        if ($cursorCreatedAt) {
+            $newNotifications = auth()->user()->notifications()
+                ->where('created_at', '>', $cursorCreatedAt)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
 
         $html = '';
         if ($newNotifications->count() > 0) {
@@ -149,9 +201,16 @@ class NotificationController extends Controller
             }
         }
 
+        // ADDED: trả thêm last_created_at để frontend có thể polling ổn định theo thời gian
+        $firstNew = $newNotifications->first();
+        $lastCreatedAtOut = $firstNew && $firstNew->created_at
+            ? Carbon::parse($firstNew->created_at)->toIso8601String()
+            : $cursorCreatedAtInput;
+
         return response()->json([
             'html' => $html,
             'last_id' => $newNotifications->first()->id ?? $lastId, // Lấy ID của item mới nhất
+            'last_created_at' => $lastCreatedAtOut,
             'count_unread' => auth()->user()->unreadNotifications()->count()
         ]);
     }

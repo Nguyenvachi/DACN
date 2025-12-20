@@ -11,6 +11,8 @@ use App\Models\DonThuoc;
 use App\Models\DonThuocItem;
 use App\Models\Thuoc;
 use App\Models\XetNghiem;
+use App\Models\SieuAm;
+use App\Models\XQuang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -124,7 +126,7 @@ class BenhAnController extends Controller
 
     public function show(BenhAn $benh_an)
     {
-        $benh_an->load(['benhNhan', 'bacSi', 'files', 'xetNghiems', 'donThuocs.items.thuoc']);
+        $benh_an->load(['benhNhan', 'bacSi', 'files', 'xetNghiems', 'sieuAms', 'xQuangs', 'donThuocs.items.thuoc']);
         $role = $this->getCurrentRole();
         // Prefer new VietCare-styled view if available; fallback to legacy view
         $preferredView = view()->exists('benh_an.show_vietcare') ? 'benh_an.show_vietcare' : 'benh_an.show';
@@ -141,7 +143,7 @@ class BenhAnController extends Controller
         $role = $this->getCurrentRole();
 
         // Load relationships cần thiết
-        $benh_an->load(['user', 'bacSi', 'lichHen.dichVu', 'files', 'xetNghiems', 'donThuocs.items.thuoc']);
+        $benh_an->load(['user', 'bacSi', 'lichHen.dichVu', 'files', 'xetNghiems', 'sieuAms', 'xQuangs', 'donThuocs.items.thuoc']);
 
         // Nếu là doctor, dùng view mới với enhanced features
         if ($role === 'doctor') {
@@ -380,17 +382,16 @@ class BenhAnController extends Controller
             'mo_ta' => 'nullable|string|max:255',
         ]);
 
-        // BỔ SUNG: lưu vào benh_an_private disk thay vì public
         $path = $request->file('file')->store('xet_nghiem', 'benh_an_private');
 
         XetNghiem::create([
             'benh_an_id' => $benhAn->id,
-            'user_id'    => $benhAn->user_id,
             'bac_si_id'  => $benhAn->bac_si_id,
             'loai'       => $data['loai'],
             'file_path'  => $path,
-            'disk'       => 'benh_an_private', // BỔ SUNG
+            'disk'       => 'benh_an_private',
             'mo_ta'      => $data['mo_ta'] ?? null,
+            'trang_thai' => XetNghiem::STATUS_COMPLETED, // Đã có kết quả ngay khi upload
         ]);
 
         // BỔ SUNG: Ghi audit log cho upload xét nghiệm
@@ -401,6 +402,40 @@ class BenhAnController extends Controller
         );
 
         return back()->with('status', 'Đã tải lên kết quả xét nghiệm');
+    }
+
+    // Upload X-Quang (mẹ) - đồng bộ với uploadXetNghiem
+    public function uploadXQuang(Request $request, BenhAn $benhAn)
+    {
+        $this->authorize('update', $benhAn);
+
+        $data = $request->validate([
+            'loai' => 'required|string|max:100',
+            'file' => 'required|file|max:10240',
+            'mo_ta' => 'nullable|string|max:255',
+        ]);
+
+        $path = $request->file('file')->store('x_quang', 'benh_an_private');
+
+        XQuang::create([
+            'benh_an_id' => $benhAn->id,
+            'user_id' => $benhAn->user_id,
+            'bac_si_id'  => $benhAn->bac_si_id,
+            'loai'       => $data['loai'],
+            'file_path'  => $path,
+            'disk'       => 'benh_an_private',
+            'mo_ta'      => $data['mo_ta'] ?? null,
+            'trang_thai' => XQuang::STATUS_COMPLETED,
+            'ngay_chi_dinh' => now(),
+        ]);
+
+        \App\Observers\BenhAnObserver::logCustomAction(
+            $benhAn,
+            'xquang_uploaded',
+            "Upload kết quả X-Quang: {$data['loai']}"
+        );
+
+        return back()->with('status', 'Đã tải lên kết quả X-Quang');
     }
 
     private function routeByRole(string $action): string
@@ -469,4 +504,43 @@ class BenhAnController extends Controller
         $fileName = basename($xetNghiem->file_path);
         return Storage::disk($disk)->download($xetNghiem->file_path, $fileName);
     }
+
+    // THÊM: download file siêu âm (bảo mật với signed URL) - đồng bộ với Xét nghiệm
+    public function downloadSieuAm(SieuAm $sieuAm)
+    {
+        $benhAn = $sieuAm->benhAn;
+        $this->authorize('view', $benhAn);
+
+        if (!$sieuAm->file_path) {
+            abort(404, 'File không tồn tại');
+        }
+
+        $disk = $sieuAm->disk ?? $sieuAm->disk_name ?? 'public';
+        if (!Storage::disk($disk)->exists($sieuAm->file_path)) {
+            abort(404, 'File không tồn tại');
+        }
+
+        $fileName = basename($sieuAm->file_path);
+        return Storage::disk($disk)->download($sieuAm->file_path, $fileName);
+    }
+
+    // THÊM: download file X-Quang (bảo mật với signed URL) - đồng bộ với Xét nghiệm/Siêu âm
+    public function downloadXQuang(XQuang $xQuang)
+    {
+        $benhAn = $xQuang->benhAn;
+        $this->authorize('view', $benhAn);
+
+        if (!$xQuang->file_path) {
+            abort(404, 'File không tồn tại');
+        }
+
+        $disk = $xQuang->disk ?? $xQuang->disk_name ?? 'public';
+        if (!Storage::disk($disk)->exists($xQuang->file_path)) {
+            abort(404, 'File không tồn tại');
+        }
+
+        $fileName = basename($xQuang->file_path);
+        return Storage::disk($disk)->download($xQuang->file_path, $fileName);
+    }
+
 }

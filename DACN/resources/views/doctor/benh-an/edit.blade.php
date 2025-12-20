@@ -70,6 +70,15 @@
                         <a href="{{ route('doctor.xetnghiem.create', $record->id) }}" class="btn btn-outline-info">
                             <i class="fas fa-flask me-2"></i>Chỉ định xét nghiệm
                         </a>
+                        <a href="{{ route('doctor.sieuam.create', ['benh_an_id' => $record->id]) }}" class="btn btn-outline-success">
+                            <i class="fas fa-notes-medical me-2"></i>Chỉ định siêu âm
+                        </a>
+                        <a href="{{ route('doctor.xquang.create', $record->id) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-x-ray me-2"></i>Chỉ định X-Quang
+                        </a>
+                        <a href="{{ route('doctor.taikham.create', $record->id) }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-calendar-check me-2"></i>Tạo tái khám
+                        </a>
                     </div>
                 </div>
             </div>
@@ -155,6 +164,8 @@
                     </form>
                 </div>
             </div>
+
+            {{-- NOTE: Legacy "Dịch vụ cận lâm sàng" section has been removed. --}}
 
             {{-- Files đã upload --}}
             @if($record->files && $record->files->count() > 0)
@@ -310,6 +321,116 @@
                 </div>
             </div>
 
+            {{-- Siêu âm --}}
+            <div class="card vc-card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-notes-medical me-2" style="color: #10b981;"></i>
+                        Siêu âm
+                    </h5>
+                    <a href="{{ route('doctor.sieuam.create', ['benh_an_id' => $record->id]) }}" class="btn btn-sm vc-btn-primary">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    @php
+                        $sieuAms = App\Models\SieuAm::where('benh_an_id', $record->id)->get();
+                    @endphp
+
+                    @if($sieuAms->count() > 0)
+                    <div class="list-group list-group-flush">
+                        @foreach($sieuAms as $sa)
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="mb-0 small">{{ $sa->loaiSieuAm->ten ?? 'N/A' }}</h6>
+                                @if($sa->trang_thai === 'completed')
+                                <span class="badge bg-success"><i class="fas fa-check"></i></span>
+                                @elseif($sa->trang_thai === 'processing')
+                                <span class="badge bg-warning"><i class="fas fa-clock"></i></span>
+                                @else
+                                <span class="badge bg-secondary"><i class="fas fa-hourglass-start"></i></span>
+                                @endif
+                            </div>
+                            @if($sa->ghi_chu)
+                            <p class="mb-2 small text-muted">{{ Str::limit($sa->ghi_chu, 60) }}</p>
+                            @endif
+                            @if($sa->trang_thai === 'completed' && $sa->file_path)
+                            <a href="{{ URL::temporarySignedRoute('doctor.benhan.sieuam.download', now()->addMinutes(10), ['sieuAm' => $sa->id]) }}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download me-1"></i>Tải KQ
+                            </a>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="text-center py-4">
+                        <i class="fas fa-notes-medical fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa chỉ định siêu âm</p>
+                        <a href="{{ route('doctor.sieuam.create', ['benh_an_id' => $record->id]) }}" class="btn btn-sm vc-btn-primary">
+                            <i class="fas fa-plus me-2"></i>Chỉ định ngay
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- X-Quang --}}
+            <div class="card vc-card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-x-ray me-2" style="color: #3b82f6;"></i>
+                        X-Quang
+                    </h5>
+                    <a href="{{ route('doctor.xquang.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    @php
+                        $xQuangs = App\Models\XQuang::where('benh_an_id', $record->id)->get();
+                    @endphp
+
+                    @if($xQuangs->count() > 0)
+                    <div class="list-group list-group-flush">
+                        @foreach($xQuangs as $xq)
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="mb-0 small">{{ $xq->loaiXQuang->ten ?? $xq->loai }}</h6>
+                                @if($xq->trang_thai === 'completed')
+                                <span class="badge bg-success"><i class="fas fa-check"></i></span>
+                                @elseif($xq->trang_thai === 'processing')
+                                <span class="badge bg-warning"><i class="fas fa-clock"></i></span>
+                                @else
+                                <span class="badge bg-secondary"><i class="fas fa-hourglass-start"></i></span>
+                                @endif
+                            </div>
+
+                            @if($xq->mo_ta)
+                            <p class="mb-2 small text-muted">{{ Str::limit($xq->mo_ta, 60) }}</p>
+                            @endif
+
+                            @if($xq->trang_thai === 'completed' && $xq->file_path)
+                            <a href="{{ URL::temporarySignedRoute('doctor.benhan.xquang.download', now()->addMinutes(10), ['xQuang' => $xq->id]) }}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download me-1"></i>Tải KQ
+                            </a>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="text-center py-4">
+                        <i class="fas fa-x-ray fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa chỉ định X-Quang</p>
+                        <a href="{{ route('doctor.xquang.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                            <i class="fas fa-plus me-2"></i>Chỉ định ngay
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
             {{-- Lịch sử --}}
             <div class="card vc-card">
                 <div class="card-header">
@@ -410,4 +531,5 @@ $(document).ready(function() {
 }
 </style>
 @endpush
+
 @endsection

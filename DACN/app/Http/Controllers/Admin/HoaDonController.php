@@ -22,15 +22,36 @@ class HoaDonController extends Controller
 
     public function show(HoaDon $hoaDon)
     {
-        $hoaDon->load(['lichHen', 'user', 'thanhToans', 'paymentLogs']);
+        $hoaDon->load([
+            'lichHen',
+            'lichHen.benhAn',
+            'lichHen.benhAn.xetNghiems',
+            'lichHen.benhAn.xetNghiems.loaiXetNghiem',
+            'lichHen.benhAn.sieuAms',
+            'lichHen.benhAn.sieuAms.loaiSieuAm',
+            'lichHen.benhAn.xQuangs',
+            'lichHen.benhAn.xQuangs.loaiXQuang',
+            'user',
+            'thanhToans',
+            'paymentLogs',
+        ]);
         return view('admin.hoadon.show', compact('hoaDon'));
     }
 
     // Tạo hóa đơn từ lịch hẹn nếu chưa có
     public function createFromAppointment(LichHen $lichHen)
     {
-        // SỬA: Lấy giá từ lich_hen.tong_tien (đã lưu từ lúc đặt)
-        $tongTien = $lichHen->tong_tien ?? 0;
+        // Lấy giá từ lich_hen.tong_tien (đã lưu từ lúc đặt)
+        $baseTongTien = (float) ($lichHen->tong_tien ?? 0);
+
+        // Cộng thêm phí xét nghiệm (nếu có)
+        $lichHen->loadMissing(['benhAn.xetNghiems']);
+        $phiXetNghiem = 0;
+        if ($lichHen->benhAn && $lichHen->benhAn->xetNghiems) {
+            $phiXetNghiem = (float) $lichHen->benhAn->xetNghiems->sum('gia');
+        }
+
+        $tongTien = $baseTongTien + $phiXetNghiem;
 
         $hoaDon = HoaDon::firstOrCreate(
             ['lich_hen_id' => $lichHen->id],
@@ -42,6 +63,17 @@ class HoaDonController extends Controller
                 'ghi_chu'    => null,
             ]
         );
+
+        // Nếu hóa đơn đã tồn tại và chưa bị chỉnh/số tiền vẫn là base, thì cập nhật thêm phí xét nghiệm
+        if (!$hoaDon->wasRecentlyCreated
+            && $phiXetNghiem > 0
+            && (float) ($hoaDon->so_tien_da_thanh_toan ?? 0) <= 0
+            && (float) ($hoaDon->so_tien_da_hoan ?? 0) <= 0
+            && (float) $hoaDon->tong_tien === $baseTongTien
+        ) {
+            $hoaDon->tong_tien = $tongTien;
+            $hoaDon->save();
+        }
 
         return redirect()->route('admin.hoadon.show', $hoaDon)->with('success', 'Đã tạo/Xem hóa đơn');
     }

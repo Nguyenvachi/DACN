@@ -59,6 +59,7 @@
                         <a href="#basic" class="btn btn-sm btn-outline-secondary">Thông tin</a>
                         <a href="#vitals" class="btn btn-sm btn-outline-secondary">Vitals</a>
                         <a href="#clinical" class="btn btn-sm btn-outline-secondary">Khám</a>
+                        <a href="#services" class="btn btn-sm btn-outline-secondary">Dịch vụ</a>
                         <a href="#prescriptions" class="btn btn-sm btn-outline-secondary">Đơn thuốc</a>
                         <a href="#attachments" class="btn btn-sm btn-outline-secondary">Tệp</a>
                     </div>
@@ -376,4 +377,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
 @endpush

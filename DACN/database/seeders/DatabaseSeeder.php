@@ -36,6 +36,15 @@ class DatabaseSeeder extends Seeder
         // Seed rooms (Phong) after doctors exist so we can attach them
         $this->call(\Database\Seeders\PhongKhamSeeder::class);
 
+        // Seed sample "Loại xét nghiệm" catalog (depends on ChuyenKhoa + Phong)
+        $this->call(\Database\Seeders\LoaiXetNghiemSeeder::class);
+
+        // THÊM: Seed Loại Siêu âm (File con: database/seeders/LoaiSieuAmSeeder.php)
+        $this->call(\Database\Seeders\LoaiSieuAmSeeder::class);
+
+        // THÊM: Seed Loại X-Quang (File con: database/seeders/LoaiXQuangSeeder.php)
+        $this->call(\Database\Seeders\LoaiXQuangSeeder::class);
+
         // Seed staff via dedicated seeder to avoid duplication
         $this->call(\Database\Seeders\NhanVienSeeder::class);
 

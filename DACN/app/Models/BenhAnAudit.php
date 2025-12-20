@@ -46,6 +46,10 @@ class BenhAnAudit extends Model
             'test_uploaded' => 'Upload xét nghiệm',
             'files_uploaded' => 'Upload tệp',
             'file_deleted' => 'Xóa tệp',
+            'pregnancy_tracking_created' => 'Tạo theo dõi thai kỳ',
+            'pregnancy_tracking_updated' => 'Cập nhật theo dõi thai kỳ',
+            'pregnancy_tracking_status_changed' => 'Đổi trạng thái theo dõi thai kỳ',
+            'pregnancy_tracking_downloaded' => 'Tải tệp theo dõi thai kỳ',
             default => ucfirst(str_replace('_', ' ', $this->action)),
         };
     }

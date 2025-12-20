@@ -7,6 +7,8 @@ use App\Models\BenhAnAudit;
 
 class BenhAnObserver
 {
+    private const ACTION_MAX_LEN = 100;
+
     /**
      * Ghi log khi tạo mới bệnh án
      */
@@ -22,10 +24,10 @@ class BenhAnObserver
     {
         $oldValues = $benhAn->getOriginal();
         $newValues = $benhAn->getAttributes();
-        
+
         // Chỉ log các trường thay đổi
         $changes = array_diff_assoc($newValues, $oldValues);
-        
+
         if (!empty($changes)) {
             $this->logAudit($benhAn, 'updated', $oldValues, $newValues);
         }
@@ -47,10 +49,12 @@ class BenhAnObserver
         $user = auth()->user();
         $request = request();
 
+        $safeAction = mb_substr(trim((string) $action), 0, self::ACTION_MAX_LEN);
+
         BenhAnAudit::create([
             'benh_an_id' => $benhAn->id,
             'user_id'    => $user?->id,
-            'action'     => $action,
+            'action'     => $safeAction,
             'old_values' => $oldValues,
             'new_values' => $newValues,
             'ip_address' => $request?->ip(),
@@ -66,12 +70,35 @@ class BenhAnObserver
         $user = auth()->user();
         $request = request();
 
+        $safeAction = mb_substr(trim((string) $action), 0, self::ACTION_MAX_LEN);
+
         BenhAnAudit::create([
             'benh_an_id' => $benhAn->id,
             'user_id'    => $user?->id,
-            'action'     => $action,
+            'action'     => $safeAction,
             'old_values' => null,
             'new_values' => ['description' => $description],
+            'ip_address' => $request?->ip(),
+            'user_agent' => $request?->userAgent(),
+        ]);
+    }
+
+    /**
+     * BỔ SUNG: Ghi log action đặc biệt kèm old/new values (phục vụ các module con như Theo dõi thai kỳ)
+     */
+    public static function logCustomActionWithValues(BenhAn $benhAn, string $action, ?array $oldValues, ?array $newValues): void
+    {
+        $user = auth()->user();
+        $request = request();
+
+        $safeAction = mb_substr(trim((string) $action), 0, self::ACTION_MAX_LEN);
+
+        BenhAnAudit::create([
+            'benh_an_id' => $benhAn->id,
+            'user_id'    => $user?->id,
+            'action'     => $safeAction,
+            'old_values' => $oldValues,
+            'new_values' => $newValues,
             'ip_address' => $request?->ip(),
             'user_agent' => $request?->userAgent(),
         ]);

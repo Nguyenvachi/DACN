@@ -52,6 +52,14 @@ return [
             'throw' => false,
         ],
 
+        // THÊM: Private disk cho file siêu âm
+        'sieu_am_private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/sieu_am'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

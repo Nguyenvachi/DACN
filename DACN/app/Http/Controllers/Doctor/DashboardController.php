@@ -66,7 +66,7 @@ class DashboardController extends Controller
             ->whereDate('ngay_hen', '>=', $today)
             ->whereDate('ngay_hen', '<=', $today->copy()->addDays(7))
             ->whereIn('trang_thai', ['Chờ xác nhận', 'Đã xác nhận'])
-            ->with(['user', 'dichVu'])
+            ->with(['user', 'dichVu', 'hoaDon'])
             ->orderBy('ngay_hen')
             ->orderBy('thoi_gian_hen')
             ->limit(10)
@@ -75,7 +75,7 @@ class DashboardController extends Controller
         // === LỊCH HẸN HÔM NAY CHI TIẾT ===
         $todayAppointments = LichHen::where('bac_si_id', $bacSi->id)
             ->whereDate('ngay_hen', $today)
-            ->with(['user', 'dichVu'])
+            ->with(['user', 'dichVu', 'hoaDon'])
             ->orderBy('thoi_gian_hen')
             ->get();
 

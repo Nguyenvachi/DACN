@@ -111,6 +111,38 @@
                 </a>
             </li>
 
+            {{-- 5.1. SIÊU ÂM - Quản lý siêu âm --}}
+            <li>
+                <a href="{{ route('doctor.sieuam.index') }}">
+                    <i class="fas fa-notes-medical"></i>
+                    <span>Siêu âm</span>
+                </a>
+            </li>
+
+            {{-- 5.2. X-QUANG - Quản lý X-Quang --}}
+            <li>
+                <a href="{{ route('doctor.xquang.index') }}">
+                    <i class="fas fa-x-ray"></i>
+                    <span>X-Quang</span>
+                </a>
+            </li>
+
+            {{-- 5.3. THEO DÕI THAI KỲ - Theo dõi sức khỏe thai kỳ --}}
+            <li>
+                <a href="{{ route('doctor.theodoithaiky.index') }}">
+                    <i class="fas fa-baby"></i>
+                    <span>Theo dõi thai kỳ</span>
+                </a>
+            </li>
+
+            {{-- 5.4. TÁI KHÁM - Theo dõi tái khám --}}
+            <li>
+                <a href="{{ route('doctor.taikham.index') }}">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Tái khám</span>
+                </a>
+            </li>
+
             {{-- 6. LỊCH LÀM VIỆC --}}
             <li>
                 <a href="{{ route('doctor.calendar.index') }}">

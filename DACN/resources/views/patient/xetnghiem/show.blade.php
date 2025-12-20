@@ -44,7 +44,7 @@
                     <div class="col-md-6">
                         <small class="text-muted text-uppercase fw-bold">Loại xét nghiệm</small>
                         <div class="fs-5 text-dark fw-bold">
-                            {{ $xetNghiem->loai_xet_nghiem ?? 'Xét nghiệm tổng quát' }}
+                            {{ $xetNghiem->loai ?? 'Xét nghiệm tổng quát' }}
                         </div>
                     </div>
                     <div class="col-md-6 text-md-end">
@@ -166,7 +166,7 @@
             </div>
             <div class="card-body d-grid gap-2">
                 {{-- Download File (Nếu có) --}}
-                @if($xetNghiem->file_path || $xetNghiem->file_ket_qua)
+                @if($xetNghiem->file_path)
                     <a href="{{ route('patient.benhan.xetnghiem.download', $xetNghiem) }}" class="btn btn-primary">
                         <i class="fas fa-download me-2"></i>Tải file kết quả (PDF/Ảnh)
                     </a>

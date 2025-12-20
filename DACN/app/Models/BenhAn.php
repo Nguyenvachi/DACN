@@ -69,6 +69,26 @@ class BenhAn extends Model
         return $this->hasMany(\App\Models\XetNghiem::class);
     }
 
+    // THÊM: Relationship với Siêu âm (File con: app/Models/SieuAm.php)
+    public function sieuAms() {
+        return $this->hasMany(\App\Models\SieuAm::class);
+    }
+
+    // THÊM: Relationship với X-Quang (File con: app/Models/XQuang.php)
+    public function xQuangs() {
+        return $this->hasMany(\App\Models\XQuang::class);
+    }
+
+    // THÊM: Relationship với Theo dõi thai kỳ (File con: app/Models/TheoDoiThaiKy.php)
+    public function theoDoiThaiKys() {
+        return $this->hasMany(\App\Models\TheoDoiThaiKy::class);
+    }
+
+    // THÊM: Relationship với Tái khám (File con: app/Models/TaiKham.php)
+    public function taiKhams() {
+        return $this->hasMany(\App\Models\TaiKham::class);
+    }
+
     // bổ sung quan hệ audit trail
     public function audits() {
         return $this->hasMany(\App\Models\BenhAnAudit::class)->orderByDesc('created_at');

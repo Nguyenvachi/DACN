@@ -13,7 +13,7 @@ return new class extends Migration {
                 $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();   // bệnh nhân
                 $table->foreignId('bac_si_id')->nullable()->constrained('bac_sis')->nullOnDelete(); // người chỉ định
                 $table->string('loai');       // máu / sinh hóa / nước tiểu / ...
-                $table->string('file_path');  // đường dẫn file kết quả
+                $table->string('file_path')->nullable();  // đường dẫn file kết quả (nullable vì lúc chỉ định chưa có file)
                 $table->string('mo_ta')->nullable();
                 $table->timestamps();
             });

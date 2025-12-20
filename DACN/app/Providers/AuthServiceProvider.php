@@ -5,9 +5,15 @@ namespace App\Providers;
 use App\Models\BenhAn;
 use App\Models\NhanVien;
 use App\Models\LichHen;
+use App\Models\SieuAm;
+use App\Models\TaiKham;
+use App\Models\TheoDoiThaiKy;
 use App\Policies\BenhAnPolicy;
 use App\Policies\NhanVienPolicy;
 use App\Policies\LichHenPolicy;
+use App\Policies\SieuAmPolicy;
+use App\Policies\TaiKhamPolicy;
+use App\Policies\TheoDoiThaiKyPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -22,6 +28,9 @@ class AuthServiceProvider extends ServiceProvider
         BenhAn::class => BenhAnPolicy::class,
         NhanVien::class => NhanVienPolicy::class,
         LichHen::class => LichHenPolicy::class,
+        SieuAm::class => SieuAmPolicy::class,
+        TheoDoiThaiKy::class => TheoDoiThaiKyPolicy::class,
+        TaiKham::class => TaiKhamPolicy::class,
     ];
 
     /**

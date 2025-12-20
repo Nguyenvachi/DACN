@@ -8,6 +8,8 @@ use App\Models\HoaDon;
 use App\Models\DonThuoc;
 use App\Models\XetNghiem;
 use App\Models\DanhGia;
+use App\Models\SieuAm; // THÊM
+use App\Models\XQuang; // THÊM
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -47,7 +49,19 @@ class PatientDashboardController extends Controller
             'total_prescriptions' => DonThuoc::whereHas('benhAn', function($q) use ($user) {
                 $q->where('user_id', $user->id);
             })->count(),
-            'total_tests' => XetNghiem::where('user_id', $user->id)->count(),
+            'total_tests' => XetNghiem::whereHas('benhAn', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->count(),
+            // THÊM: thống kê siêu âm (độc lập với xét nghiệm)
+            // Gợi ý bám theo pattern Xét nghiệm: whereHas('benhAn'...) để đảm bảo đúng patient sở hữu hồ sơ
+            'total_ultrasounds' => SieuAm::whereHas('benhAn', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->count(),
+
+            // THÊM: thống kê X-Quang (độc lập với xét nghiệm/siêu âm)
+            'total_xquangs' => XQuang::whereHas('benhAn', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->count(),
         ];
 
         // === LỊCH HẸN SẮP TỚI (5 gần nhất) ===
@@ -97,7 +111,9 @@ class PatientDashboardController extends Controller
         $appointmentChartData = $this->getAppointmentChartData($user->id);
 
         // === XÉT NGHIỆM GẦN ĐÂY ===
-        $recentTests = XetNghiem::where('user_id', $user->id)
+        $recentTests = XetNghiem::whereHas('benhAn', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
             ->orderBy('created_at', 'desc')
             ->take(3)
             ->with(['bacSi', 'benhAn'])

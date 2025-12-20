@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\LichHen;
+use App\Models\TaiKham;
 use App\Models\HoaDon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,7 @@ use App\Mail\LichHenDaXacNhan;
 use App\Mail\LichHenBiHuy;
 use App\Mail\LichHenCheckIn;
 use App\Mail\LichHenHoanThanh;
+use App\Observers\BenhAnObserver;
 
 class LichHenObserver
 {
@@ -25,6 +27,35 @@ class LichHenObserver
 
         if ($lichHen->wasChanged('trang_thai')) {
             $newStatus = $lichHen->trang_thai;
+
+            // Sync trạng thái lịch hẹn -> tái khám (nếu có liên kết)
+            try {
+                $taiKham = TaiKham::where('lich_hen_id', $lichHen->id)->first();
+                if ($taiKham) {
+                    $before = $taiKham->toArray();
+                    if ($newStatus === \App\Models\LichHen::STATUS_COMPLETED_VN && $taiKham->trang_thai !== TaiKham::STATUS_COMPLETED_VN) {
+                        $taiKham->update(['trang_thai' => TaiKham::STATUS_COMPLETED_VN]);
+                    }
+
+                    if ($newStatus === \App\Models\LichHen::STATUS_CANCELLED_VN && $taiKham->trang_thai !== TaiKham::STATUS_CANCELLED_VN) {
+                        $taiKham->update(['trang_thai' => TaiKham::STATUS_CANCELLED_VN]);
+                    }
+
+                    if ($taiKham->wasChanged('trang_thai') && $taiKham->benhAn) {
+                        BenhAnObserver::logCustomActionWithValues(
+                            $taiKham->benhAn,
+                            'tai_kham_synced_from_lich_hen',
+                            ['tai_kham' => $before, 'lich_hen' => ['trang_thai' => $lichHen->getOriginal('trang_thai')]],
+                            ['tai_kham' => $taiKham->toArray(), 'lich_hen' => ['trang_thai' => $newStatus]]
+                        );
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Failed to sync TaiKham from LichHen status', [
+                    'lich_hen_id' => $lichHen->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             // Tạo hóa đơn khi xác nhận (nếu chưa có) - GIỮ NGUYÊN TIẾNG VIỆT
                 if ($newStatus === \App\Models\LichHen::STATUS_CONFIRMED_VN) {
