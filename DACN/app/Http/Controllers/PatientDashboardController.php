@@ -10,6 +10,7 @@ use App\Models\XetNghiem;
 use App\Models\DanhGia;
 use App\Models\SieuAm; // THÊM
 use App\Models\XQuang; // THÊM
+use App\Models\NoiSoi; // THÊM
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -21,6 +22,7 @@ class PatientDashboardController extends Controller
      */
     public function index()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $profile = $user->patientProfile;
 
@@ -60,6 +62,11 @@ class PatientDashboardController extends Controller
 
             // THÊM: thống kê X-Quang (độc lập với xét nghiệm/siêu âm)
             'total_xquangs' => XQuang::whereHas('benhAn', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->count(),
+
+            // THÊM: thống kê Nội soi
+            'total_noisois' => NoiSoi::whereHas('benhAn', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             })->count(),
         ];

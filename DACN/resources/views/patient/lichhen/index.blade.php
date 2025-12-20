@@ -367,6 +367,48 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
 
+                // DataTables (patient): keep server data source; avoid duplicate paging/search
+                if (window.jQuery && $.fn.DataTable && !$.fn.DataTable.isDataTable('#appointmentsTable')) {
+                    const dt = $('#appointmentsTable').DataTable({
+                        language: {
+                            sProcessing: 'Đang xử lý...',
+                            sLengthMenu: 'Hiển thị _MENU_ dòng',
+                            sZeroRecords: 'Không tìm thấy dữ liệu',
+                            sInfo: 'Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ dòng',
+                            sInfoEmpty: 'Hiển thị 0 đến 0 trong tổng số 0 dòng',
+                            sInfoFiltered: '(lọc từ _MAX_ dòng)',
+                            sSearch: 'Tìm kiếm:',
+                            oPaginate: {
+                                sFirst: 'Đầu',
+                                sPrevious: 'Trước',
+                                sNext: 'Tiếp',
+                                sLast: 'Cuối'
+                            }
+                        },
+                        responsive: false,
+                        scrollX: true,
+                        autoWidth: true,
+                        paging: false,
+                        info: false,
+                        searching: false,
+                        lengthChange: false,
+                        order: [],
+                        columnDefs: [{ orderable: false, targets: -1 }]
+                    });
+
+                    setTimeout(function() {
+                        dt.columns.adjust();
+                    }, 0);
+
+                    let resizeTimer;
+                    $(window).on('resize.appointmentsTable', function() {
+                        clearTimeout(resizeTimer);
+                        resizeTimer = setTimeout(function() {
+                            dt.columns.adjust();
+                        }, 150);
+                    });
+                }
+
                 const detailModal = document.getElementById('detailModal');
 
                 detailModal.addEventListener('show.bs.modal', function(event) {

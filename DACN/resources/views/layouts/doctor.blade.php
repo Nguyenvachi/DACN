@@ -127,7 +127,15 @@
                 </a>
             </li>
 
-            {{-- 5.3. THEO DÕI THAI KỲ - Theo dõi sức khỏe thai kỳ --}}
+            {{-- 5.3. NỘI SOI - Quản lý Nội soi --}}
+            <li>
+                <a href="{{ route('doctor.noisoi.index') }}">
+                    <i class="fas fa-stethoscope"></i>
+                    <span>Nội soi</span>
+                </a>
+            </li>
+
+            {{-- 5.4. THEO DÕI THAI KỲ - Theo dõi sức khỏe thai kỳ --}}
             <li>
                 <a href="{{ route('doctor.theodoithaiky.index') }}">
                     <i class="fas fa-baby"></i>
@@ -135,7 +143,7 @@
                 </a>
             </li>
 
-            {{-- 5.4. TÁI KHÁM - Theo dõi tái khám --}}
+            {{-- 5.5. TÁI KHÁM - Theo dõi tái khám --}}
             <li>
                 <a href="{{ route('doctor.taikham.index') }}">
                     <i class="fas fa-calendar-alt"></i>

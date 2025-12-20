@@ -79,6 +79,11 @@ class BenhAn extends Model
         return $this->hasMany(\App\Models\XQuang::class);
     }
 
+    // THÊM: Relationship với Nội soi (File con: app/Models/NoiSoi.php)
+    public function noiSois() {
+        return $this->hasMany(\App\Models\NoiSoi::class);
+    }
+
     // THÊM: Relationship với Theo dõi thai kỳ (File con: app/Models/TheoDoiThaiKy.php)
     public function theoDoiThaiKys() {
         return $this->hasMany(\App\Models\TheoDoiThaiKy::class);

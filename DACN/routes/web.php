@@ -181,6 +181,8 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
             ->parameters(['loai-sieu-am' => 'loaiSieuAm']);
         Route::resource('loai-x-quang', \App\Http\Controllers\Admin\LoaiXQuangController::class)
             ->parameters(['loai-x-quang' => 'loaiXQuang']);
+        Route::resource('loai-noi-soi', \App\Http\Controllers\Admin\LoaiNoiSoiController::class)
+            ->parameters(['loai-noi-soi' => 'loaiNoiSoi']);
         Route::resource('chuyen-khoa', \App\Http\Controllers\Admin\ChuyenKhoaController::class)->names([
             'index' => 'chuyenkhoa.index', 'create' => 'chuyenkhoa.create', 'store' => 'chuyenkhoa.store', 'show' => 'chuyenkhoa.show', 'edit' => 'chuyenkhoa.edit', 'update' => 'chuyenkhoa.update', 'destroy' => 'chuyenkhoa.destroy',
         ])->parameters(['chuyen-khoa' => 'chuyenkhoa']);
@@ -255,6 +257,7 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
         Route::get('benh-an/sieu-am/{sieuAm}/download', [BenhAnController::class, 'downloadSieuAm'])->name('benhan.sieuam.download')->middleware('signed');
         Route::get('benh-an/x-quang/{xQuang}/download', [BenhAnController::class, 'downloadXQuang'])->name('benhan.xquang.download')->middleware('signed');
+        Route::get('benh-an/noi-soi/{noiSoi}/download', [BenhAnController::class, 'downloadNoiSoi'])->name('benhan.noisoi.download')->middleware('signed');
 
         // QUẢN LÝ XÉT NGHIỆM (Admin) - Parent file: routes/web.php
         Route::prefix('xet-nghiem')->name('xetnghiem.')->group(function () {
@@ -270,6 +273,12 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
             Route::get('/statistics', [\App\Http\Controllers\Admin\XQuangController::class, 'statistics'])->name('statistics');
             Route::get('/export', [\App\Http\Controllers\Admin\XQuangController::class, 'export'])->name('export');
             Route::get('/{xQuang}', [\App\Http\Controllers\Admin\XQuangController::class, 'show'])->name('show');
+        });
+
+        // QUẢN LÝ NỘI SOI (Admin) - Parent file: routes/web.php
+        Route::prefix('noi-soi')->name('noisoi.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\NoiSoiController::class, 'index'])->name('index');
+            Route::get('/{noiSoi}', [\App\Http\Controllers\Admin\NoiSoiController::class, 'show'])->name('show');
         });
 
         // THEO DÕI THAI KỲ - Quản lý theo dõi thai kỳ (Admin) - Parent file: routes/web.php
@@ -469,6 +478,7 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('patient.benhan.xetnghiem.download')->middleware('signed');
     Route::get('benh-an/sieu-am/{sieuAm}/download', [BenhAnController::class, 'downloadSieuAm'])->name('benhan.sieuam.download')->middleware('signed');
     Route::get('benh-an/x-quang/{xQuang}/download', [BenhAnController::class, 'downloadXQuang'])->name('benhan.xquang.download')->middleware('signed');
+    Route::get('benh-an/noi-soi/{noiSoi}/download', [BenhAnController::class, 'downloadNoiSoi'])->name('benhan.noisoi.download')->middleware('signed');
     // NOTE: Legacy "assign-service" for removed CLS module has been removed.
 
 
@@ -536,6 +546,17 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
         Route::post('/{xQuang}/comment', [\App\Http\Controllers\Doctor\XQuangController::class, 'addComment'])->name('comment');
         Route::get('/{xQuang}/download', [\App\Http\Controllers\Doctor\XQuangController::class, 'download'])->name('download');
         Route::delete('/{xQuang}', [\App\Http\Controllers\Doctor\XQuangController::class, 'destroy'])->name('destroy');
+    });
+
+    // Nội soi - Endoscopy Management (File mẹ: routes/web.php)
+    Route::prefix('noi-soi')->name('noisoi.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'index'])->name('index');
+        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'create'])->name('create');
+        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'store'])->name('store');
+        Route::get('/{noiSoi}/show', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'show'])->name('show');
+        Route::post('/{noiSoi}/upload', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'uploadResult'])->name('upload');
+        Route::get('/{noiSoi}/download', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'download'])->name('download');
+        Route::delete('/{noiSoi}', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'destroy'])->name('destroy');
     });
 
     // Theo dõi thai kỳ - Pregnancy Tracking (File mẹ: routes/web.php)
@@ -657,6 +678,7 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::get('/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('xetnghiem.download')->middleware('signed');
         Route::get('/sieu-am/{sieuAm}/download', [BenhAnController::class, 'downloadSieuAm'])->name('sieuam.download')->middleware('signed');
         Route::get('/x-quang/{xQuang}/download', [BenhAnController::class, 'downloadXQuang'])->name('xquang.download')->middleware('signed');
+        Route::get('/noi-soi/{noiSoi}/download', [BenhAnController::class, 'downloadNoiSoi'])->name('noisoi.download')->middleware('signed');
     });
 
     // Patient Invoice/HoaDon Routes
@@ -681,6 +703,12 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
     Route::prefix('x-quang')->name('patient.xquang.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Patient\XQuangController::class, 'index'])->name('index');
         Route::get('/{xQuang}', [\App\Http\Controllers\Patient\XQuangController::class, 'show'])->name('show');
+    });
+
+    // Patient Nội soi Results Routes (File mẹ: routes/web.php)
+    Route::prefix('noi-soi')->name('patient.noisoi.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\NoiSoiController::class, 'index'])->name('index');
+        Route::get('/{noiSoi}', [\App\Http\Controllers\Patient\NoiSoiController::class, 'show'])->name('show');
     });
 
     // THEO DÕI THAI KỲ - Patient pregnancy tracking (File mẹ: routes/web.php)
@@ -727,6 +755,7 @@ Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->grou
         Route::get('/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('xetnghiem.download')->middleware('signed');
         Route::get('/sieu-am/{sieuAm}/download', [BenhAnController::class, 'downloadSieuAm'])->name('sieuam.download')->middleware('signed');
         Route::get('/x-quang/{xQuang}/download', [BenhAnController::class, 'downloadXQuang'])->name('xquang.download')->middleware('signed');
+        Route::get('/noi-soi/{noiSoi}/download', [BenhAnController::class, 'downloadNoiSoi'])->name('noisoi.download')->middleware('signed');
     });
 
     // Thông báo - Notification Management (File mẹ: routes/web.php)
@@ -762,6 +791,16 @@ Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->grou
         Route::get('/{xQuang}/upload', [\App\Http\Controllers\Staff\XQuangController::class, 'uploadForm'])->name('upload.form');
         Route::post('/{xQuang}/upload', [\App\Http\Controllers\Staff\XQuangController::class, 'upload'])->name('upload');
         Route::post('/{xQuang}/processing', [\App\Http\Controllers\Staff\XQuangController::class, 'markAsProcessing'])->name('processing');
+    });
+
+    // NỘI SOI - Quản lý Nội soi (Parent file: routes/web.php)
+    Route::prefix('noi-soi')->name('noisoi.')->group(function () {
+        Route::get('/pending', [\App\Http\Controllers\Staff\NoiSoiController::class, 'pending'])->name('pending');
+        Route::get('/completed', [\App\Http\Controllers\Staff\NoiSoiController::class, 'completed'])->name('completed');
+        Route::get('/{noiSoi}', [\App\Http\Controllers\Staff\NoiSoiController::class, 'show'])->name('show');
+        Route::get('/{noiSoi}/upload', [\App\Http\Controllers\Staff\NoiSoiController::class, 'uploadForm'])->name('upload.form');
+        Route::post('/{noiSoi}/upload', [\App\Http\Controllers\Staff\NoiSoiController::class, 'upload'])->name('upload');
+        Route::post('/{noiSoi}/processing', [\App\Http\Controllers\Staff\NoiSoiController::class, 'markAsProcessing'])->name('processing');
     });
 
     // THEO DÕI THAI KỲ - Quản lý theo dõi thai kỳ (Staff) - Parent file: routes/web.php
@@ -819,9 +858,21 @@ if (! Route::has('doctor.benhan.xquang.download')) {
         ->middleware('signed');
 }
 
+if (! Route::has('doctor.benhan.noisoi.download')) {
+    Route::get('/doctor/benh-an/noi-soi/{noiSoi}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadNoiSoi'])
+        ->name('doctor.benhan.noisoi.download')
+        ->middleware('signed');
+}
+
 if (! Route::has('staff.benhan.xquang.download')) {
     Route::get('/staff/benh-an/x-quang/{xQuang}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXQuang'])
         ->name('staff.benhan.xquang.download')
+        ->middleware('signed');
+}
+
+if (! Route::has('staff.benhan.noisoi.download')) {
+    Route::get('/staff/benh-an/noi-soi/{noiSoi}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadNoiSoi'])
+        ->name('staff.benhan.noisoi.download')
         ->middleware('signed');
 }
 
@@ -831,9 +882,21 @@ if (! Route::has('patient.benhan.xquang.download')) {
         ->middleware('signed');
 }
 
+if (! Route::has('patient.benhan.noisoi.download')) {
+    Route::get('/patient/benh-an/noi-soi/{noiSoi}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadNoiSoi'])
+        ->name('patient.benhan.noisoi.download')
+        ->middleware('signed');
+}
+
 if (! Route::has('admin.benhan.xquang.download')) {
     Route::get('/admin/benh-an/x-quang/{xQuang}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXQuang'])
         ->name('admin.benhan.xquang.download')
+        ->middleware('signed');
+}
+
+if (! Route::has('admin.benhan.noisoi.download')) {
+    Route::get('/admin/benh-an/noi-soi/{noiSoi}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadNoiSoi'])
+        ->name('admin.benhan.noisoi.download')
         ->middleware('signed');
 }
 

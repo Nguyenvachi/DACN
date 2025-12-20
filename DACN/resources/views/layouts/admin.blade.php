@@ -122,6 +122,7 @@
                 <li><a href="{{ route('admin.loai-xet-nghiem.index') }}">🧪 Loại xét nghiệm</a></li>
                 <li><a href="{{ route('admin.loai-sieu-am.index') }}">📹 Loại siêu âm</a></li>
                 <li><a href="{{ route('admin.loai-x-quang.index') }}">🩻 Loại X-Quang</a></li>
+                <li><a href="{{ route('admin.loai-noi-soi.index') }}">🩺 Loại Nội soi</a></li>
             @endcan
             <li><a href="{{ route('admin.chuyenkhoa.index') }}">🔬 Chuyên khoa</a></li>
             <li><a href="{{ route('admin.phong.index') }}">🚪 Phòng khám</a></li>
@@ -153,6 +154,7 @@
                 <li><a href="{{ route('admin.xetnghiem.index') }}">🧪 Xét nghiệm</a></li>
                 <li><a href="{{ route('admin.sieuam.index') }}">📹 Siêu âm</a></li>
                 <li><a href="{{ route('admin.xquang.index') }}">🩻 X-Quang</a></li>
+                <li><a href="{{ route('admin.noisoi.index') }}">🩺 Nội soi</a></li>
                 <li><a href="{{ route('admin.theodoithaiky.index') }}">👶 Theo dõi thai kỳ</a></li>
                 <li><a href="{{ route('admin.taikham.index') }}">📅 Tái khám</a></li>
             @endcan

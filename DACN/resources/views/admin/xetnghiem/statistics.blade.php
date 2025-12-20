@@ -133,7 +133,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover">
+                        <table id="xetNghiemTopDoctorsTable" class="table table-sm table-hover">
                             <thead>
                                 <tr>
                                     <th>STT</th>
@@ -168,7 +168,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover">
+                        <table id="xetNghiemTopTypesTable" class="table table-sm table-hover">
                             <thead>
                                 <tr>
                                     <th>STT</th>
@@ -195,6 +195,11 @@
     </div>
 </div>
 @endsection
+
+<x-datatable-script
+    tableId="xetNghiemTopDoctorsTable"
+    config='{"paging": false, "info": false, "searching": false, "lengthChange": false, "order": [[2, "desc"]], "columnDefs": [{"orderable": false, "targets": 0}]}'
+/>
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -249,6 +254,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    // DataTables: Top loại xét nghiệm
+    if (window.jQuery && $.fn.DataTable && !$.fn.DataTable.isDataTable('#xetNghiemTopTypesTable')) {
+        $('#xetNghiemTopTypesTable').DataTable({
+            paging: false,
+            info: false,
+            searching: false,
+            lengthChange: false,
+            responsive: true,
+            order: [[2, 'desc']],
+            columnDefs: [{ orderable: false, targets: 0 }]
+        });
+    }
 });
 </script>
 @endpush

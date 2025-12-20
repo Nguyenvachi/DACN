@@ -133,7 +133,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover">
+                        <table id="sieuAmTopDoctorsTable" class="table table-sm table-hover">
                             <thead>
                                 <tr>
                                     <th>STT</th>
@@ -168,7 +168,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover">
+                        <table id="sieuAmTopTypesTable" class="table table-sm table-hover">
                             <thead>
                                 <tr>
                                     <th>STT</th>
@@ -195,6 +195,11 @@
     </div>
 </div>
 @endsection
+
+<x-datatable-script
+    tableId="sieuAmTopDoctorsTable"
+    config='{"paging": false, "info": false, "searching": false, "lengthChange": false, "order": [[2, "desc"]], "columnDefs": [{"orderable": false, "targets": 0}]}'
+/>
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -248,6 +253,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    // DataTables: Top loại siêu âm
+    if (window.jQuery && $.fn.DataTable && !$.fn.DataTable.isDataTable('#sieuAmTopTypesTable')) {
+        $('#sieuAmTopTypesTable').DataTable({
+            paging: false,
+            info: false,
+            searching: false,
+            lengthChange: false,
+            responsive: true,
+            order: [[2, 'desc']],
+            columnDefs: [{ orderable: false, targets: 0 }]
+        });
+    }
 });
 </script>
 @endpush

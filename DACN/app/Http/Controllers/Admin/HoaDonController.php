@@ -31,6 +31,8 @@ class HoaDonController extends Controller
             'lichHen.benhAn.sieuAms.loaiSieuAm',
             'lichHen.benhAn.xQuangs',
             'lichHen.benhAn.xQuangs.loaiXQuang',
+            'lichHen.benhAn.noiSois',
+            'lichHen.benhAn.noiSois.loaiNoiSoi',
             'user',
             'thanhToans',
             'paymentLogs',

@@ -45,6 +45,9 @@ class DatabaseSeeder extends Seeder
         // THÊM: Seed Loại X-Quang (File con: database/seeders/LoaiXQuangSeeder.php)
         $this->call(\Database\Seeders\LoaiXQuangSeeder::class);
 
+        // THÊM: Seed Loại Nội soi (File con: database/seeders/LoaiNoiSoiSeeder.php)
+        $this->call(\Database\Seeders\LoaiNoiSoiSeeder::class);
+
         // Seed staff via dedicated seeder to avoid duplication
         $this->call(\Database\Seeders\NhanVienSeeder::class);
 

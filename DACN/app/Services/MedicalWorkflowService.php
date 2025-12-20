@@ -9,13 +9,14 @@ use App\Models\User;
 use App\Models\XetNghiem;
 use App\Models\SieuAm;
 use App\Models\XQuang;
+use App\Models\NoiSoi;
 use App\Notifications\MedicalUltrasoundRequested;
 use App\Notifications\MedicalUltrasoundResultUploaded;
 use App\Notifications\MedicalUltrasoundReviewed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Service xử lý luồng nghiệp vụ y tế chuẩn
@@ -196,7 +197,7 @@ class MedicalWorkflowService
     public function generateInvoice(LichHen $lichHen): HoaDon
     {
         // Ensure relations are available when computing totals
-        $lichHen->loadMissing(['benhAn.xetNghiems', 'benhAn.sieuAms', 'benhAn.xQuangs']);
+        $lichHen->loadMissing(['benhAn.xetNghiems', 'benhAn.sieuAms', 'benhAn.xQuangs', 'benhAn.noiSois']);
 
         $baseTongTien = (float) ($lichHen->tong_tien ?? 0);
         $phiXetNghiem = 0.0;
@@ -217,7 +218,13 @@ class MedicalWorkflowService
             $phiXQuang = (float) $lichHen->benhAn->xQuangs->sum('gia');
         }
 
-        $tongTien = $baseTongTien + $phiXetNghiem + $phiSieuAm + $phiXQuang;
+        // THÊM: Phí Nội soi (dịch vụ cận lâm sàng) - đồng bộ cách cộng phí giống Xét nghiệm/X-Quang
+        $phiNoiSoi = 0.0;
+        if ($lichHen->benhAn && $lichHen->benhAn->noiSois) {
+            $phiNoiSoi = (float) $lichHen->benhAn->noiSois->sum('gia');
+        }
+
+        $tongTien = $baseTongTien + $phiXetNghiem + $phiSieuAm + $phiXQuang + $phiNoiSoi;
 
         // Kiểm tra hóa đơn đã tồn tại chưa
         $hoaDon = $lichHen->hoaDon;
@@ -302,6 +309,80 @@ class MedicalWorkflowService
         Log::info("Upload kết quả X-Quang #{$xQuang->id}");
 
         return $xQuang->fresh();
+    }
+
+    /**
+     * Tạo yêu cầu Nội soi (Bác sĩ chỉ định)
+     */
+    public function createNoiSoiRequest(BenhAn $benhAn, array $data): NoiSoi
+    {
+        $payload = [
+            'benh_an_id' => $benhAn->id,
+            'user_id' => $benhAn->user_id,
+            'bac_si_chi_dinh_id' => $data['bac_si_chi_dinh_id'] ?? $benhAn->bac_si_id,
+            'bac_si_noi_soi_id' => $data['bac_si_noi_soi_id'] ?? null,
+            'phong_id' => $data['phong_id'] ?? null,
+            'loai' => $data['loai'],
+            'mo_ta' => $data['mo_ta'] ?? null,
+            'gia' => $data['gia'] ?? 0,
+            'ngay_chi_dinh' => $data['ngay_chi_dinh'] ?? now(),
+            'trang_thai' => NoiSoi::STATUS_PENDING,
+        ];
+
+        // Backward compatibility: chỉ set loai_noi_soi_id nếu DB có cột
+        try {
+            if (Schema::hasColumn('noi_sois', 'loai_noi_soi_id')) {
+                $payload['loai_noi_soi_id'] = $data['loai_noi_soi_id'] ?? null;
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        $noiSoi = NoiSoi::create($payload);
+
+        // Nếu lịch hẹn đã có hóa đơn, cập nhật ngay tổng tiền/còn lại để cộng phí Nội soi
+        try {
+            $benhAn->loadMissing(['lichHen', 'lichHen.hoaDon', 'noiSois']);
+            if ($benhAn->lichHen && $benhAn->lichHen->hoaDon) {
+                $this->generateInvoice($benhAn->lichHen);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Invoice recalculation skipped after creating NoiSoi request', [
+                'benh_an_id' => $benhAn->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        Log::info("Bác sĩ #{$benhAn->bac_si_id} chỉ định Nội soi #{$noiSoi->id} cho bệnh án #{$benhAn->id}");
+
+        return $noiSoi;
+    }
+
+    /**
+     * Upload kết quả Nội soi (Staff/Bác sĩ thực hiện)
+     */
+    public function uploadNoiSoiResult(NoiSoi $noiSoi, $file, ?string $nhanXet = null, ?string $ketQua = null): NoiSoi
+    {
+        // Xóa file cũ nếu có
+        if ($noiSoi->file_path) {
+            Storage::disk($noiSoi->disk ?? 'benh_an_private')->delete($noiSoi->file_path);
+        }
+
+        // Lưu file mới
+        $path = $file->store('noi_soi', 'benh_an_private');
+
+        $noiSoi->update([
+            'file_path' => $path,
+            'disk' => 'benh_an_private',
+            'nhan_xet' => $nhanXet,
+            'ket_qua' => $ketQua,
+            'trang_thai' => NoiSoi::STATUS_COMPLETED,
+            'ngay_hoan_thanh' => now(),
+        ]);
+
+        Log::info("Upload kết quả Nội soi #{$noiSoi->id}");
+
+        return $noiSoi->fresh();
     }
 
     /**

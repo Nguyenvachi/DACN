@@ -12,18 +12,11 @@ class LoaiXQuangController extends Controller
 {
     public function index(Request $request)
     {
-        $q = trim((string) $request->query('q', ''));
-
         $items = LoaiXQuang::with(['chuyenKhoas', 'phong'])
-            ->when($q !== '', function ($query) use ($q) {
-                $query->where('ten', 'like', "%{$q}%")
-                    ->orWhere('ma', 'like', "%{$q}%");
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(25)
-            ->appends(['q' => $q]);
+            ->orderByDesc('created_at')
+            ->get();
 
-        return view('admin.loai_x_quang.index', compact('items', 'q'));
+        return view('admin.loai_x_quang.index', compact('items'));
     }
 
     public function create()

@@ -5,12 +5,14 @@ namespace App\Providers;
 use App\Models\BenhAn;
 use App\Models\NhanVien;
 use App\Models\LichHen;
+use App\Models\NoiSoi;
 use App\Models\SieuAm;
 use App\Models\TaiKham;
 use App\Models\TheoDoiThaiKy;
 use App\Policies\BenhAnPolicy;
 use App\Policies\NhanVienPolicy;
 use App\Policies\LichHenPolicy;
+use App\Policies\NoiSoiPolicy;
 use App\Policies\SieuAmPolicy;
 use App\Policies\TaiKhamPolicy;
 use App\Policies\TheoDoiThaiKyPolicy;
@@ -29,6 +31,7 @@ class AuthServiceProvider extends ServiceProvider
         NhanVien::class => NhanVienPolicy::class,
         LichHen::class => LichHenPolicy::class,
         SieuAm::class => SieuAmPolicy::class,
+        NoiSoi::class => NoiSoiPolicy::class,
         TheoDoiThaiKy::class => TheoDoiThaiKyPolicy::class,
         TaiKham::class => TaiKhamPolicy::class,
     ];

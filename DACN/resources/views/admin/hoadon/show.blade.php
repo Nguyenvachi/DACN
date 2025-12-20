@@ -138,6 +138,10 @@
             // THÊM: Chi phí X-Quang (parity với xét nghiệm/siêu âm)
             $xQuangs = $benhAn ? $benhAn->xQuangs : collect();
             $phiXQuang = $xQuangs ? $xQuangs->sum('gia') : 0;
+
+            // THÊM: Chi phí Nội soi (parity với xét nghiệm/siêu âm/x-quang)
+            $noiSois = $benhAn ? $benhAn->noiSois : collect();
+            $phiNoiSoi = $noiSois ? $noiSois->sum('gia') : 0;
         @endphp
 
         @if($xetNghiems && $xetNghiems->count() > 0)
@@ -291,6 +295,61 @@
                                 <tr>
                                     <td colspan="3" class="fw-bold text-end">Tổng phí X-Quang</td>
                                     <td class="text-end fw-bold text-primary">{{ number_format((float)$phiXQuang, 0, ',', '.') }} đ</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+
+
+        {{-- ============================
+         🔥 CHI TIẾT NỘI SOI (NẾU CÓ)
+    ============================= --}}
+
+        @if($noiSois && $noiSois->count() > 0)
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white border-0">
+                    <h5 class="fw-semibold mb-0">
+                        <i class="fas fa-stethoscope me-1"></i> Chi phí Nội soi
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>Loại Nội soi</th>
+                                    <th width="15%">Trạng thái</th>
+                                    <th width="20%" class="text-end">Giá</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($noiSois as $idx => $ns)
+                                    <tr>
+                                        <td>{{ $idx + 1 }}</td>
+                                        <td>{{ optional($ns->loaiNoiSoi)->ten ?? $ns->loai }}</td>
+                                        <td>
+                                            @if($ns->trang_thai === 'completed')
+                                                <span class="badge bg-success">Đã có KQ</span>
+                                            @elseif($ns->trang_thai === 'processing')
+                                                <span class="badge bg-warning">Đang xử lý</span>
+                                            @else
+                                                <span class="badge bg-secondary">Chờ thực hiện</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-end fw-bold">{{ number_format((float)$ns->gia, 0, ',', '.') }} đ</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="fw-bold text-end">Tổng phí Nội soi</td>
+                                    <td class="text-end fw-bold text-primary">{{ number_format((float)$phiNoiSoi, 0, ',', '.') }} đ</td>
                                 </tr>
                             </tfoot>
                         </table>

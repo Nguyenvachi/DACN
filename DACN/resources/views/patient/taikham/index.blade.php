@@ -47,7 +47,7 @@
                 <div class="text-muted">Chưa có yêu cầu tái khám.</div>
             @else
                 <div class="table-responsive">
-                    <table class="table align-middle">
+                    <table id="patientTaiKhamTable" class="table align-middle">
                         <thead>
                             <tr>
                                 <th>Ngày</th>
@@ -77,3 +77,46 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    if (!window.jQuery || !$.fn.DataTable) return;
+    if ($.fn.DataTable.isDataTable('#patientTaiKhamTable')) return;
+
+    const dt = $('#patientTaiKhamTable').DataTable({
+        language: {
+            sProcessing: 'Đang xử lý...',
+            sLengthMenu: 'Hiển thị _MENU_ dòng',
+            sZeroRecords: 'Không tìm thấy dữ liệu',
+            sInfo: 'Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ dòng',
+            sInfoEmpty: 'Hiển thị 0 đến 0 trong tổng số 0 dòng',
+            sInfoFiltered: '(lọc từ _MAX_ dòng)',
+            sSearch: 'Tìm kiếm:',
+            oPaginate: { sFirst: 'Đầu', sPrevious: 'Trước', sNext: 'Tiếp', sLast: 'Cuối' }
+        },
+        responsive: false,
+        scrollX: true,
+        autoWidth: true,
+        paging: false,
+        info: false,
+        searching: false,
+        lengthChange: false,
+        order: [],
+        columnDefs: [{ orderable: false, targets: -1 }]
+    });
+
+    setTimeout(function() {
+        dt.columns.adjust();
+    }, 0);
+
+    let resizeTimer;
+    $(window).on('resize.patientTaiKhamTable', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            dt.columns.adjust();
+        }, 150);
+    });
+});
+</script>
+@endpush

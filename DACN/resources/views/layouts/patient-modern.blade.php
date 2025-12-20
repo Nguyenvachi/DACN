@@ -317,6 +317,12 @@
                     <span>Kết quả X-Quang</span>
                 </a>
 
+                <a href="{{ route('patient.noisoi.index') }}"
+                    class="sidebar-link {{ request()->routeIs('patient.noisoi.*') ? 'active' : '' }}">
+                    <i class="fas fa-stethoscope" style="width: 20px;"></i>
+                    <span>Kết quả nội soi</span>
+                </a>
+
                 <a href="{{ route('patient.theodoithaiky.index') }}"
                     class="sidebar-link {{ request()->routeIs('patient.theodoithaiky.*') ? 'active' : '' }}">
                     <i class="fas fa-baby" style="width: 20px;"></i>

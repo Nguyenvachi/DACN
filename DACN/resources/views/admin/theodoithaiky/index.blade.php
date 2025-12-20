@@ -75,7 +75,7 @@
         <div class="card border-0 shadow-sm">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped align-middle">
+                    <table id="theoDoiThaiKyTable" class="table table-striped align-middle">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -118,3 +118,8 @@
     </div>
 </div>
 @endsection
+
+<x-datatable-script
+    tableId="theoDoiThaiKyTable"
+    config='{"paging": false, "info": false, "searching": false, "lengthChange": false}'
+/>

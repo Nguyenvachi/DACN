@@ -21,7 +21,7 @@
         <div class="card shadow border-0 rounded-4 overflow-hidden">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 custom-table">
+                    <table id="patientDanhGiaTable" class="table table-hover align-middle mb-0 custom-table">
                         <thead class="bg-light text-secondary">
                             <tr>
                                 <th class="py-3 ps-4 text-uppercase small fw-bold">Bác sĩ</th>
@@ -141,6 +141,47 @@
         </div>
 
     </div>
+
+    @push('scripts')
+        <script>
+            // DataTables (avoid conflict with Laravel pagination)
+            $(function() {
+                const tableSelector = '#patientDanhGiaTable';
+                if (!window.jQuery || !$.fn?.DataTable || !$(tableSelector).length) return;
+                if ($.fn.DataTable.isDataTable(tableSelector)) return;
+
+                const dt = $(tableSelector).DataTable({
+                    paging: false,
+                    searching: false,
+                    info: false,
+                    lengthChange: false,
+                    responsive: false,
+                    scrollX: true,
+                    autoWidth: true,
+                    order: [],
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
+                    },
+                    columnDefs: [{
+                        targets: -1,
+                        orderable: false
+                    }]
+                });
+
+                setTimeout(function() {
+                    dt.columns.adjust();
+                }, 0);
+
+                let resizeTimer;
+                $(window).on('resize.patientDanhGiaTable', function() {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(function() {
+                        dt.columns.adjust();
+                    }, 150);
+                });
+            });
+        </script>
+    @endpush
 
     {{-- THÊM CODE: CSS tùy chỉnh cho trang này (Soft UI) --}}
     @push('styles')

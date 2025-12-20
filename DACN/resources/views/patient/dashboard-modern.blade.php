@@ -64,6 +64,11 @@
                     :route="route('patient.xquang.index')" />
             </div>
 
+            <div class="col-lg-3 col-md-6">
+                <x-patient.stat-card title="Nội soi" :value="($statistics['total_noisois'] ?? 0)" icon="fa-stethoscope" color="info"
+                    :route="route('patient.noisoi.index')" />
+            </div>
+
         </div>
 
         <!-- Main Content -->

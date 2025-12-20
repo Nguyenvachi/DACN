@@ -13,6 +13,7 @@ use App\Models\Thuoc;
 use App\Models\XetNghiem;
 use App\Models\SieuAm;
 use App\Models\XQuang;
+use App\Models\NoiSoi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -541,6 +542,25 @@ class BenhAnController extends Controller
 
         $fileName = basename($xQuang->file_path);
         return Storage::disk($disk)->download($xQuang->file_path, $fileName);
+    }
+
+    // THÊM: download file Nội soi (bảo mật với signed URL) - đồng bộ với Xét nghiệm/Siêu âm/X-Quang
+    public function downloadNoiSoi(NoiSoi $noiSoi)
+    {
+        $benhAn = $noiSoi->benhAn;
+        $this->authorize('view', $benhAn);
+
+        if (!$noiSoi->file_path) {
+            abort(404, 'File không tồn tại');
+        }
+
+        $disk = $noiSoi->disk ?? $noiSoi->disk_name ?? 'public';
+        if (!Storage::disk($disk)->exists($noiSoi->file_path)) {
+            abort(404, 'File không tồn tại');
+        }
+
+        $fileName = basename($noiSoi->file_path);
+        return Storage::disk($disk)->download($noiSoi->file_path, $fileName);
     }
 
 }

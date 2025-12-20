@@ -76,6 +76,9 @@
                         <a href="{{ route('doctor.xquang.create', $record->id) }}" class="btn btn-outline-primary">
                             <i class="fas fa-x-ray me-2"></i>Chỉ định X-Quang
                         </a>
+                        <a href="{{ route('doctor.noisoi.create', $record->id) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-stethoscope me-2"></i>Chỉ định nội soi
+                        </a>
                         <a href="{{ route('doctor.taikham.create', $record->id) }}" class="btn btn-outline-secondary">
                             <i class="fas fa-calendar-check me-2"></i>Tạo tái khám
                         </a>
@@ -424,6 +427,62 @@
                         <i class="fas fa-x-ray fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Chưa chỉ định X-Quang</p>
                         <a href="{{ route('doctor.xquang.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                            <i class="fas fa-plus me-2"></i>Chỉ định ngay
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Nội soi --}}
+            <div class="card vc-card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-stethoscope me-2" style="color: #3b82f6;"></i>
+                        Nội soi
+                    </h5>
+                    <a href="{{ route('doctor.noisoi.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    @php
+                        $noiSois = App\Models\NoiSoi::where('benh_an_id', $record->id)->get();
+                    @endphp
+
+                    @if($noiSois->count() > 0)
+                    <div class="list-group list-group-flush">
+                        @foreach($noiSois as $ns)
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h6 class="mb-0 small">{{ $ns->loai }}</h6>
+                                @if($ns->trang_thai === 'completed')
+                                <span class="badge bg-success"><i class="fas fa-check"></i></span>
+                                @elseif($ns->trang_thai === 'processing')
+                                <span class="badge bg-warning"><i class="fas fa-clock"></i></span>
+                                @else
+                                <span class="badge bg-secondary"><i class="fas fa-hourglass-start"></i></span>
+                                @endif
+                            </div>
+
+                            @if($ns->mo_ta)
+                            <p class="mb-2 small text-muted">{{ Str::limit($ns->mo_ta, 60) }}</p>
+                            @endif
+
+                            @if($ns->trang_thai === 'completed' && $ns->file_path)
+                            <a href="{{ URL::temporarySignedRoute('doctor.benhan.noisoi.download', now()->addMinutes(10), ['noiSoi' => $ns->id]) }}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download me-1"></i>Tải KQ
+                            </a>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="text-center py-4">
+                        <i class="fas fa-stethoscope fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa chỉ định nội soi</p>
+                        <a href="{{ route('doctor.noisoi.create', $record->id) }}" class="btn btn-sm vc-btn-primary">
                             <i class="fas fa-plus me-2"></i>Chỉ định ngay
                         </a>
                     </div>

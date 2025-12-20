@@ -92,7 +92,7 @@
         <div class="card-body p-0">
             @if($sieuAms->count() > 0)
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table id="patientSieuAmTable" class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
                             <th>Ngày</th>
@@ -166,3 +166,46 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    if (!window.jQuery || !$.fn.DataTable) return;
+    if ($.fn.DataTable.isDataTable('#patientSieuAmTable')) return;
+
+    const dt = $('#patientSieuAmTable').DataTable({
+        language: {
+            sProcessing: 'Đang xử lý...',
+            sLengthMenu: 'Hiển thị _MENU_ dòng',
+            sZeroRecords: 'Không tìm thấy dữ liệu',
+            sInfo: 'Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ dòng',
+            sInfoEmpty: 'Hiển thị 0 đến 0 trong tổng số 0 dòng',
+            sInfoFiltered: '(lọc từ _MAX_ dòng)',
+            sSearch: 'Tìm kiếm:',
+            oPaginate: { sFirst: 'Đầu', sPrevious: 'Trước', sNext: 'Tiếp', sLast: 'Cuối' }
+        },
+        responsive: false,
+        scrollX: true,
+        autoWidth: true,
+        paging: false,
+        info: false,
+        searching: false,
+        lengthChange: false,
+        order: [],
+        columnDefs: [{ orderable: false, targets: -1 }]
+    });
+
+    setTimeout(function() {
+        dt.columns.adjust();
+    }, 0);
+
+    let resizeTimer;
+    $(window).on('resize.patientSieuAmTable', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            dt.columns.adjust();
+        }, 150);
+    });
+});
+</script>
+@endpush

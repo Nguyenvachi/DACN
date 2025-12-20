@@ -322,6 +322,12 @@
                 <span>X-Quang</span>
             </a>
 
+            <a href="{{ route('staff.noisoi.pending') }}"
+                class="menu-item {{ request()->routeIs('staff.noisoi.*') ? 'active' : '' }}">
+                <i class="fas fa-stethoscope"></i>
+                <span>Nội soi</span>
+            </a>
+
             {{-- Pharmacy Section --}}
             <div class="menu-group-title mt-3">
                 <i class="bi bi-capsule-pill me-1"></i> Dược

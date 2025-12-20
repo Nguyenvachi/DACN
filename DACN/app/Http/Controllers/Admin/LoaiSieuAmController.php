@@ -15,18 +15,11 @@ class LoaiSieuAmController extends Controller
      */
     public function index(Request $request)
     {
-        $q = trim((string) $request->query('q', ''));
-
         $items = LoaiSieuAm::with(['chuyenKhoas', 'phong'])
-            ->when($q !== '', function ($query) use ($q) {
-                $query->where('ten', 'like', "%{$q}%")
-                    ->orWhere('mo_ta', 'like', "%{$q}%");
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(25)
-            ->appends(['q' => $q]);
+            ->orderByDesc('created_at')
+            ->get();
 
-        return view('admin.loai_sieu_am.index', compact('items', 'q'));
+        return view('admin.loai_sieu_am.index', compact('items'));
     }
 
     /**

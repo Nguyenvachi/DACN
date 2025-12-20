@@ -94,7 +94,7 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0">
+                        <table id="patientHoaDonTable" class="table table-hover mb-0">
                             <thead class="bg-light">
                                 <tr>
                                     <th>Mã HĐ</th>
@@ -210,6 +210,43 @@
                     url.searchParams.delete('status');
                 }
                 window.location.href = url.toString();
+            });
+
+            // DataTables (avoid conflict with Laravel pagination)
+            $(function() {
+                const tableSelector = '#patientHoaDonTable';
+                if (!window.jQuery || !$.fn?.DataTable || !$(tableSelector).length) return;
+                if ($.fn.DataTable.isDataTable(tableSelector)) return;
+
+                const dt = $(tableSelector).DataTable({
+                    paging: false,
+                    searching: false,
+                    info: false,
+                    lengthChange: false,
+                    responsive: false,
+                    scrollX: true,
+                    autoWidth: true,
+                    order: [],
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
+                    },
+                    columnDefs: [{
+                        targets: -1,
+                        orderable: false
+                    }]
+                });
+
+                setTimeout(function() {
+                    dt.columns.adjust();
+                }, 0);
+
+                let resizeTimer;
+                $(window).on('resize.patientHoaDonTable', function() {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(function() {
+                        dt.columns.adjust();
+                    }, 150);
+                });
             });
         </script>
     @endpush

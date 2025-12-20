@@ -32,19 +32,8 @@
 
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body">
-                <form method="GET" class="row g-2 mb-3" action="{{ route('admin.loai-sieu-am.index') }}">
-                    <div class="col-md-6">
-                        <input type="text" name="q" class="form-control" value="{{ $q ?? '' }}" placeholder="Tìm theo tên...">
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-outline-secondary w-100" type="submit">
-                            <i class="fas fa-search me-1"></i> Tìm
-                        </button>
-                    </div>
-                </form>
-
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table id="loaiSieuAmTable" class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th>Tên</th>
@@ -104,12 +93,10 @@
                         </tbody>
                     </table>
                 </div>
-
-                <div class="mt-3">
-                    {{ $items->links() }}
-                </div>
             </div>
         </div>
 
     </div>
 @endsection
+
+<x-datatable-script tableId="loaiSieuAmTable" config='{"order":[[0,"asc"]]}' />

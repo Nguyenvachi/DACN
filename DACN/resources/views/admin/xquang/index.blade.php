@@ -152,7 +152,7 @@
     <div class="card border-0 shadow-sm">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table id="xquangTable" class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
                             <th width="80">Mã XQ</th>
@@ -216,6 +216,11 @@
     </div>
 </div>
 @endsection
+
+<x-datatable-script
+    tableId="xquangTable"
+    config='{"paging": false, "info": false, "searching": false, "lengthChange": false}'
+/>
 
 @push('styles')
 <style>

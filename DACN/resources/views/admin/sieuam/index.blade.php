@@ -149,7 +149,7 @@
             <div class="card-body p-0">
                 @if ($sieuAms->count() > 0)
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0">
+                        <table id="sieuAmTable" class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
                                     <th>ID</th>
@@ -232,3 +232,8 @@
         </div>
     </div>
 @endsection
+
+<x-datatable-script
+    tableId="sieuAmTable"
+    config='{"paging": false, "info": false, "searching": false, "lengthChange": false}'
+/>

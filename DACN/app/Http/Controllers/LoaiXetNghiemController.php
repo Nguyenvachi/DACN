@@ -14,18 +14,11 @@ class LoaiXetNghiemController extends Controller
      */
     public function index(Request $request)
     {
-        $q = trim((string) $request->query('q', ''));
-
         $items = LoaiXetNghiem::with(['chuyenKhoas', 'phong'])
-            ->when($q !== '', function ($query) use ($q) {
-                $query->where('ten', 'like', "%{$q}%")
-                    ->orWhere('ma', 'like', "%{$q}%");
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(25)
-            ->appends(['q' => $q]);
+            ->orderByDesc('created_at')
+            ->get();
 
-        return view('admin.loai_xet_nghiem.index', compact('items', 'q'));
+        return view('admin.loai_xet_nghiem.index', compact('items'));
     }
 
     public function create()
