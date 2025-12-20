@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 13, 2025 lúc 03:54 PM
+-- Thời gian đã tạo: Th12 20, 2025 lúc 05:18 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.0.30
 
@@ -48,7 +48,10 @@ CREATE TABLE `activity_log` (
 
 INSERT INTO `activity_log` (`id`, `log_name`, `description`, `subject_type`, `event`, `subject_id`, `causer_type`, `causer_id`, `properties`, `batch_uuid`, `created_at`, `updated_at`) VALUES
 (1, 'default', 'Nhân viên check-in bệnh nhân', 'App\\Models\\LichHen', NULL, 3, 'App\\Models\\User', 149, '{\"old_status\":\"\\u0110\\u00e3 x\\u00e1c nh\\u1eadn\",\"new_status\":\"\\u0110\\u00e3 check-in\"}', NULL, '2025-12-13 07:38:09', '2025-12-13 07:38:09'),
-(2, 'default', 'Nhân viên gọi bệnh nhân vào khám', 'App\\Models\\LichHen', NULL, 3, 'App\\Models\\User', 149, '{\"action\":\"call_next\"}', NULL, '2025-12-13 07:40:21', '2025-12-13 07:40:21');
+(2, 'default', 'Nhân viên gọi bệnh nhân vào khám', 'App\\Models\\LichHen', NULL, 3, 'App\\Models\\User', 149, '{\"action\":\"call_next\"}', NULL, '2025-12-13 07:40:21', '2025-12-13 07:40:21'),
+(3, 'default', 'Nhân viên check-in bệnh nhân', 'App\\Models\\LichHen', NULL, 8, 'App\\Models\\User', 149, '[]', NULL, '2025-12-14 08:28:08', '2025-12-14 08:28:08'),
+(4, 'default', 'Nhân viên gọi bệnh nhân vào khám', 'App\\Models\\LichHen', NULL, 8, 'App\\Models\\User', 149, '{\"action\":\"call_next\"}', NULL, '2025-12-14 08:28:12', '2025-12-14 08:28:12'),
+(5, 'default', 'Nhân viên check-in bệnh nhân', 'App\\Models\\LichHen', NULL, 1, 'App\\Models\\User', 25, '[]', NULL, '2025-12-19 17:48:15', '2025-12-19 17:48:15');
 
 -- --------------------------------------------------------
 
@@ -77,18 +80,18 @@ CREATE TABLE `bac_sis` (
 --
 
 INSERT INTO `bac_sis` (`id`, `user_id`, `ho_ten`, `email`, `chuyen_khoa`, `kinh_nghiem`, `mo_ta`, `trang_thai`, `so_dien_thoai`, `avatar`, `dia_chi`, `created_at`, `updated_at`) VALUES
-(105, 136, 'TS.BS Nguyễn Thị Lan Anh', 'lananh@vietcare.com', 'Sản Khoa', 25, 'Nguyên Trưởng khoa Sản bệnh viện Từ Dũ. Chuyên gia hàng đầu về quản lý thai kỳ nguy cơ cao (tiền sản giật, đái tháo đường thai kỳ) và đỡ sinh khó.', 'Đang hoạt động', '0909111001', 'avatars/NgwECmcOF5OsDRW5m7U47jEgpIwpJNGv9yBECZpz.png', 'Quận 3, TP.HCM', '2025-12-12 07:01:42', '2025-12-12 07:13:43'),
-(106, 137, 'ThS.BS Phạm Văn Hùng', 'hunghoang@vietcare.com', 'Sản Khoa', 12, 'Thạc sĩ Y khoa chuyên ngành Sản phụ khoa, từng tu nghiệp tại Pháp. Nổi tiếng \"mát tay\" trong đỡ sinh thường, may thẩm mỹ tầng sinh môn và phẫu thuật lấy thai.', 'Đang hoạt động', '0909111002', 'avatars/Dc4rhJ9iMhQbGivllt2KH4SC3wcev2SoV5thMf9W.png', 'Quận 7, TP.HCM', '2025-12-12 07:01:42', '2025-12-13 04:29:47'),
-(107, 138, 'BSCKII Trần Thu Hà', 'hatran@vietcare.com', 'Phụ Khoa', 18, 'Chuyên gia phẫu thuật nội soi phụ khoa (bóc u xơ tử cung, u nang buồng trứng). Điều trị chuyên sâu các bệnh lý sàn chậu, sa tử cung và són tiểu ở phụ nữ.', 'Đang hoạt động', '0909111003', 'avatars/msxfncVI0Y4IfkPa2P3Akg9wViu4eg8BkeeFI1kB.png', 'Quận 10, TP.HCM', '2025-12-12 07:01:42', '2025-12-12 07:13:11'),
-(108, 139, 'BS.CKI Nguyễn Thanh Vân', 'vannguyen@vietcare.com', 'Phụ Khoa', 10, 'Chuyên sâu về soi cổ tử cung, điều trị lộ tuyến và các bệnh viêm nhiễm phụ khoa tái phát. Tư vấn sức khỏe tiền mãn kinh.', 'Đang hoạt động', '0909111004', 'avatars/Kn1lryOqsrl2hnJ2oZxSUZR41NdgYBACo1Bn2A2t.png', 'Quận Tân Bình, TP.HCM', '2025-12-12 07:01:42', '2025-12-12 07:12:50'),
-(109, 140, 'TS.BS Hoàng Minh Tuấn', 'tuanhoang@vietcare.com', 'Hiếm muộn & Vô sinh', 20, 'Nguyên Phó Giám đốc Trung tâm Hỗ trợ sinh sản Quốc gia. \"Bàn tay vàng\" điều trị vô sinh nam và thực hiện kỹ thuật IVF/ICSI với tỷ lệ thành công cao.', 'Đang hoạt động', '0909111005', 'avatars/tFhDIqyGiJGubaeaPIwtHzZhVQKWUQl9ckcKskDv.png', 'TP. Thủ Đức, TP.HCM', '2025-12-12 07:01:42', '2025-12-12 07:12:33'),
-(110, 141, 'ThS.BS Võ Thị Ngọc', 'ngocvo@vietcare.com', 'Hiếm muộn & Vô sinh', 15, 'Chuyên gia về nội tiết sinh sản. Rất giỏi trong việc kích trứng, canh niêm mạc và điều trị hội chứng buồng trứng đa nang (PCOS) cho các cặp đôi mong con.', 'Đang hoạt động', '0909111006', 'avatars/javPWxwi07wRO58pqLeC79LKbHTmU1zEmb5CkZA4.png', 'Quận 5, TP.HCM', '2025-12-12 07:01:42', '2025-12-12 07:16:27'),
-(111, 142, 'BS.CKI Phạm Thanh Thúy', 'thuypham@vietcare.com', 'Siêu âm & Chẩn đoán hình ảnh', 10, 'Có chứng chỉ FMF Quốc tế (London). Chuyên siêu âm 4D/5D tầm soát dị tật thai nhi sớm và siêu âm Doppler tim thai, mạch máu.', 'Đang hoạt động', '0909111007', 'avatars/7Am7ipu0EktY6wXSN9cWfcRtVNtBNWiFqcAToFY6.png', 'Quận 1, TP.HCM', '2025-12-12 07:01:42', '2025-12-12 07:14:04'),
-(112, 143, 'ThS.BS Nguyễn Hữu Phước', 'phuocnguyen@vietcare.com', 'Sàng lọc trước sinh', 9, 'Chuyên gia Di truyền học. Tư vấn chuyên sâu về các kết quả sàng lọc NIPT, Double Test, Triple Test và chọc ối chẩn đoán bất thường nhiễm sắc thể.', 'Đang hoạt động', '0909111008', 'avatars/RgY8tGvX7ZN7Q6Uar9Z5JF7hhcyxWgsgHpzMkK2m.png', 'Quận Bình Thạnh, TP.HCM', '2025-12-12 07:01:43', '2025-12-12 07:12:18'),
-(113, 144, 'BS.CKI Đỗ Mỹ Linh', 'linhdo@vietcare.com', 'Kế hoạch hóa gia đình', 12, 'Chuyên thực hiện các thủ thuật tránh thai hiện đại: Cấy que Implanon, đặt vòng nội tiết Mirena. Thao tác nhẹ nhàng, không đau, tư vấn tận tình.', 'Đang hoạt động', '0909111009', 'avatars/rSIA5L9IxPl7e3ckaiw8iGmiuiajr6Cc8e6GZLYo.png', 'Quận Phú Nhuận, TP.HCM', '2025-12-12 07:01:43', '2025-12-12 07:12:04'),
-(114, 145, 'ThS.BS Lê Thị Mai', 'maile@vietcare.com', 'Sản Khoa', 8, 'Bác sĩ trẻ, nhiệt huyết, cập nhật liên tục các phương pháp thai giáo và sinh nở hiện đại (da kề da, kẹp rốn chậm). Được nhiều mẹ bầu trẻ tin tưởng.', 'Đang hoạt động', '0909111010', 'avatars/vF1nqgNi2AZSwjxA7ii2rz5xqH1KPzDjDqeHD8nE.png', 'Quận 4, TP.HCM', '2025-12-12 07:01:43', '2025-12-12 07:11:49'),
-(115, 146, 'BS.CKI Trần Văn Minh', 'minh.xetnghiem@vietcare.com', 'Xét nghiệm', 15, 'Trưởng khoa Xét nghiệm. Chuyên gia về Huyết học và Vi sinh. Đảm bảo quy trình xét nghiệm đạt chuẩn ISO 15189, kết quả chính xác và nhanh chóng.', 'Đang hoạt động', '0909111011', 'avatars/WkE01UOSwyyKFNjyZVn0lMBkR8lkTfFBCKc0UE4B.png', 'Quận 8, TP.HCM', '2025-12-12 07:01:43', '2025-12-12 07:11:35'),
-(116, 147, 'ThS.BS Nguyễn Ngọc Lan', 'lan.thammy@vietcare.com', 'Sàn chậu & Thẩm mỹ nữ', 10, 'Chuyên gia phục hồi sàn chậu sau sinh và thẩm mỹ vùng kín. Rất mát tay trong các thủ thuật làm hồng, se khít và điều trị són tiểu không phẫu thuật.', 'Đang hoạt động', '0909111012', 'avatars/wlRgm2tm7BDT0t0gOOmYwIBEvVFpYVTRkxpq4Vaf.png', 'Quận 2, TP.HCM', '2025-12-12 07:01:43', '2025-12-12 07:11:14');
+(1, 1, 'TS.BS Nguyễn Thị Lan Anh', 'lananh@vietcare.com', 'Sản Khoa', 25, 'Nguyên Trưởng khoa Sản bệnh viện Từ Dũ. Chuyên gia hàng đầu về quản lý thai kỳ nguy cơ cao (tiền sản giật, đái tháo đường thai kỳ) và đỡ sinh khó.', 'Đang hoạt động', '0909111001', NULL, 'Quận 3, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(2, 2, 'ThS.BS Phạm Văn Hùng', 'hunghoang@vietcare.com', 'Sản Khoa', 12, 'Thạc sĩ Y khoa chuyên ngành Sản phụ khoa, từng tu nghiệp tại Pháp. Nổi tiếng \"mát tay\" trong đỡ sinh thường, may thẩm mỹ tầng sinh môn và phẫu thuật lấy thai.', 'Đang hoạt động', '0909111002', NULL, 'Quận 7, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(3, 3, 'BSCKII Trần Thu Hà', 'hatran@vietcare.com', 'Phụ Khoa', 18, 'Chuyên gia phẫu thuật nội soi phụ khoa (bóc u xơ tử cung, u nang buồng trứng). Điều trị chuyên sâu các bệnh lý sàn chậu, sa tử cung và són tiểu ở phụ nữ.', 'Đang hoạt động', '0909111003', NULL, 'Quận 10, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(4, 4, 'BS.CKI Nguyễn Thanh Vân', 'vannguyen@vietcare.com', 'Phụ Khoa', 10, 'Chuyên sâu về soi cổ tử cung, điều trị lộ tuyến và các bệnh viêm nhiễm phụ khoa tái phát. Tư vấn sức khỏe tiền mãn kinh.', 'Đang hoạt động', '0909111004', NULL, 'Quận Tân Bình, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(5, 5, 'TS.BS Hoàng Minh Tuấn', 'tuanhoang@vietcare.com', 'Hiếm muộn & Vô sinh', 20, 'Nguyên Phó Giám đốc Trung tâm Hỗ trợ sinh sản Quốc gia. \"Bàn tay vàng\" điều trị vô sinh nam và thực hiện kỹ thuật IVF/ICSI với tỷ lệ thành công cao.', 'Đang hoạt động', '0909111005', NULL, 'TP. Thủ Đức, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(6, 6, 'ThS.BS Võ Thị Ngọc', 'ngocvo@vietcare.com', 'Hiếm muộn & Vô sinh', 15, 'Chuyên gia về nội tiết sinh sản. Rất giỏi trong việc kích trứng, canh niêm mạc và điều trị hội chứng buồng trứng đa nang (PCOS) cho các cặp đôi mong con.', 'Đang hoạt động', '0909111006', NULL, 'Quận 5, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(7, 7, 'BS.CKI Phạm Thanh Thúy', 'thuypham@vietcare.com', 'Siêu âm & Chẩn đoán hình ảnh', 10, 'Có chứng chỉ FMF Quốc tế (London). Chuyên siêu âm 4D/5D tầm soát dị tật thai nhi sớm và siêu âm Doppler tim thai, mạch máu.', 'Đang hoạt động', '0909111007', NULL, 'Quận 1, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(8, 8, 'ThS.BS Nguyễn Hữu Phước', 'phuocnguyen@vietcare.com', 'Sàng lọc trước sinh', 9, 'Chuyên gia Di truyền học. Tư vấn chuyên sâu về các kết quả sàng lọc NIPT, Double Test, Triple Test và chọc ối chẩn đoán bất thường nhiễm sắc thể.', 'Đang hoạt động', '0909111008', NULL, 'Quận Bình Thạnh, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(9, 9, 'BS.CKI Đỗ Mỹ Linh', 'linhdo@vietcare.com', 'Kế hoạch hóa gia đình', 12, 'Chuyên thực hiện các thủ thuật tránh thai hiện đại: Cấy que Implanon, đặt vòng nội tiết Mirena. Thao tác nhẹ nhàng, không đau, tư vấn tận tình.', 'Đang hoạt động', '0909111009', NULL, 'Quận Phú Nhuận, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(10, 10, 'ThS.BS Lê Thị Mai', 'maile@vietcare.com', 'Sản Khoa', 8, 'Bác sĩ trẻ, nhiệt huyết, cập nhật liên tục các phương pháp thai giáo và sinh nở hiện đại (da kề da, kẹp rốn chậm). Được nhiều mẹ bầu trẻ tin tưởng.', 'Đang hoạt động', '0909111010', NULL, 'Quận 4, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(11, 11, 'BS.CKI Trần Văn Minh', 'minh.xetnghiem@vietcare.com', 'Xét nghiệm', 15, 'Trưởng khoa Xét nghiệm. Chuyên gia về Huyết học và Vi sinh. Đảm bảo quy trình xét nghiệm đạt chuẩn ISO 15189, kết quả chính xác và nhanh chóng.', 'Đang hoạt động', '0909111011', NULL, 'Quận 8, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(12, 12, 'ThS.BS Nguyễn Ngọc Lan', 'lan.thammy@vietcare.com', 'Sàn chậu & Thẩm mỹ nữ', 10, 'Chuyên gia phục hồi sàn chậu sau sinh và thẩm mỹ vùng kín. Rất mát tay trong các thủ thuật làm hồng, se khít và điều trị són tiểu không phẫu thuật.', 'Đang hoạt động', '0909111012', NULL, 'Quận 2, TP.HCM', '2025-12-19 16:00:44', '2025-12-19 16:00:44');
 
 -- --------------------------------------------------------
 
@@ -106,18 +109,18 @@ CREATE TABLE `bac_si_chuyen_khoa` (
 --
 
 INSERT INTO `bac_si_chuyen_khoa` (`bac_si_id`, `chuyen_khoa_id`) VALUES
-(105, 15),
-(106, 15),
-(107, 16),
-(108, 16),
-(109, 17),
-(110, 17),
-(111, 18),
-(112, 19),
-(113, 20),
-(114, 15),
-(115, 22),
-(116, 21);
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 2),
+(5, 3),
+(6, 3),
+(7, 4),
+(8, 5),
+(9, 6),
+(10, 1),
+(11, 8),
+(12, 7);
 
 -- --------------------------------------------------------
 
@@ -135,16 +138,16 @@ CREATE TABLE `bac_si_phong` (
 --
 
 INSERT INTO `bac_si_phong` (`bac_si_id`, `phong_id`) VALUES
-(105, 17),
-(106, 18),
-(107, 20),
-(109, 23),
-(110, 24),
-(111, 19),
-(112, 26),
-(113, 21),
-(115, 25),
-(116, 22);
+(1, 1),
+(2, 2),
+(3, 4),
+(5, 7),
+(6, 8),
+(7, 3),
+(8, 10),
+(9, 5),
+(11, 9),
+(12, 6);
 
 -- --------------------------------------------------------
 
@@ -175,10 +178,10 @@ CREATE TABLE `bai_viets` (
 --
 
 INSERT INTO `bai_viets` (`id`, `user_id`, `danh_muc_id`, `title`, `slug`, `excerpt`, `content`, `status`, `published_at`, `meta_title`, `meta_description`, `thumbnail`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 13, 1, 'Chế độ dinh dưỡng vàng cho bà bầu 3 tháng đầu: Ăn đúng để con khỏe, mẹ không tăng cân', 'che-do-dinh-duong-vang-cho-ba-bau-3-thang-dau-an-dung-de-co', '3 tháng đầu là giai đoạn quan trọng nhất để hình thành các cơ quan của thai nhi. Cùng tìm hiểu thực đơn chuẩn giúp mẹ khỏe, bé phát triển toàn diện và giảm nghén hiệu quả.', '<p>Mang thai 3 tháng đầu (tam cá nguyệt thứ nhất) là giai đoạn quan trọng nhất để hình thành các cơ quan thiết yếu của thai nhi như tim, não và tủy sống. Tuy nhiên, đây cũng là giai đoạn mẹ bầu dễ bị nghén nhất. Vậy làm sao để ăn uống đủ chất mà vẫn thoải mái?</p><p><strong>1. Axit Folic – \"Thần dược\" ngăn ngừa dị tật</strong></p><p>Nếu có một chất dinh dưỡng bắt buộc phải bổ sung ngay khi biết tin có thai, đó chính là Axit Folic (Vitamin B9). Dưỡng chất này đóng vai trò then chốt trong việc ngăn ngừa các dị tật ống thần kinh ở thai nhi (nứt đốt sống, vô sọ).</p><p><strong>Nhu cầu khuyến nghị:</strong> 400mcg - 600mcg/ngày.</p><p><strong>Thực phẩm giàu Folate:</strong> Các loại rau màu xanh đậm (súp lơ, cải bó xôi), các loại đậu, ngũ cốc nguyên hạt và trái cây họ cam quýt.</p><p><strong>2. Protein và Sắt – Xây dựng tế bào máu</strong></p><p>Thể tích máu của mẹ sẽ tăng lên 50% trong thai kỳ để nuôi dưỡng bào thai. Do đó, thiếu sắt sẽ dẫn đến thiếu máu, gây mệt mỏi và chóng mặt. Mẹ nên bổ sung: Thịt bò nạc, ức gà, cá hồi (đã nấu chín kỹ), trứng gà và các loại hạt.</p><p><strong>3. Danh sách thực phẩm cần \"Tuyệt đối tránh\"</strong></p><p>Để đảm bảo an toàn cho thai nhi, mẹ bầu 3 tháng đầu cần loại bỏ ngay các món sau khỏi thực đơn:</p><p><strong>Thực phẩm sống:</strong> Sushi, gỏi cá, trứng lòng đào, thịt tái (nguy cơ nhiễm khuẩn Salmonella, E.coli).</p><p><strong>Rau củ gây co thắt tử cung:</strong> Rau răm, đu đủ xanh, dứa (thơm), ngải cứu.</p><p><strong>Chất kích thích:</strong> Rượu, bia, thuốc lá và hạn chế tối đa Cafein.</p><p><strong>4. Mẹo nhỏ giúp mẹ vượt qua cơn nghén</strong></p><p>Nếu bạn bị nôn nghén nặng, hãy chia nhỏ bữa ăn thành 5-6 bữa/ngày thay vì 3 bữa chính. Luôn chuẩn bị sẵn bánh quy gừng hoặc uống nước chanh ấm vào buổi sáng để giảm cảm giác buồn nôn.</p>', 'published', '2025-12-12 08:30:00', 'Dinh dưỡng bà bầu 3 tháng đầu: Ăn gì để vào con không vào mẹ?', 'Hướng dẫn chi tiết thực đơn cho mẹ bầu 3 tháng đầu. Danh sách thực phẩm giàu Axit Folic, Sắt và những món ăn cần kiêng kỵ tuyệt đối để tránh sảy thai.', 'http://127.0.0.1:8000/storage/uploads/posts/1765385670_image-3-compressed2.jpg', '2025-12-12 08:30:17', '2025-12-12 08:35:13', NULL),
-(2, 13, 2, 'Quy trình Thụ tinh trong ống nghiệm (IVF) chuẩn Châu Âu tại Phòng khám', 'quy-trinh-thu-tinh-trong-ong-nghiem-ivf-chuan-chau-au-tai', 'Giải đáp chi tiết quy trình IVF chuẩn y khoa, từ bước kích trứng, chọc hút đến chuyển phôi. Hy vọng mới cho các cặp vợ chồng mong con với tỷ lệ thành công cao.', '<p>Thụ tinh trong ống nghiệm (IVF) là kỹ thuật hỗ trợ sinh sản hiện đại nhất hiện nay, mang lại hy vọng cho hàng triệu cặp vợ chồng hiếm muộn. Tại phòng khám của chúng tôi, quy trình IVF được thực hiện khép kín với hệ thống phòng Lab đạt chuẩn ISO.</p><p><strong>Giai đoạn 1: Kích thích buồng trứng (Ngày 2 của chu kỳ)</strong></p><p>Bác sĩ sẽ chỉ định tiêm thuốc kích thích buồng trứng liên tục trong khoảng 9-11 ngày. Mục đích là để thu được số lượng nang noãn tối ưu (thay vì chỉ 1 trứng rụng như chu kỳ tự nhiên). Trong thời gian này, bạn sẽ được siêu âm và xét nghiệm máu 3-4 lần để theo dõi sự phát triển của nang trứng.</p><p><strong>Giai đoạn 2: Chọc hút trứng và Lấy tinh trùng</strong></p><p>Khi nang trứng đạt kích thước chuẩn, mũi tiêm rụng trứng sẽ được thực hiện. 36 giờ sau, bác sĩ tiến hành chọc hút trứng. Quy trình này diễn ra nhẹ nhàng dưới sự hỗ trợ của gây mê, chỉ mất khoảng 15-20 phút. Song song đó, người chồng sẽ được lấy mẫu tinh trùng để lọc rửa, chọn ra những \"chiến binh\" khỏe mạnh nhất.</p><p><strong>Giai đoạn 3: Tạo phôi và Nuôi cấy phôi</strong></p><p>Trứng và tinh trùng được kết hợp trong đĩa cấy tại phòng Lab. Các chuyên viên phôi học sẽ theo dõi quá trình phân chia tế bào:</p><p><strong>Phôi ngày 3:</strong> Phôi có khoảng 6-8 tế bào.</p><p><strong>Phôi ngày 5 (Phôi nang):</strong> Phôi có hàng trăm tế bào, khả năng làm tổ cao hơn.</p><p><strong>Giai đoạn 4: Chuyển phôi và Thử thai</strong></p><p>Bác sĩ dùng một ống thông (catheter) rất nhỏ, mềm để đưa phôi vào buồng tử cung người mẹ. Đây là thủ thuật không đau. Sau 14 ngày, mẹ có thể xét nghiệm Beta-HCG để đón nhận tin vui.</p><blockquote><p><strong>Lưu ý:</strong> Tỷ lệ thành công của IVF phụ thuộc rất lớn vào độ tuổi của người vợ và chất lượng phòng Lab. Hãy đặt lịch tư vấn sớm để không bỏ lỡ \"thời điểm vàng\".</p></blockquote>', 'published', '2025-12-12 08:30:00', 'Quy trình thụ tinh trong ống nghiệm (IVF) chuẩn Châu Âu - Tỷ lệ đậu thai cao', 'Tìm hiểu quy trình IVF khép kín tại phòng khám: Kích trứng, chọc hút, nuôi cấy phôi và chuyển phôi. Giải pháp tối ưu cho các cặp vợ chồng hiếm muộn lâu năm.', 'http://127.0.0.1:8000/storage/uploads/posts/1765385732_tai-xuong.jfif', '2025-12-12 08:30:17', '2025-12-12 08:33:25', NULL),
-(3, 13, 3, 'So sánh Double Test, Triple Test và NIPT: Mẹ bầu nên chọn gói nào?', 'so-sanh-double-test-triple-test-va-nipt-me-bau-nen-chon-go', 'So sánh ưu nhược điểm của các phương pháp sàng lọc trước sinh phổ biến hiện nay. Tại sao NIPT lại được nhiều mẹ bầu lựa chọn dù chi phí cao hơn?', '<p>Sàng lọc trước sinh là bước không thể thiếu để phát hiện sớm các dị tật bẩm sinh do bất thường nhiễm sắc thể (NST). Hiện nay có 3 phương pháp phổ biến, vậy đâu là lựa chọn tốt nhất cho mẹ?</p><p><strong>1. Double Test (Sàng lọc quý I)</strong></p><p><strong>Thời điểm:</strong> Tuần thai 11 - 13 tuần 6 ngày.</p><p><strong>Cách thức:</strong> Kết hợp siêu âm đo độ mờ da gáy và xét nghiệm máu mẹ.</p><p><strong>Độ chính xác:</strong> Khoảng 80 - 85%.</p><p><strong>Phát hiện:</strong> Hội chứng Down, Edwards, Patau.</p><p><strong>2. Triple Test (Sàng lọc quý II)</strong></p><p><strong>Thời điểm:</strong> Tuần thai 15 - 18.</p><p><strong>Cách thức:</strong> Xét nghiệm 3 chỉ số sinh hóa trong máu mẹ.</p><p><strong>Độ chính xác:</strong> Thấp hơn Double Test (khoảng 70%).</p><p><strong>Phát hiện:</strong> Nguy cơ dị tật ống thần kinh và các hội chứng NST.</p><p><strong>3. NIPT (Sàng lọc trước sinh không xâm lấn - Cao cấp)</strong></p><p>Đây là phương pháp tiên tiến nhất hiện nay, phân tích ADN tự do của thai nhi (cfDNA) có trong máu mẹ.</p><p><strong>Thời điểm:</strong> Thực hiện rất sớm, từ tuần thai thứ 9.</p><p><strong>Độ chính xác:</strong> &gt; 99%. Gần như tuyệt đối.</p><p><strong>Ưu điểm vượt trội:</strong> Sàng lọc được toàn bộ 23 cặp NST, phát hiện cả các đột biến vi mất đoạn mà siêu âm hay xét nghiệm thường không thấy.</p><p><strong>An toàn:</strong> Chỉ lấy 7-10ml máu mẹ, hoàn toàn không xâm lấn, không gây hại cho thai nhi.</p><p><strong>Kết luận</strong></p><p>Nếu có điều kiện kinh tế, các chuyên gia khuyến cáo mẹ nên chọn <strong>NIPT</strong> ngay từ tuần thứ 10 để an tâm tuyệt đối suốt thai kỳ, giảm thiểu việc phải chọc ối không cần thiết.</p>', 'published', '2025-12-12 08:30:00', 'So sánh Double Test, Triple Test và NIPT: Mẹ bầu nên chọn gói nào?', 'Phân tích ưu nhược điểm và độ chính xác của các phương pháp sàng lọc dị tật thai nhi. Tại sao bác sĩ khuyên dùng NIPT từ tuần thứ 9?', 'http://127.0.0.1:8000/storage/uploads/posts/1765388323_cham-soc-suc-khoe-cho-ba-bau-02.jpg', '2025-12-12 08:30:17', '2025-12-12 08:34:07', NULL),
-(4, 13, 4, '[HOT] Chào đón Giáng Sinh - Tặng gói quà sơ sinh 5 Triệu khi đăng ký Thai sản trọn gói', 'hot-chao-don-giang-sinh-tang-goi-qua-so-sinh-5-trieu-khi', 'Tri ân khách hàng dịp cuối năm, phòng khám dành tặng hàng ngàn voucher giảm giá và quà tặng sơ sinh cao cấp khi đăng ký gói theo dõi thai kỳ trong tháng 12.', '<p>Thấu hiểu nỗi lo chi phí của các gia đình trẻ, Phòng khám Sản-Phụ khoa xin gửi đến chương trình ưu đãi lớn nhất năm: <strong>\"Giáng sinh an lành - Đón rồng con khỏe mạnh\"</strong>.</p><p><strong>🎁 Chi tiết ưu đãi:</strong></p><p><strong>GIẢM TRỰC TIẾP 20%</strong> chi phí khi đăng ký Gói theo dõi thai kỳ từ tuần 12.</p><p><strong>TẶNG NGAY</strong> gói sàng lọc sơ sinh (lấy máu gót chân) cho bé sau sinh trị giá 2.000.000đ.</p><p>Miễn phí 01 lần siêu âm 4D VIP (có ghi đĩa/gửi file video).</p><p>Tặng bộ quà tặng mẹ &amp; bé cao cấp: Balo bỉm sữa, quần áo sơ sinh...</p><p><strong>⏰ Thời gian và Điều kiện áp dụng:</strong></p><p>Chương trình diễn ra từ: <strong>10/12/2025 đến hết 31/12/2025</strong>.</p><p>Áp dụng cho khách hàng đặt cọc online hoặc đến trực tiếp phòng khám.</p><p>👉 <strong>Đừng bỏ lỡ cơ hội chăm sóc thai kỳ chuẩn quốc tế với chi phí tiết kiệm nhất! Liên hệ Hotline ngay để được tư vấn.</strong></p>', 'published', '2025-12-12 08:30:00', '[HOT] Ưu đãi thai sản trọn gói tháng 12: Giảm 20% + Tặng quà 5 Triệu', 'Chương trình tri ân lớn nhất năm. Giảm ngay 20% chi phí thai sản trọn gói, tặng gói sàng lọc sơ sinh và bộ quà tặng cao cấp cho mẹ và bé.', 'http://127.0.0.1:8000/storage/uploads/posts/1765385894_tai-xuong-2.jfif', '2025-12-12 08:30:17', '2025-12-12 08:34:39', NULL);
+(1, 1, 1, 'Chế độ dinh dưỡng vàng cho bà bầu 3 tháng đầu: Ăn đúng để con khỏe, mẹ không tăng cân', 'che-do-dinh-duong-vang-cho-ba-bau-3-thang-dau-an-dung-de-co', '3 tháng đầu là giai đoạn quan trọng nhất để hình thành các cơ quan của thai nhi. Cùng tìm hiểu thực đơn chuẩn giúp mẹ khỏe, bé phát triển toàn diện và giảm nghén hiệu quả.', 'Mang thai 3 tháng đầu (tam cá nguyệt thứ nhất) là giai đoạn quan trọng nhất để hình thành các cơ quan thiết yếu của thai nhi như tim, não và tủy sống. Tuy nhiên, đây cũng là giai đoạn mẹ bầu dễ bị nghén nhất. Vậy làm sao để ăn uống đủ chất mà vẫn thoải mái?\n\n1. Axit Folic – \"Thần dược\" ngăn ngừa dị tật\n\nNếu có một chất dinh dưỡng bắt buộc phải bổ sung ngay khi biết tin có thai, đó chính là Axit Folic (Vitamin B9). Dưỡng chất này đóng vai trò then chốt trong việc ngăn ngừa các dị tật ống thần kinh ở thai nhi (nứt đốt sống, vô sọ).\n\nNhu cầu khuyến nghị: 400mcg - 600mcg/ngày.\n\nThực phẩm giàu Folate: Các loại rau màu xanh đậm (súp lơ, cải bó xôi), các loại đậu, ngũ cốc nguyên hạt và trái cây họ cam quýt.\n\n2. Protein và Sắt – Xây dựng tế bào máu\n\nThể tích máu của mẹ sẽ tăng lên 50% trong thai kỳ để nuôi dưỡng bào thai. Do đó, thiếu sắt sẽ dẫn đến thiếu máu, gây mệt mỏi và chóng mặt. Mẹ nên bổ sung: Thịt bò nạc, ức gà, cá hồi (đã nấu chín kỹ), trứng gà và các loại hạt.\n\n3. Danh sách thực phẩm cần \"Tuyệt đối tránh\"\n\nĐể đảm bảo an toàn cho thai nhi, mẹ bầu 3 tháng đầu cần loại bỏ ngay các món sau khỏi thực đơn:\n\nThực phẩm sống: Sushi, gỏi cá, trứng lòng đào, thịt tái (nguy cơ nhiễm khuẩn Salmonella, E.coli).\n\nRau củ gây co thắt tử cung: Rau răm, đu đủ xanh, dứa (thơm), ngải cứu.\n\nChất kích thích: Rượu, bia, thuốc lá và hạn chế tối đa Cafein.\n\n4. Mẹo nhỏ giúp mẹ vượt qua cơn nghén\n\nNếu bạn bị nôn nghén nặng, hãy chia nhỏ bữa ăn thành 5-6 bữa/ngày thay vì 3 bữa chính. Luôn chuẩn bị sẵn bánh quy gừng hoặc uống nước chanh ấm vào buổi sáng để giảm cảm giác buồn nôn.', 'published', '2025-12-19 16:00:46', 'Dinh dưỡng bà bầu 3 tháng đầu: Ăn gì để vào con không vào mẹ?', 'Hướng dẫn chi tiết thực đơn cho mẹ bầu 3 tháng đầu. Danh sách thực phẩm giàu Axit Folic, Sắt và những món ăn cần kiêng kỵ tuyệt đối để tránh sảy thai.', NULL, '2025-12-19 16:00:46', '2025-12-19 16:00:46', NULL),
+(2, 1, 2, 'Quy trình Thụ tinh trong ống nghiệm (IVF) chuẩn Châu Âu tại Phòng khám', 'quy-trinh-thu-tinh-trong-ong-nghiem-ivf-chuan-chau-au-tai', 'Giải đáp chi tiết quy trình IVF chuẩn y khoa, từ bước kích trứng, chọc hút đến chuyển phôi. Hy vọng mới cho các cặp vợ chồng mong con với tỷ lệ thành công cao.', 'Thụ tinh trong ống nghiệm (IVF) là kỹ thuật hỗ trợ sinh sản hiện đại nhất hiện nay, mang lại hy vọng cho hàng triệu cặp vợ chồng hiếm muộn. Tại phòng khám của chúng tôi, quy trình IVF được thực hiện khép kín với hệ thống phòng Lab đạt chuẩn ISO.\n\nGiai đoạn 1: Kích thích buồng trứng (Ngày 2 của chu kỳ)\n\nBác sĩ sẽ chỉ định tiêm thuốc kích thích buồng trứng liên tục trong khoảng 9-11 ngày. Mục đích là để thu được số lượng nang noãn tối ưu (thay vì chỉ 1 trứng rụng như chu kỳ tự nhiên). Trong thời gian này, bạn sẽ được siêu âm và xét nghiệm máu 3-4 lần để theo dõi sự phát triển của nang trứng.\n\nGiai đoạn 2: Chọc hút trứng và Lấy tinh trùng\n\nKhi nang trứng đạt kích thước chuẩn, mũi tiêm rụng trứng sẽ được thực hiện. 36 giờ sau, bác sĩ tiến hành chọc hút trứng. Quy trình này diễn ra nhẹ nhàng dưới sự hỗ trợ của gây mê, chỉ mất khoảng 15-20 phút. Song song đó, người chồng sẽ được lấy mẫu tinh trùng để lọc rửa, chọn ra những \'chiến binh\' khỏe mạnh nhất.\n\nGiai đoạn 3: Tạo phôi và Nuôi cấy phôi\n\nTrứng và tinh trùng được kết hợp trong đĩa cấy tại phòng Lab. Các chuyên viên phôi học sẽ theo dõi quá trình phân chia tế bào:\n\nPhôi ngày 3: Phôi có khoảng 6-8 tế bào.\n\nPhôi ngày 5 (Phôi nang): Phôi có hàng trăm tế bào, khả năng làm tổ cao hơn.\n\nGiai đoạn 4: Chuyển phôi và Thử thai\n\nBác sĩ dùng một ống thông (catheter) rất nhỏ, mềm để đưa phôi vào buồng tử cung người mẹ. Đây là thủ thuật không đau. Sau 14 ngày, mẹ có thể xét nghiệm Beta-HCG để đón nhận tin vui.', 'published', '2025-12-19 16:00:46', 'Quy trình thụ tinh trong ống nghiệm (IVF) chuẩn Châu Âu - Tỷ lệ đậu thai cao', 'Tìm hiểu quy trình IVF khép kín tại phòng khám: Kích trứng, chọc hút, nuôi cấy phôi và chuyển phôi. Giải pháp tối ưu cho các cặp vợ chồng hiếm muộn lâu năm.', NULL, '2025-12-19 16:00:46', '2025-12-19 16:00:46', NULL),
+(3, 1, 3, 'So sánh Double Test, Triple Test và NIPT: Mẹ bầu nên chọn gói nào?', 'so-sanh-double-test-triple-test-va-nipt-me-bau-nen-chon-go', 'So sánh ưu nhược điểm của các phương pháp sàng lọc trước sinh phổ biến hiện nay. Tại sao NIPT lại được nhiều mẹ bầu lựa chọn dù chi phí cao hơn?', 'Sàng lọc trước sinh là bước không thể thiếu để phát hiện sớm các dị tật bẩm sinh do bất thường nhiễm sắc thể (NST). Hiện nay có 3 phương pháp phổ biến, vậy đâu là lựa chọn tốt nhất cho mẹ?\n\n1. Double Test (Sàng lọc quý I)\n\nThời điểm: Tuần thai 11 - 13 tuần 6 ngày.\n\nCách thức: Kết hợp siêu âm đo độ mờ da gáy và xét nghiệm máu mẹ.\n\nĐộ chính xác: Khoảng 80 - 85%.\n\nPhát hiện: Hội chứng Down, Edwards, Patau.\n\n2. Triple Test (Sàng lọc quý II)\n\nThời điểm: Tuần thai 15 - 18.\n\nCách thức: Xét nghiệm 3 chỉ số sinh hóa trong máu mẹ.\n\nĐộ chính xác: Thấp hơn Double Test (khoảng 70%).\n\nPhát hiện: Nguy cơ dị tật ống thần kinh và các hội chứng NST.\n\n3. NIPT (Sàng lọc trước sinh không xâm lấn - Cao cấp)\n\nĐây là phương pháp tiên tiến nhất hiện nay, phân tích ADN tự do của thai nhi (cfDNA) có trong máu mẹ.\n\nThời điểm: Thực hiện rất sớm, từ tuần thai thứ 9.\n\nĐộ chính xác: > 99%. Gần như tuyệt đối.\n\nƯu điểm vượt trội: Sàng lọc được toàn bộ 23 cặp NST, phát hiện cả các đột biến vi mất đoạn mà siêu âm hay xét nghiệm thường không thấy.\n\nAn toàn: Chỉ lấy 7-10ml máu mẹ, hoàn toàn không xâm lấn, không gây hại cho thai nhi.\n\nKết luận\n\nNếu có điều kiện kinh tế, các chuyên gia khuyến cáo mẹ nên chọn NIPT ngay từ tuần thứ 10 để an tâm tuyệt đối suốt thai kỳ, giảm thiểu việc phải chọc ối không cần thiết.', 'published', '2025-12-19 16:00:46', 'So sánh Double Test, Triple Test và NIPT: Mẹ bầu nên chọn gói nào?', 'Phân tích ưu nhược điểm và độ chính xác của các phương pháp sàng lọc dị tật thai nhi. Tại sao bác sĩ khuyên dùng NIPT từ tuần thứ 9?', NULL, '2025-12-19 16:00:46', '2025-12-19 16:00:46', NULL),
+(4, 1, 4, '[HOT] Chào đón Giáng Sinh - Tặng gói quà sơ sinh 5 Triệu khi đăng ký Thai sản trọn gói', 'hot-chao-don-giang-sinh-tang-goi-qua-so-sinh-5-trieu-khi', 'Tri ân khách hàng dịp cuối năm, phòng khám dành tặng hàng ngàn voucher giảm giá và quà tặng sơ sinh cao cấp khi đăng ký gói theo dõi thai kỳ trong tháng 12.', '<p>Thấu hiểu nỗi lo chi phí của các gia đình trẻ, Phòng khám Sản-Phụ khoa xin gửi đến chương trình ưu đãi lớn nhất năm: \"Giáng sinh an lành - Đón rồng con khỏe mạnh\". 🎁 Chi tiết ưu đãi: GIẢM TRỰC TIẾP 20% chi phí khi đăng ký Gói theo dõi thai kỳ từ tuần 12. TẶNG NGAY gói sàng lọc sơ sinh (lấy máu gót chân) cho bé sau sinh trị giá 2.000.000đ. Miễn phí 01 lần siêu âm 4D VIP (có ghi đĩa/gửi file video). Tặng bộ quà tặng mẹ &amp; bé cao cấp: Balo bỉm sữa, quần áo sơ sinh... ⏰ Thời gian và Điều kiện áp dụng: Chương trình diễn ra từ: 10/12/2025 đến hết 31/12/2025. Áp dụng cho khách hàng đặt cọc online hoặc đến trực tiếp phòng khám.</p>', 'published', '2025-12-19 16:00:00', '[HOT] Ưu đãi thai sản trọn gói tháng 12: Giảm 20% + Tặng quà 5 Triệu', 'Chương trình tri ân lớn nhất năm. Giảm ngay 20% chi phí thai sản trọn gói, tặng gói sàng lọc sơ sinh và bộ quà tặng cao cấp cho mẹ và bé.', 'http://127.0.0.1:8000/storage/uploads/posts/1765385894_tai-xuong-2.jfif', '2025-12-19 16:00:46', '2025-12-19 16:29:17', NULL);
 
 -- --------------------------------------------------------
 
@@ -215,7 +218,7 @@ CREATE TABLE `benh_ans` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `bac_si_id` bigint(20) UNSIGNED NOT NULL,
   `lich_hen_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `ngay_kham` date NOT NULL DEFAULT '2025-12-12',
+  `ngay_kham` date NOT NULL DEFAULT '2025-12-19',
   `tieu_de` varchar(255) NOT NULL,
   `trieu_chung` text DEFAULT NULL,
   `chuan_doan` text DEFAULT NULL,
@@ -230,7 +233,7 @@ CREATE TABLE `benh_ans` (
 --
 
 INSERT INTO `benh_ans` (`id`, `user_id`, `bac_si_id`, `lich_hen_id`, `ngay_kham`, `tieu_de`, `trieu_chung`, `chuan_doan`, `dieu_tri`, `ghi_chu`, `created_at`, `updated_at`) VALUES
-(1, 148, 108, 3, '2025-12-13', 'Khám Gói Khám Phụ khoa Tổng quát (VIP)', 'Test', 'Test', 'Test', 'Bệnh án được tạo tự động khi bắt đầu khám', '2025-12-13 07:56:24', '2025-12-13 07:59:05');
+(1, 23, 4, 1, '2025-12-20', 'Khám Gói Khám Phụ khoa Tổng quát (VIP)', 'Khám Gói Khám Phụ khoa Tổng quát (VIP)', 'Khám Gói Khám Phụ khoa Tổng quát (VIP)', 'Khám Gói Khám Phụ khoa Tổng quát (VIP)', 'Bệnh án được tạo tự động khi bắt đầu khám', '2025-12-19 17:48:37', '2025-12-19 17:49:03');
 
 -- --------------------------------------------------------
 
@@ -242,7 +245,7 @@ CREATE TABLE `benh_an_audits` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `benh_an_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `action` varchar(20) NOT NULL,
+  `action` varchar(100) NOT NULL,
   `old_values` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`old_values`)),
   `new_values` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`new_values`)),
   `ip_address` varchar(45) DEFAULT NULL,
@@ -256,9 +259,12 @@ CREATE TABLE `benh_an_audits` (
 --
 
 INSERT INTO `benh_an_audits` (`id`, `benh_an_id`, `user_id`, `action`, `old_values`, `new_values`, `ip_address`, `user_agent`, `created_at`, `updated_at`) VALUES
-(1, 1, 139, 'created', NULL, '{\"user_id\":148,\"bac_si_id\":108,\"lich_hen_id\":3,\"ngay_kham\":\"2025-12-13 14:56:24\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"\",\"chuan_doan\":\"\",\"dieu_tri\":\"\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"updated_at\":\"2025-12-13 14:56:24\",\"created_at\":\"2025-12-13 14:56:24\",\"id\":1}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-13 07:56:24', '2025-12-13 07:56:24'),
-(2, 1, 139, 'updated', '{\"id\":1,\"user_id\":148,\"bac_si_id\":108,\"lich_hen_id\":3,\"ngay_kham\":\"2025-12-12T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"\",\"chuan_doan\":\"\",\"dieu_tri\":\"\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"created_at\":\"2025-12-13T07:56:24.000000Z\",\"updated_at\":\"2025-12-13T07:56:24.000000Z\"}', '{\"id\":1,\"user_id\":\"148\",\"bac_si_id\":\"108\",\"lich_hen_id\":\"3\",\"ngay_kham\":\"2025-12-13 00:00:00\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"Test\",\"chuan_doan\":\"Test\",\"dieu_tri\":\"Test\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"created_at\":\"2025-12-13 14:56:24\",\"updated_at\":\"2025-12-13 14:59:05\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-13 07:59:05', '2025-12-13 07:59:05'),
-(3, 1, 139, 'test_uploaded', NULL, '{\"description\":\"Upload k\\u1ebft qu\\u1ea3 x\\u00e9t nghi\\u1ec7m: Testt\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-13 08:04:38', '2025-12-13 08:04:38');
+(1, 1, 4, 'created', NULL, '{\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":1,\"ngay_kham\":\"2025-12-20 00:48:37\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"\",\"chuan_doan\":\"\",\"dieu_tri\":\"\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"updated_at\":\"2025-12-20 00:48:37\",\"created_at\":\"2025-12-20 00:48:37\",\"id\":1}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-19 17:48:37', '2025-12-19 17:48:37'),
+(2, 1, 4, 'updated', '{\"id\":1,\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":1,\"ngay_kham\":\"2025-12-19T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"\",\"chuan_doan\":\"\",\"dieu_tri\":\"\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"created_at\":\"2025-12-19T17:48:37.000000Z\",\"updated_at\":\"2025-12-19T17:48:37.000000Z\"}', '{\"id\":1,\"user_id\":\"23\",\"bac_si_id\":\"4\",\"lich_hen_id\":\"1\",\"ngay_kham\":\"2025-12-20 00:00:00\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"chuan_doan\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"dieu_tri\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"created_at\":\"2025-12-20 00:48:37\",\"updated_at\":\"2025-12-20 00:49:03\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-19 17:49:03', '2025-12-19 17:49:03'),
+(3, 1, 25, 'medicine_dispensed', NULL, '{\"description\":\"C\\u1ea5p thu\\u1ed1c cho \\u0111\\u01a1n #1\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2025-12-20 02:02:43', '2025-12-20 02:02:43'),
+(4, 1, NULL, 'tai_kham_created_by_doctor', NULL, '{\"test\":1}', '127.0.0.1', 'Symfony', '2025-12-20 04:09:40', '2025-12-20 04:09:40'),
+(5, 1, 23, 'tai_kham_confirmed_by_patient', '{\"tai_kham\":{\"id\":2,\"benh_an_id\":1,\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":null,\"ngay_tai_kham\":\"2025-12-22T17:00:00.000000Z\",\"thoi_gian_tai_kham\":\"13:40:00\",\"so_ngay_du_kien\":2,\"ly_do\":\"Huy\\u1ebft \\u00e1p v\\u00e0 \\u0111\\u01b0\\u1eddng huy\\u1ebft cao. Y\\u00eau c\\u1ea7u l\\u00e0m th\\u00eam x\\u00e9t nghi\\u1ec7m dung n\\u1ea1p \\u0111\\u01b0\\u1eddng v\\u00e0 protein ni\\u1ec7u. H\\u1eb9n t\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y.\",\"ghi_chu\":\"Huy\\u1ebft \\u00e1p v\\u00e0 \\u0111\\u01b0\\u1eddng huy\\u1ebft cao. Y\\u00eau c\\u1ea7u l\\u00e0m th\\u00eam x\\u00e9t nghi\\u1ec7m dung n\\u1ea1p \\u0111\\u01b0\\u1eddng v\\u00e0 protein ni\\u1ec7u. H\\u1eb9n t\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y.\",\"trang_thai\":\"Ch\\u1edd x\\u00e1c nh\\u1eadn\",\"created_by_role\":\"doctor\",\"created_at\":\"2025-12-20T04:06:20.000000Z\",\"updated_at\":\"2025-12-20T04:06:20.000000Z\",\"deleted_at\":null,\"benh_an\":{\"id\":1,\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":1,\"ngay_kham\":\"2025-12-19T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"chuan_doan\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"dieu_tri\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"created_at\":\"2025-12-19T17:48:37.000000Z\",\"updated_at\":\"2025-12-19T17:49:03.000000Z\"},\"bac_si\":{\"id\":4,\"user_id\":4,\"ho_ten\":\"BS.CKI Nguy\\u1ec5n Thanh V\\u00e2n\",\"email\":\"vannguyen@vietcare.com\",\"chuyen_khoa\":\"Ph\\u1ee5 Khoa\",\"kinh_nghiem\":10,\"mo_ta\":\"Chuy\\u00ean s\\u00e2u v\\u1ec1 soi c\\u1ed5 t\\u1eed cung, \\u0111i\\u1ec1u tr\\u1ecb l\\u1ed9 tuy\\u1ebfn v\\u00e0 c\\u00e1c b\\u1ec7nh vi\\u00eam nhi\\u1ec5m ph\\u1ee5 khoa t\\u00e1i ph\\u00e1t. T\\u01b0 v\\u1ea5n s\\u1ee9c kh\\u1ecfe ti\\u1ec1n m\\u00e3n kinh.\",\"trang_thai\":\"\\u0110ang ho\\u1ea1t \\u0111\\u1ed9ng\",\"so_dien_thoai\":\"0909111004\",\"avatar\":null,\"dia_chi\":\"Qu\\u1eadn T\\u00e2n B\\u00ecnh, TP.HCM\",\"created_at\":\"2025-12-19T16:00:44.000000Z\",\"updated_at\":\"2025-12-19T16:00:44.000000Z\",\"user\":{\"id\":4,\"name\":\"BS.CKI Nguy\\u1ec5n Thanh V\\u00e2n\",\"email\":\"vannguyen@vietcare.com\",\"avatar\":null,\"so_dien_thoai\":\"0909111004\",\"ngay_sinh\":null,\"gioi_tinh\":null,\"email_verified_at\":\"2025-12-19T16:00:44.000000Z\",\"locked_at\":null,\"locked_until\":null,\"must_change_password\":false,\"last_login_at\":\"2025-12-20T01:08:39.000000Z\",\"login_attempts\":0,\"last_login_ip\":\"127.0.0.1\",\"created_at\":\"2025-12-19T16:00:44.000000Z\",\"updated_at\":\"2025-12-20T01:08:39.000000Z\",\"role\":\"doctor\"}},\"user\":{\"id\":23,\"name\":\"Nguy\\u1ec5n Ch\\u00ed Thanh\",\"email\":\"tn822798@gmail.com\",\"avatar\":null,\"so_dien_thoai\":null,\"ngay_sinh\":null,\"gioi_tinh\":null,\"email_verified_at\":null,\"locked_at\":null,\"locked_until\":null,\"must_change_password\":false,\"last_login_at\":\"2025-12-20T01:08:21.000000Z\",\"login_attempts\":0,\"last_login_ip\":\"127.0.0.1\",\"created_at\":\"2025-12-19T16:11:58.000000Z\",\"updated_at\":\"2025-12-20T01:08:21.000000Z\",\"role\":\"patient\"}}}', '{\"tai_kham\":{\"id\":2,\"benh_an_id\":1,\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":null,\"ngay_tai_kham\":\"2025-12-22T17:00:00.000000Z\",\"thoi_gian_tai_kham\":\"13:40:00\",\"so_ngay_du_kien\":2,\"ly_do\":\"Huy\\u1ebft \\u00e1p v\\u00e0 \\u0111\\u01b0\\u1eddng huy\\u1ebft cao. Y\\u00eau c\\u1ea7u l\\u00e0m th\\u00eam x\\u00e9t nghi\\u1ec7m dung n\\u1ea1p \\u0111\\u01b0\\u1eddng v\\u00e0 protein ni\\u1ec7u. H\\u1eb9n t\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y.\",\"ghi_chu\":\"Huy\\u1ebft \\u00e1p v\\u00e0 \\u0111\\u01b0\\u1eddng huy\\u1ebft cao. Y\\u00eau c\\u1ea7u l\\u00e0m th\\u00eam x\\u00e9t nghi\\u1ec7m dung n\\u1ea1p \\u0111\\u01b0\\u1eddng v\\u00e0 protein ni\\u1ec7u. H\\u1eb9n t\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y.\",\"trang_thai\":\"\\u0110\\u00e3 x\\u00e1c nh\\u1eadn\",\"created_by_role\":\"doctor\",\"created_at\":\"2025-12-20T04:06:20.000000Z\",\"updated_at\":\"2025-12-20T04:10:54.000000Z\",\"deleted_at\":null,\"benh_an\":{\"id\":1,\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":1,\"ngay_kham\":\"2025-12-19T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"chuan_doan\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"dieu_tri\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"created_at\":\"2025-12-19T17:48:37.000000Z\",\"updated_at\":\"2025-12-19T17:49:03.000000Z\"},\"bac_si\":{\"id\":4,\"user_id\":4,\"ho_ten\":\"BS.CKI Nguy\\u1ec5n Thanh V\\u00e2n\",\"email\":\"vannguyen@vietcare.com\",\"chuyen_khoa\":\"Ph\\u1ee5 Khoa\",\"kinh_nghiem\":10,\"mo_ta\":\"Chuy\\u00ean s\\u00e2u v\\u1ec1 soi c\\u1ed5 t\\u1eed cung, \\u0111i\\u1ec1u tr\\u1ecb l\\u1ed9 tuy\\u1ebfn v\\u00e0 c\\u00e1c b\\u1ec7nh vi\\u00eam nhi\\u1ec5m ph\\u1ee5 khoa t\\u00e1i ph\\u00e1t. T\\u01b0 v\\u1ea5n s\\u1ee9c kh\\u1ecfe ti\\u1ec1n m\\u00e3n kinh.\",\"trang_thai\":\"\\u0110ang ho\\u1ea1t \\u0111\\u1ed9ng\",\"so_dien_thoai\":\"0909111004\",\"avatar\":null,\"dia_chi\":\"Qu\\u1eadn T\\u00e2n B\\u00ecnh, TP.HCM\",\"created_at\":\"2025-12-19T16:00:44.000000Z\",\"updated_at\":\"2025-12-19T16:00:44.000000Z\",\"user\":{\"id\":4,\"name\":\"BS.CKI Nguy\\u1ec5n Thanh V\\u00e2n\",\"email\":\"vannguyen@vietcare.com\",\"avatar\":null,\"so_dien_thoai\":\"0909111004\",\"ngay_sinh\":null,\"gioi_tinh\":null,\"email_verified_at\":\"2025-12-19T16:00:44.000000Z\",\"locked_at\":null,\"locked_until\":null,\"must_change_password\":false,\"last_login_at\":\"2025-12-20T01:08:39.000000Z\",\"login_attempts\":0,\"last_login_ip\":\"127.0.0.1\",\"created_at\":\"2025-12-19T16:00:44.000000Z\",\"updated_at\":\"2025-12-20T01:08:39.000000Z\",\"role\":\"doctor\"}},\"user\":{\"id\":23,\"name\":\"Nguy\\u1ec5n Ch\\u00ed Thanh\",\"email\":\"tn822798@gmail.com\",\"avatar\":null,\"so_dien_thoai\":null,\"ngay_sinh\":null,\"gioi_tinh\":null,\"email_verified_at\":null,\"locked_at\":null,\"locked_until\":null,\"must_change_password\":false,\"last_login_at\":\"2025-12-20T01:08:21.000000Z\",\"login_attempts\":0,\"last_login_ip\":\"127.0.0.1\",\"created_at\":\"2025-12-19T16:11:58.000000Z\",\"updated_at\":\"2025-12-20T01:08:21.000000Z\",\"role\":\"patient\"}}}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-20 04:10:54', '2025-12-20 04:10:54'),
+(6, 1, 25, 'tai_kham_booked', '{\"tai_kham\":{\"id\":2,\"benh_an_id\":1,\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":null,\"ngay_tai_kham\":\"2025-12-22T17:00:00.000000Z\",\"thoi_gian_tai_kham\":\"13:40:00\",\"so_ngay_du_kien\":2,\"ly_do\":\"Huy\\u1ebft \\u00e1p v\\u00e0 \\u0111\\u01b0\\u1eddng huy\\u1ebft cao. Y\\u00eau c\\u1ea7u l\\u00e0m th\\u00eam x\\u00e9t nghi\\u1ec7m dung n\\u1ea1p \\u0111\\u01b0\\u1eddng v\\u00e0 protein ni\\u1ec7u. H\\u1eb9n t\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y.\",\"ghi_chu\":\"Huy\\u1ebft \\u00e1p v\\u00e0 \\u0111\\u01b0\\u1eddng huy\\u1ebft cao. Y\\u00eau c\\u1ea7u l\\u00e0m th\\u00eam x\\u00e9t nghi\\u1ec7m dung n\\u1ea1p \\u0111\\u01b0\\u1eddng v\\u00e0 protein ni\\u1ec7u. H\\u1eb9n t\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y.\",\"trang_thai\":\"\\u0110\\u00e3 x\\u00e1c nh\\u1eadn\",\"created_by_role\":\"doctor\",\"created_at\":\"2025-12-20T04:06:20.000000Z\",\"updated_at\":\"2025-12-20T04:10:54.000000Z\",\"deleted_at\":null,\"benh_an\":{\"id\":1,\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":1,\"ngay_kham\":\"2025-12-19T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"chuan_doan\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"dieu_tri\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"created_at\":\"2025-12-19T17:48:37.000000Z\",\"updated_at\":\"2025-12-19T17:49:03.000000Z\",\"lich_hen\":{\"id\":1,\"user_id\":23,\"bac_si_id\":4,\"dich_vu_id\":14,\"ten_benh_nhan\":null,\"sdt_benh_nhan\":null,\"email_benh_nhan\":null,\"ngay_sinh_benh_nhan\":null,\"tong_tien\":\"2500000.00\",\"ngay_hen\":\"2025-12-19T17:00:00.000000Z\",\"thoi_gian_hen\":\"01:00:00\",\"ghi_chu\":null,\"trang_thai\":\"Ho\\u00e0n th\\u00e0nh\",\"checked_in_at\":\"2025-12-19T17:48:11.000000Z\",\"checked_in_by\":25,\"thoi_gian_bat_dau_kham\":\"2025-12-19T17:48:37.000000Z\",\"completed_at\":\"2025-12-19T17:58:52.000000Z\",\"created_at\":\"2025-12-19T17:46:19.000000Z\",\"updated_at\":\"2025-12-20T01:37:05.000000Z\",\"payment_status\":\"\\u0110\\u00e3 thanh to\\u00e1n\",\"payment_method\":\"MOMO\",\"paid_at\":\"2025-12-20T01:37:05.000000Z\",\"cancelled_by\":null,\"cancelled_at\":null},\"user\":{\"id\":23,\"name\":\"Nguy\\u1ec5n Ch\\u00ed Thanh\",\"email\":\"tn822798@gmail.com\",\"avatar\":null,\"so_dien_thoai\":null,\"ngay_sinh\":null,\"gioi_tinh\":null,\"email_verified_at\":null,\"locked_at\":null,\"locked_until\":null,\"must_change_password\":false,\"last_login_at\":\"2025-12-20T01:08:21.000000Z\",\"login_attempts\":0,\"last_login_ip\":\"127.0.0.1\",\"created_at\":\"2025-12-19T16:11:58.000000Z\",\"updated_at\":\"2025-12-20T01:08:21.000000Z\",\"role\":\"patient\"}},\"user\":{\"id\":23,\"name\":\"Nguy\\u1ec5n Ch\\u00ed Thanh\",\"email\":\"tn822798@gmail.com\",\"avatar\":null,\"so_dien_thoai\":null,\"ngay_sinh\":null,\"gioi_tinh\":null,\"email_verified_at\":null,\"locked_at\":null,\"locked_until\":null,\"must_change_password\":false,\"last_login_at\":\"2025-12-20T01:08:21.000000Z\",\"login_attempts\":0,\"last_login_ip\":\"127.0.0.1\",\"created_at\":\"2025-12-19T16:11:58.000000Z\",\"updated_at\":\"2025-12-20T01:08:21.000000Z\",\"role\":\"patient\"},\"bac_si\":{\"id\":4,\"user_id\":4,\"ho_ten\":\"BS.CKI Nguy\\u1ec5n Thanh V\\u00e2n\",\"email\":\"vannguyen@vietcare.com\",\"chuyen_khoa\":\"Ph\\u1ee5 Khoa\",\"kinh_nghiem\":10,\"mo_ta\":\"Chuy\\u00ean s\\u00e2u v\\u1ec1 soi c\\u1ed5 t\\u1eed cung, \\u0111i\\u1ec1u tr\\u1ecb l\\u1ed9 tuy\\u1ebfn v\\u00e0 c\\u00e1c b\\u1ec7nh vi\\u00eam nhi\\u1ec5m ph\\u1ee5 khoa t\\u00e1i ph\\u00e1t. T\\u01b0 v\\u1ea5n s\\u1ee9c kh\\u1ecfe ti\\u1ec1n m\\u00e3n kinh.\",\"trang_thai\":\"\\u0110ang ho\\u1ea1t \\u0111\\u1ed9ng\",\"so_dien_thoai\":\"0909111004\",\"avatar\":null,\"dia_chi\":\"Qu\\u1eadn T\\u00e2n B\\u00ecnh, TP.HCM\",\"created_at\":\"2025-12-19T16:00:44.000000Z\",\"updated_at\":\"2025-12-19T16:00:44.000000Z\",\"user\":{\"id\":4,\"name\":\"BS.CKI Nguy\\u1ec5n Thanh V\\u00e2n\",\"email\":\"vannguyen@vietcare.com\",\"avatar\":null,\"so_dien_thoai\":\"0909111004\",\"ngay_sinh\":null,\"gioi_tinh\":null,\"email_verified_at\":\"2025-12-19T16:00:44.000000Z\",\"locked_at\":null,\"locked_until\":null,\"must_change_password\":false,\"last_login_at\":\"2025-12-20T01:08:39.000000Z\",\"login_attempts\":0,\"last_login_ip\":\"127.0.0.1\",\"created_at\":\"2025-12-19T16:00:44.000000Z\",\"updated_at\":\"2025-12-20T01:08:39.000000Z\",\"role\":\"doctor\"}}}}', '{\"tai_kham\":{\"id\":2,\"benh_an_id\":1,\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":2,\"ngay_tai_kham\":\"2025-12-22T17:00:00.000000Z\",\"thoi_gian_tai_kham\":\"13:40:00\",\"so_ngay_du_kien\":2,\"ly_do\":\"Huy\\u1ebft \\u00e1p v\\u00e0 \\u0111\\u01b0\\u1eddng huy\\u1ebft cao. Y\\u00eau c\\u1ea7u l\\u00e0m th\\u00eam x\\u00e9t nghi\\u1ec7m dung n\\u1ea1p \\u0111\\u01b0\\u1eddng v\\u00e0 protein ni\\u1ec7u. H\\u1eb9n t\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y.\",\"ghi_chu\":\"Huy\\u1ebft \\u00e1p v\\u00e0 \\u0111\\u01b0\\u1eddng huy\\u1ebft cao. Y\\u00eau c\\u1ea7u l\\u00e0m th\\u00eam x\\u00e9t nghi\\u1ec7m dung n\\u1ea1p \\u0111\\u01b0\\u1eddng v\\u00e0 protein ni\\u1ec7u. H\\u1eb9n t\\u00e1i kh\\u00e1m sau 3 ng\\u00e0y.\",\"trang_thai\":\"\\u0110\\u00e3 \\u0111\\u1eb7t l\\u1ecbch\",\"created_by_role\":\"doctor\",\"created_at\":\"2025-12-20T04:06:20.000000Z\",\"updated_at\":\"2025-12-20T04:12:45.000000Z\",\"deleted_at\":null,\"benh_an\":{\"id\":1,\"user_id\":23,\"bac_si_id\":4,\"lich_hen_id\":1,\"ngay_kham\":\"2025-12-19T17:00:00.000000Z\",\"tieu_de\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"trieu_chung\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"chuan_doan\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"dieu_tri\":\"Kh\\u00e1m G\\u00f3i Kh\\u00e1m Ph\\u1ee5 khoa T\\u1ed5ng qu\\u00e1t (VIP)\",\"ghi_chu\":\"B\\u1ec7nh \\u00e1n \\u0111\\u01b0\\u1ee3c t\\u1ea1o t\\u1ef1 \\u0111\\u1ed9ng khi b\\u1eaft \\u0111\\u1ea7u kh\\u00e1m\",\"created_at\":\"2025-12-19T17:48:37.000000Z\",\"updated_at\":\"2025-12-19T17:49:03.000000Z\"},\"user\":{\"id\":23,\"name\":\"Nguy\\u1ec5n Ch\\u00ed Thanh\",\"email\":\"tn822798@gmail.com\",\"avatar\":null,\"so_dien_thoai\":null,\"ngay_sinh\":null,\"gioi_tinh\":null,\"email_verified_at\":null,\"locked_at\":null,\"locked_until\":null,\"must_change_password\":false,\"last_login_at\":\"2025-12-20T01:08:21.000000Z\",\"login_attempts\":0,\"last_login_ip\":\"127.0.0.1\",\"created_at\":\"2025-12-19T16:11:58.000000Z\",\"updated_at\":\"2025-12-20T01:08:21.000000Z\",\"role\":\"patient\"},\"bac_si\":{\"id\":4,\"user_id\":4,\"ho_ten\":\"BS.CKI Nguy\\u1ec5n Thanh V\\u00e2n\",\"email\":\"vannguyen@vietcare.com\",\"chuyen_khoa\":\"Ph\\u1ee5 Khoa\",\"kinh_nghiem\":10,\"mo_ta\":\"Chuy\\u00ean s\\u00e2u v\\u1ec1 soi c\\u1ed5 t\\u1eed cung, \\u0111i\\u1ec1u tr\\u1ecb l\\u1ed9 tuy\\u1ebfn v\\u00e0 c\\u00e1c b\\u1ec7nh vi\\u00eam nhi\\u1ec5m ph\\u1ee5 khoa t\\u00e1i ph\\u00e1t. T\\u01b0 v\\u1ea5n s\\u1ee9c kh\\u1ecfe ti\\u1ec1n m\\u00e3n kinh.\",\"trang_thai\":\"\\u0110ang ho\\u1ea1t \\u0111\\u1ed9ng\",\"so_dien_thoai\":\"0909111004\",\"avatar\":null,\"dia_chi\":\"Qu\\u1eadn T\\u00e2n B\\u00ecnh, TP.HCM\",\"created_at\":\"2025-12-19T16:00:44.000000Z\",\"updated_at\":\"2025-12-19T16:00:44.000000Z\"}}}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2025-12-20 04:12:45', '2025-12-20 04:12:45');
 
 -- --------------------------------------------------------
 
@@ -284,7 +290,7 @@ CREATE TABLE `benh_an_files` (
 --
 
 INSERT INTO `benh_an_files` (`id`, `benh_an_id`, `ten_file`, `path`, `disk`, `loai_mime`, `size_bytes`, `uploaded_by`, `created_at`, `updated_at`) VALUES
-(1, 1, 'screenshot_1765433090.png', 'files/IYkIT19GKHTVlLQedQlczIYMiKL4EakFLKzRnl0i.png', 'benh_an_private', 'image/png', 630260, 139, '2025-12-13 07:59:05', '2025-12-13 07:59:05');
+(1, 1, 'screenshot_1765433090.png', 'files/5UCFXXUvoUMcjZHRM7fsSvzUKGJl8Q6SZbyoRm2j.png', 'benh_an_private', 'image/png', 630260, 4, '2025-12-19 17:49:03', '2025-12-19 17:49:03');
 
 -- --------------------------------------------------------
 
@@ -310,7 +316,8 @@ CREATE TABLE `ca_dieu_chinh_bac_sis` (
 --
 
 INSERT INTO `ca_dieu_chinh_bac_sis` (`id`, `bac_si_id`, `ngay`, `gio_bat_dau`, `gio_ket_thuc`, `hanh_dong`, `ly_do`, `meta`, `created_at`, `updated_at`) VALUES
-(2, 105, '2025-12-14', '07:30:00', '11:30:00', 'add', 'Thêm ca Chủ nhật theo yêu cầu', NULL, '2025-12-13 02:39:30', '2025-12-13 02:39:30');
+(1, 1, '2025-12-21', '07:30:00', '11:30:00', 'add', 'Thêm ca Chủ nhật theo yêu cầu', NULL, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 4, '2025-12-20', '00:00:00', '17:00:00', 'add', 'Thêm ca test', NULL, '2025-12-19 17:45:14', '2025-12-19 17:45:14');
 
 -- --------------------------------------------------------
 
@@ -334,125 +341,124 @@ CREATE TABLE `ca_lam_viec_nhan_viens` (
 --
 
 INSERT INTO `ca_lam_viec_nhan_viens` (`id`, `nhan_vien_id`, `ngay`, `bat_dau`, `ket_thuc`, `ghi_chu`, `created_at`, `updated_at`) VALUES
-(2, 9, '2025-12-13', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(3, 10, '2025-12-13', '08:00:00', '12:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(4, 13, '2025-12-13', '08:00:00', '12:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(5, 14, '2025-12-13', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(8, 8, '2025-12-15', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(9, 10, '2025-12-15', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(10, 11, '2025-12-15', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(11, 12, '2025-12-15', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(12, 13, '2025-12-15', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(13, 14, '2025-12-15', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(14, 15, '2025-12-15', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(15, 16, '2025-12-15', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(18, 8, '2025-12-16', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(19, 9, '2025-12-16', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(20, 10, '2025-12-16', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(21, 11, '2025-12-16', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(22, 12, '2025-12-16', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(23, 13, '2025-12-16', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(24, 14, '2025-12-16', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(25, 15, '2025-12-16', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(26, 16, '2025-12-16', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(29, 8, '2025-12-17', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(30, 9, '2025-12-17', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(31, 10, '2025-12-17', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(32, 11, '2025-12-17', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(33, 12, '2025-12-17', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(34, 13, '2025-12-17', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(35, 14, '2025-12-17', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(36, 15, '2025-12-17', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(37, 16, '2025-12-17', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(40, 8, '2025-12-18', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(41, 9, '2025-12-18', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(42, 10, '2025-12-18', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(43, 11, '2025-12-18', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(44, 12, '2025-12-18', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(45, 13, '2025-12-18', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(46, 14, '2025-12-18', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(47, 15, '2025-12-18', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(48, 16, '2025-12-18', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(51, 8, '2025-12-19', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(52, 9, '2025-12-19', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(53, 10, '2025-12-19', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(54, 11, '2025-12-19', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(55, 12, '2025-12-19', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(56, 13, '2025-12-19', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(57, 14, '2025-12-19', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(58, 15, '2025-12-19', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(59, 16, '2025-12-19', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(61, 9, '2025-12-20', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(62, 10, '2025-12-20', '08:00:00', '12:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(63, 13, '2025-12-20', '08:00:00', '12:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(64, 14, '2025-12-20', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(67, 8, '2025-12-22', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(68, 10, '2025-12-22', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(69, 11, '2025-12-22', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(70, 12, '2025-12-22', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(71, 13, '2025-12-22', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(72, 14, '2025-12-22', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(73, 15, '2025-12-22', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(74, 16, '2025-12-22', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(77, 8, '2025-12-23', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(78, 9, '2025-12-23', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(79, 10, '2025-12-23', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(80, 11, '2025-12-23', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(81, 12, '2025-12-23', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(82, 13, '2025-12-23', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(83, 14, '2025-12-23', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(84, 15, '2025-12-23', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(85, 16, '2025-12-23', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(88, 8, '2025-12-24', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(89, 9, '2025-12-24', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(90, 10, '2025-12-24', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(91, 11, '2025-12-24', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(92, 12, '2025-12-24', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(93, 13, '2025-12-24', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(94, 14, '2025-12-24', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(95, 15, '2025-12-24', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(96, 16, '2025-12-24', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(99, 8, '2025-12-25', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(100, 9, '2025-12-25', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(101, 10, '2025-12-25', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(102, 11, '2025-12-25', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(103, 12, '2025-12-25', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(104, 13, '2025-12-25', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(105, 14, '2025-12-25', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(106, 15, '2025-12-25', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(107, 16, '2025-12-25', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(110, 8, '2025-12-26', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(111, 9, '2025-12-26', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(112, 10, '2025-12-26', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(113, 11, '2025-12-26', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(114, 12, '2025-12-26', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(115, 13, '2025-12-26', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(116, 14, '2025-12-26', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(117, 15, '2025-12-26', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(118, 16, '2025-12-26', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-13 03:41:58', '2025-12-13 03:41:58'),
-(119, 17, '2025-12-13', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(120, 17, '2025-12-15', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(121, 17, '2025-12-15', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(122, 17, '2025-12-16', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(123, 17, '2025-12-16', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(124, 17, '2025-12-17', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(125, 17, '2025-12-17', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(126, 17, '2025-12-18', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(127, 17, '2025-12-18', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(128, 17, '2025-12-19', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(129, 17, '2025-12-19', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(130, 17, '2025-12-20', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(131, 17, '2025-12-22', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(132, 17, '2025-12-22', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:53', '2025-12-13 04:18:53'),
-(133, 17, '2025-12-23', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:54', '2025-12-13 04:18:54'),
-(134, 17, '2025-12-23', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:54', '2025-12-13 04:18:54'),
-(135, 17, '2025-12-24', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:54', '2025-12-13 04:18:54'),
-(136, 17, '2025-12-24', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:54', '2025-12-13 04:18:54'),
-(137, 17, '2025-12-25', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:54', '2025-12-13 04:18:54'),
-(138, 17, '2025-12-25', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:54', '2025-12-13 04:18:54'),
-(139, 17, '2025-12-26', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-13 04:18:54', '2025-12-13 04:18:54'),
-(140, 17, '2025-12-26', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 04:18:54', '2025-12-13 04:18:54'),
-(141, 17, '2025-12-13', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-13 07:11:12', '2025-12-13 07:11:12');
+(3, 2, '2025-12-19', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(4, 3, '2025-12-19', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(5, 4, '2025-12-19', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(6, 5, '2025-12-19', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(7, 6, '2025-12-19', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(8, 7, '2025-12-19', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(9, 8, '2025-12-19', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(10, 9, '2025-12-19', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(11, 10, '2025-12-19', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(13, 3, '2025-12-20', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(14, 4, '2025-12-20', '08:00:00', '12:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(15, 7, '2025-12-20', '08:00:00', '12:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(16, 8, '2025-12-20', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(19, 2, '2025-12-22', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(20, 4, '2025-12-22', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(21, 5, '2025-12-22', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(22, 6, '2025-12-22', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(23, 7, '2025-12-22', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(24, 8, '2025-12-22', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(25, 9, '2025-12-22', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(26, 10, '2025-12-22', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(29, 2, '2025-12-23', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(30, 3, '2025-12-23', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(31, 4, '2025-12-23', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(32, 5, '2025-12-23', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(33, 6, '2025-12-23', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(34, 7, '2025-12-23', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(35, 8, '2025-12-23', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(36, 9, '2025-12-23', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(37, 10, '2025-12-23', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(40, 2, '2025-12-24', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(41, 3, '2025-12-24', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(42, 4, '2025-12-24', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(43, 5, '2025-12-24', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(44, 6, '2025-12-24', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(45, 7, '2025-12-24', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(46, 8, '2025-12-24', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(47, 9, '2025-12-24', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(48, 10, '2025-12-24', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(51, 2, '2025-12-25', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(52, 3, '2025-12-25', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(53, 4, '2025-12-25', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(54, 5, '2025-12-25', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(55, 6, '2025-12-25', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(56, 7, '2025-12-25', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(57, 8, '2025-12-25', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(58, 9, '2025-12-25', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(59, 10, '2025-12-25', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(62, 2, '2025-12-26', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(63, 3, '2025-12-26', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(64, 4, '2025-12-26', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(65, 5, '2025-12-26', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(66, 6, '2025-12-26', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(67, 7, '2025-12-26', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(68, 8, '2025-12-26', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(69, 9, '2025-12-26', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(70, 10, '2025-12-26', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(72, 3, '2025-12-27', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(73, 4, '2025-12-27', '08:00:00', '12:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(74, 7, '2025-12-27', '08:00:00', '12:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(75, 8, '2025-12-27', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(78, 2, '2025-12-29', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(79, 4, '2025-12-29', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(80, 5, '2025-12-29', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(81, 6, '2025-12-29', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(82, 7, '2025-12-29', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(83, 8, '2025-12-29', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(84, 9, '2025-12-29', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(85, 10, '2025-12-29', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(88, 2, '2025-12-30', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(89, 3, '2025-12-30', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(90, 4, '2025-12-30', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(91, 5, '2025-12-30', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(92, 6, '2025-12-30', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(93, 7, '2025-12-30', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(94, 8, '2025-12-30', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(95, 9, '2025-12-30', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(96, 10, '2025-12-30', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(99, 2, '2025-12-31', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(100, 3, '2025-12-31', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(101, 4, '2025-12-31', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(102, 5, '2025-12-31', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(103, 6, '2025-12-31', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(104, 7, '2025-12-31', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(105, 8, '2025-12-31', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(106, 9, '2025-12-31', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(107, 10, '2025-12-31', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(110, 2, '2026-01-01', '08:00:00', '17:00:00', 'Nhân viên CSKH', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(111, 3, '2026-01-01', '17:30:00', '20:30:00', 'Lễ tân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(112, 4, '2026-01-01', '08:00:00', '16:00:00', 'Điều dưỡng trưởng', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(113, 5, '2026-01-01', '08:00:00', '16:30:00', 'Nữ hộ sinh', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(114, 6, '2026-01-01', '08:00:00', '17:00:00', 'Điều dưỡng đa khoa', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(115, 7, '2026-01-01', '08:00:00', '17:00:00', 'Thu ngân', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(116, 8, '2026-01-01', '07:30:00', '11:30:00', 'Dược sĩ', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(117, 9, '2026-01-01', '09:00:00', '18:00:00', 'Quản lý phòng khám', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(118, 10, '2026-01-01', '09:00:00', '18:00:00', 'Nhân viên IT / Kỹ thuật', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(119, 11, '2025-12-19', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(120, 11, '2025-12-19', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(121, 11, '2025-12-20', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(122, 11, '2025-12-22', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(123, 11, '2025-12-22', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(124, 11, '2025-12-23', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(125, 11, '2025-12-23', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(126, 11, '2025-12-24', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(127, 11, '2025-12-24', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(128, 11, '2025-12-25', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(129, 11, '2025-12-25', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(130, 11, '2025-12-26', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(131, 11, '2025-12-26', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(132, 11, '2025-12-27', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(133, 11, '2025-12-29', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(134, 11, '2025-12-29', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(135, 11, '2025-12-30', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(136, 11, '2025-12-30', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(137, 11, '2025-12-31', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(138, 11, '2025-12-31', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(139, 11, '2026-01-01', '07:30:00', '11:30:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11'),
+(140, 11, '2026-01-01', '13:30:00', '17:00:00', 'Trưởng lễ tân', '2025-12-19 16:43:11', '2025-12-19 16:43:11');
 
 -- --------------------------------------------------------
 
@@ -474,14 +480,14 @@ CREATE TABLE `chuyen_khoas` (
 --
 
 INSERT INTO `chuyen_khoas` (`id`, `ten`, `slug`, `mo_ta`, `created_at`, `updated_at`) VALUES
-(15, 'Sản Khoa', 'san-khoa', 'Chuyên sâu về theo dõi thai kỳ, quản lý thai nghén nguy cơ cao (tiền sản giật, đái tháo đường thai kỳ), tư vấn dinh dưỡng và chuẩn bị cho cuộc vượt cạn an toàn.', '2025-12-12 05:38:18', '2025-12-12 05:38:18'),
-(16, 'Phụ Khoa', 'phu-khoa', 'Khám và điều trị các bệnh lý viêm nhiễm phụ khoa, lộ tuyến cổ tử cung, u xơ tử cung, u nang buồng trứng, rối loạn kinh nguyệt và sức khỏe tiền mãn kinh.', '2025-12-12 05:38:18', '2025-12-12 05:38:18'),
-(17, 'Hiếm muộn & Vô sinh', 'hiem-muon-vo-sinh', 'Tư vấn sức khỏe sinh sản cặp đôi, khám tìm nguyên nhân chậm con. Thực hiện các kỹ thuật hỗ trợ sinh sản như bơm tinh trùng (IUI) và tư vấn thụ tinh ống nghiệm (IVF).', '2025-12-12 05:38:18', '2025-12-12 05:38:18'),
-(18, 'Siêu âm & Chẩn đoán hình ảnh', 'sieu-am-chan-doan-hinh-anh', 'Thực hiện các kỹ thuật chẩn đoán hình ảnh hiện đại: Siêu âm thai 4D/5D hình thái học, siêu âm Doppler màu tim thai, siêu âm tuyến vú và đầu dò âm đạo.', '2025-12-12 05:38:18', '2025-12-12 05:38:18'),
-(19, 'Sàng lọc trước sinh', 'sang-loc-truoc-sinh', 'Chuyên khoa Di truyền học. Thực hiện và tư vấn các xét nghiệm NIPT, Double Test, Triple Test, chọc ối để phát hiện sớm các dị tật bẩm sinh ở thai nhi.', '2025-12-12 05:38:18', '2025-12-12 05:38:18'),
-(20, 'Kế hoạch hóa gia đình', 'ke-hoach-hoa-gia-dinh', 'Tư vấn và thực hiện các biện pháp tránh thai an toàn, hiện đại: Cấy que tránh thai Implanon, đặt vòng nội tiết Mirena, tiêm thuốc tránh thai.', '2025-12-12 05:38:18', '2025-12-12 05:38:18'),
-(21, 'Sàn chậu & Thẩm mỹ nữ', 'san-chau-tham-my-nu', 'Điều trị các bệnh lý sa tạng chậu, són tiểu sau sinh. Thực hiện các dịch vụ thẩm mỹ, trẻ hóa vùng kín và phục hồi chức năng sàn chậu cho phụ nữ sau sinh.', '2025-12-12 05:38:18', '2025-12-12 05:38:18'),
-(22, 'Xét nghiệm', 'xet-nghiem', 'Trung tâm xét nghiệm thực hiện các chỉ định cận lâm sàng: Huyết học, Sinh hóa, Miễn dịch, Vi sinh và Nội tiết tố phục vụ cho chẩn đoán của bác sĩ lâm sàng.', '2025-12-12 05:38:18', '2025-12-12 05:38:18');
+(1, 'Sản Khoa', 'san-khoa', 'Chuyên sâu về theo dõi thai kỳ, quản lý thai nghén nguy cơ cao (tiền sản giật, đái tháo đường thai kỳ), tư vấn dinh dưỡng và chuẩn bị cho cuộc vượt cạn an toàn.', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(2, 'Phụ Khoa', 'phu-khoa', 'Khám và điều trị các bệnh lý viêm nhiễm phụ khoa, lộ tuyến cổ tử cung, u xơ tử cung, u nang buồng trứng, rối loạn kinh nguyệt và sức khỏe tiền mãn kinh.', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(3, 'Hiếm muộn & Vô sinh', 'hiem-muon-vo-sinh', 'Tư vấn sức khỏe sinh sản cặp đôi, khám tìm nguyên nhân chậm con. Thực hiện các kỹ thuật hỗ trợ sinh sản như bơm tinh trùng (IUI) và tư vấn thụ tinh ống nghiệm (IVF).', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(4, 'Siêu âm & Chẩn đoán hình ảnh', 'sieu-am-chan-doan-hinh-anh', 'Thực hiện các kỹ thuật chẩn đoán hình ảnh hiện đại: Siêu âm thai 4D/5D hình thái học, siêu âm Doppler màu tim thai, siêu âm tuyến vú và đầu dò âm đạo.', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(5, 'Sàng lọc trước sinh', 'sang-loc-truoc-sinh', 'Chuyên khoa Di truyền học. Thực hiện và tư vấn các xét nghiệm NIPT, Double Test, Triple Test, chọc ối để phát hiện sớm các dị tật bẩm sinh ở thai nhi.', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(6, 'Kế hoạch hóa gia đình', 'ke-hoach-hoa-gia-dinh', 'Tư vấn và thực hiện các biện pháp tránh thai an toàn, hiện đại: Cấy que tránh thai Implanon, đặt vòng nội tiết Mirena, tiêm thuốc tránh thai.', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(7, 'Sàn chậu & Thẩm mỹ nữ', 'san-chau-tham-my-nu', 'Điều trị các bệnh lý sa tạng chậu, són tiểu sau sinh. Thực hiện các dịch vụ thẩm mỹ, trẻ hóa vùng kín và phục hồi chức năng sàn chậu cho phụ nữ sau sinh.', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(8, 'Xét nghiệm', 'xet-nghiem', 'Trung tâm xét nghiệm thực hiện các chỉ định cận lâm sàng: Huyết học, Sinh hóa, Miễn dịch, Vi sinh và Nội tiết tố phục vụ cho chẩn đoán của bác sĩ lâm sàng.', '2025-12-19 16:00:43', '2025-12-19 16:00:43');
 
 -- --------------------------------------------------------
 
@@ -502,46 +508,160 @@ CREATE TABLE `chuyen_khoa_dich_vu` (
 --
 
 INSERT INTO `chuyen_khoa_dich_vu` (`id`, `chuyen_khoa_id`, `dich_vu_id`, `created_at`, `updated_at`) VALUES
-(227, 15, 126, NULL, NULL),
-(228, 16, 127, NULL, NULL),
-(229, 17, 128, NULL, NULL),
-(230, 20, 128, NULL, NULL),
-(231, 17, 129, NULL, NULL),
-(232, 15, 130, NULL, NULL),
-(233, 18, 130, NULL, NULL),
-(234, 15, 131, NULL, NULL),
-(235, 16, 131, NULL, NULL),
-(236, 18, 131, NULL, NULL),
-(237, 17, 131, NULL, NULL),
-(238, 16, 132, NULL, NULL),
-(239, 18, 132, NULL, NULL),
-(240, 19, 133, NULL, NULL),
-(241, 15, 133, NULL, NULL),
-(242, 16, 134, NULL, NULL),
-(243, 19, 134, NULL, NULL),
-(244, 15, 135, NULL, NULL),
-(245, 17, 135, NULL, NULL),
-(246, 22, 135, NULL, NULL),
-(247, 20, 136, NULL, NULL),
-(248, 17, 137, NULL, NULL),
-(249, 16, 138, NULL, NULL),
-(250, 22, 138, NULL, NULL),
-(251, 16, 139, NULL, NULL),
-(252, 18, 139, NULL, NULL),
-(253, 22, 139, NULL, NULL),
-(254, 17, 140, NULL, NULL),
-(255, 22, 140, NULL, NULL),
-(256, 17, 141, NULL, NULL),
-(257, 15, 141, NULL, NULL),
-(258, 22, 141, NULL, NULL),
-(259, 17, 142, NULL, NULL),
-(260, 22, 142, NULL, NULL),
-(261, 16, 143, NULL, NULL),
-(262, 22, 143, NULL, NULL),
-(263, 15, 144, NULL, NULL),
-(264, 22, 144, NULL, NULL),
-(265, 21, 145, NULL, NULL),
-(266, 21, 146, NULL, NULL);
+(1, 1, 1, NULL, NULL),
+(2, 2, 2, NULL, NULL),
+(3, 3, 3, NULL, NULL),
+(4, 6, 3, NULL, NULL),
+(5, 3, 4, NULL, NULL),
+(6, 1, 5, NULL, NULL),
+(7, 4, 5, NULL, NULL),
+(8, 1, 6, NULL, NULL),
+(9, 2, 6, NULL, NULL),
+(10, 4, 6, NULL, NULL),
+(11, 3, 6, NULL, NULL),
+(12, 2, 7, NULL, NULL),
+(13, 4, 7, NULL, NULL),
+(14, 5, 8, NULL, NULL),
+(15, 1, 8, NULL, NULL),
+(16, 2, 9, NULL, NULL),
+(17, 5, 9, NULL, NULL),
+(18, 1, 10, NULL, NULL),
+(19, 3, 10, NULL, NULL),
+(20, 8, 10, NULL, NULL),
+(21, 6, 11, NULL, NULL),
+(22, 3, 12, NULL, NULL),
+(23, 2, 13, NULL, NULL),
+(24, 8, 13, NULL, NULL),
+(25, 2, 14, NULL, NULL),
+(26, 4, 14, NULL, NULL),
+(27, 8, 14, NULL, NULL),
+(28, 3, 15, NULL, NULL),
+(29, 8, 15, NULL, NULL),
+(30, 3, 16, NULL, NULL),
+(31, 1, 16, NULL, NULL),
+(32, 8, 16, NULL, NULL),
+(33, 3, 17, NULL, NULL),
+(34, 8, 17, NULL, NULL),
+(35, 2, 18, NULL, NULL),
+(36, 8, 18, NULL, NULL),
+(37, 1, 19, NULL, NULL),
+(38, 8, 19, NULL, NULL),
+(39, 7, 20, NULL, NULL),
+(40, 7, 21, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `chuyen_khoa_loai_sieu_am`
+--
+
+CREATE TABLE `chuyen_khoa_loai_sieu_am` (
+  `chuyen_khoa_id` bigint(20) UNSIGNED NOT NULL,
+  `loai_sieu_am_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `chuyen_khoa_loai_sieu_am`
+--
+
+INSERT INTO `chuyen_khoa_loai_sieu_am` (`chuyen_khoa_id`, `loai_sieu_am_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 12),
+(2, 7),
+(2, 8),
+(2, 10),
+(2, 11),
+(3, 9),
+(3, 10),
+(4, 1),
+(4, 2),
+(4, 3),
+(4, 4),
+(4, 5),
+(4, 6),
+(4, 7),
+(4, 8),
+(4, 9),
+(4, 10),
+(4, 11),
+(4, 12),
+(5, 4),
+(5, 5),
+(5, 6);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `chuyen_khoa_loai_xet_nghiem`
+--
+
+CREATE TABLE `chuyen_khoa_loai_xet_nghiem` (
+  `chuyen_khoa_id` bigint(20) UNSIGNED NOT NULL,
+  `loai_xet_nghiem_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `chuyen_khoa_loai_xet_nghiem`
+--
+
+INSERT INTO `chuyen_khoa_loai_xet_nghiem` (`chuyen_khoa_id`, `loai_xet_nghiem_id`) VALUES
+(1, 1),
+(1, 3),
+(1, 4),
+(1, 7),
+(1, 8),
+(1, 9),
+(1, 10),
+(2, 5),
+(2, 7),
+(2, 9),
+(2, 11),
+(3, 1),
+(3, 2),
+(3, 3),
+(5, 11),
+(8, 1),
+(8, 2),
+(8, 3),
+(8, 4),
+(8, 5),
+(8, 6),
+(8, 7),
+(8, 8),
+(8, 9),
+(8, 10),
+(8, 11);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `chuyen_khoa_loai_x_quang`
+--
+
+CREATE TABLE `chuyen_khoa_loai_x_quang` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `chuyen_khoa_id` bigint(20) UNSIGNED NOT NULL,
+  `loai_x_quang_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `chuyen_khoa_loai_x_quang`
+--
+
+INSERT INTO `chuyen_khoa_loai_x_quang` (`id`, `chuyen_khoa_id`, `loai_x_quang_id`, `created_at`, `updated_at`) VALUES
+(1, 4, 1, NULL, NULL),
+(2, 4, 2, NULL, NULL),
+(3, 4, 3, NULL, NULL),
+(4, 4, 4, NULL, NULL),
+(5, 4, 5, NULL, NULL),
+(6, 4, 6, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -560,6 +680,13 @@ CREATE TABLE `conversations` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `conversations`
+--
+
+INSERT INTO `conversations` (`id`, `benh_nhan_id`, `bac_si_id`, `lich_hen_id`, `tieu_de`, `trang_thai`, `last_message_at`, `created_at`, `updated_at`) VALUES
+(1, 23, 4, 1, 'Tư vấn với BS.CKI Nguyễn Thanh Vân', 'Đang hoạt động', '2025-12-20 01:38:35', '2025-12-20 01:38:05', '2025-12-20 01:38:35');
 
 -- --------------------------------------------------------
 
@@ -590,12 +717,12 @@ CREATE TABLE `coupons` (
 --
 
 INSERT INTO `coupons` (`id`, `ma_giam_gia`, `ten`, `mo_ta`, `loai`, `gia_tri`, `giam_toi_da`, `don_toi_thieu`, `ngay_bat_dau`, `ngay_ket_thuc`, `so_lan_su_dung_toi_da`, `so_lan_da_su_dung`, `kich_hoat`, `created_at`, `updated_at`) VALUES
-(3, 'CHAOBANMOI', 'Giảm 10% cho khách mới', 'Giảm 10% cho khách mới', 'phan_tram', 10.00, NULL, 0.00, '2025-11-12', '2026-06-12', NULL, 0, 1, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(4, 'KHAMTHAI', 'Giảm 50k cho gói khám thai', 'Giảm 50k cho gói khám thai', 'tien_mat', 50000.00, NULL, 200000.00, '2025-11-12', '2026-06-12', NULL, 0, 1, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(5, 'TRIAN', 'Ưu đãi cho khách cũ', 'Ưu đãi cho khách cũ', 'phan_tram', 5.00, NULL, 0.00, '2025-11-12', '2026-06-12', NULL, 0, 1, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(6, 'SINHNHAT', 'Quà sinh nhật', 'Quà sinh nhật', 'tien_mat', 100000.00, NULL, 0.00, '2024-12-12', '2027-12-12', NULL, 0, 1, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(7, 'TRONGGIO', 'Giảm 10% giờ vàng', 'Giảm 10% giờ vàng', 'phan_tram', 10.00, NULL, 0.00, '2025-11-12', '2026-03-12', NULL, 0, 1, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(8, 'DICHVU50', 'Giảm 50% dịch vụ chọn lọc', 'Giảm 50% dịch vụ chọn lọc', 'phan_tram', 50.00, NULL, 500000.00, '2025-11-12', '2026-06-12', NULL, 0, 1, '2025-12-12 07:50:15', '2025-12-12 07:50:15');
+(1, 'CHAOBANMOI', 'Giảm 10% cho khách mới', 'Giảm 10% cho khách mới', 'phan_tram', 10.00, NULL, 0.00, '2025-11-19', '2026-06-19', NULL, 0, 1, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 'KHAMTHAI', 'Giảm 50k cho gói khám thai', 'Giảm 50k cho gói khám thai', 'tien_mat', 50000.00, NULL, 200000.00, '2025-11-19', '2026-06-19', NULL, 0, 1, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 'TRIAN', 'Ưu đãi cho khách cũ', 'Ưu đãi cho khách cũ', 'phan_tram', 5.00, NULL, 0.00, '2025-11-19', '2026-06-19', NULL, 0, 1, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(4, 'SINHNHAT', 'Quà sinh nhật', 'Quà sinh nhật', 'tien_mat', 100000.00, NULL, 0.00, '2024-12-19', '2027-12-19', NULL, 0, 1, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(5, 'TRONGGIO', 'Giảm 10% giờ vàng', 'Giảm 10% giờ vàng', 'phan_tram', 10.00, NULL, 0.00, '2025-11-19', '2026-03-19', NULL, 0, 1, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(6, 'DICHVU50', 'Giảm 50% dịch vụ chọn lọc', 'Giảm 50% dịch vụ chọn lọc', 'phan_tram', 50.00, NULL, 500000.00, '2025-11-19', '2026-06-19', NULL, 0, 1, '2025-12-19 16:00:46', '2025-12-19 16:00:46');
 
 -- --------------------------------------------------------
 
@@ -614,6 +741,13 @@ CREATE TABLE `danh_gias` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `danh_gias`
+--
+
+INSERT INTO `danh_gias` (`id`, `user_id`, `bac_si_id`, `lich_hen_id`, `rating`, `noi_dung`, `trang_thai`, `created_at`, `updated_at`) VALUES
+(1, 23, 4, 1, 5, 'Bác sĩ quá mát tay, trộm vía mẹ tròn con vuông', 'approved', '2025-12-20 01:37:59', '2025-12-20 01:37:59');
 
 -- --------------------------------------------------------
 
@@ -637,10 +771,10 @@ CREATE TABLE `danh_mucs` (
 --
 
 INSERT INTO `danh_mucs` (`id`, `name`, `slug`, `meta_title`, `meta_description`, `description`, `created_at`, `updated_at`) VALUES
-(1, 'Cẩm nang Thai kỳ', 'cam-nang-thai-ky', NULL, NULL, NULL, '2025-12-12 08:30:17', '2025-12-12 08:30:17'),
-(2, 'Vô sinh - Hiếm muộn', 'vo-sinh-hiem-muon', NULL, NULL, NULL, '2025-12-12 08:30:17', '2025-12-12 08:30:17'),
-(3, 'Tin tức Y khoa', 'tin-tuc-y-khoa', NULL, NULL, NULL, '2025-12-12 08:30:17', '2025-12-12 08:30:17'),
-(4, 'Hoạt động Phòng khám', 'hoat-dong-phong-kham', NULL, NULL, NULL, '2025-12-12 08:30:17', '2025-12-12 08:30:17');
+(1, 'Cẩm nang Thai kỳ', 'cam-nang-thai-ky', NULL, NULL, NULL, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 'Vô sinh - Hiếm muộn', 'vo-sinh-hiem-muon', NULL, NULL, NULL, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 'Tin tức Y khoa', 'tin-tuc-y-khoa', NULL, NULL, NULL, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(4, 'Hoạt động Phòng khám', 'hoat-dong-phong-kham', NULL, NULL, NULL, '2025-12-19 16:00:46', '2025-12-19 16:00:46');
 
 -- --------------------------------------------------------
 
@@ -663,28 +797,27 @@ CREATE TABLE `dich_vus` (
 --
 
 INSERT INTO `dich_vus` (`id`, `ten_dich_vu`, `mo_ta`, `gia`, `thoi_gian_uoc_tinh`, `created_at`, `updated_at`) VALUES
-(126, 'Khám Thai định kỳ & Tư vấn dinh dưỡng', 'Khám lâm sàng, đo bề cao tử cung, vòng bụng, nghe tim thai bằng Doppler. Tư vấn dinh dưỡng và lịch tiêm phòng cho mẹ bầu.', 200000.00, 15, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(127, 'Khám Phụ khoa tổng quát', 'Kiểm tra cơ quan sinh dục ngoài và trong, phát hiện sớm các bệnh lý viêm nhiễm, u xơ, u nang. Bao gồm phí dụng cụ dùng một lần.', 250000.00, 20, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(128, 'Khám & Tư vấn sức khỏe Tiền hôn nhân', 'Gói khám sức khỏe sinh sản tổng quát cho cả vợ và chồng trước khi cưới. Tư vấn di truyền và chuẩn bị mang thai an toàn.', 800000.00, 30, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(129, 'Tư vấn chuyên sâu Vô sinh - Hiếm muộn', 'Bác sĩ chuyên khoa xem hồ sơ cũ, tư vấn phác đồ điều trị và chỉ định các xét nghiệm chuyên sâu cần thiết cho các cặp vợ chồng mong con.', 500000.00, 45, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(130, 'Siêu âm thai 5D (Hình thái học)', 'Công nghệ dựng hình 5D sắc nét, khảo sát dị tật thai nhi toàn diện (mặt, tim, chi...). Tặng kèm file video và hình ảnh bé qua Zalo/Email.', 500000.00, 30, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(131, 'Siêu âm đầu dò âm đạo (Transvaginal)', 'Kỹ thuật siêu âm qua đường âm đạo giúp quan sát tử cung, buồng trứng rõ nét nhất. Phát hiện thai sớm, u nang buồng trứng, đa nang.', 300000.00, 15, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(132, 'Siêu âm Tuyến vú 2 bên', 'Tầm soát nang vú, nhân xơ tuyến vú lành tính/ác tính bằng sóng siêu âm. Không đau, không xâm lấn.', 300000.00, 15, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(133, 'Sàng lọc trước sinh không xâm lấn (NIPT - 23 cặp NST)', 'Sàng lọc toàn bộ 23 cặp nhiễm sắc thể từ máu mẹ, phát hiện các bất thường vi mất đoạn với độ chính xác >99%. An toàn tuyệt đối cho thai nhi.', 6500000.00, 10, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(134, 'Xét nghiệm tế bào cổ tử cung (Pap Smear - ThinPrep)', 'Tầm soát ung thư cổ tử cung phương pháp mới. Phát hiện sớm các biến đổi tế bào tiền ung thư. Khuyên dùng định kỳ hàng năm.', 400000.00, 10, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(135, 'Định lượng Beta-hCG (Máu)', 'Xét nghiệm máu chẩn đoán thai sớm chính xác nhất (có thể phát hiện trước khi chậm kinh). Theo dõi sự phát triển của thai giai đoạn đầu.', 150000.00, 5, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(136, 'Cấy que tránh thai Implanon (3 năm)', 'Que cấy tránh thai nội tiết (xuất xứ Mỹ/Châu Âu), hiệu quả ngừa thai lên đến 3 năm. Thủ thuật nhanh, không đau (có gây tê tại chỗ).', 3200000.00, 20, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(137, 'Bơm tinh trùng vào buồng tử cung (IUI)', 'Kỹ thuật lọc rửa và bơm tinh trùng vào buồng tử cung. Hỗ trợ sinh sản cho các cặp vợ chồng hiếm muộn nhẹ, tinh trùng yếu.', 3500000.00, 60, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(138, 'Gói Tầm soát Ung thư Cổ tử cung (Cơ bản)', 'Bao gồm: Khám phụ khoa, Soi cổ tử cung kỹ thuật số, Xét nghiệm Pap Smear và Test nhanh dịch âm đạo.', 1200000.00, 30, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(139, 'Gói Khám Phụ khoa Tổng quát (VIP)', 'Khám lâm sàng, Siêu âm đầu dò, Soi tươi dịch âm đạo, Tầm soát ung thư (HPV + Pap Smear), Siêu âm tuyến vú.', 2500000.00, 45, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(140, 'Xét nghiệm dự trữ buồng trứng (AMH)', 'Chỉ số quan trọng nhất để đánh giá khả năng sinh sản của phụ nữ. Bắt buộc thực hiện trước khi làm IVF/IUI.', 800000.00, 10, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(141, 'Bộ xét nghiệm Nội tiết tố nữ (6 chỉ số)', 'Kiểm tra 6 chỉ số: FSH, LH, Estradiol, Prolactin, Progesterone, Testosterone. Đánh giá rối loạn kinh nguyệt và rụng trứng.', 1500000.00, 15, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(142, 'Tinh dịch đồ', 'Phân tích số lượng, khả năng di động và hình dạng của tinh trùng. Bước đầu tiên khám vô sinh nam.', 350000.00, 60, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(143, 'Xét nghiệm Bệnh lây truyền (STD Panel)', 'Xét nghiệm PCR đa mồi phát hiện 9 tác nhân lây qua đường tình dục: Lậu, Giang mai, Chlamydia, Nấm, Trichomonas...', 1800000.00, 20, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(144, 'Xét nghiệm Rubella (IgM/IgG)', 'Tầm soát kháng thể Rubella cho phụ nữ chuẩn bị mang thai hoặc đang mang thai 3 tháng đầu.', 300000.00, 10, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(145, 'Tập vật lý trị liệu sàn chậu (1 buổi)', 'Bài tập chuyên sâu với máy tập Biofeedback giúp co hồi cơ sàn chậu, chống sa tử cung và són tiểu sau sinh.', 400000.00, 45, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(146, 'Làm hồng & Trẻ hóa vùng kín (Laser)', 'Sử dụng công nghệ Laser CO2 Fractional giúp se khít, làm hồng và trẻ hóa vùng kín không phẫu thuật.', 5000000.00, 60, '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(149, 'Full Combo', NULL, 1800000.00, 30, '2025-12-13 11:35:10', '2025-12-13 11:35:10');
+(1, 'Khám Thai định kỳ & Tư vấn dinh dưỡng', 'Khám lâm sàng, đo bề cao tử cung, vòng bụng, nghe tim thai bằng Doppler. Tư vấn dinh dưỡng và lịch tiêm phòng cho mẹ bầu.', 200000.00, 15, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(2, 'Khám Phụ khoa tổng quát', 'Kiểm tra cơ quan sinh dục ngoài và trong, phát hiện sớm các bệnh lý viêm nhiễm, u xơ, u nang. Bao gồm phí dụng cụ dùng một lần.', 250000.00, 20, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(3, 'Khám & Tư vấn sức khỏe Tiền hôn nhân', 'Gói khám sức khỏe sinh sản tổng quát cho cả vợ và chồng trước khi cưới. Tư vấn di truyền và chuẩn bị mang thai an toàn.', 800000.00, 30, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(4, 'Tư vấn chuyên sâu Vô sinh - Hiếm muộn', 'Bác sĩ chuyên khoa xem hồ sơ cũ, tư vấn phác đồ điều trị và chỉ định các xét nghiệm chuyên sâu cần thiết cho các cặp vợ chồng mong con.', 500000.00, 45, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(5, 'Siêu âm thai 5D (Hình thái học)', 'Công nghệ dựng hình 5D sắc nét, khảo sát dị tật thai nhi toàn diện (mặt, tim, chi...). Tặng kèm file video và hình ảnh bé qua Zalo/Email.', 500000.00, 30, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(6, 'Siêu âm đầu dò âm đạo (Transvaginal)', 'Kỹ thuật siêu âm qua đường âm đạo giúp quan sát tử cung, buồng trứng rõ nét nhất. Phát hiện thai sớm, u nang buồng trứng, đa nang.', 300000.00, 15, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(7, 'Siêu âm Tuyến vú 2 bên', 'Tầm soát nang vú, nhân xơ tuyến vú lành tính/ác tính bằng sóng siêu âm. Không đau, không xâm lấn.', 300000.00, 15, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(8, 'Sàng lọc trước sinh không xâm lấn (NIPT - 23 cặp NST)', 'Sàng lọc toàn bộ 23 cặp nhiễm sắc thể từ máu mẹ, phát hiện các bất thường vi mất đoạn với độ chính xác >99%. An toàn tuyệt đối cho thai nhi.', 6500000.00, 10, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(9, 'Xét nghiệm tế bào cổ tử cung (Pap Smear - ThinPrep)', 'Tầm soát ung thư cổ tử cung phương pháp mới. Phát hiện sớm các biến đổi tế bào tiền ung thư. Khuyên dùng định kỳ hàng năm.', 400000.00, 10, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(10, 'Định lượng Beta-hCG (Máu)', 'Xét nghiệm máu chẩn đoán thai sớm chính xác nhất (có thể phát hiện trước khi chậm kinh). Theo dõi sự phát triển của thai giai đoạn đầu.', 150000.00, 5, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(11, 'Cấy que tránh thai Implanon (3 năm)', 'Que cấy tránh thai nội tiết (xuất xứ Mỹ/Châu Âu), hiệu quả ngừa thai lên đến 3 năm. Thủ thuật nhanh, không đau (có gây tê tại chỗ).', 3200000.00, 20, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(12, 'Bơm tinh trùng vào buồng tử cung (IUI)', 'Kỹ thuật lọc rửa và bơm tinh trùng vào buồng tử cung. Hỗ trợ sinh sản cho các cặp vợ chồng hiếm muộn nhẹ, tinh trùng yếu.', 3500000.00, 60, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(13, 'Gói Tầm soát Ung thư Cổ tử cung (Cơ bản)', 'Bao gồm: Khám phụ khoa, Soi cổ tử cung kỹ thuật số, Xét nghiệm Pap Smear và Test nhanh dịch âm đạo.', 1200000.00, 30, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(14, 'Gói Khám Phụ khoa Tổng quát (VIP)', 'Khám lâm sàng, Siêu âm đầu dò, Soi tươi dịch âm đạo, Tầm soát ung thư (HPV + Pap Smear), Siêu âm tuyến vú.', 2500000.00, 45, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(15, 'Xét nghiệm dự trữ buồng trứng (AMH)', 'Chỉ số quan trọng nhất để đánh giá khả năng sinh sản của phụ nữ. Bắt buộc thực hiện trước khi làm IVF/IUI.', 800000.00, 10, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(16, 'Bộ xét nghiệm Nội tiết tố nữ (6 chỉ số)', 'Kiểm tra 6 chỉ số: FSH, LH, Estradiol, Prolactin, Progesterone, Testosterone. Đánh giá rối loạn kinh nguyệt và rụng trứng.', 1500000.00, 15, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(17, 'Tinh dịch đồ', 'Phân tích số lượng, khả năng di động và hình dạng của tinh trùng. Bước đầu tiên khám vô sinh nam.', 350000.00, 60, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(18, 'Xét nghiệm Bệnh lây truyền (STD Panel)', 'Xét nghiệm PCR đa mồi phát hiện 9 tác nhân lây qua đường tình dục: Lậu, Giang mai, Chlamydia, Nấm, Trichomonas...', 1800000.00, 20, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(19, 'Xét nghiệm Rubella (IgM/IgG)', 'Tầm soát kháng thể Rubella cho phụ nữ chuẩn bị mang thai hoặc đang mang thai 3 tháng đầu.', 300000.00, 10, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(20, 'Tập vật lý trị liệu sàn chậu (1 buổi)', 'Bài tập chuyên sâu với máy tập Biofeedback giúp co hồi cơ sàn chậu, chống sa tử cung và són tiểu sau sinh.', 400000.00, 45, '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(21, 'Làm hồng & Trẻ hóa vùng kín (Laser)', 'Sử dụng công nghệ Laser CO2 Fractional giúp se khít, làm hồng và trẻ hóa vùng kín không phẫu thuật.', 5000000.00, 60, '2025-12-19 16:00:43', '2025-12-19 16:00:43');
 
 -- --------------------------------------------------------
 
@@ -701,7 +834,9 @@ CREATE TABLE `don_hangs` (
   `giam_gia` decimal(15,2) NOT NULL DEFAULT 0.00 COMMENT 'Số tiền giảm giá',
   `thanh_toan` decimal(15,2) NOT NULL DEFAULT 0.00 COMMENT 'Số tiền phải thanh toán (tong - giam)',
   `trang_thai` enum('Chờ xử lý','Đã xác nhận','Đang giao','Hoàn thành','Đã hủy') NOT NULL DEFAULT 'Chờ xử lý',
-  `trang_thai_thanh_toan` enum('Chưa thanh toán','Đã thanh toán','Hoàn tiền') NOT NULL DEFAULT 'Chưa thanh toán',
+  `trang_thai_thanh_toan` enum('Chưa thanh toán','Đang thanh toán','Đã thanh toán','Hoàn tiền') DEFAULT 'Chưa thanh toán',
+  `phuong_thuc_thanh_toan` varchar(255) DEFAULT NULL,
+  `thanh_toan_at` timestamp NULL DEFAULT NULL,
   `dia_chi_giao` varchar(255) DEFAULT NULL COMMENT 'Địa chỉ giao hàng',
   `sdt_nguoi_nhan` varchar(255) DEFAULT NULL,
   `ghi_chu` text DEFAULT NULL,
@@ -738,9 +873,13 @@ CREATE TABLE `don_thuocs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `benh_an_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `nguoi_cap_thuoc_id` bigint(20) UNSIGNED DEFAULT NULL,
   `bac_si_id` bigint(20) UNSIGNED DEFAULT NULL,
   `lich_hen_id` bigint(20) UNSIGNED DEFAULT NULL,
   `ghi_chu` varchar(255) DEFAULT NULL,
+  `ghi_chu_cap_thuoc` varchar(1000) DEFAULT NULL,
+  `trang_thai` varchar(255) DEFAULT NULL,
+  `ngay_cap_thuoc` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -749,8 +888,8 @@ CREATE TABLE `don_thuocs` (
 -- Đang đổ dữ liệu cho bảng `don_thuocs`
 --
 
-INSERT INTO `don_thuocs` (`id`, `benh_an_id`, `user_id`, `bac_si_id`, `lich_hen_id`, `ghi_chu`, `created_at`, `updated_at`) VALUES
-(1, 1, 148, 108, 3, 'Test', '2025-12-13 07:58:06', '2025-12-13 07:58:06');
+INSERT INTO `don_thuocs` (`id`, `benh_an_id`, `user_id`, `nguoi_cap_thuoc_id`, `bac_si_id`, `lich_hen_id`, `ghi_chu`, `ghi_chu_cap_thuoc`, `trang_thai`, `ngay_cap_thuoc`, `created_at`, `updated_at`) VALUES
+(1, 1, 23, 25, 4, 1, 'Khám Gói Khám Phụ khoa Tổng quát (VIP)', '- Theo dõi thai kỳ, sức khỏe', 'da_cap_thuoc', '2025-12-20 09:02:43', '2025-12-19 17:49:35', '2025-12-20 02:02:43');
 
 -- --------------------------------------------------------
 
@@ -774,7 +913,7 @@ CREATE TABLE `don_thuoc_items` (
 --
 
 INSERT INTO `don_thuoc_items` (`id`, `don_thuoc_id`, `thuoc_id`, `so_luong`, `lieu_dung`, `cach_dung`, `created_at`, `updated_at`) VALUES
-(1, 1, 91, 10, '2 lần/ngày', 'Uống trước khi ăn', '2025-12-13 07:58:06', '2025-12-13 07:58:06');
+(1, 1, 142, 1, '2 viên/lần', 'Uống sau ăn', '2025-12-19 17:49:35', '2025-12-19 17:49:35');
 
 -- --------------------------------------------------------
 
@@ -790,34 +929,6 @@ CREATE TABLE `failed_jobs` (
   `payload` longtext NOT NULL,
   `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `family_members`
---
-
-CREATE TABLE `family_members` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `ho_ten` varchar(255) NOT NULL,
-  `quan_he` enum('vo','chong','con','cha','me','anh','chi','em','ong','ba','chau','khac') NOT NULL,
-  `ngay_sinh` date NOT NULL,
-  `gioi_tinh` enum('Nam','Nữ','Khác') NOT NULL,
-  `so_dien_thoai` varchar(255) NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `dia_chi` text DEFAULT NULL,
-  `nhom_mau` varchar(255) DEFAULT NULL,
-  `chieu_cao` decimal(5,2) DEFAULT NULL COMMENT 'cm',
-  `can_nang` decimal(5,2) DEFAULT NULL COMMENT 'kg',
-  `tien_su_benh` text DEFAULT NULL,
-  `bhyt_ma_so` varchar(255) DEFAULT NULL,
-  `bhyt_ngay_het_han` date DEFAULT NULL,
-  `avatar` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -848,7 +959,7 @@ CREATE TABLE `hoan_tiens` (
 CREATE TABLE `hoa_dons` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `ma_hoa_don` varchar(255) DEFAULT NULL,
-  `lich_hen_id` bigint(20) UNSIGNED NOT NULL,
+  `lich_hen_id` bigint(20) UNSIGNED DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `tong_tien` decimal(12,2) NOT NULL DEFAULT 0.00,
   `so_tien_da_thanh_toan` decimal(12,2) NOT NULL DEFAULT 0.00,
@@ -869,7 +980,8 @@ CREATE TABLE `hoa_dons` (
 --
 
 INSERT INTO `hoa_dons` (`id`, `ma_hoa_don`, `lich_hen_id`, `user_id`, `tong_tien`, `so_tien_da_thanh_toan`, `so_tien_con_lai`, `so_tien_da_hoan`, `trang_thai`, `status`, `phuong_thuc`, `ghi_chu`, `created_at`, `updated_at`, `coupon_id`, `giam_gia`) VALUES
-(3, 'INV-20251213-00001', 3, 148, 2250000.00, 2250000.00, 0.00, 0.00, 'Đã thanh toán', 'paid', 'Tiền mặt', '', '2025-12-13 04:53:41', '2025-12-13 08:02:48', 3, 250000.00);
+(1, 'INV-20251220-00001', 1, 23, 2870000.00, 2870000.00, 0.00, 0.00, 'Đã thanh toán', 'paid', 'MOMO', 'Khám hoàn thành - ', '2025-12-19 17:46:19', '2025-12-20 01:37:05', NULL, 0.00),
+(2, 'INV-20251220-00002', 2, 23, 2500000.00, 0.00, 2500000.00, 0.00, 'Chưa thanh toán', 'unpaid', NULL, 'Tạo từ yêu cầu tái khám #2', '2025-12-20 04:12:45', '2025-12-20 04:12:45', NULL, 0.00);
 
 -- --------------------------------------------------------
 
@@ -892,7 +1004,9 @@ CREATE TABLE `jobs` (
 --
 
 INSERT INTO `jobs` (`id`, `queue`, `payload`, `attempts`, `reserved_at`, `available_at`, `created_at`) VALUES
-(1, 'default', '{\"uuid\":\"ddf56bb4-f5cf-4e1b-8845-c8667ac26474\",\"displayName\":\"App\\\\Mail\\\\HoaDonDaThanhToan\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Mail\\\\SendQueuedMailable\",\"command\":\"O:34:\\\"Illuminate\\\\Mail\\\\SendQueuedMailable\\\":15:{s:8:\\\"mailable\\\";O:26:\\\"App\\\\Mail\\\\HoaDonDaThanhToan\\\":3:{s:6:\\\"hoaDon\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:17:\\\"App\\\\Models\\\\HoaDon\\\";s:2:\\\"id\\\";i:3;s:9:\\\"relations\\\";a:2:{i:0;s:7:\\\"lichHen\\\";i:1;s:4:\\\"user\\\";}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:2:\\\"to\\\";a:1:{i:0;a:2:{s:4:\\\"name\\\";N;s:7:\\\"address\\\";s:18:\\\"tn822798@gmail.com\\\";}}s:6:\\\"mailer\\\";s:4:\\\"smtp\\\";}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:13:\\\"maxExceptions\\\";N;s:17:\\\"shouldBeEncrypted\\\";b:0;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}s:3:\\\"job\\\";N;}\"}}', 0, NULL, 1765612924, 1765612924);
+(1, 'default', '{\"uuid\":\"b9294f6b-ce60-45c8-868c-79cd30934b6b\",\"displayName\":\"App\\\\Mail\\\\HoaDonDaThanhToan\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Mail\\\\SendQueuedMailable\",\"command\":\"O:34:\\\"Illuminate\\\\Mail\\\\SendQueuedMailable\\\":15:{s:8:\\\"mailable\\\";O:26:\\\"App\\\\Mail\\\\HoaDonDaThanhToan\\\":3:{s:6:\\\"hoaDon\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:17:\\\"App\\\\Models\\\\HoaDon\\\";s:2:\\\"id\\\";i:1;s:9:\\\"relations\\\";a:2:{i:0;s:7:\\\"lichHen\\\";i:1;s:4:\\\"user\\\";}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:2:\\\"to\\\";a:1:{i:0;a:2:{s:4:\\\"name\\\";N;s:7:\\\"address\\\";s:18:\\\"tn822798@gmail.com\\\";}}s:6:\\\"mailer\\\";s:4:\\\"smtp\\\";}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:13:\\\"maxExceptions\\\";N;s:17:\\\"shouldBeEncrypted\\\";b:0;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}s:3:\\\"job\\\";N;}\"}}', 0, NULL, 1766166442, 1766166442),
+(2, 'default', '{\"uuid\":\"a94cb835-461e-42ad-b488-72108ebe8b61\",\"displayName\":\"App\\\\Mail\\\\HoaDonDaThanhToan\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Mail\\\\SendQueuedMailable\",\"command\":\"O:34:\\\"Illuminate\\\\Mail\\\\SendQueuedMailable\\\":15:{s:8:\\\"mailable\\\";O:26:\\\"App\\\\Mail\\\\HoaDonDaThanhToan\\\":3:{s:6:\\\"hoaDon\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:17:\\\"App\\\\Models\\\\HoaDon\\\";s:2:\\\"id\\\";i:1;s:9:\\\"relations\\\";a:2:{i:0;s:7:\\\"lichHen\\\";i:1;s:4:\\\"user\\\";}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:2:\\\"to\\\";a:1:{i:0;a:2:{s:4:\\\"name\\\";N;s:7:\\\"address\\\";s:18:\\\"tn822798@gmail.com\\\";}}s:6:\\\"mailer\\\";s:4:\\\"smtp\\\";}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:13:\\\"maxExceptions\\\";N;s:17:\\\"shouldBeEncrypted\\\";b:0;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}s:3:\\\"job\\\";N;}\"}}', 0, NULL, 1766168427, 1766168427),
+(3, 'default', '{\"uuid\":\"bfb4d9e9-457d-4b1b-a648-7ff3a79dc9cd\",\"displayName\":\"App\\\\Mail\\\\HoaDonDaThanhToan\",\"job\":\"Illuminate\\\\Queue\\\\CallQueuedHandler@call\",\"maxTries\":null,\"maxExceptions\":null,\"failOnTimeout\":false,\"backoff\":null,\"timeout\":null,\"retryUntil\":null,\"data\":{\"commandName\":\"Illuminate\\\\Mail\\\\SendQueuedMailable\",\"command\":\"O:34:\\\"Illuminate\\\\Mail\\\\SendQueuedMailable\\\":15:{s:8:\\\"mailable\\\";O:26:\\\"App\\\\Mail\\\\HoaDonDaThanhToan\\\":3:{s:6:\\\"hoaDon\\\";O:45:\\\"Illuminate\\\\Contracts\\\\Database\\\\ModelIdentifier\\\":5:{s:5:\\\"class\\\";s:17:\\\"App\\\\Models\\\\HoaDon\\\";s:2:\\\"id\\\";i:1;s:9:\\\"relations\\\";a:2:{i:0;s:7:\\\"lichHen\\\";i:1;s:4:\\\"user\\\";}s:10:\\\"connection\\\";s:5:\\\"mysql\\\";s:15:\\\"collectionClass\\\";N;}s:2:\\\"to\\\";a:1:{i:0;a:2:{s:4:\\\"name\\\";N;s:7:\\\"address\\\";s:18:\\\"tn822798@gmail.com\\\";}}s:6:\\\"mailer\\\";s:4:\\\"smtp\\\";}s:5:\\\"tries\\\";N;s:7:\\\"timeout\\\";N;s:13:\\\"maxExceptions\\\";N;s:17:\\\"shouldBeEncrypted\\\";b:0;s:10:\\\"connection\\\";N;s:5:\\\"queue\\\";N;s:15:\\\"chainConnection\\\";N;s:10:\\\"chainQueue\\\";N;s:19:\\\"chainCatchCallbacks\\\";N;s:5:\\\"delay\\\";N;s:11:\\\"afterCommit\\\";N;s:10:\\\"middleware\\\";a:0:{}s:7:\\\"chained\\\";a:0:{}s:3:\\\"job\\\";N;}\"}}', 0, NULL, 1766194625, 1766194625);
 
 -- --------------------------------------------------------
 
@@ -915,6 +1029,7 @@ CREATE TABLE `lich_hens` (
   `ghi_chu` text DEFAULT NULL,
   `trang_thai` varchar(255) NOT NULL DEFAULT 'Chờ xác nhận',
   `checked_in_at` timestamp NULL DEFAULT NULL,
+  `checked_in_by` bigint(20) UNSIGNED DEFAULT NULL,
   `thoi_gian_bat_dau_kham` timestamp NULL DEFAULT NULL,
   `completed_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -930,8 +1045,9 @@ CREATE TABLE `lich_hens` (
 -- Đang đổ dữ liệu cho bảng `lich_hens`
 --
 
-INSERT INTO `lich_hens` (`id`, `user_id`, `bac_si_id`, `dich_vu_id`, `ten_benh_nhan`, `sdt_benh_nhan`, `email_benh_nhan`, `ngay_sinh_benh_nhan`, `tong_tien`, `ngay_hen`, `thoi_gian_hen`, `ghi_chu`, `trang_thai`, `checked_in_at`, `thoi_gian_bat_dau_kham`, `completed_at`, `created_at`, `updated_at`, `payment_status`, `payment_method`, `paid_at`, `cancelled_by`, `cancelled_at`) VALUES
-(3, 148, 108, 139, NULL, NULL, NULL, NULL, 2250000.00, '2025-12-13', '14:30:00', 'test', 'Hoàn thành', '2025-12-13 07:38:09', '2025-12-13 07:40:21', '2025-12-13 07:59:47', '2025-12-13 04:53:41', '2025-12-13 08:02:48', 'Đã thanh toán', 'Tiền mặt', '2025-12-13 08:02:48', NULL, NULL);
+INSERT INTO `lich_hens` (`id`, `user_id`, `bac_si_id`, `dich_vu_id`, `ten_benh_nhan`, `sdt_benh_nhan`, `email_benh_nhan`, `ngay_sinh_benh_nhan`, `tong_tien`, `ngay_hen`, `thoi_gian_hen`, `ghi_chu`, `trang_thai`, `checked_in_at`, `checked_in_by`, `thoi_gian_bat_dau_kham`, `completed_at`, `created_at`, `updated_at`, `payment_status`, `payment_method`, `paid_at`, `cancelled_by`, `cancelled_at`) VALUES
+(1, 23, 4, 14, NULL, NULL, NULL, NULL, 2500000.00, '2025-12-20', '01:00:00', NULL, 'Hoàn thành', '2025-12-19 17:48:11', 25, '2025-12-19 17:48:37', '2025-12-19 17:58:52', '2025-12-19 17:46:19', '2025-12-20 01:37:05', 'Đã thanh toán', 'MOMO', '2025-12-20 01:37:05', NULL, NULL),
+(2, 23, 4, 14, NULL, NULL, NULL, NULL, 2500000.00, '2025-12-23', '13:40:00', 'Đặt lịch tái khám #2', 'Đã xác nhận', NULL, NULL, NULL, NULL, '2025-12-20 04:12:45', '2025-12-20 04:12:45', 'Chưa thanh toán', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -955,174 +1071,174 @@ CREATE TABLE `lich_lam_viecs` (
 --
 
 INSERT INTO `lich_lam_viecs` (`id`, `bac_si_id`, `phong_id`, `ngay_trong_tuan`, `thoi_gian_bat_dau`, `thoi_gian_ket_thuc`, `created_at`, `updated_at`) VALUES
-(4, 105, 17, 1, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(5, 105, 17, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(6, 105, 17, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(7, 105, 17, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(8, 105, 17, 3, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(9, 105, 17, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(10, 105, 17, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(11, 105, 17, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(12, 105, 17, 5, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(13, 105, 17, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(14, 105, 17, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(15, 107, 20, 1, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(16, 107, 20, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(17, 107, 20, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(18, 107, 20, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(19, 107, 20, 3, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(20, 107, 20, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(21, 107, 20, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(22, 107, 20, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(23, 107, 20, 5, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(24, 107, 20, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(25, 107, 20, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(26, 109, 23, 1, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(27, 109, 23, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(28, 109, 23, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(29, 109, 23, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(30, 109, 23, 3, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(31, 109, 23, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(32, 109, 23, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(33, 109, 23, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(34, 109, 23, 5, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(35, 109, 23, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(36, 109, 23, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(37, 115, 25, 1, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(38, 115, 25, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(39, 115, 25, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(40, 115, 25, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(41, 115, 25, 3, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(42, 115, 25, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(43, 115, 25, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(44, 115, 25, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(45, 115, 25, 5, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(46, 115, 25, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(47, 115, 25, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(48, 106, 18, 1, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(49, 106, 18, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(50, 106, 18, 1, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(51, 106, 18, 3, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(52, 106, 18, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(53, 106, 18, 3, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(54, 106, 18, 5, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(55, 106, 18, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(56, 106, 18, 5, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(57, 106, 18, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(58, 106, 18, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(59, 106, 18, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(60, 106, 18, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(61, 106, 18, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(62, 106, 18, 6, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(63, 108, 20, 1, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(64, 108, 20, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(65, 108, 20, 1, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(66, 108, 20, 3, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(67, 108, 20, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(68, 108, 20, 3, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(69, 108, 20, 5, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(70, 108, 20, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(71, 108, 20, 5, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(72, 108, 20, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(73, 108, 20, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(74, 108, 20, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(75, 108, 20, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(76, 108, 20, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(77, 108, 20, 6, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(78, 110, 24, 1, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(79, 110, 24, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(80, 110, 24, 1, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(81, 110, 24, 3, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(82, 110, 24, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(83, 110, 24, 3, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(84, 110, 24, 5, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(85, 110, 24, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(86, 110, 24, 5, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(87, 110, 24, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(88, 110, 24, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(89, 110, 24, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(90, 110, 24, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(91, 110, 24, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(92, 110, 24, 6, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(93, 111, 19, 1, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(94, 111, 19, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(95, 111, 19, 1, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(96, 111, 19, 3, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(97, 111, 19, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(98, 111, 19, 3, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(99, 111, 19, 5, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(100, 111, 19, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(101, 111, 19, 5, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(102, 111, 19, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(103, 111, 19, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(104, 111, 19, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(105, 111, 19, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(106, 111, 19, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(107, 111, 19, 6, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(108, 114, 18, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(109, 114, 18, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(110, 114, 18, 2, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(111, 114, 18, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(112, 114, 18, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(113, 114, 18, 4, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(114, 114, 18, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(115, 114, 18, 6, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(116, 114, 18, 6, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(117, 114, 18, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(118, 114, 18, 1, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(119, 114, 18, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(120, 114, 18, 3, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(121, 114, 18, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(122, 114, 18, 5, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(123, 114, 18, 0, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(124, 113, 21, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(125, 113, 21, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(126, 113, 21, 2, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(127, 113, 21, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(128, 113, 21, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(129, 113, 21, 4, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(130, 113, 21, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(131, 113, 21, 6, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(132, 113, 21, 6, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(133, 113, 21, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(134, 113, 21, 1, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(135, 113, 21, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(136, 113, 21, 3, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(137, 113, 21, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(138, 113, 21, 5, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(139, 113, 21, 0, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(140, 112, 26, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(141, 112, 26, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(142, 112, 26, 2, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(143, 112, 26, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(144, 112, 26, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(145, 112, 26, 4, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(146, 112, 26, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(147, 112, 26, 6, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(148, 112, 26, 6, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(149, 112, 26, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(150, 112, 26, 1, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(151, 112, 26, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(152, 112, 26, 3, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(153, 112, 26, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(154, 112, 26, 5, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(155, 112, 26, 0, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(156, 116, 22, 2, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(157, 116, 22, 2, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(158, 116, 22, 2, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(159, 116, 22, 4, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(160, 116, 22, 4, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(161, 116, 22, 4, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(162, 116, 22, 6, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(163, 116, 22, 6, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(164, 116, 22, 6, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(165, 116, 22, 1, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(166, 116, 22, 1, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(167, 116, 22, 3, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(168, 116, 22, 3, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(169, 116, 22, 5, '13:30:00', '17:00:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(170, 116, 22, 5, '17:30:00', '20:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47'),
-(171, 116, 22, 0, '07:30:00', '11:30:00', '2025-12-13 02:39:30', '2025-12-13 03:14:47');
+(1, 1, 1, 1, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 1, 1, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 1, 1, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(4, 1, 1, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(5, 1, 1, 3, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(6, 1, 1, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(7, 1, 1, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(8, 1, 1, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(9, 1, 1, 5, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(10, 1, 1, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(11, 1, 1, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(12, 3, 4, 1, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(13, 3, 4, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(14, 3, 4, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(15, 3, 4, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(16, 3, 4, 3, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(17, 3, 4, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(18, 3, 4, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(19, 3, 4, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(20, 3, 4, 5, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(21, 3, 4, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(22, 3, 4, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(23, 5, 7, 1, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(24, 5, 7, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(25, 5, 7, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(26, 5, 7, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(27, 5, 7, 3, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(28, 5, 7, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(29, 5, 7, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(30, 5, 7, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(31, 5, 7, 5, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(32, 5, 7, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(33, 5, 7, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(34, 11, 9, 1, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(35, 11, 9, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(36, 11, 9, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(37, 11, 9, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(38, 11, 9, 3, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(39, 11, 9, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(40, 11, 9, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(41, 11, 9, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(42, 11, 9, 5, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(43, 11, 9, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(44, 11, 9, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(45, 2, 2, 1, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(46, 2, 2, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(47, 2, 2, 1, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(48, 2, 2, 3, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(49, 2, 2, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(50, 2, 2, 3, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(51, 2, 2, 5, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(52, 2, 2, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(53, 2, 2, 5, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(54, 2, 2, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(55, 2, 2, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(56, 2, 2, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(57, 2, 2, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(58, 2, 2, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(59, 2, 2, 6, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(60, 4, 4, 1, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(61, 4, 4, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(62, 4, 4, 1, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(63, 4, 4, 3, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(64, 4, 4, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(65, 4, 4, 3, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(66, 4, 4, 5, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(67, 4, 4, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(68, 4, 4, 5, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(69, 4, 4, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(70, 4, 4, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(71, 4, 4, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(72, 4, 4, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(73, 4, 4, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(74, 4, 4, 6, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(75, 6, 8, 1, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(76, 6, 8, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(77, 6, 8, 1, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(78, 6, 8, 3, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(79, 6, 8, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(80, 6, 8, 3, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(81, 6, 8, 5, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(82, 6, 8, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(83, 6, 8, 5, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(84, 6, 8, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(85, 6, 8, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(86, 6, 8, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(87, 6, 8, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(88, 6, 8, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(89, 6, 8, 6, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(90, 7, 3, 1, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(91, 7, 3, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(92, 7, 3, 1, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(93, 7, 3, 3, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(94, 7, 3, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(95, 7, 3, 3, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(96, 7, 3, 5, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(97, 7, 3, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(98, 7, 3, 5, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(99, 7, 3, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(100, 7, 3, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(101, 7, 3, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(102, 7, 3, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(103, 7, 3, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(104, 7, 3, 6, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(105, 10, 2, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(106, 10, 2, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(107, 10, 2, 2, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(108, 10, 2, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(109, 10, 2, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(110, 10, 2, 4, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(111, 10, 2, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(112, 10, 2, 6, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(113, 10, 2, 6, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(114, 10, 2, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(115, 10, 2, 1, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(116, 10, 2, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(117, 10, 2, 3, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(118, 10, 2, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(119, 10, 2, 5, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(120, 10, 2, 0, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(121, 9, 5, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(122, 9, 5, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(123, 9, 5, 2, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(124, 9, 5, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(125, 9, 5, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(126, 9, 5, 4, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(127, 9, 5, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(128, 9, 5, 6, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(129, 9, 5, 6, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(130, 9, 5, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(131, 9, 5, 1, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(132, 9, 5, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(133, 9, 5, 3, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(134, 9, 5, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(135, 9, 5, 5, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(136, 9, 5, 0, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(137, 8, 10, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(138, 8, 10, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(139, 8, 10, 2, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(140, 8, 10, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(141, 8, 10, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(142, 8, 10, 4, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(143, 8, 10, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(144, 8, 10, 6, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(145, 8, 10, 6, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(146, 8, 10, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(147, 8, 10, 1, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(148, 8, 10, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(149, 8, 10, 3, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(150, 8, 10, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(151, 8, 10, 5, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(152, 8, 10, 0, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(153, 12, 6, 2, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(154, 12, 6, 2, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(155, 12, 6, 2, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(156, 12, 6, 4, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(157, 12, 6, 4, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(158, 12, 6, 4, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(159, 12, 6, 6, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(160, 12, 6, 6, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(161, 12, 6, 6, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(162, 12, 6, 1, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(163, 12, 6, 1, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(164, 12, 6, 3, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(165, 12, 6, 3, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(166, 12, 6, 5, '13:30:00', '17:00:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(167, 12, 6, 5, '17:30:00', '20:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(168, 12, 6, 0, '07:30:00', '11:30:00', '2025-12-19 16:00:46', '2025-12-19 16:00:46');
 
 -- --------------------------------------------------------
 
@@ -1146,9 +1262,112 @@ CREATE TABLE `lich_nghis` (
 --
 
 INSERT INTO `lich_nghis` (`id`, `bac_si_id`, `ngay`, `bat_dau`, `ket_thuc`, `ly_do`, `created_at`, `updated_at`) VALUES
-(1, 106, '2025-12-14', '07:30:00', '11:30:00', 'Hội thảo', '2025-12-13 02:39:30', '2025-12-13 02:39:30'),
-(2, 106, '2025-12-14', '13:30:00', '17:00:00', 'Hội thảo', '2025-12-13 02:39:30', '2025-12-13 02:39:30'),
-(3, 111, '2025-12-15', '00:00:00', '23:59:59', 'Việc riêng', '2025-12-13 02:39:30', '2025-12-13 02:39:30');
+(1, 2, '2025-12-20', '07:30:00', '11:30:00', 'Hội thảo', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 2, '2025-12-20', '13:30:00', '17:00:00', 'Hội thảo', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 7, '2025-12-21', '00:00:00', '23:59:59', 'Việc riêng', '2025-12-19 16:00:46', '2025-12-19 16:00:46');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `loai_sieu_ams`
+--
+
+CREATE TABLE `loai_sieu_ams` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ten` varchar(255) NOT NULL,
+  `mo_ta` text DEFAULT NULL,
+  `gia_mac_dinh` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `thoi_gian_uoc_tinh` int(11) NOT NULL DEFAULT 30,
+  `phong_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `loai_sieu_ams`
+--
+
+INSERT INTO `loai_sieu_ams` (`id`, `ten`, `mo_ta`, `gia_mac_dinh`, `thoi_gian_uoc_tinh`, `phong_id`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Siêu âm thai 2D', 'Siêu âm thai thông thường, kiểm tra phát triển thai nhi cơ bản: đo CRL, BPD, FL, AC, HC. Theo dõi nhịp tim thai, nước ối và nhau thai.', 200000.00, 20, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(2, 'Siêu âm thai 3D/4D', 'Siêu âm thai 3 chiều, 4 chiều để quan sát rõ hơn hình ảnh thai nhi, khuôn mặt, chi. Ghi lại video động để gia đình lưu niệm.', 500000.00, 30, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(3, 'Siêu âm Doppler thai', 'Đánh giá tuần hoàn máu thai: động mạch rốn, động mạch não giữa, tĩnh mạch ống, động mạch tử cung. Phát hiện sớm thiếu oxy thai.', 350000.00, 25, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(4, 'Siêu âm hình thái học thai (20-24 tuần)', 'Siêu âm tầm soát dị tật cấu trúc thai nhi giai đoạn 20-24 tuần: tim, não, cột sống, chi, môi, khẩu cái. Chuẩn FMF London.', 600000.00, 45, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(5, 'Siêu âm sàng lọc sớm (11-13 tuần)', 'Đo độ mờ da gáy (NT), xương mũi, Doppler tĩnh mạch ống. Ước tính nguy cơ Down, Edward, Patau. Là phần quan trọng của Double Test/Triple Test.', 400000.00, 30, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(6, 'Siêu âm tim thai', 'Siêu âm chuyên sâu tim thai, đánh giá 4 buồng, đường ra/vào, van tim. Phát hiện dị tật tim bẩm sinh. Bắt buộc khi có tiền sử gia đình hoặc Double Test bất thường.', 700000.00, 40, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(7, 'Siêu âm phụ khoa qua bụng', 'Siêu âm tử cung, buồng trứng qua thành bụng. Thường dùng cho trinh nữ hoặc không thể siêu âm qua âm đạo.', 150000.00, 15, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(8, 'Siêu âm tử cung qua đường âm đạo', 'Siêu âm nội soi phụ khoa (Transvaginal), hình ảnh rõ nét hơn. Phát hiện u xơ tử cung, u nang buồng trứng, polyp nội mạc tử cung, viêm nhiễm.', 250000.00, 20, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(9, 'Siêu âm đếm noãn', 'Theo dõi phát triển nang trứng trong chu kỳ kinh để dự đoán ngày rụng trứng (Follicular tracking). Cần thiết cho giao hợp có chỉ định hoặc IUI.', 150000.00, 15, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(10, 'Siêu âm vòi trứng - SIS', 'Đánh giá độ thông thoáng vòi trứng bằng cách bơm dung dịch muối sinh lý vào buồng tử cung (Saline Infusion Sonography). Thay thế chụp buồng tử cung có thuốc cản quang.', 450000.00, 30, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(11, 'Siêu âm vú 2 bên', 'Tầm soát u nang, u xơ, khối đặc tuyến vú. Phân biệt khối lành tính/ác tính. Khuyên làm định kỳ hàng năm cho phụ nữ từ 35 tuổi.', 250000.00, 20, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44'),
+(12, 'Siêu âm hậu sản', 'Kiểm tra tử cung phục hồi sau sinh (6 tuần sau sinh), phát hiện sót rau/màng nhau, nhiễm trùng buồng tử cung.', 180000.00, 20, 3, 1, '2025-12-19 15:59:05', '2025-12-19 16:00:44');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `loai_xet_nghiems`
+--
+
+CREATE TABLE `loai_xet_nghiems` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ten` varchar(255) NOT NULL,
+  `ma` varchar(255) DEFAULT NULL,
+  `mo_ta` text DEFAULT NULL,
+  `thoi_gian_uoc_tinh` int(10) UNSIGNED NOT NULL DEFAULT 30,
+  `gia` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `phong_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `loai_xet_nghiems`
+--
+
+INSERT INTO `loai_xet_nghiems` (`id`, `ten`, `ma`, `mo_ta`, `thoi_gian_uoc_tinh`, `gia`, `phong_id`, `active`, `created_at`, `updated_at`) VALUES
+(1, 'Định lượng Beta-hCG (Máu)', 'XN_BETA_HCG', 'Chẩn đoán thai sớm và theo dõi phát triển thai giai đoạn đầu.', 5, 150000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(2, 'Xét nghiệm dự trữ buồng trứng (AMH)', 'XN_AMH', 'Đánh giá dự trữ buồng trứng, hỗ trợ chẩn đoán và điều trị hiếm muộn.', 10, 800000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(3, 'Bộ xét nghiệm Nội tiết tố nữ (6 chỉ số)', 'XN_NOI_TIET_TO_NU_6', 'FSH, LH, Estradiol, Prolactin, Progesterone, Testosterone.', 15, 1500000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(4, 'Xét nghiệm Rubella (IgM/IgG)', 'XN_RUBELLA_IGM_IGG', 'Tầm soát kháng thể Rubella trước/sớm trong thai kỳ.', 10, 300000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(5, 'Xét nghiệm Bệnh lây truyền (STD Panel)', 'XN_STD_PANEL', 'PCR đa mồi sàng lọc các tác nhân lây qua đường tình dục.', 20, 1800000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(6, 'Công thức máu (CBC)', 'XN_CONG_THUC_MAU', 'Đánh giá hồng cầu, bạch cầu, tiểu cầu; hỗ trợ chẩn đoán thiếu máu/viêm.', 10, 120000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(7, 'Tổng phân tích nước tiểu (10 thông số)', 'XN_TONG_PHAN_TICH_NUOC_TIEU', 'Sàng lọc viêm tiết niệu, đường huyết niệu, protein niệu...', 10, 80000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(8, 'Đường huyết lúc đói', 'XN_DUONG_HUYET_LUC_DOI', 'Tầm soát rối loạn đường huyết/đái tháo đường.', 10, 70000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(9, 'HIV Ab/Ag (test nhanh)', 'XN_HIV_AB', 'Sàng lọc HIV Ab/Ag theo quy trình chuẩn an toàn.', 15, 120000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(10, 'HBsAg (Viêm gan B)', 'XN_HBSAG', 'Sàng lọc viêm gan B, đặc biệt quan trọng trong thai kỳ.', 15, 120000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(11, 'Xét nghiệm tế bào cổ tử cung (Pap Smear - ThinPrep)', 'XN_PAP_SMEAR_THINPREP', 'Tầm soát ung thư cổ tử cung, phát hiện sớm biến đổi tế bào.', 10, 400000.00, 9, 1, '2025-12-19 16:00:44', '2025-12-19 16:00:44');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `loai_x_quangs`
+--
+
+CREATE TABLE `loai_x_quangs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ten` varchar(255) NOT NULL,
+  `ma` varchar(255) DEFAULT NULL,
+  `mo_ta` text DEFAULT NULL,
+  `thoi_gian_uoc_tinh` int(10) UNSIGNED NOT NULL DEFAULT 15,
+  `gia` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `phong_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `loai_x_quangs`
+--
+
+INSERT INTO `loai_x_quangs` (`id`, `ten`, `ma`, `mo_ta`, `thoi_gian_uoc_tinh`, `gia`, `phong_id`, `active`, `created_at`, `updated_at`) VALUES
+(1, 'X-Quang ngực thẳng', 'XQ_NGUC_THANG', 'Đánh giá phổi, tim, lồng ngực; hỗ trợ chẩn đoán viêm phổi, tràn dịch màng phổi, bất thường tim phổi.', 10, 180000.00, 3, 1, '2025-12-20 01:24:27', '2025-12-20 01:24:27'),
+(2, 'X-Quang cột sống cổ', 'XQ_COT_SONG_CO', 'Đánh giá thoái hóa, chấn thương, lệch trục cột sống cổ.', 15, 220000.00, 3, 1, '2025-12-20 01:24:27', '2025-12-20 01:24:27'),
+(3, 'X-Quang cột sống thắt lưng', 'XQ_COT_SONG_LUNG', 'Đánh giá thoái hóa, trượt đốt sống, chấn thương cột sống thắt lưng.', 15, 250000.00, 3, 1, '2025-12-20 01:24:27', '2025-12-20 01:24:27'),
+(4, 'X-Quang khung chậu', 'XQ_KHUNG_CHAU', 'Đánh giá xương chậu, khớp háng; hỗ trợ chẩn đoán chấn thương, thoái hóa.', 15, 240000.00, 3, 1, '2025-12-20 01:24:27', '2025-12-20 01:24:27'),
+(5, 'X-Quang bàn tay', 'XQ_BAN_TAY', 'Đánh giá gãy xương, trật khớp, thoái hóa khớp bàn tay.', 10, 150000.00, 3, 1, '2025-12-20 01:24:27', '2025-12-20 01:24:27'),
+(6, 'X-Quang bàn chân', 'XQ_BAN_CHAN', 'Đánh giá gãy xương, tổn thương khớp bàn chân.', 10, 150000.00, 3, 1, '2025-12-20 01:24:27', '2025-12-20 01:24:27');
 
 -- --------------------------------------------------------
 
@@ -1173,71 +1392,21 @@ CREATE TABLE `login_audits` (
 --
 
 INSERT INTO `login_audits` (`id`, `user_id`, `email`, `ip`, `user_agent`, `status`, `reason`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-12 03:54:41', '2025-12-12 03:54:41'),
-(2, NULL, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-12 03:54:45', '2025-12-12 03:54:45'),
-(3, NULL, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-12 03:54:59', '2025-12-12 03:54:59'),
-(4, NULL, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-12 03:55:59', '2025-12-12 03:55:59'),
-(5, NULL, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-12 04:18:08', '2025-12-12 04:18:08'),
-(6, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-12 04:24:50', '2025-12-12 04:24:50'),
-(7, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-12 04:27:14', '2025-12-12 04:27:14'),
-(8, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-12 04:29:30', '2025-12-12 04:29:30'),
-(9, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-12 04:37:44', '2025-12-12 04:37:44'),
-(10, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-12 08:39:46', '2025-12-12 08:39:46'),
-(11, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-13 02:13:24', '2025-12-13 02:13:24'),
-(12, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-13 02:13:34', '2025-12-13 02:13:34'),
-(13, 148, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 02:14:29', '2025-12-13 02:14:29'),
-(14, NULL, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-13 04:00:35', '2025-12-13 04:00:35'),
-(15, 148, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:20:32', '2025-12-13 04:20:32'),
-(16, 137, 'hunghoang@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:23:09', '2025-12-13 04:23:09'),
-(17, 137, 'hunghoang@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:24:11', '2025-12-13 04:24:11'),
-(18, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-13 04:24:34', '2025-12-13 04:24:34'),
-(19, 147, 'lan.thammy@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:27:14', '2025-12-13 04:27:14'),
-(20, 137, 'hungpham@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:29:17', '2025-12-13 04:29:17'),
-(21, 137, 'hungpham@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:29:19', '2025-12-13 04:29:19'),
-(22, NULL, 'hunghoang@vietcare.comhun', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:30:24', '2025-12-13 04:30:24'),
-(23, 137, 'hunghoang@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:32:03', '2025-12-13 04:32:03'),
-(24, 137, 'hunghoang@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'account_locked', '2025-12-13 04:34:51', '2025-12-13 04:34:51'),
-(25, 137, 'hunghoang@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:35:22', '2025-12-13 04:35:22'),
-(26, 143, 'phuocnguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:36:56', '2025-12-13 04:36:56'),
-(27, 143, 'phuocnguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:37:02', '2025-12-13 04:37:02'),
-(28, 137, 'hunghoang@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:38:33', '2025-12-13 04:38:33'),
-(29, 137, 'hunghoang@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:40:34', '2025-12-13 04:40:34'),
-(30, 141, 'ngocvo@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:43:11', '2025-12-13 04:43:11'),
-(31, 142, 'thuypham@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:43:44', '2025-12-13 04:43:44'),
-(32, 136, 'lananh@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:44:39', '2025-12-13 04:44:39'),
-(33, 138, 'hatran@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:45:17', '2025-12-13 04:45:17'),
-(34, 139, 'vannguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:45:51', '2025-12-13 04:45:51'),
-(35, 140, 'tuanhoang@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:46:20', '2025-12-13 04:46:20'),
-(36, 143, 'phuocnguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:46:51', '2025-12-13 04:46:51'),
-(37, 144, 'linhdo@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:47:38', '2025-12-13 04:47:38'),
-(38, 145, 'maile@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:48:08', '2025-12-13 04:48:08'),
-(39, 146, 'minh.xetnghiem@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:48:32', '2025-12-13 04:48:32'),
-(40, 147, 'lan.thammy@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:49:04', '2025-12-13 04:49:04'),
-(41, 143, 'phuocnguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:49:32', '2025-12-13 04:49:32'),
-(42, 143, 'phuocnguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:49:46', '2025-12-13 04:49:46'),
-(43, 143, 'phuocnguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:49:51', '2025-12-13 04:49:51'),
-(44, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:54:35', '2025-12-13 04:54:35'),
-(45, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:54:39', '2025-12-13 04:54:39'),
-(46, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:54:46', '2025-12-13 04:54:46'),
-(47, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 04:55:27', '2025-12-13 04:55:27'),
-(48, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 04:55:48', '2025-12-13 04:55:48'),
-(49, 139, 'vannguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-13 04:56:58', '2025-12-13 04:56:58'),
-(50, 148, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 07:06:31', '2025-12-13 07:06:31'),
-(51, 139, 'vannguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-13 07:07:09', '2025-12-13 07:07:09'),
-(52, 139, 'vannguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 07:07:13', '2025-12-13 07:07:13'),
-(53, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-13 07:08:52', '2025-12-13 07:08:52'),
-(54, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-13 07:09:18', '2025-12-13 07:09:18'),
-(55, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-13 07:09:23', '2025-12-13 07:09:23'),
-(56, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-13 11:06:07', '2025-12-13 11:06:07'),
-(57, 148, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 11:07:00', '2025-12-13 11:07:00'),
-(58, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-13 11:07:29', '2025-12-13 11:07:29'),
-(59, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-13 11:07:34', '2025-12-13 11:07:34'),
-(60, 139, 'vannguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 11:08:19', '2025-12-13 11:08:19'),
-(61, NULL, 'doctor1@example.test', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 11:39:17', '2025-12-13 11:39:17'),
-(62, 13, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-13 14:07:18', '2025-12-13 14:07:18'),
-(63, 149, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-13 14:08:24', '2025-12-13 14:08:24'),
-(64, 148, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 14:08:56', '2025-12-13 14:08:56'),
-(65, 139, 'vannguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-13 14:09:29', '2025-12-13 14:09:29');
+(1, NULL, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-19 16:11:30', '2025-12-19 16:11:30'),
+(2, 4, 'vannguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'failed', 'invalid_credentials', '2025-12-19 16:12:29', '2025-12-19 16:12:29'),
+(3, 4, 'vannguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-19 16:12:42', '2025-12-19 16:12:42'),
+(4, NULL, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-19 16:13:17', '2025-12-19 16:13:17'),
+(5, NULL, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-19 16:14:02', '2025-12-19 16:14:02'),
+(6, NULL, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'failed', 'invalid_credentials', '2025-12-19 16:17:06', '2025-12-19 16:17:06'),
+(7, 24, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-19 16:18:13', '2025-12-19 16:18:13'),
+(8, 24, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-19 16:18:58', '2025-12-19 16:18:58'),
+(9, 24, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-19 16:27:01', '2025-12-19 16:27:01'),
+(10, 23, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-19 16:37:10', '2025-12-19 16:37:10'),
+(11, 25, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-19 16:39:08', '2025-12-19 16:39:08'),
+(12, 23, 'tn822798@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-20 01:08:21', '2025-12-20 01:08:21'),
+(13, 4, 'vannguyen@vietcare.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'success', NULL, '2025-12-20 01:08:39', '2025-12-20 01:08:39'),
+(14, 24, 'Admin@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-20 01:10:09', '2025-12-20 01:10:09'),
+(15, 25, 'henvaemhen@gmail.com', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', 'success', NULL, '2025-12-20 01:11:38', '2025-12-20 01:11:38');
 
 -- --------------------------------------------------------
 
@@ -1258,6 +1427,14 @@ CREATE TABLE `messages` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `messages`
+--
+
+INSERT INTO `messages` (`id`, `conversation_id`, `user_id`, `noi_dung`, `file_path`, `file_name`, `file_type`, `is_read`, `read_at`, `created_at`, `updated_at`) VALUES
+(1, 1, 23, 'Bác ơi', NULL, NULL, NULL, 1, '2025-12-20 01:38:31', '2025-12-20 01:38:10', '2025-12-20 01:38:31'),
+(2, 1, 4, 'sao đây', NULL, NULL, NULL, 0, NULL, '2025-12-20 01:38:35', '2025-12-20 01:38:35');
 
 -- --------------------------------------------------------
 
@@ -1280,90 +1457,113 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (2, '2014_10_12_100000_create_password_resets_table', 1),
 (3, '2019_08_19_000000_create_failed_jobs_table', 1),
 (4, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(5, '2025_10_08_150521_create_bac_sis_table', 1),
-(6, '2025_10_08_160313_create_dich_vus_table', 1),
-(7, '2025_10_08_170625_create_lich_hens_table', 1),
-(8, '2025_10_08_181011_add_role_to_users_table', 1),
-(9, '2025_10_08_192322_create_lich_lam_viecs_table', 1),
-(10, '2025_10_27_200000_add_unique_index_to_lich_hens', 1),
-(11, '2025_11_02_235900_create_lich_nghis_table_if_not_exists', 1),
-(12, '2025_11_03_000000_create_lich_nghis_table', 1),
-(13, '2025_11_03_010000_add_user_id_to_bac_sis', 1),
-(14, '2025_11_03_130343_add_user_id_to_bac_sis_table', 1),
-(15, '2025_11_04_084258_update_users_table_set_role_defaults', 1),
-(16, '2025_11_04_190000_create_benh_ans_table', 1),
-(17, '2025_11_04_190100_create_benh_an_files_table', 1),
-(18, '2025_11_05_120000_backfill_lich_hens_status_to_vn', 1),
-(19, '2025_11_05_130000_create_hoa_dons_table', 1),
-(20, '2025_11_05_130100_create_thanh_toans_table', 1),
-(21, '2025_11_07_000000_add_payment_columns_to_lich_hens_table', 1),
-(22, '2025_11_07_000002_create_hoan_tiens_table', 1),
-(23, '2025_11_07_010000_rename_payment_columns_on_lich_hens_table', 1),
-(24, '2025_11_10_120000_add_cancel_columns_to_lich_hens', 1),
-(25, '2025_11_11_093527_add_missing_columns_to_bac_sis_table', 1),
-(26, '2025_11_13_120001_create_thuocs_table', 1),
-(27, '2025_11_13_120002_create_don_thuocs_table', 1),
-(28, '2025_11_13_120003_create_xet_nghiems_table', 1),
-(29, '2025_11_13_170001_create_nhan_viens_table', 1),
-(30, '2025_11_13_170002_create_ca_lam_viec_nhan_viens_table', 1),
-(31, '2025_11_13_180000_add_unique_user_to_nhan_viens', 1),
-(32, '2025_11_14_090000_create_ca_dieu_chinh_bac_sis_table', 1),
-(33, '2025_11_14_230000_add_time_columns_to_lich_hens', 1),
-(34, '2025_11_17_000001_create_nha_cung_caps_table', 1),
-(35, '2025_11_17_000002_create_thuoc_khos_table', 1),
-(36, '2025_11_17_000003_create_phieu_nhaps_table', 1),
-(37, '2025_11_17_000004_create_phieu_xuats_table', 1),
-(38, '2025_11_17_100100_create_chuyen_khoas_and_phongs', 1),
-(39, '2025_11_17_100200_add_phong_id_to_lich_lam_viecs', 1),
-(40, '2025_11_17_104853_create_jobs_table', 1),
-(41, '2025_11_17_104907_create_jobs_table', 1),
-(42, '2025_11_17_110000_create_danh_mucs_table', 1),
-(43, '2025_11_17_110100_create_tags_table', 1),
-(44, '2025_11_17_110200_create_bai_viets_table', 1),
-(45, '2025_11_17_110300_create_bai_viet_tag_table', 1),
-(46, '2025_11_17_110400_reinforce_lich_hen_slot_uniqueness', 1),
-(47, '2025_11_20_054524_create_benh_an_audits_table', 1),
-(48, '2025_11_20_055120_add_disk_to_benh_an_files_table', 1),
-(49, '2025_11_20_073110_add_disk_to_xet_nghiems_table', 1),
-(50, '2025_11_20_100000_create_payment_logs_table', 1),
-(51, '2025_11_20_100100_add_idempotency_key_to_thanh_toans_table', 1),
-(52, '2025_11_20_110000_add_tong_tien_to_lich_hens_table', 1),
-(53, '2025_11_21_000001_create_nhan_vien_audits_table', 1),
-(54, '2025_11_21_041434_create_permission_tables', 1),
-(55, '2025_11_21_050000_add_account_security_to_users', 1),
-(56, '2025_11_21_050100_create_login_audits_table', 1),
-(57, '2025_11_30_105600_add_avatar_to_bac_sis_table', 1),
-(58, '2025_12_04_140000_add_status_fields_to_hoa_dons_table', 1),
-(59, '2025_12_04_145328_add_ton_toi_thieu_to_thuocs_table', 1),
-(60, '2025_12_04_150000_add_status_to_phongs_table', 1),
-(61, '2025_12_04_150308_create_coupons_table', 1),
-(62, '2025_12_04_150320_create_don_hangs_table', 1),
-(63, '2025_12_04_150330_create_don_hang_items_table', 1),
-(64, '2025_12_04_155210_create_nha_cung_cap_thuoc_table', 1),
-(65, '2025_12_04_160000_fix_phieu_nhaps_foreign_key', 1),
-(66, '2025_12_04_160100_fix_phieu_nhap_items_foreign_key', 1),
-(67, '2025_12_04_160200_fix_phieu_xuat_items_foreign_key', 1),
-(68, '2025_12_05_092931_add_deleted_at_to_bai_viets_table', 1),
-(69, '2025_12_05_101210_create_patient_profiles_table', 1),
-(70, '2025_12_05_101211_create_notification_preferences_table', 1),
-(71, '2025_12_05_144344_create_danh_gias_table', 1),
-(72, '2025_12_05_150000_create_conversations_table', 1),
-(73, '2025_12_05_150001_create_messages_table', 1),
-(74, '2025_12_05_201222_create_family_members_table', 1),
-(75, '2025_12_05_204006_create_notifications_table', 1),
-(76, '2025_12_06_155207_add_sms_appointment_cancelled_to_notification_preferences_table', 1),
-(77, '2025_12_07_133150_add_workflow_status_to_lich_hens_table', 1),
-(78, '2025_12_07_133230_add_status_to_xet_nghiems_table', 1),
-(79, '2025_12_08_174915_add_patient_info_to_users_table', 1),
-(80, '2025_12_09_123000_add_started_at_to_lich_hens_table', 1),
-(81, '2025_12_09_130926_create_activity_log_table', 1),
-(82, '2025_12_09_130927_add_event_column_to_activity_log_table', 1),
-(83, '2025_12_09_130928_add_batch_uuid_column_to_activity_log_table', 1),
-(84, '2025_12_10_161500_add_avatar_to_users_table', 1),
-(85, '2025_12_11_000001_create_chuyen_khoa_dich_vu_table', 1),
-(86, '2025_12_12_200000_create_slot_locks_table', 1),
-(87, '2025_12_12_201000_add_patient_info_to_lich_hens', 1),
-(88, '2025_12_12_202000_add_coupon_to_hoa_dons', 1);
+(5, '2025_10_08_150521_create_bac_sis_table', 2),
+(6, '2025_10_08_160313_create_dich_vus_table', 2),
+(7, '2025_10_08_170625_create_lich_hens_table', 2),
+(8, '2025_10_08_181011_add_role_to_users_table', 2),
+(9, '2025_10_08_192322_create_lich_lam_viecs_table', 2),
+(10, '2025_10_27_200000_add_unique_index_to_lich_hens', 2),
+(11, '2025_11_02_235900_create_lich_nghis_table_if_not_exists', 2),
+(12, '2025_11_03_000000_create_lich_nghis_table', 2),
+(13, '2025_11_03_010000_add_user_id_to_bac_sis', 2),
+(14, '2025_11_03_130343_add_user_id_to_bac_sis_table', 2),
+(15, '2025_11_04_084258_update_users_table_set_role_defaults', 2),
+(16, '2025_11_04_190000_create_benh_ans_table', 2),
+(17, '2025_11_04_190100_create_benh_an_files_table', 2),
+(18, '2025_11_05_120000_backfill_lich_hens_status_to_vn', 2),
+(19, '2025_11_05_130000_create_hoa_dons_table', 2),
+(20, '2025_11_05_130100_create_thanh_toans_table', 2),
+(21, '2025_11_07_000000_add_payment_columns_to_lich_hens_table', 2),
+(22, '2025_11_07_000002_create_hoan_tiens_table', 2),
+(23, '2025_11_07_010000_rename_payment_columns_on_lich_hens_table', 2),
+(24, '2025_11_10_120000_add_cancel_columns_to_lich_hens', 2),
+(25, '2025_11_11_093527_add_missing_columns_to_bac_sis_table', 2),
+(26, '2025_11_13_120001_create_thuocs_table', 2),
+(27, '2025_11_13_120002_create_don_thuocs_table', 2),
+(28, '2025_11_13_120003_create_xet_nghiems_table', 2),
+(29, '2025_11_13_170001_create_nhan_viens_table', 2),
+(30, '2025_11_13_170002_create_ca_lam_viec_nhan_viens_table', 2),
+(31, '2025_11_13_180000_add_unique_user_to_nhan_viens', 2),
+(32, '2025_11_14_090000_create_ca_dieu_chinh_bac_sis_table', 2),
+(33, '2025_11_14_230000_add_time_columns_to_lich_hens', 2),
+(34, '2025_11_17_000001_create_nha_cung_caps_table', 2),
+(35, '2025_11_17_000002_create_thuoc_khos_table', 2),
+(36, '2025_11_17_000003_create_phieu_nhaps_table', 2),
+(37, '2025_11_17_000004_create_phieu_xuats_table', 2),
+(38, '2025_11_17_100100_create_chuyen_khoas_and_phongs', 2),
+(39, '2025_11_17_100200_add_phong_id_to_lich_lam_viecs', 2),
+(40, '2025_11_17_104853_create_jobs_table', 2),
+(41, '2025_11_17_104907_create_jobs_table', 2),
+(42, '2025_11_17_110000_create_danh_mucs_table', 2),
+(43, '2025_11_17_110100_create_tags_table', 2),
+(44, '2025_11_17_110200_create_bai_viets_table', 2),
+(45, '2025_11_17_110300_create_bai_viet_tag_table', 2),
+(46, '2025_11_17_110400_reinforce_lich_hen_slot_uniqueness', 2),
+(47, '2025_11_20_054524_create_benh_an_audits_table', 2),
+(48, '2025_11_20_055120_add_disk_to_benh_an_files_table', 2),
+(49, '2025_11_20_073110_add_disk_to_xet_nghiems_table', 2),
+(50, '2025_11_20_100000_create_payment_logs_table', 2),
+(51, '2025_11_20_100100_add_idempotency_key_to_thanh_toans_table', 2),
+(52, '2025_11_20_110000_add_tong_tien_to_lich_hens_table', 2),
+(53, '2025_11_21_000001_create_nhan_vien_audits_table', 2),
+(54, '2025_11_21_041434_create_permission_tables', 2),
+(55, '2025_11_21_050000_add_account_security_to_users', 2),
+(56, '2025_11_21_050100_create_login_audits_table', 2),
+(57, '2025_11_30_105600_add_avatar_to_bac_sis_table', 2),
+(58, '2025_12_04_140000_add_status_fields_to_hoa_dons_table', 2),
+(59, '2025_12_04_145328_add_ton_toi_thieu_to_thuocs_table', 2),
+(60, '2025_12_04_150000_add_status_to_phongs_table', 2),
+(61, '2025_12_04_150308_create_coupons_table', 2),
+(62, '2025_12_04_150320_create_don_hangs_table', 2),
+(63, '2025_12_04_150330_create_don_hang_items_table', 2),
+(64, '2025_12_04_155210_create_nha_cung_cap_thuoc_table', 2),
+(65, '2025_12_04_160000_fix_phieu_nhaps_foreign_key', 2),
+(66, '2025_12_04_160100_fix_phieu_nhap_items_foreign_key', 2),
+(67, '2025_12_04_160200_fix_phieu_xuat_items_foreign_key', 2),
+(68, '2025_12_05_092931_add_deleted_at_to_bai_viets_table', 2),
+(69, '2025_12_05_101210_create_patient_profiles_table', 2),
+(70, '2025_12_05_101211_create_notification_preferences_table', 2),
+(71, '2025_12_05_144344_create_danh_gias_table', 2),
+(72, '2025_12_05_150000_create_conversations_table', 2),
+(73, '2025_12_05_150001_create_messages_table', 2),
+(74, '2025_12_05_204006_create_notifications_table', 2),
+(75, '2025_12_06_155207_add_sms_appointment_cancelled_to_notification_preferences_table', 2),
+(76, '2025_12_07_133150_add_workflow_status_to_lich_hens_table', 2),
+(77, '2025_12_07_133230_add_status_to_xet_nghiems_table', 2),
+(78, '2025_12_08_000001_optimize_xet_nghiems_table', 2),
+(79, '2025_12_08_174915_add_patient_info_to_users_table', 2),
+(80, '2025_12_09_123000_add_started_at_to_lich_hens_table', 2),
+(81, '2025_12_09_130926_create_activity_log_table', 2),
+(82, '2025_12_09_130927_add_event_column_to_activity_log_table', 2),
+(83, '2025_12_09_130928_add_batch_uuid_column_to_activity_log_table', 2),
+(84, '2025_12_10_161500_add_avatar_to_users_table', 2),
+(85, '2025_12_11_000001_create_chuyen_khoa_dich_vu_table', 2),
+(86, '2025_12_12_200000_create_slot_locks_table', 2),
+(87, '2025_12_12_201000_add_patient_info_to_lich_hens', 2),
+(88, '2025_12_12_202000_add_coupon_to_hoa_dons', 2),
+(89, '2025_12_13_000001_add_checked_in_by_to_lich_hens', 2),
+(90, '2025_12_15_152209_add_payable_to_thanh_toans_table', 2),
+(91, '2025_12_15_152314_add_payment_columns_to_don_hangs_table', 2),
+(92, '2025_12_15_152807_update_trang_thai_thanh_toan_enum_in_don_hangs_table', 2),
+(93, '2025_12_15_153022_add_payable_to_payment_logs_table', 2),
+(94, '2025_12_15_153434_make_hoa_don_id_nullable_in_thanh_toans_table', 2),
+(95, '2025_12_15_170000_make_lich_hen_nullable_on_hoa_dons_table', 2),
+(96, '2025_12_19_100000_create_loai_sieu_ams_table', 2),
+(97, '2025_12_19_100100_create_sieu_ams_table', 2),
+(98, '2025_12_19_101200_add_disk_to_xet_nghiems_table', 2),
+(99, '2025_12_19_140000_create_loai_xet_nghiems_table', 2),
+(100, '2025_12_19_200000_make_file_path_nullable_in_xet_nghiems_table', 2),
+(101, '2025_12_19_224327_create_chuyen_khoa_loai_sieu_am_table', 2),
+(102, '2025_12_19_225805_add_phong_id_to_loai_sieu_ams_table', 3),
+(103, '2025_01_15_100000_create_loai_sieu_ams_table', 4),
+(104, '2025_01_15_100100_create_sieu_ams_table', 4),
+(105, '2025_12_20_000001_create_loai_x_quangs_table', 5),
+(106, '2025_12_20_000002_create_chuyen_khoa_loai_x_quang_table', 5),
+(107, '2025_12_20_000003_create_x_quangs_table', 5),
+(108, '2025_12_20_100000_add_dispensing_fields_to_don_thuocs_table', 6),
+(109, '2025_12_20_000001_create_theo_doi_thai_kys_table', 7),
+(110, '2025_12_20_130000_create_tai_khams_table', 8),
+(111, '2025_12_20_160000_alter_benh_an_audits_action_length', 9);
 
 -- --------------------------------------------------------
 
@@ -1376,6 +1576,13 @@ CREATE TABLE `model_has_permissions` (
   `model_type` varchar(255) NOT NULL,
   `model_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `model_has_permissions`
+--
+
+INSERT INTO `model_has_permissions` (`permission_id`, `model_type`, `model_id`) VALUES
+(57, 'App\\Models\\User', 24);
 
 -- --------------------------------------------------------
 
@@ -1394,43 +1601,31 @@ CREATE TABLE `model_has_roles` (
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
-(1, 'App\\Models\\User', 13),
-(1, 'App\\Models\\User', 150),
-(2, 'App\\Models\\User', 13),
-(4, 'App\\Models\\User', 136),
-(4, 'App\\Models\\User', 137),
-(4, 'App\\Models\\User', 138),
-(4, 'App\\Models\\User', 139),
-(4, 'App\\Models\\User', 140),
-(4, 'App\\Models\\User', 141),
-(4, 'App\\Models\\User', 142),
-(4, 'App\\Models\\User', 143),
-(4, 'App\\Models\\User', 144),
-(4, 'App\\Models\\User', 145),
-(4, 'App\\Models\\User', 146),
-(4, 'App\\Models\\User', 147),
+(1, 'App\\Models\\User', 24),
+(2, 'App\\Models\\User', 24),
+(4, 'App\\Models\\User', 1),
+(4, 'App\\Models\\User', 2),
+(4, 'App\\Models\\User', 3),
+(4, 'App\\Models\\User', 4),
+(4, 'App\\Models\\User', 5),
+(4, 'App\\Models\\User', 6),
+(4, 'App\\Models\\User', 7),
+(4, 'App\\Models\\User', 8),
+(4, 'App\\Models\\User', 9),
+(4, 'App\\Models\\User', 10),
+(4, 'App\\Models\\User', 11),
+(4, 'App\\Models\\User', 12),
+(5, 'App\\Models\\User', 14),
+(5, 'App\\Models\\User', 15),
+(5, 'App\\Models\\User', 16),
+(5, 'App\\Models\\User', 17),
+(5, 'App\\Models\\User', 18),
+(5, 'App\\Models\\User', 19),
+(5, 'App\\Models\\User', 20),
+(5, 'App\\Models\\User', 21),
+(5, 'App\\Models\\User', 22),
 (5, 'App\\Models\\User', 25),
-(5, 'App\\Models\\User', 26),
-(5, 'App\\Models\\User', 27),
-(5, 'App\\Models\\User', 28),
-(5, 'App\\Models\\User', 29),
-(5, 'App\\Models\\User', 51),
-(5, 'App\\Models\\User', 52),
-(5, 'App\\Models\\User', 53),
-(5, 'App\\Models\\User', 54),
-(5, 'App\\Models\\User', 55),
-(5, 'App\\Models\\User', 115),
-(5, 'App\\Models\\User', 116),
-(5, 'App\\Models\\User', 117),
-(5, 'App\\Models\\User', 118),
-(5, 'App\\Models\\User', 119),
-(5, 'App\\Models\\User', 120),
-(5, 'App\\Models\\User', 121),
-(5, 'App\\Models\\User', 122),
-(5, 'App\\Models\\User', 123),
-(5, 'App\\Models\\User', 149),
-(6, 'App\\Models\\User', 148),
-(6, 'App\\Models\\User', 150);
+(6, 'App\\Models\\User', 23);
 
 -- --------------------------------------------------------
 
@@ -1458,16 +1653,16 @@ CREATE TABLE `nhan_viens` (
 --
 
 INSERT INTO `nhan_viens` (`id`, `user_id`, `ho_ten`, `chuc_vu`, `so_dien_thoai`, `email_cong_viec`, `ngay_sinh`, `gioi_tinh`, `avatar_path`, `trang_thai`, `created_at`, `updated_at`) VALUES
-(8, 115, 'Nguyễn Thị Hồng Hạnh', 'Nhân viên CSKH', '0909222002', 'hanh.nguyen@vietcare.com', '2000-10-20', 'nu', 'nv_avatar/9mZ0E9DC2etpeikNnSxRKryaqtVKcRYDeQHR0YUi.png', 'active', '2025-12-12 06:41:13', '2025-12-12 07:24:50'),
-(9, 116, 'Trần Thị Kim Dung', 'Lễ tân', '0909222003', 'dung.tran@vietcare.com', '1999-08-15', 'nu', 'nv_avatar/gTy76mUjFUdwlSE4wuYBiYyjeJl7BKYbcR0AzfP3.png', 'active', '2025-12-12 06:41:13', '2025-12-12 07:23:32'),
-(10, 117, 'Phạm Thị Thu Thảo', 'Điều dưỡng trưởng', '0909222004', 'thao.pham@vietcare.com', '1985-02-05', 'nu', 'nv_avatar/J9L8WaUVEUXaH5U0T1yFHsYxH2zb3DuVJTfvUhOD.png', 'active', '2025-12-12 06:41:13', '2025-12-12 07:24:40'),
-(11, 118, 'Lê Thị Thanh Trúc', 'Nữ hộ sinh', '0909222005', 'truc.le@vietcare.com', '1995-11-10', 'nu', 'nv_avatar/fbPQYtNRPoz4kUjPK9PLpXALB28b564CiTUAK5ic.png', 'active', '2025-12-12 06:41:13', '2025-12-12 07:22:14'),
-(12, 119, 'Nguyễn Ngọc Huyền', 'Điều dưỡng đa khoa', '0909222006', 'huyen.nguyen@vietcare.com', '1997-07-22', 'nu', 'nv_avatar/XP0eYT5HYXhEcRCfTxcPSxSaCTuiLMNtCdGB1IFT.png', 'active', '2025-12-12 06:41:14', '2025-12-12 07:20:05'),
-(13, 120, 'Vũ Thị Minh Anh', 'Thu ngân', '0909222007', 'anh.vu@vietcare.com', '1996-04-30', 'nu', 'nv_avatar/abxEAXOG6uldxyMHONI9sU1gwikUptIeDInfsI9n.png', 'active', '2025-12-12 06:41:14', '2025-12-12 07:19:48'),
-(14, 121, 'Hoàng Văn Nam', 'Dược sĩ', '0909222008', 'nam.hoang@vietcare.com', '1990-09-14', 'nam', 'nv_avatar/SORI798EIccHzFfo0BTZLYX9IhXiD7kn88jXCOub.png', 'active', '2025-12-12 06:41:14', '2025-12-12 07:21:55'),
-(15, 122, 'Nguyễn Thu Phương', 'Quản lý phòng khám', '0909222009', 'phuong.nguyen@vietcare.com', '1980-01-01', 'nu', 'nv_avatar/hcuvgd00doWlGBX75i8WDbJHKfjeuJXe3M0HEyaN.png', 'active', '2025-12-12 06:41:14', '2025-12-12 07:19:29'),
-(16, 123, 'Trần Quốc Bảo', 'Nhân viên IT / Kỹ thuật', '0909222010', 'bao.tran@vietcare.com', '1995-12-18', 'nam', 'nv_avatar/CZmBnBIrQbAcDdMl7QI9AiiXVvgXPNIFnSrrWBpb.png', 'active', '2025-12-12 06:41:14', '2025-12-12 07:18:50'),
-(17, 149, 'Lê Minh Nhật', 'Trưởng lễ tân', '0789654123', 'henvaemhen@gmail.com', '2004-12-12', 'nam', 'nv_avatar/n53Ti8mAFEeIWZkE7fn214GxlPNQrBCHokZb2fpT.png', 'active', '2025-12-13 04:13:14', '2025-12-13 04:13:14');
+(2, 14, 'Nguyễn Thị Hồng Hạnh', 'Nhân viên CSKH', '0909222002', 'hanh.nguyen@vietcare.com', '2000-10-20', 'Nữ', NULL, 'Đang làm', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(3, 15, 'Trần Thị Kim Dung', 'Lễ tân', '0909222003', 'dung.tran@vietcare.com', '1999-08-15', 'Nữ', NULL, 'Đang làm', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(4, 16, 'Phạm Thị Thu Thảo', 'Điều dưỡng trưởng', '0909222004', 'thao.pham@vietcare.com', '1985-02-05', 'Nữ', NULL, 'Đang làm', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(5, 17, 'Lê Thị Thanh Trúc', 'Nữ hộ sinh', '0909222005', 'truc.le@vietcare.com', '1995-11-10', 'Nữ', NULL, 'Đang làm', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(6, 18, 'Nguyễn Ngọc Huyền', 'Điều dưỡng đa khoa', '0909222006', 'huyen.nguyen@vietcare.com', '1997-07-22', 'Nữ', NULL, 'Đang làm', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(7, 19, 'Vũ Thị Minh Anh', 'Thu ngân', '0909222007', 'anh.vu@vietcare.com', '1996-04-30', 'Nữ', NULL, 'Đang làm', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(8, 20, 'Hoàng Văn Nam', 'Dược sĩ', '0909222008', 'nam.hoang@vietcare.com', '1990-09-14', 'Nam', NULL, 'Đang làm', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(9, 21, 'Nguyễn Thu Phương', 'Quản lý phòng khám', '0909222009', 'phuong.nguyen@vietcare.com', '1980-01-01', 'Nữ', NULL, 'Đang làm', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(10, 22, 'Trần Quốc Bảo', 'Nhân viên IT / Kỹ thuật', '0909222010', 'bao.tran@vietcare.com', '1995-12-18', 'Nam', NULL, 'Đang làm', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(11, 25, 'Lê Minh Nhật', 'Trưởng lễ tân', '0123654897', 'henvaemhen@gmail.com', '2004-12-12', 'nam', 'nv_avatar/QfiZElnLOZ8wtxphGmyS6YRhdRjUyF8yFWoKRWL9.png', 'active', '2025-12-19 16:38:20', '2025-12-19 16:38:20');
 
 -- --------------------------------------------------------
 
@@ -1491,46 +1686,16 @@ CREATE TABLE `nhan_vien_audits` (
 --
 
 INSERT INTO `nhan_vien_audits` (`id`, `nhan_vien_id`, `user_id`, `action`, `old_data`, `new_data`, `created_at`, `updated_at`) VALUES
-(11, 8, NULL, 'created', NULL, '{\"email_cong_viec\":\"hanh.nguyen@vietcare.com\",\"user_id\":115,\"ho_ten\":\"Nguy\\u1ec5n Th\\u1ecb H\\u1ed3ng H\\u1ea1nh\",\"chuc_vu\":\"Nh\\u00e2n vi\\u00ean CSKH\",\"so_dien_thoai\":\"0909222002\",\"ngay_sinh\":\"2000-10-20\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:41:13\",\"created_at\":\"2025-12-12 13:41:13\",\"id\":8}', '2025-12-12 06:41:13', '2025-12-12 06:41:13'),
-(12, 9, NULL, 'created', NULL, '{\"email_cong_viec\":\"dung.tran@vietcare.com\",\"user_id\":116,\"ho_ten\":\"Tr\\u1ea7n Th\\u1ecb Kim Dung\",\"chuc_vu\":\"L\\u1ec5 t\\u00e2n\",\"so_dien_thoai\":\"0909222003\",\"ngay_sinh\":\"1999-08-15\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:41:13\",\"created_at\":\"2025-12-12 13:41:13\",\"id\":9}', '2025-12-12 06:41:13', '2025-12-12 06:41:13'),
-(13, 10, NULL, 'created', NULL, '{\"email_cong_viec\":\"thao.pham@vietcare.com\",\"user_id\":117,\"ho_ten\":\"Ph\\u1ea1m Th\\u1ecb Thu Th\\u1ea3o\",\"chuc_vu\":\"\\u0110i\\u1ec1u d\\u01b0\\u1ee1ng tr\\u01b0\\u1edfng\",\"so_dien_thoai\":\"0909222004\",\"ngay_sinh\":\"1985-02-05\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:41:13\",\"created_at\":\"2025-12-12 13:41:13\",\"id\":10}', '2025-12-12 06:41:13', '2025-12-12 06:41:13'),
-(14, 11, NULL, 'created', NULL, '{\"email_cong_viec\":\"truc.le@vietcare.com\",\"user_id\":118,\"ho_ten\":\"L\\u00ea Th\\u1ecb Thanh Tr\\u00fac\",\"chuc_vu\":\"N\\u1eef h\\u1ed9 sinh\",\"so_dien_thoai\":\"0909222005\",\"ngay_sinh\":\"1995-11-10\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:41:13\",\"created_at\":\"2025-12-12 13:41:13\",\"id\":11}', '2025-12-12 06:41:13', '2025-12-12 06:41:13'),
-(15, 12, NULL, 'created', NULL, '{\"email_cong_viec\":\"huyen.nguyen@vietcare.com\",\"user_id\":119,\"ho_ten\":\"Nguy\\u1ec5n Ng\\u1ecdc Huy\\u1ec1n\",\"chuc_vu\":\"\\u0110i\\u1ec1u d\\u01b0\\u1ee1ng \\u0111a khoa\",\"so_dien_thoai\":\"0909222006\",\"ngay_sinh\":\"1997-07-22\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:41:14\",\"created_at\":\"2025-12-12 13:41:14\",\"id\":12}', '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(16, 13, NULL, 'created', NULL, '{\"email_cong_viec\":\"anh.vu@vietcare.com\",\"user_id\":120,\"ho_ten\":\"V\\u0169 Th\\u1ecb Minh Anh\",\"chuc_vu\":\"Thu ng\\u00e2n\",\"so_dien_thoai\":\"0909222007\",\"ngay_sinh\":\"1996-04-30\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:41:14\",\"created_at\":\"2025-12-12 13:41:14\",\"id\":13}', '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(17, 14, NULL, 'created', NULL, '{\"email_cong_viec\":\"nam.hoang@vietcare.com\",\"user_id\":121,\"ho_ten\":\"Ho\\u00e0ng V\\u0103n Nam\",\"chuc_vu\":\"D\\u01b0\\u1ee3c s\\u0129\",\"so_dien_thoai\":\"0909222008\",\"ngay_sinh\":\"1990-09-14\",\"gioi_tinh\":\"Nam\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:41:14\",\"created_at\":\"2025-12-12 13:41:14\",\"id\":14}', '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(18, 15, NULL, 'created', NULL, '{\"email_cong_viec\":\"phuong.nguyen@vietcare.com\",\"user_id\":122,\"ho_ten\":\"Nguy\\u1ec5n Thu Ph\\u01b0\\u01a1ng\",\"chuc_vu\":\"Qu\\u1ea3n l\\u00fd ph\\u00f2ng kh\\u00e1m\",\"so_dien_thoai\":\"0909222009\",\"ngay_sinh\":\"1980-01-01\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:41:14\",\"created_at\":\"2025-12-12 13:41:14\",\"id\":15}', '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(19, 16, NULL, 'created', NULL, '{\"email_cong_viec\":\"bao.tran@vietcare.com\",\"user_id\":123,\"ho_ten\":\"Tr\\u1ea7n Qu\\u1ed1c B\\u1ea3o\",\"chuc_vu\":\"Nh\\u00e2n vi\\u00ean IT \\/ K\\u1ef9 thu\\u1eadt\",\"so_dien_thoai\":\"0909222010\",\"ngay_sinh\":\"1995-12-18\",\"gioi_tinh\":\"Nam\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:41:14\",\"created_at\":\"2025-12-12 13:41:14\",\"id\":16}', '2025-12-12 06:41:14', '2025-12-12 06:41:14'),
-(20, 16, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:41:14.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 13:43:52\"}', '2025-12-12 06:43:52', '2025-12-12 06:43:52'),
-(21, 16, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T06:43:52.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 13:43:58\"}', '2025-12-12 06:43:58', '2025-12-12 06:43:58'),
-(23, 16, NULL, 'updated', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12T06:43:58.000000Z\"}', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12 13:47:24\"}', '2025-12-12 06:47:24', '2025-12-12 06:47:24'),
-(24, 16, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:47:24.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 14:07:57\"}', '2025-12-12 07:07:57', '2025-12-12 07:07:57'),
-(25, 16, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T07:07:57.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 14:08:12\"}', '2025-12-12 07:08:12', '2025-12-12 07:08:12'),
-(26, 15, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:41:14.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 14:17:04\"}', '2025-12-12 07:17:04', '2025-12-12 07:17:04'),
-(27, 14, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:41:14.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 14:17:07\"}', '2025-12-12 07:17:07', '2025-12-12 07:17:07'),
-(28, 13, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:41:14.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 14:17:09\"}', '2025-12-12 07:17:09', '2025-12-12 07:17:09'),
-(29, 12, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:41:14.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 14:17:11\"}', '2025-12-12 07:17:11', '2025-12-12 07:17:11'),
-(31, 8, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:41:13.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 14:17:17\"}', '2025-12-12 07:17:17', '2025-12-12 07:17:17'),
-(32, 9, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:41:13.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 14:17:19\"}', '2025-12-12 07:17:19', '2025-12-12 07:17:19'),
-(33, 10, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:41:13.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 14:17:22\"}', '2025-12-12 07:17:22', '2025-12-12 07:17:22'),
-(34, 11, 13, 'updated', '{\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-12T06:41:13.000000Z\"}', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12 14:17:24\"}', '2025-12-12 07:17:24', '2025-12-12 07:17:24'),
-(35, 12, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T07:17:11.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 14:17:27\"}', '2025-12-12 07:17:27', '2025-12-12 07:17:27'),
-(36, 13, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T07:17:09.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 14:17:28\"}', '2025-12-12 07:17:28', '2025-12-12 07:17:28'),
-(37, 14, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T07:17:07.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 14:17:30\"}', '2025-12-12 07:17:30', '2025-12-12 07:17:30'),
-(38, 15, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T07:17:04.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 14:17:32\"}', '2025-12-12 07:17:32', '2025-12-12 07:17:32'),
-(40, 8, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T07:17:17.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 14:17:38\"}', '2025-12-12 07:17:38', '2025-12-12 07:17:38'),
-(41, 9, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T07:17:19.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 14:17:41\"}', '2025-12-12 07:17:41', '2025-12-12 07:17:41'),
-(42, 10, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T07:17:22.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 14:17:43\"}', '2025-12-12 07:17:43', '2025-12-12 07:17:43'),
-(43, 11, 13, 'updated', '{\"trang_thai\":\"inactive\",\"updated_at\":\"2025-12-12T07:17:24.000000Z\"}', '{\"trang_thai\":\"active\",\"updated_at\":\"2025-12-12 14:17:46\"}', '2025-12-12 07:17:46', '2025-12-12 07:17:46'),
-(44, 16, 13, 'updated', '{\"gioi_tinh\":\"Nam\",\"avatar_path\":null,\"updated_at\":\"2025-12-12T07:08:12.000000Z\"}', '{\"gioi_tinh\":\"nam\",\"avatar_path\":\"nv_avatar\\/CZmBnBIrQbAcDdMl7QI9AiiXVvgXPNIFnSrrWBpb.png\",\"updated_at\":\"2025-12-12 14:18:50\"}', '2025-12-12 07:18:50', '2025-12-12 07:18:50'),
-(45, 15, 13, 'updated', '{\"gioi_tinh\":\"N\\u1eef\",\"avatar_path\":null,\"updated_at\":\"2025-12-12T07:17:32.000000Z\"}', '{\"gioi_tinh\":\"nu\",\"avatar_path\":\"nv_avatar\\/hcuvgd00doWlGBX75i8WDbJHKfjeuJXe3M0HEyaN.png\",\"updated_at\":\"2025-12-12 14:19:29\"}', '2025-12-12 07:19:29', '2025-12-12 07:19:29'),
-(46, 13, 13, 'updated', '{\"gioi_tinh\":\"N\\u1eef\",\"avatar_path\":null,\"updated_at\":\"2025-12-12T07:17:28.000000Z\"}', '{\"gioi_tinh\":\"nu\",\"avatar_path\":\"nv_avatar\\/abxEAXOG6uldxyMHONI9sU1gwikUptIeDInfsI9n.png\",\"updated_at\":\"2025-12-12 14:19:48\"}', '2025-12-12 07:19:48', '2025-12-12 07:19:48'),
-(47, 12, 13, 'updated', '{\"gioi_tinh\":\"N\\u1eef\",\"avatar_path\":null,\"updated_at\":\"2025-12-12T07:17:27.000000Z\"}', '{\"gioi_tinh\":\"nu\",\"avatar_path\":\"nv_avatar\\/XP0eYT5HYXhEcRCfTxcPSxSaCTuiLMNtCdGB1IFT.png\",\"updated_at\":\"2025-12-12 14:20:05\"}', '2025-12-12 07:20:05', '2025-12-12 07:20:05'),
-(48, 14, 13, 'updated', '{\"gioi_tinh\":\"Nam\",\"avatar_path\":null,\"updated_at\":\"2025-12-12T07:17:30.000000Z\"}', '{\"gioi_tinh\":\"nam\",\"avatar_path\":\"nv_avatar\\/SORI798EIccHzFfo0BTZLYX9IhXiD7kn88jXCOub.png\",\"updated_at\":\"2025-12-12 14:21:55\"}', '2025-12-12 07:21:55', '2025-12-12 07:21:55'),
-(49, 11, 13, 'updated', '{\"gioi_tinh\":\"N\\u1eef\",\"avatar_path\":null,\"updated_at\":\"2025-12-12T07:17:46.000000Z\"}', '{\"gioi_tinh\":\"nu\",\"avatar_path\":\"nv_avatar\\/fbPQYtNRPoz4kUjPK9PLpXALB28b564CiTUAK5ic.png\",\"updated_at\":\"2025-12-12 14:22:14\"}', '2025-12-12 07:22:14', '2025-12-12 07:22:14'),
-(51, 9, 13, 'updated', '{\"gioi_tinh\":\"N\\u1eef\",\"avatar_path\":null,\"updated_at\":\"2025-12-12T07:17:41.000000Z\"}', '{\"gioi_tinh\":\"nu\",\"avatar_path\":\"nv_avatar\\/gTy76mUjFUdwlSE4wuYBiYyjeJl7BKYbcR0AzfP3.png\",\"updated_at\":\"2025-12-12 14:23:32\"}', '2025-12-12 07:23:32', '2025-12-12 07:23:32'),
-(52, 10, 13, 'updated', '{\"gioi_tinh\":\"N\\u1eef\",\"avatar_path\":null,\"updated_at\":\"2025-12-12T07:17:43.000000Z\"}', '{\"gioi_tinh\":\"nu\",\"avatar_path\":\"nv_avatar\\/J9L8WaUVEUXaH5U0T1yFHsYxH2zb3DuVJTfvUhOD.png\",\"updated_at\":\"2025-12-12 14:24:40\"}', '2025-12-12 07:24:40', '2025-12-12 07:24:40'),
-(53, 8, 13, 'updated', '{\"gioi_tinh\":\"N\\u1eef\",\"avatar_path\":null,\"updated_at\":\"2025-12-12T07:17:38.000000Z\"}', '{\"gioi_tinh\":\"nu\",\"avatar_path\":\"nv_avatar\\/9mZ0E9DC2etpeikNnSxRKryaqtVKcRYDeQHR0YUi.png\",\"updated_at\":\"2025-12-12 14:24:50\"}', '2025-12-12 07:24:50', '2025-12-12 07:24:50'),
-(55, 17, 13, 'created', NULL, '{\"ho_ten\":\"L\\u00ea Minh Nh\\u1eadt\",\"chuc_vu\":\"Tr\\u01b0\\u1edfng l\\u1ec5 t\\u00e2n\",\"so_dien_thoai\":\"0789654123\",\"email_cong_viec\":\"henvaemhen@gmail.com\",\"ngay_sinh\":\"2004-12-12\",\"gioi_tinh\":\"nam\",\"avatar_path\":\"nv_avatar\\/n53Ti8mAFEeIWZkE7fn214GxlPNQrBCHokZb2fpT.png\",\"user_id\":149,\"updated_at\":\"2025-12-13 11:13:14\",\"created_at\":\"2025-12-13 11:13:14\",\"id\":17}', '2025-12-13 04:13:14', '2025-12-13 04:13:14');
+(2, 2, NULL, 'created', NULL, '{\"email_cong_viec\":\"hanh.nguyen@vietcare.com\",\"user_id\":14,\"ho_ten\":\"Nguy\\u1ec5n Th\\u1ecb H\\u1ed3ng H\\u1ea1nh\",\"chuc_vu\":\"Nh\\u00e2n vi\\u00ean CSKH\",\"so_dien_thoai\":\"0909222002\",\"ngay_sinh\":\"2000-10-20\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-19 23:00:45\",\"created_at\":\"2025-12-19 23:00:45\",\"id\":2}', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(3, 3, NULL, 'created', NULL, '{\"email_cong_viec\":\"dung.tran@vietcare.com\",\"user_id\":15,\"ho_ten\":\"Tr\\u1ea7n Th\\u1ecb Kim Dung\",\"chuc_vu\":\"L\\u1ec5 t\\u00e2n\",\"so_dien_thoai\":\"0909222003\",\"ngay_sinh\":\"1999-08-15\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-19 23:00:45\",\"created_at\":\"2025-12-19 23:00:45\",\"id\":3}', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(4, 4, NULL, 'created', NULL, '{\"email_cong_viec\":\"thao.pham@vietcare.com\",\"user_id\":16,\"ho_ten\":\"Ph\\u1ea1m Th\\u1ecb Thu Th\\u1ea3o\",\"chuc_vu\":\"\\u0110i\\u1ec1u d\\u01b0\\u1ee1ng tr\\u01b0\\u1edfng\",\"so_dien_thoai\":\"0909222004\",\"ngay_sinh\":\"1985-02-05\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-19 23:00:45\",\"created_at\":\"2025-12-19 23:00:45\",\"id\":4}', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(5, 5, NULL, 'created', NULL, '{\"email_cong_viec\":\"truc.le@vietcare.com\",\"user_id\":17,\"ho_ten\":\"L\\u00ea Th\\u1ecb Thanh Tr\\u00fac\",\"chuc_vu\":\"N\\u1eef h\\u1ed9 sinh\",\"so_dien_thoai\":\"0909222005\",\"ngay_sinh\":\"1995-11-10\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-19 23:00:45\",\"created_at\":\"2025-12-19 23:00:45\",\"id\":5}', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(6, 6, NULL, 'created', NULL, '{\"email_cong_viec\":\"huyen.nguyen@vietcare.com\",\"user_id\":18,\"ho_ten\":\"Nguy\\u1ec5n Ng\\u1ecdc Huy\\u1ec1n\",\"chuc_vu\":\"\\u0110i\\u1ec1u d\\u01b0\\u1ee1ng \\u0111a khoa\",\"so_dien_thoai\":\"0909222006\",\"ngay_sinh\":\"1997-07-22\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-19 23:00:45\",\"created_at\":\"2025-12-19 23:00:45\",\"id\":6}', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(7, 7, NULL, 'created', NULL, '{\"email_cong_viec\":\"anh.vu@vietcare.com\",\"user_id\":19,\"ho_ten\":\"V\\u0169 Th\\u1ecb Minh Anh\",\"chuc_vu\":\"Thu ng\\u00e2n\",\"so_dien_thoai\":\"0909222007\",\"ngay_sinh\":\"1996-04-30\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-19 23:00:45\",\"created_at\":\"2025-12-19 23:00:45\",\"id\":7}', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(8, 8, NULL, 'created', NULL, '{\"email_cong_viec\":\"nam.hoang@vietcare.com\",\"user_id\":20,\"ho_ten\":\"Ho\\u00e0ng V\\u0103n Nam\",\"chuc_vu\":\"D\\u01b0\\u1ee3c s\\u0129\",\"so_dien_thoai\":\"0909222008\",\"ngay_sinh\":\"1990-09-14\",\"gioi_tinh\":\"Nam\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-19 23:00:45\",\"created_at\":\"2025-12-19 23:00:45\",\"id\":8}', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(9, 9, NULL, 'created', NULL, '{\"email_cong_viec\":\"phuong.nguyen@vietcare.com\",\"user_id\":21,\"ho_ten\":\"Nguy\\u1ec5n Thu Ph\\u01b0\\u01a1ng\",\"chuc_vu\":\"Qu\\u1ea3n l\\u00fd ph\\u00f2ng kh\\u00e1m\",\"so_dien_thoai\":\"0909222009\",\"ngay_sinh\":\"1980-01-01\",\"gioi_tinh\":\"N\\u1eef\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-19 23:00:45\",\"created_at\":\"2025-12-19 23:00:45\",\"id\":9}', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(10, 10, NULL, 'created', NULL, '{\"email_cong_viec\":\"bao.tran@vietcare.com\",\"user_id\":22,\"ho_ten\":\"Tr\\u1ea7n Qu\\u1ed1c B\\u1ea3o\",\"chuc_vu\":\"Nh\\u00e2n vi\\u00ean IT \\/ K\\u1ef9 thu\\u1eadt\",\"so_dien_thoai\":\"0909222010\",\"ngay_sinh\":\"1995-12-18\",\"gioi_tinh\":\"Nam\",\"trang_thai\":\"\\u0110ang l\\u00e0m\",\"updated_at\":\"2025-12-19 23:00:45\",\"created_at\":\"2025-12-19 23:00:45\",\"id\":10}', '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(12, 11, 24, 'created', NULL, '{\"ho_ten\":\"L\\u00ea Minh Nh\\u1eadt\",\"chuc_vu\":\"Tr\\u01b0\\u1edfng l\\u1ec5 t\\u00e2n\",\"so_dien_thoai\":\"0123654897\",\"email_cong_viec\":\"henvaemhen@gmail.com\",\"ngay_sinh\":\"2004-12-12\",\"gioi_tinh\":\"nam\",\"avatar_path\":\"nv_avatar\\/QfiZElnLOZ8wtxphGmyS6YRhdRjUyF8yFWoKRWL9.png\",\"user_id\":25,\"updated_at\":\"2025-12-19 23:38:20\",\"created_at\":\"2025-12-19 23:38:20\",\"id\":11}', '2025-12-19 16:38:20', '2025-12-19 16:38:20');
 
 -- --------------------------------------------------------
 
@@ -1554,21 +1719,21 @@ CREATE TABLE `nha_cung_caps` (
 --
 
 INSERT INTO `nha_cung_caps` (`id`, `ten`, `dia_chi`, `so_dien_thoai`, `email`, `ghi_chu`, `created_at`, `updated_at`) VALUES
-(1, 'Zuellig Pharma Vietnam', 'TP.HCM', '09091000', 'supplier1@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(2, 'DKSH Vietnam', 'TP.HCM', '09091001', 'supplier2@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(3, 'Dược Hậu Giang', 'TP.HCM', '09091002', 'supplier3@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(4, 'Traphaco', 'TP.HCM', '09091003', 'supplier4@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(5, 'Vinapharm', 'TP.HCM', '09091004', 'supplier5@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(6, 'Công ty Vật tư Y tế Sài Gòn', 'TP.HCM', '09091005', 'supplier6@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(7, 'Công ty Vật tư Y tế Hà Nội', 'TP.HCM', '09091006', 'supplier7@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(8, 'Công ty Vật tư Y tế Trung Tâm', 'TP.HCM', '09091007', 'supplier8@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(9, 'Hóa chất Roche Vietnam', 'TP.HCM', '09091008', 'supplier9@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(10, 'Hóa chất Abbott Vietnam', 'TP.HCM', '09091009', 'supplier10@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(11, 'Hóa chất Biomed', 'TP.HCM', '09091010', 'supplier11@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(12, 'Công ty Thiết bị Y tế MedTech', 'TP.HCM', '09091011', 'supplier12@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(13, 'Công ty Thiết bị Y tế VN', 'TP.HCM', '09091012', 'supplier13@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(14, 'Nhà thuốc An Bình', 'TP.HCM', '09091013', 'supplier14@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55'),
-(15, 'Nhà thuốc Bảo An', 'TP.HCM', '09091014', 'supplier15@vietcare.com', NULL, '2025-12-12 07:45:55', '2025-12-12 07:45:55');
+(1, 'Zuellig Pharma Vietnam', 'TP.HCM', '09091000', 'supplier1@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(2, 'DKSH Vietnam', 'TP.HCM', '09091001', 'supplier2@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(3, 'Dược Hậu Giang', 'TP.HCM', '09091002', 'supplier3@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(4, 'Traphaco', 'TP.HCM', '09091003', 'supplier4@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(5, 'Vinapharm', 'TP.HCM', '09091004', 'supplier5@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(6, 'Công ty Vật tư Y tế Sài Gòn', 'TP.HCM', '09091005', 'supplier6@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(7, 'Công ty Vật tư Y tế Hà Nội', 'TP.HCM', '09091006', 'supplier7@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(8, 'Công ty Vật tư Y tế Trung Tâm', 'TP.HCM', '09091007', 'supplier8@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(9, 'Hóa chất Roche Vietnam', 'TP.HCM', '09091008', 'supplier9@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(10, 'Hóa chất Abbott Vietnam', 'TP.HCM', '09091009', 'supplier10@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(11, 'Hóa chất Biomed', 'TP.HCM', '09091010', 'supplier11@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(12, 'Công ty Thiết bị Y tế MedTech', 'TP.HCM', '09091011', 'supplier12@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(13, 'Công ty Thiết bị Y tế VN', 'TP.HCM', '09091012', 'supplier13@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(14, 'Nhà thuốc An Bình', 'TP.HCM', '09091013', 'supplier14@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(15, 'Nhà thuốc Bảo An', 'TP.HCM', '09091014', 'supplier15@vietcare.com', NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45');
 
 -- --------------------------------------------------------
 
@@ -1590,754 +1755,406 @@ CREATE TABLE `nha_cung_cap_thuoc` (
 --
 
 INSERT INTO `nha_cung_cap_thuoc` (`id`, `nha_cung_cap_id`, `thuoc_id`, `gia_nhap_mac_dinh`, `created_at`, `updated_at`) VALUES
-(1, 3, 1, 7667.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(2, 13, 1, 7667.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(3, 3, 2, 3200.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(4, 7, 2, 3200.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(5, 8, 3, 6465.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(6, 12, 3, 6465.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(7, 2, 4, 7862.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(8, 3, 4, 7862.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(9, 6, 5, 5528.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(10, 12, 5, 5528.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(11, 2, 6, 3571.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(12, 10, 6, 3571.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(13, 10, 7, 6489.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(14, 13, 7, 6489.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(15, 1, 8, 7117.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(16, 3, 8, 7117.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(17, 13, 9, 6708.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(18, 15, 9, 6708.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(19, 5, 10, 1598.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(20, 15, 10, 1598.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(21, 8, 11, 9072.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(22, 11, 11, 9072.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(23, 1, 12, 9481.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(24, 11, 12, 9481.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(25, 10, 13, 1030.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(26, 14, 13, 1030.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(27, 2, 14, 7461.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(28, 10, 14, 7461.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(29, 6, 15, 6157.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(30, 9, 15, 6157.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(31, 1, 16, 6234.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(32, 7, 16, 6234.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(33, 10, 17, 3962.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(34, 14, 17, 3962.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(35, 2, 18, 6982.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(36, 6, 18, 6982.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(37, 11, 19, 9644.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(38, 12, 19, 9644.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(39, 2, 20, 5052.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(40, 7, 20, 5052.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(41, 4, 21, 5239.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(42, 14, 21, 5239.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(43, 3, 22, 5354.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(44, 9, 22, 5354.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(45, 5, 23, 2578.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(46, 13, 23, 2578.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(47, 3, 24, 3062.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(48, 5, 24, 3062.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(49, 5, 25, 1300.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(50, 13, 25, 1300.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(51, 1, 26, 3924.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(52, 10, 26, 3924.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(53, 4, 27, 8390.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(54, 6, 27, 8390.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(55, 10, 28, 2206.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(56, 13, 28, 2206.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(57, 6, 29, 9768.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(58, 8, 29, 9768.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(59, 12, 30, 9944.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(60, 13, 30, 9944.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(61, 7, 31, 8731.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(62, 9, 31, 8731.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(63, 4, 32, 959.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(64, 13, 32, 959.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(65, 5, 33, 1488.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(66, 8, 33, 1488.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(67, 7, 34, 9179.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(68, 11, 34, 9179.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(69, 1, 35, 4240.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(70, 12, 35, 4240.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(71, 4, 36, 3190.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(72, 7, 36, 3190.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(73, 8, 37, 3196.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(74, 10, 37, 3196.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(75, 2, 38, 6611.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(76, 6, 38, 6611.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(77, 14, 39, 5243.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(78, 15, 39, 5243.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(79, 5, 40, 6217.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(80, 6, 40, 6217.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(81, 12, 41, 7252.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(82, 15, 41, 7252.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(83, 10, 42, 5690.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(84, 14, 42, 5690.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(85, 5, 43, 8403.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(86, 9, 43, 8403.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(87, 1, 44, 2050.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(88, 3, 44, 2050.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(89, 8, 45, 2187.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(90, 12, 45, 2187.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(91, 12, 46, 1050.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(92, 14, 46, 1050.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(93, 1, 47, 6567.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(94, 3, 47, 6567.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(95, 9, 48, 6053.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(96, 11, 48, 6053.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(97, 7, 49, 3148.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(98, 13, 49, 3148.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(99, 2, 50, 6798.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(100, 5, 50, 6798.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(101, 1, 51, 6756.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(102, 6, 51, 6756.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(103, 3, 52, 9295.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(104, 9, 52, 9295.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(105, 5, 53, 4944.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(106, 9, 53, 4944.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(107, 7, 54, 3934.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(108, 12, 54, 3934.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(109, 3, 55, 9585.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(110, 6, 55, 9585.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(111, 2, 56, 5804.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(112, 10, 56, 5804.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(113, 2, 57, 6439.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(114, 12, 57, 6439.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(115, 7, 58, 3038.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(116, 11, 58, 3038.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(117, 2, 59, 5224.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(118, 13, 59, 5224.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(119, 4, 60, 9771.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(120, 5, 60, 9771.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(121, 13, 61, 2949.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(122, 14, 61, 2949.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(123, 3, 62, 7553.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(124, 11, 62, 7553.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(125, 1, 63, 5602.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(126, 7, 63, 5602.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(127, 5, 64, 3184.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(128, 11, 64, 3184.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(129, 12, 65, 8332.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(130, 14, 65, 8332.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(131, 4, 66, 1790.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(132, 15, 66, 1790.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(133, 6, 67, 5299.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(134, 13, 67, 5299.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(135, 3, 68, 2799.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(136, 13, 68, 2799.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(137, 4, 69, 6768.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(138, 6, 69, 6768.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(139, 5, 70, 6674.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(140, 6, 70, 6674.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(141, 2, 71, 6674.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(142, 12, 71, 6674.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(143, 4, 72, 3772.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(144, 11, 72, 3772.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(145, 4, 73, 3514.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(146, 8, 73, 3514.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(147, 1, 74, 5860.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(148, 14, 74, 5860.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(149, 1, 75, 8276.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(150, 14, 75, 8276.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(151, 2, 76, 9989.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(152, 5, 76, 9989.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(153, 8, 77, 5089.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(154, 9, 77, 5089.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(155, 7, 78, 8962.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(156, 10, 78, 8962.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(157, 4, 79, 3629.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(158, 14, 79, 3629.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(159, 1, 80, 851.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(160, 13, 80, 851.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(161, 11, 81, 6564.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(162, 12, 81, 6564.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(163, 2, 82, 6019.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(164, 6, 82, 6019.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(165, 10, 83, 6541.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(166, 13, 83, 6541.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(167, 3, 84, 5297.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(168, 12, 84, 5297.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(169, 6, 85, 2719.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(170, 8, 85, 2719.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(171, 10, 86, 4013.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(172, 15, 86, 4013.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(173, 6, 87, 6564.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(174, 10, 87, 6564.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(175, 4, 88, 1104.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(176, 13, 88, 1104.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(177, 6, 89, 9142.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(178, 13, 89, 9142.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(179, 4, 90, 7835.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(180, 14, 90, 7835.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(181, 4, 91, 3773.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(182, 13, 91, 3773.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(183, 5, 92, 4838.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(184, 11, 92, 4838.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(185, 9, 93, 6906.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(186, 15, 93, 6906.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(187, 3, 94, 9401.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(188, 5, 94, 9401.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(189, 7, 95, 7119.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(190, 9, 95, 7119.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(191, 2, 96, 9637.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(192, 11, 96, 9637.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(193, 6, 97, 2754.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(194, 10, 97, 2754.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(195, 6, 98, 6470.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(196, 10, 98, 6470.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(197, 4, 99, 4746.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(198, 14, 99, 4746.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(199, 2, 100, 3319.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(200, 9, 100, 3319.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(201, 11, 101, 7843.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(202, 14, 101, 7843.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(203, 5, 102, 7796.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(204, 8, 102, 7796.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(205, 8, 103, 1597.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(206, 11, 103, 1597.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(207, 8, 104, 5894.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(208, 13, 104, 5894.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(209, 8, 105, 2441.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(210, 13, 105, 2441.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(211, 5, 106, 6487.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(212, 12, 106, 6487.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(213, 2, 107, 4069.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(214, 15, 107, 4069.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(215, 1, 108, 3780.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(216, 4, 108, 3780.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(217, 7, 109, 9516.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(218, 13, 109, 9516.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(219, 5, 110, 1709.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(220, 8, 110, 1709.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(221, 11, 111, 2557.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(222, 13, 111, 2557.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(223, 3, 112, 8338.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(224, 6, 112, 8338.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(225, 13, 113, 9291.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(226, 14, 113, 9291.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(227, 3, 114, 6872.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(228, 6, 114, 6872.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(229, 4, 115, 2983.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(230, 9, 115, 2983.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(231, 9, 116, 1346.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(232, 11, 116, 1346.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(233, 4, 117, 6841.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(234, 14, 117, 6841.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(235, 3, 118, 2312.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(236, 15, 118, 2312.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(237, 10, 119, 2896.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(238, 14, 119, 2896.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(239, 6, 120, 4603.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(240, 7, 120, 4603.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(241, 6, 121, 1347.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(242, 7, 121, 1347.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(243, 3, 122, 6440.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(244, 13, 122, 6440.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(245, 5, 123, 4290.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(246, 12, 123, 4290.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(247, 7, 124, 8981.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(248, 8, 124, 8981.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(249, 6, 125, 3597.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(250, 7, 125, 3597.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(251, 2, 126, 7060.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(252, 6, 126, 7060.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(253, 1, 127, 1123.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(254, 9, 127, 1123.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(255, 4, 128, 879.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(256, 11, 128, 879.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(257, 6, 129, 8561.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(258, 13, 129, 8561.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(259, 11, 130, 5083.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(260, 14, 130, 5083.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(261, 8, 131, 1200.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(262, 13, 131, 1200.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(263, 4, 132, 9527.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(264, 13, 132, 9527.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(265, 3, 133, 9464.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(266, 13, 133, 9464.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(267, 8, 134, 2136.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(268, 15, 134, 2136.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(269, 6, 135, 4252.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(270, 15, 135, 4252.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(271, 3, 136, 8208.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(272, 14, 136, 8208.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(273, 10, 137, 4857.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(274, 14, 137, 4857.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(275, 4, 138, 9750.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(276, 5, 138, 9750.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(277, 5, 139, 7884.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(278, 9, 139, 7884.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(279, 1, 140, 8061.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(280, 8, 140, 8061.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(281, 8, 141, 1672.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(282, 10, 141, 1672.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(283, 4, 142, 7425.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(284, 10, 142, 7425.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(285, 1, 143, 7891.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(286, 15, 143, 7891.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(287, 10, 144, 7222.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(288, 13, 144, 7222.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(289, 2, 145, 4047.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(290, 11, 145, 4047.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(291, 5, 146, 1563.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(292, 13, 146, 1563.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(293, 10, 147, 7835.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(294, 11, 147, 7835.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(295, 4, 148, 8710.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(296, 14, 148, 8710.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(297, 10, 149, 7338.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(298, 15, 149, 7338.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(299, 5, 150, 6112.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(300, 6, 150, 6112.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(301, 6, 151, 15432.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(302, 8, 151, 15432.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(303, 7, 152, 5359.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(304, 10, 152, 5359.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(305, 1, 153, 21814.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(306, 5, 153, 21814.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(307, 4, 154, 22269.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(308, 8, 154, 22269.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(309, 10, 155, 30009.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(310, 15, 155, 30009.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(311, 4, 156, 2710.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(312, 13, 156, 2710.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(313, 4, 157, 24569.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(314, 8, 157, 24569.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(315, 8, 158, 15917.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(316, 13, 158, 15917.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(317, 3, 159, 45799.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(318, 7, 159, 45799.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(319, 9, 160, 46495.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(320, 15, 160, 46495.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(321, 2, 161, 8485.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(322, 7, 161, 8485.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(323, 1, 162, 49316.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(324, 8, 162, 49316.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(325, 11, 163, 38888.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(326, 14, 163, 38888.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(327, 3, 164, 32901.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(328, 5, 164, 32901.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(329, 13, 165, 2179.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(330, 14, 165, 2179.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(331, 9, 166, 10945.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(332, 12, 166, 10945.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(333, 10, 167, 10571.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(334, 13, 167, 10571.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(335, 4, 168, 9274.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(336, 6, 168, 9274.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(337, 8, 169, 3380.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(338, 11, 169, 3380.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(339, 10, 170, 13880.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(340, 11, 170, 13880.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(341, 3, 171, 22817.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(342, 10, 171, 22817.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(343, 4, 172, 15638.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(344, 14, 172, 15638.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(345, 9, 173, 11919.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(346, 14, 173, 11919.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(347, 1, 174, 18629.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(348, 15, 174, 18629.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(349, 3, 175, 31951.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(350, 10, 175, 31951.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(351, 2, 176, 47634.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(352, 6, 176, 47634.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(353, 4, 177, 13647.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(354, 8, 177, 13647.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(355, 6, 178, 24717.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(356, 11, 178, 24717.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(357, 1, 179, 13303.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(358, 2, 179, 13303.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(359, 4, 180, 39824.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(360, 13, 180, 39824.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(361, 1, 181, 9380.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(362, 9, 181, 9380.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(363, 4, 182, 32782.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(364, 5, 182, 32782.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(365, 5, 183, 42087.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(366, 13, 183, 42087.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(367, 5, 184, 33893.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(368, 7, 184, 33893.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(369, 3, 185, 44973.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(370, 13, 185, 44973.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(371, 5, 186, 10977.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(372, 10, 186, 10977.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(373, 4, 187, 20835.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(374, 8, 187, 20835.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(375, 5, 188, 48519.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(376, 10, 188, 48519.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(377, 11, 189, 46645.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(378, 13, 189, 46645.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(379, 11, 190, 21991.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(380, 13, 190, 21991.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(381, 6, 191, 35119.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(382, 8, 191, 35119.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(383, 6, 192, 36222.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(384, 14, 192, 36222.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(385, 5, 193, 4718.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(386, 11, 193, 4718.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(387, 2, 194, 34879.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(388, 10, 194, 34879.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(389, 9, 195, 24175.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(390, 10, 195, 24175.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(391, 3, 196, 4075.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(392, 6, 196, 4075.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(393, 5, 197, 9151.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(394, 9, 197, 9151.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(395, 5, 198, 21269.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(396, 12, 198, 21269.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(397, 12, 199, 29765.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(398, 13, 199, 29765.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(399, 10, 200, 49482.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(400, 11, 200, 49482.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(401, 8, 1, 6799.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(402, 9, 1, 6799.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(403, 8, 2, 3144.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(404, 1, 3, 8858.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(405, 14, 3, 8858.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(406, 4, 4, 7111.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(407, 11, 4, 7111.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(408, 3, 5, 4240.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(409, 9, 5, 4240.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(410, 5, 6, 6736.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(411, 2, 7, 9986.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(412, 11, 7, 9986.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(413, 6, 8, 1855.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(414, 8, 8, 1855.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(415, 1, 9, 1744.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(416, 11, 9, 1744.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(417, 3, 10, 1585.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(418, 8, 10, 1585.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(419, 1, 11, 4696.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(420, 14, 11, 4696.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(421, 6, 12, 4789.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(422, 12, 12, 4789.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(423, 7, 13, 4943.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(424, 9, 13, 4943.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(425, 3, 14, 5675.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(426, 12, 14, 5675.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(427, 1, 15, 8143.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(428, 14, 15, 8143.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(429, 2, 16, 4177.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(430, 10, 16, 4177.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(431, 8, 18, 9503.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(432, 13, 18, 9503.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(433, 2, 19, 2104.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(434, 9, 20, 1147.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(435, 11, 20, 1147.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(436, 8, 21, 6592.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(437, 12, 22, 3887.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(438, 12, 23, 5633.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(439, 14, 23, 5633.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(440, 12, 24, 7852.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(441, 6, 25, 5875.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(442, 9, 25, 5875.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(443, 15, 26, 3396.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(444, 1, 27, 4819.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(445, 2, 27, 4819.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(446, 9, 28, 3256.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(447, 15, 28, 3256.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(448, 11, 29, 9760.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(449, 1, 30, 9462.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(450, 3, 30, 9462.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(451, 12, 31, 3125.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(452, 15, 31, 3125.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(453, 7, 32, 4606.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(454, 10, 32, 4606.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(455, 3, 33, 5824.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(456, 14, 33, 5824.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(457, 6, 34, 1572.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(458, 8, 34, 1572.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(459, 6, 35, 2198.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(460, 7, 35, 2198.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(461, 6, 36, 7880.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(462, 12, 36, 7880.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(463, 3, 37, 9457.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(464, 9, 37, 9457.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(465, 14, 38, 6978.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(466, 12, 39, 6270.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(467, 13, 39, 6270.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(468, 2, 40, 4843.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(469, 8, 40, 4843.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(470, 6, 41, 6869.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(471, 11, 42, 6823.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(472, 13, 42, 6823.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(473, 1, 43, 9875.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(474, 12, 43, 9875.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(475, 11, 44, 4866.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(476, 12, 44, 4866.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(477, 11, 45, 5327.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(478, 15, 45, 5327.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(479, 1, 46, 9413.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(480, 13, 47, 4455.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(481, 1, 48, 9801.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(482, 15, 48, 9801.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(483, 4, 49, 3257.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(484, 5, 49, 3257.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(485, 7, 50, 1753.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(486, 10, 51, 6168.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(487, 12, 51, 6168.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(488, 10, 52, 1876.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(489, 14, 52, 1876.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(490, 4, 53, 4569.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(491, 13, 53, 4569.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(492, 6, 54, 6654.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(493, 15, 54, 6654.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(494, 12, 55, 5440.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(495, 3, 56, 2294.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(496, 6, 56, 2294.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(497, 5, 57, 4464.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(498, 9, 57, 4464.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(499, 6, 58, 6275.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(500, 7, 59, 4550.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(501, 9, 59, 4550.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(502, 13, 60, 1957.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(503, 15, 60, 1957.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(504, 4, 61, 4697.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(505, 12, 61, 4697.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(506, 10, 62, 7479.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(507, 14, 62, 7479.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(508, 4, 63, 2267.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(509, 11, 63, 2267.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(510, 7, 64, 4399.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(511, 14, 64, 4399.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(512, 3, 65, 2478.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(513, 5, 65, 2478.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(514, 13, 66, 3637.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(515, 2, 67, 9238.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(516, 12, 67, 9238.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(517, 2, 68, 3636.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(518, 8, 68, 3636.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(519, 7, 69, 7124.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(520, 12, 69, 7124.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(521, 8, 70, 1828.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(522, 9, 70, 1828.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(523, 6, 71, 1728.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(524, 10, 71, 1728.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(525, 8, 72, 4795.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(526, 14, 72, 4795.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(527, 9, 73, 6075.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(528, 15, 73, 6075.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(529, 9, 74, 1330.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(530, 11, 74, 1330.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(531, 6, 75, 7633.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(532, 10, 75, 7633.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(533, 4, 76, 7680.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(534, 11, 76, 7680.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(535, 1, 77, 9155.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(536, 7, 77, 9155.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(537, 1, 78, 6667.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(538, 12, 78, 6667.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(539, 13, 79, 8741.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(540, 3, 80, 3405.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(541, 15, 80, 3405.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(542, 5, 81, 4377.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(543, 9, 81, 4377.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(544, 4, 82, 2905.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(545, 11, 82, 2905.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(546, 14, 83, 8396.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(547, 6, 84, 5915.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(548, 2, 85, 3547.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(549, 12, 85, 3547.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(550, 1, 86, 5234.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(551, 12, 87, 9784.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(552, 14, 87, 9784.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(553, 1, 88, 4413.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(554, 6, 88, 4413.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(555, 7, 89, 4449.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(556, 9, 89, 4449.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(557, 2, 90, 3402.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(558, 11, 91, 9584.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(559, 12, 92, 8942.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(560, 15, 92, 8942.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(561, 5, 93, 8442.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(562, 2, 94, 3577.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(563, 3, 95, 5414.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(564, 4, 95, 5414.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(565, 13, 96, 6832.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(566, 12, 97, 8093.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(567, 1, 98, 4636.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(568, 14, 98, 4636.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(569, 2, 99, 4323.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(570, 9, 99, 4323.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(571, 4, 100, 2303.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(572, 6, 100, 2303.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(573, 3, 101, 1866.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(574, 10, 101, 1866.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(575, 3, 102, 4440.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(576, 4, 102, 4440.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(577, 5, 103, 2031.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(578, 7, 103, 2031.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(579, 6, 104, 4324.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(580, 9, 104, 4324.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(581, 6, 105, 8718.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(582, 7, 105, 8718.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(583, 7, 106, 5178.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(584, 14, 106, 5178.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(585, 8, 107, 3106.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(586, 11, 107, 3106.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(587, 5, 108, 9025.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(588, 8, 108, 9025.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(589, 4, 109, 4095.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(590, 15, 109, 4095.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(591, 1, 110, 6250.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(592, 15, 110, 6250.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(593, 12, 111, 9836.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(594, 4, 112, 6877.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(595, 3, 113, 1973.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(596, 10, 113, 1973.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(597, 1, 114, 8095.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(598, 5, 114, 8095.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(599, 2, 115, 7101.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(600, 3, 116, 9795.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(601, 15, 116, 9795.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(602, 7, 117, 6578.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(603, 11, 117, 6578.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(604, 5, 118, 5619.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(605, 6, 118, 5619.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(606, 8, 119, 3645.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(607, 9, 120, 5363.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(608, 13, 120, 5363.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(609, 4, 121, 1845.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(610, 11, 121, 1845.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(611, 10, 122, 3720.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(612, 14, 122, 3720.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(613, 4, 123, 6386.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(614, 8, 123, 6386.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(615, 3, 124, 9755.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(616, 9, 124, 9755.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(617, 1, 125, 3468.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(618, 13, 125, 3468.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(619, 3, 126, 4600.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(620, 7, 126, 4600.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(621, 3, 127, 5918.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(622, 5, 127, 5918.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(623, 1, 128, 9169.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(624, 5, 128, 9169.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(625, 4, 130, 8440.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(626, 7, 130, 8440.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(627, 15, 131, 5887.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(628, 14, 132, 3420.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(629, 15, 132, 3420.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(630, 5, 133, 811.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(631, 7, 133, 811.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(632, 4, 134, 4789.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(633, 10, 134, 4789.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(634, 3, 135, 4221.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(635, 7, 135, 4221.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(636, 6, 136, 6124.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(637, 9, 136, 6124.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(638, 1, 137, 4118.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(639, 9, 137, 4118.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(640, 8, 138, 9498.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(641, 9, 138, 9498.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(642, 6, 139, 6094.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(643, 13, 139, 6094.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(644, 3, 140, 9584.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(645, 12, 140, 9584.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(646, 1, 141, 4397.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(647, 2, 141, 4397.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(648, 14, 142, 4240.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(649, 6, 143, 9831.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(650, 7, 143, 9831.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(651, 5, 144, 1441.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(652, 8, 144, 1441.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(653, 3, 145, 9479.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(654, 8, 145, 9479.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(655, 8, 146, 9128.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(656, 10, 146, 9128.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(657, 13, 147, 3549.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(658, 12, 148, 4537.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(659, 2, 149, 7562.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(660, 14, 149, 7562.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(661, 2, 150, 9952.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(662, 15, 150, 9952.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(663, 4, 151, 13591.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(664, 4, 152, 16683.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(665, 8, 153, 41995.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(666, 14, 153, 41995.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(667, 5, 154, 23842.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(668, 13, 155, 28481.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(669, 2, 156, 3890.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(670, 3, 156, 3890.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(671, 2, 157, 10046.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(672, 13, 157, 10046.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(673, 2, 158, 13507.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(674, 10, 159, 30650.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(675, 7, 160, 7925.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(676, 14, 160, 7925.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(677, 6, 161, 47151.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(678, 9, 161, 47151.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(679, 4, 162, 40101.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(680, 6, 162, 40101.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(681, 2, 163, 18144.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(682, 4, 164, 20553.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(683, 7, 164, 20553.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(684, 10, 165, 6553.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(685, 11, 165, 6553.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(686, 5, 166, 35693.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(687, 6, 167, 31993.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(688, 9, 167, 31993.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(689, 5, 168, 5367.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(690, 15, 168, 5367.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(691, 9, 169, 37178.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(692, 15, 169, 37178.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(693, 6, 170, 11783.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(694, 13, 170, 11783.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(695, 4, 171, 37301.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(696, 11, 171, 37301.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(697, 6, 172, 34936.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(698, 11, 172, 34936.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(699, 10, 173, 14093.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(700, 2, 174, 35695.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(701, 6, 175, 10461.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(702, 14, 175, 10461.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(703, 9, 176, 12544.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(704, 9, 177, 28295.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(705, 15, 177, 28295.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(706, 1, 178, 43893.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(707, 14, 178, 43893.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(708, 6, 179, 8745.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(709, 7, 179, 8745.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(710, 1, 180, 37844.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(711, 2, 180, 37844.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(712, 4, 181, 45831.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(713, 12, 181, 45831.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(714, 8, 182, 49252.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(715, 13, 182, 49252.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(716, 1, 183, 6474.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(717, 10, 183, 6474.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(718, 10, 184, 12473.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(719, 13, 184, 12473.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(720, 6, 185, 7835.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(721, 10, 185, 7835.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(722, 2, 186, 4903.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(723, 9, 186, 4903.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(724, 1, 187, 39002.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(725, 6, 188, 33296.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(726, 15, 188, 33296.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(727, 7, 189, 47332.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(728, 9, 189, 47332.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(729, 6, 190, 10994.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(730, 7, 190, 10994.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(731, 7, 191, 41881.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(732, 13, 191, 41881.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(733, 7, 192, 27750.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(734, 12, 192, 27750.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15');
-INSERT INTO `nha_cung_cap_thuoc` (`id`, `nha_cung_cap_id`, `thuoc_id`, `gia_nhap_mac_dinh`, `created_at`, `updated_at`) VALUES
-(735, 2, 193, 27779.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(736, 6, 193, 27779.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(737, 7, 194, 45932.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(738, 11, 194, 45932.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(739, 5, 195, 42004.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(740, 6, 195, 42004.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(741, 8, 196, 29372.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(742, 4, 197, 28146.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(743, 12, 197, 28146.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(744, 7, 198, 6496.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(745, 10, 198, 6496.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(746, 1, 199, 37354.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(747, 4, 200, 12190.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15');
+(1, 9, 1, 9701.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(2, 13, 1, 9701.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(3, 12, 2, 9969.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(4, 14, 2, 9969.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(5, 2, 3, 3679.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(6, 9, 3, 3679.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(7, 1, 4, 3683.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(8, 8, 4, 3683.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(9, 7, 5, 6880.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(10, 14, 5, 6880.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(11, 2, 6, 8601.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(12, 15, 6, 8601.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(13, 14, 7, 6366.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(14, 15, 7, 6366.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(15, 3, 8, 5268.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(16, 11, 8, 5268.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(17, 2, 9, 1183.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(18, 3, 9, 1183.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(19, 4, 10, 4574.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(20, 5, 10, 4574.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(21, 9, 11, 4027.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(22, 10, 11, 4027.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(23, 4, 12, 5265.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(24, 15, 12, 5265.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(25, 5, 13, 4658.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(26, 11, 13, 4658.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(27, 6, 14, 4618.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(28, 8, 14, 4618.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(29, 10, 15, 4263.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(30, 13, 15, 4263.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(31, 10, 16, 6515.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(32, 13, 16, 6515.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(33, 3, 17, 8953.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(34, 5, 17, 8953.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(35, 7, 18, 7067.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(36, 15, 18, 7067.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(37, 1, 19, 6205.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(38, 5, 19, 6205.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(39, 6, 20, 4146.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(40, 7, 20, 4146.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(41, 4, 21, 5668.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(42, 11, 21, 5668.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(43, 2, 22, 4770.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(44, 5, 22, 4770.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(45, 9, 23, 7241.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(46, 10, 23, 7241.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(47, 2, 24, 5457.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(48, 11, 24, 5457.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(49, 8, 25, 3610.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(50, 9, 25, 3610.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(51, 3, 26, 1664.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(52, 12, 26, 1664.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(53, 12, 27, 7079.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(54, 14, 27, 7079.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(55, 8, 28, 8432.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(56, 13, 28, 8432.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(57, 2, 29, 9395.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(58, 6, 29, 9395.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(59, 2, 30, 6347.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(60, 10, 30, 6347.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(61, 5, 31, 3409.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(62, 11, 31, 3409.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(63, 3, 32, 818.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(64, 11, 32, 818.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(65, 9, 33, 4596.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(66, 12, 33, 4596.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(67, 10, 34, 8097.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(68, 15, 34, 8097.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(69, 4, 35, 4722.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(70, 9, 35, 4722.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(71, 1, 36, 2259.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(72, 12, 36, 2259.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(73, 4, 37, 5184.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(74, 8, 37, 5184.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(75, 9, 38, 5818.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(76, 11, 38, 5818.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(77, 2, 39, 5786.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(78, 13, 39, 5786.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(79, 3, 40, 9119.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(80, 4, 40, 9119.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(81, 2, 41, 9416.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(82, 6, 41, 9416.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(83, 8, 42, 6334.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(84, 12, 42, 6334.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(85, 1, 43, 3183.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(86, 14, 43, 3183.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(87, 8, 44, 9694.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(88, 11, 44, 9694.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(89, 3, 45, 5753.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(90, 10, 45, 5753.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(91, 4, 46, 5550.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(92, 14, 46, 5550.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(93, 8, 47, 7560.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(94, 9, 47, 7560.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(95, 6, 48, 3762.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(96, 11, 48, 3762.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(97, 4, 49, 4275.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(98, 5, 49, 4275.00, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(99, 4, 50, 8946.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(100, 8, 50, 8946.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(101, 4, 51, 4939.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(102, 15, 51, 4939.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(103, 7, 52, 6389.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(104, 12, 52, 6389.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(105, 8, 53, 7789.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(106, 15, 53, 7789.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(107, 4, 54, 6064.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(108, 9, 54, 6064.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(109, 9, 55, 3096.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(110, 11, 55, 3096.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(111, 9, 56, 2992.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(112, 14, 56, 2992.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(113, 1, 57, 6694.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(114, 5, 57, 6694.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(115, 4, 58, 1597.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(116, 11, 58, 1597.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(117, 1, 59, 6949.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(118, 15, 59, 6949.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(119, 6, 60, 1200.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(120, 7, 60, 1200.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(121, 4, 61, 8527.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(122, 15, 61, 8527.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(123, 3, 62, 6274.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(124, 13, 62, 6274.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(125, 5, 63, 5519.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(126, 8, 63, 5519.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(127, 7, 64, 4375.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(128, 13, 64, 4375.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(129, 3, 65, 1376.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(130, 5, 65, 1376.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(131, 8, 66, 7019.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(132, 11, 66, 7019.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(133, 1, 67, 4223.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(134, 6, 67, 4223.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(135, 4, 68, 966.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(136, 13, 68, 966.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(137, 2, 69, 3256.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(138, 14, 69, 3256.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(139, 1, 70, 983.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(140, 5, 70, 983.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(141, 5, 71, 6272.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(142, 12, 71, 6272.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(143, 8, 72, 2667.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(144, 13, 72, 2667.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(145, 7, 73, 4348.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(146, 15, 73, 4348.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(147, 5, 74, 4381.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(148, 14, 74, 4381.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(149, 6, 75, 2383.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(150, 14, 75, 2383.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(151, 1, 76, 6466.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(152, 2, 76, 6466.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(153, 7, 77, 8999.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(154, 12, 77, 8999.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(155, 4, 78, 6805.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(156, 9, 78, 6805.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(157, 1, 79, 1371.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(158, 10, 79, 1371.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(159, 9, 80, 9122.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(160, 15, 80, 9122.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(161, 5, 81, 3789.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(162, 15, 81, 3789.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(163, 1, 82, 3704.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(164, 15, 82, 3704.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(165, 2, 83, 1035.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(166, 5, 83, 1035.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(167, 2, 84, 2368.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(168, 5, 84, 2368.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(169, 2, 85, 2710.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(170, 7, 85, 2710.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(171, 4, 86, 1813.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(172, 5, 86, 1813.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(173, 5, 87, 2044.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(174, 13, 87, 2044.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(175, 11, 88, 6894.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(176, 15, 88, 6894.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(177, 1, 89, 6279.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(178, 8, 89, 6279.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(179, 8, 90, 6190.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(180, 14, 90, 6190.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(181, 8, 91, 2932.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(182, 9, 91, 2932.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(183, 9, 92, 6614.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(184, 14, 92, 6614.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(185, 8, 93, 2038.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(186, 14, 93, 2038.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(187, 4, 94, 5980.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(188, 8, 94, 5980.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(189, 9, 95, 9090.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(190, 11, 95, 9090.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(191, 5, 96, 1499.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(192, 6, 96, 1499.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(193, 7, 97, 2486.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(194, 9, 97, 2486.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(195, 2, 98, 1055.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(196, 3, 98, 1055.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(197, 1, 99, 9486.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(198, 3, 99, 9486.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(199, 1, 100, 1703.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(200, 12, 100, 1703.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(201, 7, 101, 8452.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(202, 15, 101, 8452.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(203, 9, 102, 7585.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(204, 13, 102, 7585.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(205, 3, 103, 8263.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(206, 13, 103, 8263.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(207, 9, 104, 8838.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(208, 15, 104, 8838.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(209, 6, 105, 6774.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(210, 14, 105, 6774.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(211, 3, 106, 1810.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(212, 10, 106, 1810.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(213, 5, 107, 3798.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(214, 8, 107, 3798.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(215, 4, 108, 9431.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(216, 14, 108, 9431.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(217, 3, 109, 1127.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(218, 11, 109, 1127.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(219, 12, 110, 1237.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(220, 15, 110, 1237.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(221, 3, 111, 4413.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(222, 9, 111, 4413.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(223, 1, 112, 6783.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(224, 12, 112, 6783.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(225, 3, 113, 5670.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(226, 12, 113, 5670.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(227, 11, 114, 5633.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(228, 13, 114, 5633.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(229, 4, 115, 4184.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(230, 8, 115, 4184.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(231, 5, 116, 930.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(232, 11, 116, 930.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(233, 6, 117, 2928.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(234, 11, 117, 2928.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(235, 9, 118, 3180.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(236, 11, 118, 3180.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(237, 2, 119, 4670.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(238, 10, 119, 4670.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(239, 6, 120, 7930.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(240, 13, 120, 7930.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(241, 12, 121, 9323.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(242, 13, 121, 9323.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(243, 8, 122, 1885.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(244, 10, 122, 1885.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(245, 4, 123, 2600.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(246, 11, 123, 2600.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(247, 8, 124, 6458.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(248, 14, 124, 6458.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(249, 4, 125, 6965.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(250, 6, 125, 6965.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(251, 10, 126, 2194.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(252, 13, 126, 2194.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(253, 8, 127, 6400.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(254, 11, 127, 6400.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(255, 2, 128, 6511.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(256, 5, 128, 6511.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(257, 1, 129, 5781.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(258, 11, 129, 5781.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(259, 3, 130, 6452.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(260, 14, 130, 6452.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(261, 6, 131, 7433.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(262, 7, 131, 7433.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(263, 8, 132, 8303.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(264, 14, 132, 8303.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(265, 7, 133, 6600.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(266, 14, 133, 6600.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(267, 1, 134, 6171.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(268, 8, 134, 6171.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(269, 1, 135, 4761.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(270, 6, 135, 4761.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(271, 2, 136, 2424.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(272, 8, 136, 2424.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(273, 10, 137, 2458.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(274, 12, 137, 2458.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(275, 5, 138, 3521.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(276, 7, 138, 3521.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(277, 7, 139, 2156.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(278, 9, 139, 2156.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(279, 2, 140, 5313.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(280, 10, 140, 5313.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(281, 11, 141, 1949.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(282, 13, 141, 1949.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(283, 4, 142, 9858.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(284, 15, 142, 9858.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(285, 3, 143, 6780.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(286, 5, 143, 6780.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(287, 8, 144, 2556.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(288, 11, 144, 2556.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(289, 11, 145, 3805.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(290, 14, 145, 3805.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(291, 5, 146, 5392.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(292, 7, 146, 5392.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(293, 8, 147, 3773.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(294, 9, 147, 3773.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(295, 9, 148, 8500.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(296, 10, 148, 8500.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(297, 2, 149, 3168.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(298, 10, 149, 3168.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(299, 4, 150, 5165.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(300, 7, 150, 5165.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(301, 1, 151, 42705.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(302, 11, 151, 42705.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(303, 6, 152, 41046.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(304, 14, 152, 41046.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(305, 8, 153, 49664.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(306, 10, 153, 49664.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(307, 1, 154, 37945.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(308, 5, 154, 37945.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(309, 8, 155, 27606.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(310, 12, 155, 27606.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(311, 9, 156, 49106.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(312, 11, 156, 49106.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(313, 4, 157, 8195.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(314, 15, 157, 8195.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(315, 9, 158, 30379.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(316, 10, 158, 30379.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(317, 5, 159, 8417.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(318, 12, 159, 8417.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(319, 11, 160, 15106.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(320, 15, 160, 15106.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(321, 7, 161, 15070.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(322, 15, 161, 15070.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(323, 8, 162, 19187.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(324, 12, 162, 19187.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(325, 2, 163, 40108.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(326, 5, 163, 40108.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(327, 2, 164, 38513.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(328, 3, 164, 38513.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(329, 5, 165, 46940.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(330, 12, 165, 46940.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(331, 4, 166, 26020.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(332, 6, 166, 26020.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(333, 10, 167, 9578.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(334, 12, 167, 9578.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(335, 3, 168, 46057.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(336, 5, 168, 46057.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(337, 10, 169, 6904.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(338, 15, 169, 6904.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(339, 1, 170, 21423.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(340, 12, 170, 21423.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(341, 9, 171, 48325.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(342, 11, 171, 48325.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(343, 1, 172, 45776.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(344, 4, 172, 45776.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(345, 6, 173, 32785.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(346, 9, 173, 32785.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(347, 3, 174, 37050.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(348, 12, 174, 37050.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(349, 10, 175, 39470.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(350, 14, 175, 39470.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(351, 6, 176, 28640.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(352, 12, 176, 28640.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(353, 6, 177, 7272.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(354, 10, 177, 7272.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(355, 1, 178, 26141.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(356, 7, 178, 26141.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(357, 3, 179, 23953.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(358, 6, 179, 23953.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(359, 1, 180, 34453.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(360, 7, 180, 34453.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(361, 12, 181, 44688.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(362, 13, 181, 44688.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(363, 6, 182, 8532.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(364, 12, 182, 8532.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(365, 1, 183, 7511.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(366, 7, 183, 7511.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(367, 7, 184, 42479.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(368, 11, 184, 42479.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(369, 5, 185, 13013.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(370, 10, 185, 13013.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(371, 6, 186, 26749.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(372, 7, 186, 26749.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(373, 13, 187, 23516.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(374, 14, 187, 23516.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(375, 4, 188, 36289.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(376, 6, 188, 36289.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(377, 7, 189, 48910.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(378, 8, 189, 48910.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(379, 2, 190, 48526.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(380, 15, 190, 48526.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(381, 11, 191, 21922.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(382, 12, 191, 21922.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(383, 8, 192, 11481.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(384, 14, 192, 11481.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(385, 4, 193, 13201.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(386, 12, 193, 13201.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(387, 5, 194, 28796.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(388, 9, 194, 28796.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(389, 2, 195, 48546.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(390, 10, 195, 48546.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(391, 4, 196, 44470.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(392, 8, 196, 44470.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(393, 6, 197, 24752.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(394, 15, 197, 24752.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(395, 8, 198, 22019.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(396, 11, 198, 22019.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(397, 4, 199, 9962.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(398, 5, 199, 9962.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(399, 2, 200, 23707.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(400, 11, 200, 23707.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46');
 
 -- --------------------------------------------------------
 
@@ -2355,6 +2172,29 @@ CREATE TABLE `notifications` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
+('05358c89-6b9b-4935-9f54-3dd4d4c45499', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 21, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', NULL, '2025-12-19 17:58:38', '2025-12-19 17:58:38'),
+('0aa89208-0f21-401f-8dcf-1cfe375508bf', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 25, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', '2025-12-20 01:40:59', '2025-12-19 17:58:38', '2025-12-20 01:40:59'),
+('1007f11b-7675-49c1-9171-b295fc0ea90e', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 17, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', NULL, '2025-12-19 17:58:38', '2025-12-19 17:58:38'),
+('2073a13a-49ab-41c9-8c4f-3a315c91d0bc', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 20, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', NULL, '2025-12-19 17:58:38', '2025-12-19 17:58:38'),
+('3b51a3da-ac02-4f7a-8b05-120d502a0aeb', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 23, '{\"title\":\"B\\u1ea1n c\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"B\\u00e1c s\\u0129 \\u0111\\u00e3 t\\u1ea1o ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m. Vui l\\u00f2ng theo d\\u00f5i tr\\u1ea1ng th\\u00e1i v\\u00e0 k\\u1ebft qu\\u1ea3 khi c\\u00f3.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', '2025-12-19 17:59:50', '2025-12-19 17:58:37', '2025-12-19 17:59:50'),
+('3b6374ec-03a3-4279-b1e3-19b3382cc38e', 'App\\Notifications\\MedicalUltrasoundResultUploaded', 'App\\Models\\User', 4, '{\"title\":\"C\\u00f3 k\\u1ebft qu\\u1ea3 si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"K\\u1ef9 thu\\u1eadt vi\\u00ean \\u0111\\u00e3 upload k\\u1ebft qu\\u1ea3 si\\u00eau \\u00e2m. Vui l\\u00f2ng v\\u00e0o xem v\\u00e0 nh\\u1eadn x\\u00e9t.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/doctor\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', '2025-12-19 18:14:55', '2025-12-19 18:02:22', '2025-12-19 18:14:55'),
+('424b402f-57dc-4c0d-8c80-0decf8b870ff', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 15, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', NULL, '2025-12-19 17:58:38', '2025-12-19 17:58:38'),
+('44309695-e539-44ff-b7c1-7bfcb982cacb', 'App\\Notifications\\CustomNotification', 'App\\Models\\User', 4, '{\"title\":\"C\\u00f3 l\\u1ecbch t\\u00e1i kh\\u00e1m m\\u1edbi\",\"message\":\"Y\\u00eau c\\u1ea7u t\\u00e1i kh\\u00e1m #2 \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c \\u0111\\u1eb7t l\\u1ecbch.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/doctor\\/tai-kham\\/2\\/show\"}', '2025-12-20 04:13:05', '2025-12-20 04:12:45', '2025-12-20 04:13:05'),
+('55be1f70-8ae8-4889-8581-eb7df647a826', 'App\\Notifications\\MedicalUltrasoundReviewed', 'App\\Models\\User', 23, '{\"title\":\"B\\u00e1c s\\u0129 \\u0111\\u00e3 nh\\u1eadn x\\u00e9t k\\u1ebft qu\\u1ea3 si\\u00eau \\u00e2m\",\"message\":\"B\\u00e1c s\\u0129 \\u0111\\u00e3 c\\u1eadp nh\\u1eadt nh\\u1eadn x\\u00e9t cho k\\u1ebft qu\\u1ea3 si\\u00eau \\u00e2m c\\u1ee7a b\\u1ea1n.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', '2025-12-19 18:04:02', '2025-12-19 18:03:06', '2025-12-19 18:04:02'),
+('7ce18eac-7fd0-4696-bb66-79951519bba0', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 18, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', NULL, '2025-12-19 17:58:38', '2025-12-19 17:58:38'),
+('85ccfbd6-d345-457a-922c-aaafcdcb34c6', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 22, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', NULL, '2025-12-19 17:58:38', '2025-12-19 17:58:38'),
+('894103c8-718a-4351-bfbc-aa3886c932e6', 'App\\Notifications\\CustomNotification', 'App\\Models\\User', 4, '{\"title\":\"B\\u1ec7nh nh\\u00e2n x\\u00e1c nh\\u1eadn t\\u00e1i kh\\u00e1m\",\"message\":\"Y\\u00eau c\\u1ea7u t\\u00e1i kh\\u00e1m #2 \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c b\\u1ec7nh nh\\u00e2n x\\u00e1c nh\\u1eadn.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/doctor\\/tai-kham\\/2\\/show\"}', '2025-12-20 04:11:40', '2025-12-20 04:10:54', '2025-12-20 04:11:40'),
+('8ab102f3-762a-4163-98ef-767303f30b8e', 'App\\Notifications\\MedicalUltrasoundResultUploaded', 'App\\Models\\User', 23, '{\"title\":\"\\u0110\\u00e3 c\\u00f3 k\\u1ebft qu\\u1ea3 si\\u00eau \\u00e2m\",\"message\":\"K\\u1ebft qu\\u1ea3 si\\u00eau \\u00e2m \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c c\\u1eadp nh\\u1eadt. B\\u1ea1n c\\u00f3 th\\u1ec3 xem v\\u00e0 t\\u1ea3i file k\\u1ebft qu\\u1ea3.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', '2025-12-19 18:03:59', '2025-12-19 18:02:22', '2025-12-19 18:03:59'),
+('e188c109-7a13-43d1-b587-876aee516c9f', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 14, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', NULL, '2025-12-19 17:58:38', '2025-12-19 17:58:38'),
+('fcc6bf22-0611-4a93-9762-052a9e29e966', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 19, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', NULL, '2025-12-19 17:58:38', '2025-12-19 17:58:38'),
+('fd4f33e9-4eb1-4391-bc50-914ef04db9eb', 'App\\Notifications\\MedicalUltrasoundRequested', 'App\\Models\\User', 16, '{\"title\":\"C\\u00f3 ch\\u1ec9 \\u0111\\u1ecbnh si\\u00eau \\u00e2m m\\u1edbi\",\"message\":\"M\\u1ed9t ca si\\u00eau \\u00e2m m\\u1edbi v\\u1eeba \\u0111\\u01b0\\u1ee3c ch\\u1ec9 \\u0111\\u1ecbnh. Vui l\\u00f2ng v\\u00e0o danh s\\u00e1ch ch\\u1edd \\u0111\\u1ec3 x\\u1eed l\\u00fd.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/staff\\/sieu-am\\/1\",\"meta\":{\"module\":\"sieu_am\",\"sieu_am_id\":1}}', NULL, '2025-12-19 17:58:38', '2025-12-19 17:58:38'),
+('ffb8eb58-4895-43e8-9394-a0609bdbcf78', 'App\\Notifications\\CustomNotification', 'App\\Models\\User', 23, '{\"title\":\"\\u0110\\u00e3 \\u0111\\u1eb7t l\\u1ecbch t\\u00e1i kh\\u00e1m\",\"message\":\"Y\\u00eau c\\u1ea7u t\\u00e1i kh\\u00e1m #2 \\u0111\\u00e3 \\u0111\\u01b0\\u1ee3c \\u0111\\u1eb7t l\\u1ecbch.\",\"action_url\":\"http:\\/\\/127.0.0.1:8000\\/tai-kham\\/2\"}', '2025-12-20 04:13:28', '2025-12-20 04:12:45', '2025-12-20 04:13:28');
 
 -- --------------------------------------------------------
 
@@ -2423,6 +2263,8 @@ CREATE TABLE `patient_profiles` (
 CREATE TABLE `payment_logs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `hoa_don_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `payable_type` varchar(255) DEFAULT NULL,
+  `payable_id` bigint(20) UNSIGNED DEFAULT NULL,
   `provider` varchar(255) NOT NULL,
   `event_type` varchar(255) NOT NULL,
   `idempotency_key` varchar(255) DEFAULT NULL,
@@ -2440,9 +2282,14 @@ CREATE TABLE `payment_logs` (
 -- Đang đổ dữ liệu cho bảng `payment_logs`
 --
 
-INSERT INTO `payment_logs` (`id`, `hoa_don_id`, `provider`, `event_type`, `idempotency_key`, `transaction_ref`, `result_code`, `result_message`, `payload`, `ip_address`, `user_agent`, `created_at`, `updated_at`) VALUES
-(1, 3, 'VNPAY', 'request', NULL, NULL, NULL, NULL, '{\"vnp_Version\":\"2.1.0\",\"vnp_TmnCode\":\"I2U8WK7F\",\"vnp_Amount\":225000000,\"vnp_Command\":\"pay\",\"vnp_CreateDate\":\"20251213150105\",\"vnp_CurrCode\":\"VND\",\"vnp_IpAddr\":\"127.0.0.1\",\"vnp_Locale\":\"vn\",\"vnp_OrderInfo\":\"Thanh toan hoa don #3\",\"vnp_OrderType\":\"billpayment\",\"vnp_ReturnUrl\":\"http:\\/\\/127.0.0.1:8000\\/payment\\/vnpay-return\",\"vnp_TxnRef\":\"3\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2025-12-13 08:01:05', '2025-12-13 08:01:05'),
-(2, 3, 'VNPAY', 'return', NULL, 'VNP15338816', '00', NULL, '{\"vnp_Amount\":\"225000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15338816\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan hoa don #3\",\"vnp_PayDate\":\"20251213150151\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"I2U8WK7F\",\"vnp_TransactionNo\":\"15338816\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"3\",\"vnp_SecureHash\":\"69d8889d1916e141bb5589f9d4e4f93a171cd2da47462a1e57304c1f93277db74617b8c1bf387dad2b70e6e65e7415404eb2e888e375d215439f4c41b0f7001f\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2025-12-13 08:02:04', '2025-12-13 08:02:04');
+INSERT INTO `payment_logs` (`id`, `hoa_don_id`, `payable_type`, `payable_id`, `provider`, `event_type`, `idempotency_key`, `transaction_ref`, `result_code`, `result_message`, `payload`, `ip_address`, `user_agent`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, NULL, 'VNPAY', 'request', NULL, NULL, NULL, NULL, '{\"vnp_Version\":\"2.1.0\",\"vnp_TmnCode\":\"I2U8WK7F\",\"vnp_Amount\":250000000,\"vnp_Command\":\"pay\",\"vnp_CreateDate\":\"20251220004634\",\"vnp_CurrCode\":\"VND\",\"vnp_IpAddr\":\"127.0.0.1\",\"vnp_Locale\":\"vn\",\"vnp_OrderInfo\":\"Thanh toan hoa don #1\",\"vnp_OrderType\":\"billpayment\",\"vnp_ReturnUrl\":\"http:\\/\\/127.0.0.1:8000\\/payment\\/vnpay-return\",\"vnp_TxnRef\":\"1\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-19 17:46:34', '2025-12-19 17:46:34'),
+(2, 1, NULL, NULL, 'VNPAY', 'return', NULL, 'VNP15355638', '00', NULL, '{\"vnp_Amount\":\"250000000\",\"vnp_BankCode\":\"NCB\",\"vnp_BankTranNo\":\"VNP15355638\",\"vnp_CardType\":\"ATM\",\"vnp_OrderInfo\":\"Thanh toan hoa don #1\",\"vnp_PayDate\":\"20251220004714\",\"vnp_ResponseCode\":\"00\",\"vnp_TmnCode\":\"I2U8WK7F\",\"vnp_TransactionNo\":\"15355638\",\"vnp_TransactionStatus\":\"00\",\"vnp_TxnRef\":\"1\",\"vnp_SecureHash\":\"1ba21d5f088601bfe4a6acb9793fa29851dc4e245fac0afffa700be8ed6d3ffeb854e7a6f00293baf8df7f18e5f075647479a55d251becdc50e9a051a3103a9e\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-19 17:47:22', '2025-12-19 17:47:22'),
+(3, 1, NULL, NULL, 'MOMO', 'request', NULL, NULL, NULL, NULL, '{\"partnerCode\":\"MOMOBKUN20180529\",\"partnerName\":\"Test\",\"storeId\":\"MomoTestStore\",\"requestId\":\"1766168359\",\"amount\":\"220000\",\"orderId\":\"1_1766168359\",\"orderInfo\":\"Thanh to\\u00e1n h\\u00f3a \\u0111\\u01a1n #1\",\"redirectUrl\":\"http:\\/\\/127.0.0.1:8000\\/payment\\/momo-return\",\"ipnUrl\":\"http:\\/\\/127.0.0.1:8000\\/payment\\/momo-ipn\",\"lang\":\"vi\",\"extraData\":\"\",\"requestType\":\"payWithMethod\",\"signature\":\"a8b66e63538efba9a7232ffbf12ef8d8beded466b0d59685b8bed48f69e843c9\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-19 18:19:19', '2025-12-19 18:19:19'),
+(4, 1, NULL, NULL, 'MOMO', 'return', NULL, '4633649724', '0', 'Successful.', '{\"partnerCode\":\"MOMOBKUN20180529\",\"orderId\":\"1_1766168359\",\"requestId\":\"1766168359\",\"amount\":\"220000\",\"orderInfo\":\"Thanh to\\u00e1n h\\u00f3a \\u0111\\u01a1n #1\",\"orderType\":\"momo_wallet\",\"transId\":\"4633649724\",\"resultCode\":\"0\",\"message\":\"Successful.\",\"payType\":\"napas\",\"responseTime\":\"1766168421692\",\"extraData\":null,\"signature\":\"aa73d4189216c145f891097d79ebd35609c007ddfdb8bee0867186c27ae6112e\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-19 18:20:27', '2025-12-19 18:20:27'),
+(5, 1, NULL, NULL, 'VNPAY', 'request', NULL, NULL, NULL, NULL, '{\"vnp_Version\":\"2.1.0\",\"vnp_TmnCode\":\"I2U8WK7F\",\"vnp_Amount\":15000000,\"vnp_Command\":\"pay\",\"vnp_CreateDate\":\"20251220083601\",\"vnp_CurrCode\":\"VND\",\"vnp_IpAddr\":\"127.0.0.1\",\"vnp_Locale\":\"vn\",\"vnp_OrderInfo\":\"Thanh toan hoa don #1\",\"vnp_OrderType\":\"billpayment\",\"vnp_ReturnUrl\":\"http:\\/\\/127.0.0.1:8000\\/payment\\/vnpay-return\",\"vnp_TxnRef\":\"1\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-20 01:36:01', '2025-12-20 01:36:01'),
+(6, 1, NULL, NULL, 'MOMO', 'request', NULL, NULL, NULL, NULL, '{\"partnerCode\":\"MOMOBKUN20180529\",\"partnerName\":\"Test\",\"storeId\":\"MomoTestStore\",\"requestId\":\"1766194564\",\"amount\":\"150000\",\"orderId\":\"1_1766194564\",\"orderInfo\":\"Thanh to\\u00e1n h\\u00f3a \\u0111\\u01a1n #1\",\"redirectUrl\":\"http:\\/\\/127.0.0.1:8000\\/payment\\/momo-return\",\"ipnUrl\":\"http:\\/\\/127.0.0.1:8000\\/payment\\/momo-ipn\",\"lang\":\"vi\",\"extraData\":\"\",\"requestType\":\"payWithMethod\",\"signature\":\"15089622cf5411a5954d2bff20e17114b43cdd4db38c64e0a2f10ef948776f0c\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-20 01:36:04', '2025-12-20 01:36:04'),
+(7, 1, NULL, NULL, 'MOMO', 'return', NULL, '4633864111', '0', 'Successful.', '{\"partnerCode\":\"MOMOBKUN20180529\",\"orderId\":\"1_1766194564\",\"requestId\":\"1766194564\",\"amount\":\"150000\",\"orderInfo\":\"Thanh to\\u00e1n h\\u00f3a \\u0111\\u01a1n #1\",\"orderType\":\"momo_wallet\",\"transId\":\"4633864111\",\"resultCode\":\"0\",\"message\":\"Successful.\",\"payType\":\"napas\",\"responseTime\":\"1766194620482\",\"extraData\":null,\"signature\":\"9095ecab942ca7173fb898fd92b895d942153a14234546af04b9d69f570fc0e2\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-20 01:37:05', '2025-12-20 01:37:05');
 
 -- --------------------------------------------------------
 
@@ -2463,62 +2310,63 @@ CREATE TABLE `permissions` (
 --
 
 INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'view-users', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(2, 'create-users', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(3, 'edit-users', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(4, 'delete-users', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(5, 'lock-users', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(6, 'unlock-users', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(7, 'assign-roles', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(8, 'view-roles', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(9, 'create-roles', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(10, 'edit-roles', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(11, 'delete-roles', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(12, 'view-permissions', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(13, 'create-permissions', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(14, 'delete-permissions', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(15, 'view-doctors', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(16, 'create-doctors', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(17, 'edit-doctors', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(18, 'delete-doctors', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(19, 'manage-schedules', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(20, 'view-appointments', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(21, 'create-appointments', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(22, 'edit-appointments', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(23, 'cancel-appointments', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(24, 'confirm-appointments', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(25, 'view-medical-records', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(26, 'create-medical-records', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(27, 'edit-medical-records', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(28, 'delete-medical-records', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(29, 'view-services', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(30, 'create-services', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(31, 'edit-services', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(32, 'delete-services', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(33, 'view-medicines', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(34, 'create-medicines', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(35, 'edit-medicines', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(36, 'delete-medicines', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(37, 'manage-inventory', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(38, 'view-inventory-reports', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(39, 'view-staff', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(40, 'create-staff', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(41, 'edit-staff', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(42, 'delete-staff', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(43, 'view-staff-shifts', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(44, 'assign-staff-shifts', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(45, 'view-invoices', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(46, 'create-invoices', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(47, 'edit-invoices', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(48, 'delete-invoices', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(49, 'process-payments', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(50, 'refund-payments', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(51, 'view-payment-logs', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(52, 'view-reports', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(53, 'view-revenue-reports', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(54, 'view-appointment-reports', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(55, 'export-data', 'web', '2025-12-12 04:21:30', '2025-12-12 04:21:30'),
-(56, 'view-dashboard', 'web', '2025-12-12 04:35:40', '2025-12-12 04:35:40');
+(1, 'view-users', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(2, 'create-users', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(3, 'edit-users', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(4, 'delete-users', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(5, 'lock-users', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(6, 'unlock-users', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(7, 'assign-roles', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(8, 'view-roles', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(9, 'create-roles', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(10, 'edit-roles', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(11, 'delete-roles', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(12, 'view-permissions', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(13, 'create-permissions', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(14, 'delete-permissions', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(15, 'view-doctors', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(16, 'create-doctors', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(17, 'edit-doctors', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(18, 'delete-doctors', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(19, 'manage-schedules', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(20, 'view-appointments', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(21, 'create-appointments', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(22, 'edit-appointments', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(23, 'cancel-appointments', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(24, 'confirm-appointments', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(25, 'view-medical-records', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(26, 'create-medical-records', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(27, 'edit-medical-records', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(28, 'delete-medical-records', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(29, 'view-services', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(30, 'create-services', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(31, 'edit-services', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(32, 'delete-services', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(33, 'view-medicines', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(34, 'create-medicines', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(35, 'edit-medicines', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(36, 'delete-medicines', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(37, 'manage-inventory', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(38, 'view-inventory-reports', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(39, 'view-staff', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(40, 'create-staff', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(41, 'edit-staff', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(42, 'delete-staff', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(43, 'view-staff-shifts', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(44, 'assign-staff-shifts', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(45, 'view-invoices', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(46, 'create-invoices', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(47, 'edit-invoices', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(48, 'delete-invoices', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(49, 'process-payments', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(50, 'refund-payments', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(51, 'view-payment-logs', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(52, 'view-reports', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(53, 'view-revenue-reports', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(54, 'view-appointment-reports', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(55, 'export-data', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(56, 'view-dashboard', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(57, 'send-notifications', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43');
 
 -- --------------------------------------------------------
 
@@ -2562,16 +2410,16 @@ CREATE TABLE `phieu_nhaps` (
 --
 
 INSERT INTO `phieu_nhaps` (`id`, `ma_phieu`, `ngay_nhap`, `nha_cung_cap_id`, `user_id`, `tong_tien`, `ghi_chu`, `created_at`, `updated_at`) VALUES
-(1, 'PN-SEED-1', '2025-11-27', 8, NULL, 8986582.00, 'Seed PN #1', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(2, 'PN-SEED-2', '2025-10-16', 10, NULL, 21936287.00, 'Seed PN #2', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(3, 'PN-SEED-3', '2025-10-03', 5, NULL, 7745288.00, 'Seed PN #3', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(4, 'PN-SEED-4', '2025-10-28', 1, NULL, 10448265.00, 'Seed PN #4', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(5, 'PN-SEED-5', '2025-10-12', 13, NULL, 7426712.00, 'Seed PN #5', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(6, 'PN-SEED-6', '2025-12-04', 12, NULL, 7505743.00, 'Seed PN #6', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(7, 'PN-SEED-7', '2025-09-19', 1, NULL, 27822630.00, 'Seed PN #7', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(8, 'PN-SEED-8', '2025-11-01', 10, NULL, 18581538.00, 'Seed PN #8', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(9, 'PN-SEED-9', '2025-10-25', 5, NULL, 17205230.00, 'Seed PN #9', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(10, 'PN-SEED-10', '2025-11-25', 1, NULL, 11362290.00, 'Seed PN #10', '2025-12-12 07:45:56', '2025-12-12 07:50:15');
+(1, 'PN-SEED-1', '2025-10-06', 4, NULL, 8760531.00, 'Seed PN #1', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 'PN-SEED-2', '2025-10-23', 7, NULL, 16243385.00, 'Seed PN #2', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 'PN-SEED-3', '2025-12-12', 15, NULL, 11057171.00, 'Seed PN #3', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(4, 'PN-SEED-4', '2025-10-27', 6, NULL, 16586942.00, 'Seed PN #4', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(5, 'PN-SEED-5', '2025-12-08', 14, NULL, 18156026.00, 'Seed PN #5', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(6, 'PN-SEED-6', '2025-11-10', 6, NULL, 8421378.00, 'Seed PN #6', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(7, 'PN-SEED-7', '2025-10-16', 4, NULL, 11132818.00, 'Seed PN #7', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(8, 'PN-SEED-8', '2025-11-26', 13, NULL, 16358984.00, 'Seed PN #8', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(9, 'PN-SEED-9', '2025-10-05', 3, NULL, 14823100.00, 'Seed PN #9', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(10, 'PN-SEED-10', '2025-11-28', 8, NULL, 14786647.00, 'Seed PN #10', '2025-12-19 16:00:46', '2025-12-19 16:00:46');
 
 -- --------------------------------------------------------
 
@@ -2597,212 +2445,114 @@ CREATE TABLE `phieu_nhap_items` (
 --
 
 INSERT INTO `phieu_nhap_items` (`id`, `phieu_nhap_id`, `thuoc_id`, `ma_lo`, `han_su_dung`, `so_luong`, `don_gia`, `thanh_tien`, `created_at`, `updated_at`) VALUES
-(1, 1, 89, 'LOT-PN-1-267', '2027-06-12', 411, 1041.00, 427851.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(2, 1, 98, 'LOT-PN-1-855', '2026-08-12', 380, 5895.00, 2240100.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(3, 1, 192, 'LOT-PN-1-262', '2028-09-12', 245, 4791.00, 1173795.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(4, 1, 105, 'LOT-PN-1-617', '2026-12-12', 114, 3785.00, 431490.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(5, 1, 3, 'LOT-PN-1-516', '2027-04-12', 24, 1936.00, 46464.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(6, 1, 191, 'LOT-PN-1-662', '2027-06-12', 210, 7676.00, 1611960.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(7, 1, 157, 'LOT-PN-1-925', '2028-06-12', 460, 3160.00, 1453600.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(8, 1, 174, 'LOT-PN-1-841', '2027-09-12', 54, 1377.00, 74358.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(9, 1, 162, 'LOT-PN-1-85', '2026-08-12', 355, 4482.00, 1591110.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(10, 1, 12, 'LOT-PN-1-320', '2027-04-12', 363, 9030.00, 3277890.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(11, 1, 187, 'LOT-PN-1-866', '2027-07-12', 276, 6914.00, 1908264.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(12, 1, 80, 'LOT-PN-1-877', '2027-10-12', 82, 7346.00, 602372.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(13, 2, 183, 'LOT-PN-2-409', '2028-04-12', 68, 7057.00, 479876.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(14, 2, 117, 'LOT-PN-2-910', '2027-05-12', 65, 9108.00, 592020.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(15, 2, 188, 'LOT-PN-2-204', '2028-10-12', 371, 2811.00, 1042881.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(16, 2, 41, 'LOT-PN-2-526', '2027-08-12', 186, 9117.00, 1695762.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(17, 2, 139, 'LOT-PN-2-856', '2028-09-12', 464, 9437.00, 4378768.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(18, 2, 177, 'LOT-PN-2-84', '2028-09-12', 360, 6127.00, 2205720.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(19, 2, 174, 'LOT-PN-2-956', '2026-06-12', 224, 3813.00, 854112.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(20, 2, 163, 'LOT-PN-2-567', '2026-10-12', 483, 6503.00, 3140949.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(21, 2, 6, 'LOT-PN-2-475', '2028-07-12', 450, 5412.00, 2435400.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(22, 2, 168, 'LOT-PN-2-858', '2027-11-12', 146, 6734.00, 983164.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(23, 2, 110, 'LOT-PN-2-714', '2028-09-12', 224, 1401.00, 313824.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(24, 2, 180, 'LOT-PN-2-806', '2027-11-12', 150, 3055.00, 458250.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(25, 2, 44, 'LOT-PN-2-503', '2026-07-12', 447, 1429.00, 638763.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(26, 3, 35, 'LOT-PN-3-555', '2027-05-12', 150, 1554.00, 233100.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(27, 3, 4, 'LOT-PN-3-972', '2028-05-12', 256, 5425.00, 1388800.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(28, 3, 128, 'LOT-PN-3-850', '2028-12-12', 239, 6622.00, 1582658.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(29, 3, 8, 'LOT-PN-3-500', '2026-09-12', 70, 7531.00, 527170.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(30, 3, 107, 'LOT-PN-3-807', '2028-11-12', 293, 9358.00, 2741894.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(31, 3, 142, 'LOT-PN-3-896', '2027-02-12', 414, 7792.00, 3225888.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(32, 3, 81, 'LOT-PN-3-787', '2028-09-12', 445, 8030.00, 3573350.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(33, 3, 78, 'LOT-PN-3-307', '2027-03-12', 380, 9116.00, 3464080.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(34, 3, 80, 'LOT-PN-3-741', '2026-09-12', 375, 827.00, 310125.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(35, 3, 17, 'LOT-PN-3-812', '2028-01-12', 381, 862.00, 328422.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(36, 3, 73, 'LOT-PN-3-688', '2028-12-12', 117, 8159.00, 954603.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(37, 3, 98, 'LOT-PN-3-911', '2028-07-12', 270, 8328.00, 2248560.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(38, 4, 125, 'LOT-PN-4-484', '2027-11-12', 296, 9504.00, 2813184.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(39, 4, 181, 'LOT-PN-4-971', '2027-07-12', 411, 7429.00, 3053319.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(40, 4, 87, 'LOT-PN-4-398', '2027-03-12', 450, 5620.00, 2529000.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(41, 4, 166, 'LOT-PN-4-209', '2026-12-12', 483, 9326.00, 4504458.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(42, 4, 172, 'LOT-PN-4-544', '2028-06-12', 250, 4102.00, 1025500.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(43, 4, 64, 'LOT-PN-4-307', '2028-11-12', 200, 7964.00, 1592800.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(44, 4, 23, 'LOT-PN-4-97', '2027-05-12', 215, 3359.00, 722185.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(45, 4, 117, 'LOT-PN-4-980', '2028-08-12', 381, 6614.00, 2519934.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(46, 4, 127, 'LOT-PN-4-230', '2027-07-12', 32, 4530.00, 144960.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(47, 4, 183, 'LOT-PN-4-254', '2027-08-12', 270, 9587.00, 2588490.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(48, 4, 108, 'LOT-PN-4-741', '2026-12-12', 341, 5446.00, 1857086.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(49, 4, 40, 'LOT-PN-4-769', '2028-01-12', 185, 2568.00, 475080.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(50, 5, 161, 'LOT-PN-5-970', '2027-01-12', 74, 3359.00, 248566.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(51, 5, 141, 'LOT-PN-5-219', '2026-12-12', 271, 8679.00, 2352009.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(52, 5, 168, 'LOT-PN-5-80', '2027-05-12', 390, 2406.00, 938340.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(53, 5, 95, 'LOT-PN-5-72', '2026-08-12', 439, 2257.00, 990823.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(54, 5, 80, 'LOT-PN-5-873', '2026-09-12', 294, 7192.00, 2114448.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(55, 5, 23, 'LOT-PN-5-6', '2027-12-12', 129, 3361.00, 433569.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(56, 5, 91, 'LOT-PN-5-561', '2028-01-12', 191, 2299.00, 439109.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(57, 5, 3, 'LOT-PN-5-184', '2028-06-12', 305, 3417.00, 1042185.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(58, 5, 63, 'LOT-PN-5-188', '2027-01-12', 265, 7428.00, 1968420.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(59, 5, 166, 'LOT-PN-5-12', '2026-11-12', 166, 4412.00, 732392.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(60, 5, 138, 'LOT-PN-5-557', '2026-07-12', 161, 1139.00, 183379.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(61, 5, 103, 'LOT-PN-5-543', '2026-08-12', 281, 5778.00, 1623618.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(62, 5, 163, 'LOT-PN-5-8', '2026-06-12', 423, 6183.00, 2615409.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(63, 5, 104, 'LOT-PN-5-347', '2028-05-12', 322, 6413.00, 2064986.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(64, 5, 24, 'LOT-PN-5-167', '2028-08-12', 303, 8676.00, 2628828.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(65, 6, 133, 'LOT-PN-6-569', '2028-08-12', 41, 1293.00, 53013.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(66, 6, 18, 'LOT-PN-6-614', '2028-11-12', 57, 5281.00, 301017.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(67, 6, 115, 'LOT-PN-6-373', '2027-05-12', 315, 7642.00, 2407230.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(68, 6, 55, 'LOT-PN-6-49', '2027-01-12', 268, 7660.00, 2052880.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(69, 6, 119, 'LOT-PN-6-295', '2026-07-12', 264, 6228.00, 1644192.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(70, 6, 30, 'LOT-PN-6-854', '2028-11-12', 124, 4526.00, 561224.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(71, 6, 7, 'LOT-PN-6-650', '2027-02-12', 437, 6746.00, 2948002.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(72, 6, 93, 'LOT-PN-6-782', '2027-04-12', 289, 8303.00, 2399567.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(73, 7, 3, 'LOT-PN-7-607', '2028-02-12', 259, 9186.00, 2379174.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(74, 7, 126, 'LOT-PN-7-122', '2028-08-12', 37, 5775.00, 213675.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(75, 7, 43, 'LOT-PN-7-237', '2026-11-12', 149, 5042.00, 751258.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(76, 7, 29, 'LOT-PN-7-574', '2027-08-12', 364, 4800.00, 1747200.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(77, 7, 199, 'LOT-PN-7-474', '2028-02-12', 301, 615.00, 185115.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(78, 7, 4, 'LOT-PN-7-283', '2027-10-12', 471, 4115.00, 1938165.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(79, 8, 154, 'LOT-PN-8-941', '2028-01-12', 348, 7093.00, 2468364.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(80, 8, 41, 'LOT-PN-8-281', '2027-10-12', 454, 3811.00, 1730194.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(81, 8, 131, 'LOT-PN-8-578', '2026-06-12', 499, 6676.00, 3331324.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(82, 8, 172, 'LOT-PN-8-677', '2028-11-12', 65, 7354.00, 478010.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(83, 8, 198, 'LOT-PN-8-928', '2028-08-12', 85, 8710.00, 740350.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(84, 8, 108, 'LOT-PN-8-359', '2028-08-12', 411, 2839.00, 1166829.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(85, 8, 182, 'LOT-PN-8-147', '2026-08-12', 227, 8768.00, 1990336.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(86, 8, 125, 'LOT-PN-8-387', '2027-05-12', 350, 3386.00, 1185100.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(87, 8, 76, 'LOT-PN-8-974', '2027-03-12', 140, 6111.00, 855540.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(88, 9, 175, 'LOT-PN-9-826', '2028-11-12', 89, 7865.00, 699985.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(89, 9, 2, 'LOT-PN-9-388', '2027-12-12', 394, 1382.00, 544508.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(90, 9, 28, 'LOT-PN-9-876', '2028-04-12', 122, 6288.00, 767136.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(91, 9, 69, 'LOT-PN-9-941', '2026-12-12', 266, 8995.00, 2392670.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(92, 9, 186, 'LOT-PN-9-53', '2027-08-12', 36, 6228.00, 224208.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(93, 9, 77, 'LOT-PN-9-272', '2028-03-12', 63, 6716.00, 423108.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(94, 9, 115, 'LOT-PN-9-784', '2026-12-12', 284, 8520.00, 2419680.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(95, 9, 197, 'LOT-PN-9-583', '2027-07-12', 20, 9506.00, 190120.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(96, 10, 127, 'LOT-PN-10-964', '2027-11-12', 64, 3926.00, 251264.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(97, 10, 103, 'LOT-PN-10-820', '2027-08-12', 466, 4010.00, 1868660.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(98, 10, 9, 'LOT-PN-10-141', '2027-10-12', 489, 4746.00, 2320794.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(99, 10, 56, 'LOT-PN-10-625', '2028-01-12', 327, 3685.00, 1204995.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(100, 10, 137, 'LOT-PN-10-502', '2028-03-12', 144, 4278.00, 616032.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(101, 10, 30, 'LOT-PN-10-255', '2028-02-12', 217, 8069.00, 1750973.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(102, 10, 73, 'LOT-PN-10-332', '2027-01-12', 270, 3848.00, 1038960.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(103, 10, 39, 'LOT-PN-10-881', '2028-07-12', 32, 5714.00, 182848.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(104, 1, 103, 'LOT-PN-1-352', '2027-11-12', 275, 3139.00, 863225.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(105, 1, 149, 'LOT-PN-1-257', '2027-09-12', 28, 2029.00, 56812.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(106, 1, 58, 'LOT-PN-1-267', '2026-08-12', 101, 5358.00, 541158.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(107, 1, 108, 'LOT-PN-1-567', '2027-04-12', 141, 4768.00, 672288.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(108, 1, 47, 'LOT-PN-1-223', '2027-08-12', 431, 4026.00, 1735206.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(109, 1, 115, 'LOT-PN-1-373', '2028-10-12', 463, 6612.00, 3061356.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(110, 1, 196, 'LOT-PN-1-32', '2027-12-12', 198, 6119.00, 1211562.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(111, 1, 144, 'LOT-PN-1-221', '2027-11-12', 64, 9025.00, 577600.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(112, 1, 8, 'LOT-PN-1-101', '2028-08-12', 115, 2325.00, 267375.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(113, 2, 161, 'LOT-PN-2-763', '2027-06-12', 122, 3801.00, 463722.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(114, 2, 40, 'LOT-PN-2-264', '2028-01-12', 409, 9887.00, 4043783.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(115, 2, 80, 'LOT-PN-2-482', '2027-05-12', 451, 5703.00, 2572053.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(116, 2, 32, 'LOT-PN-2-370', '2026-07-12', 356, 6376.00, 2269856.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(117, 2, 15, 'LOT-PN-2-709', '2027-07-12', 415, 9543.00, 3960345.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(118, 2, 45, 'LOT-PN-2-81', '2026-10-12', 34, 8571.00, 291414.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(119, 2, 19, 'LOT-PN-2-234', '2027-01-12', 110, 5079.00, 558690.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(120, 2, 14, 'LOT-PN-2-583', '2027-09-12', 45, 3536.00, 159120.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(121, 2, 77, 'LOT-PN-2-570', '2028-04-12', 365, 3055.00, 1115075.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(122, 2, 67, 'LOT-PN-2-25', '2028-07-12', 69, 4490.00, 309810.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(123, 2, 46, 'LOT-PN-2-303', '2028-01-12', 397, 7987.00, 3170839.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(124, 2, 195, 'LOT-PN-2-962', '2027-09-12', 435, 4049.00, 1761315.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(125, 2, 71, 'LOT-PN-2-949', '2028-01-12', 93, 8193.00, 761949.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(126, 2, 192, 'LOT-PN-2-128', '2027-06-12', 74, 6734.00, 498316.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(127, 3, 180, 'LOT-PN-3-375', '2026-07-12', 187, 3716.00, 694892.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(128, 3, 136, 'LOT-PN-3-490', '2026-12-12', 280, 6185.00, 1731800.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(129, 3, 87, 'LOT-PN-3-377', '2028-09-12', 159, 1389.00, 220851.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(130, 3, 181, 'LOT-PN-3-243', '2027-05-12', 448, 3177.00, 1423296.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(131, 3, 158, 'LOT-PN-3-704', '2026-11-12', 341, 9674.00, 3298834.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(132, 3, 83, 'LOT-PN-3-720', '2027-09-12', 85, 4419.00, 375615.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(133, 4, 61, 'LOT-PN-4-959', '2028-01-12', 84, 3875.00, 325500.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(134, 4, 149, 'LOT-PN-4-183', '2027-08-12', 186, 9211.00, 1713246.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(135, 4, 78, 'LOT-PN-4-349', '2028-10-12', 373, 4153.00, 1549069.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(136, 4, 1, 'LOT-PN-4-711', '2028-12-12', 124, 3451.00, 427924.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(137, 4, 29, 'LOT-PN-4-198', '2027-05-12', 249, 6723.00, 1674027.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(138, 4, 164, 'LOT-PN-4-979', '2027-06-12', 245, 6731.00, 1649095.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(139, 4, 42, 'LOT-PN-4-613', '2026-11-12', 342, 1761.00, 602262.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(140, 4, 131, 'LOT-PN-4-736', '2027-06-12', 244, 7153.00, 1745332.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(141, 4, 56, 'LOT-PN-4-372', '2028-12-12', 265, 2402.00, 636530.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(142, 4, 53, 'LOT-PN-4-856', '2026-12-12', 180, 696.00, 125280.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(143, 5, 58, 'LOT-PN-5-49', '2028-03-12', 39, 8195.00, 319605.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(144, 5, 78, 'LOT-PN-5-944', '2026-08-12', 83, 3229.00, 268007.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(145, 5, 41, 'LOT-PN-5-743', '2027-05-12', 37, 1766.00, 65342.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(146, 5, 129, 'LOT-PN-5-381', '2028-03-12', 126, 824.00, 103824.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(147, 5, 127, 'LOT-PN-5-476', '2028-12-12', 31, 1378.00, 42718.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(148, 5, 198, 'LOT-PN-5-945', '2028-07-12', 286, 7328.00, 2095808.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(149, 5, 54, 'LOT-PN-5-486', '2026-11-12', 69, 8518.00, 587742.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(150, 5, 19, 'LOT-PN-5-41', '2028-11-12', 140, 3082.00, 431480.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(151, 5, 43, 'LOT-PN-5-259', '2028-07-12', 139, 5165.00, 717935.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(152, 5, 116, 'LOT-PN-5-467', '2028-10-12', 99, 8065.00, 798435.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(153, 5, 51, 'LOT-PN-5-844', '2027-05-12', 496, 2034.00, 1008864.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(154, 5, 48, 'LOT-PN-5-988', '2028-10-12', 102, 9676.00, 986952.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(155, 6, 99, 'LOT-PN-6-528', '2027-06-12', 189, 7558.00, 1428462.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(156, 6, 123, 'LOT-PN-6-550', '2027-10-12', 309, 4054.00, 1252686.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(157, 6, 142, 'LOT-PN-6-614', '2028-11-12', 160, 9059.00, 1449440.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(158, 6, 20, 'LOT-PN-6-643', '2028-11-12', 37, 1122.00, 41514.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(159, 6, 28, 'LOT-PN-6-763', '2028-07-12', 358, 985.00, 352630.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(160, 6, 179, 'LOT-PN-6-623', '2026-06-12', 77, 3395.00, 261415.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(161, 6, 138, 'LOT-PN-6-792', '2026-08-12', 307, 7821.00, 2401047.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(162, 6, 32, 'LOT-PN-6-22', '2027-10-12', 231, 1379.00, 318549.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(163, 7, 160, 'LOT-PN-7-658', '2027-09-12', 414, 9033.00, 3739662.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(164, 7, 50, 'LOT-PN-7-582', '2028-11-12', 160, 4066.00, 650560.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(165, 7, 13, 'LOT-PN-7-245', '2027-05-12', 258, 3268.00, 843144.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(166, 7, 49, 'LOT-PN-7-879', '2026-11-12', 356, 8377.00, 2982212.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(167, 7, 90, 'LOT-PN-7-60', '2026-09-12', 70, 2692.00, 188440.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(168, 7, 41, 'LOT-PN-7-189', '2026-06-12', 261, 7870.00, 2054070.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(169, 7, 121, 'LOT-PN-7-650', '2027-12-12', 494, 9309.00, 4598646.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(170, 7, 36, 'LOT-PN-7-709', '2028-03-12', 445, 8001.00, 3560445.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(171, 7, 35, 'LOT-PN-7-652', '2026-08-12', 499, 8813.00, 4397687.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(172, 7, 52, 'LOT-PN-7-253', '2026-10-12', 440, 9588.00, 4218720.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(173, 7, 116, 'LOT-PN-7-778', '2027-05-12', 191, 3084.00, 589044.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(174, 8, 29, 'LOT-PN-8-595', '2028-08-12', 335, 8335.00, 2792225.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(175, 8, 167, 'LOT-PN-8-808', '2028-08-12', 315, 5085.00, 1601775.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(176, 8, 141, 'LOT-PN-8-516', '2027-12-12', 78, 6483.00, 505674.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(177, 8, 51, 'LOT-PN-8-804', '2026-06-12', 376, 688.00, 258688.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(178, 8, 84, 'LOT-PN-8-460', '2027-10-12', 198, 3644.00, 721512.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(179, 8, 194, 'LOT-PN-8-109', '2026-06-12', 301, 6826.00, 2054626.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(180, 8, 139, 'LOT-PN-8-780', '2027-09-12', 336, 4861.00, 1633296.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(181, 8, 40, 'LOT-PN-8-145', '2026-11-12', 316, 9249.00, 2922684.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(182, 8, 62, 'LOT-PN-8-840', '2028-04-12', 448, 7776.00, 3483648.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(183, 8, 11, 'LOT-PN-8-266', '2028-01-12', 392, 646.00, 253232.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(184, 8, 97, 'LOT-PN-8-889', '2028-08-12', 232, 9635.00, 2235320.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(185, 8, 30, 'LOT-PN-8-643', '2026-08-12', 67, 1774.00, 118858.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(186, 9, 4, 'LOT-PN-9-68', '2028-10-12', 89, 3302.00, 293878.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(187, 9, 17, 'LOT-PN-9-741', '2027-05-12', 364, 7170.00, 2609880.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(188, 9, 16, 'LOT-PN-9-545', '2027-05-12', 440, 1529.00, 672760.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(189, 9, 195, 'LOT-PN-9-951', '2028-09-12', 231, 8185.00, 1890735.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(190, 9, 189, 'LOT-PN-9-843', '2027-03-12', 339, 1698.00, 575622.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(191, 9, 170, 'LOT-PN-9-359', '2026-07-12', 251, 634.00, 159134.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(192, 9, 11, 'LOT-PN-9-94', '2026-06-12', 284, 9357.00, 2657388.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(193, 9, 7, 'LOT-PN-9-892', '2028-01-12', 39, 6046.00, 235794.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(194, 9, 180, 'LOT-PN-9-622', '2027-06-12', 69, 9409.00, 649221.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(195, 9, 89, 'LOT-PN-9-194', '2027-02-12', 246, 9939.00, 2444994.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(196, 9, 108, 'LOT-PN-9-378', '2027-08-12', 209, 1140.00, 238260.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(197, 9, 164, 'LOT-PN-9-270', '2027-01-12', 268, 1823.00, 488564.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(198, 9, 88, 'LOT-PN-9-11', '2026-08-12', 328, 9406.00, 3085168.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(199, 9, 3, 'LOT-PN-9-1', '2027-04-12', 166, 7252.00, 1203832.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(200, 10, 108, 'LOT-PN-10-118', '2027-04-12', 419, 7556.00, 3165964.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(201, 10, 81, 'LOT-PN-10-545', '2027-07-12', 101, 1470.00, 148470.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(202, 10, 115, 'LOT-PN-10-89', '2026-09-12', 457, 7434.00, 3397338.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(203, 10, 136, 'LOT-PN-10-207', '2027-12-12', 310, 8796.00, 2726760.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(204, 10, 65, 'LOT-PN-10-145', '2027-01-12', 283, 2269.00, 642127.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(205, 10, 76, 'LOT-PN-10-58', '2027-01-12', 128, 5891.00, 754048.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(206, 10, 193, 'LOT-PN-10-172', '2027-03-12', 291, 1813.00, 527583.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15');
+(1, 1, 156, 'LOT-PN-1-566', '2027-01-19', 381, 7292.00, 2778252.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 1, 106, 'LOT-PN-1-63', '2026-06-19', 183, 3400.00, 622200.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 1, 89, 'LOT-PN-1-347', '2026-10-19', 462, 1171.00, 541002.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(4, 1, 170, 'LOT-PN-1-481', '2028-08-19', 131, 7174.00, 939794.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(5, 1, 70, 'LOT-PN-1-352', '2026-12-19', 23, 2507.00, 57661.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(6, 1, 32, 'LOT-PN-1-531', '2028-03-19', 160, 7770.00, 1243200.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(7, 1, 37, 'LOT-PN-1-39', '2028-07-19', 198, 8868.00, 1755864.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(8, 1, 108, 'LOT-PN-1-686', '2028-03-19', 242, 3399.00, 822558.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(9, 2, 82, 'LOT-PN-2-401', '2026-08-19', 198, 1679.00, 332442.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(10, 2, 106, 'LOT-PN-2-759', '2027-09-19', 122, 4238.00, 517036.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(11, 2, 195, 'LOT-PN-2-421', '2028-06-19', 452, 9181.00, 4149812.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(12, 2, 189, 'LOT-PN-2-718', '2028-01-19', 389, 8170.00, 3178130.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(13, 2, 2, 'LOT-PN-2-40', '2026-09-19', 385, 6685.00, 2573725.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(14, 2, 128, 'LOT-PN-2-492', '2026-06-19', 112, 9320.00, 1043840.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(15, 2, 134, 'LOT-PN-2-3', '2026-06-19', 481, 6756.00, 3249636.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(16, 2, 85, 'LOT-PN-2-68', '2027-03-19', 50, 796.00, 39800.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(17, 2, 137, 'LOT-PN-2-59', '2027-02-19', 422, 1415.00, 597130.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(18, 2, 24, 'LOT-PN-2-303', '2028-08-19', 63, 8918.00, 561834.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(19, 3, 58, 'LOT-PN-3-521', '2026-11-19', 77, 4710.00, 362670.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(20, 3, 71, 'LOT-PN-3-434', '2026-11-19', 448, 7785.00, 3487680.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(21, 3, 166, 'LOT-PN-3-45', '2027-10-19', 56, 1933.00, 108248.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(22, 3, 185, 'LOT-PN-3-52', '2027-11-19', 88, 9535.00, 839080.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(23, 3, 165, 'LOT-PN-3-302', '2026-11-19', 337, 4322.00, 1456514.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(24, 3, 103, 'LOT-PN-3-470', '2026-08-19', 425, 8411.00, 3574675.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(25, 3, 75, 'LOT-PN-3-540', '2026-09-19', 154, 7976.00, 1228304.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(26, 4, 122, 'LOT-PN-4-248', '2027-05-19', 453, 4230.00, 1916190.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(27, 4, 77, 'LOT-PN-4-47', '2027-07-19', 434, 4643.00, 2015062.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(28, 4, 30, 'LOT-PN-4-171', '2028-10-19', 293, 6140.00, 1799020.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(29, 4, 74, 'LOT-PN-4-918', '2027-04-19', 33, 9053.00, 298749.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(30, 4, 178, 'LOT-PN-4-847', '2028-03-19', 361, 6017.00, 2172137.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(31, 4, 73, 'LOT-PN-4-942', '2028-12-19', 96, 7287.00, 699552.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(32, 4, 63, 'LOT-PN-4-204', '2027-11-19', 189, 9107.00, 1721223.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(33, 4, 107, 'LOT-PN-4-453', '2026-06-19', 114, 7231.00, 824334.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(34, 4, 170, 'LOT-PN-4-82', '2027-05-19', 125, 1771.00, 221375.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(35, 4, 144, 'LOT-PN-4-18', '2027-12-19', 92, 8249.00, 758908.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(36, 4, 186, 'LOT-PN-4-356', '2028-09-19', 266, 2804.00, 745864.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(37, 4, 81, 'LOT-PN-4-253', '2027-10-19', 494, 6912.00, 3414528.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(38, 5, 193, 'LOT-PN-5-553', '2028-09-19', 246, 2401.00, 590646.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(39, 5, 112, 'LOT-PN-5-973', '2027-12-19', 236, 3570.00, 842520.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(40, 5, 106, 'LOT-PN-5-600', '2028-02-19', 225, 6467.00, 1455075.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(41, 5, 128, 'LOT-PN-5-989', '2027-09-19', 274, 7406.00, 2029244.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(42, 5, 44, 'LOT-PN-5-89', '2027-08-19', 301, 5006.00, 1506806.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(43, 5, 168, 'LOT-PN-5-435', '2028-11-19', 499, 2954.00, 1474046.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(44, 5, 137, 'LOT-PN-5-681', '2026-11-19', 246, 928.00, 228288.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(45, 5, 27, 'LOT-PN-5-92', '2028-05-19', 103, 4689.00, 482967.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(46, 5, 169, 'LOT-PN-5-514', '2027-07-19', 347, 9051.00, 3140697.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(47, 5, 5, 'LOT-PN-5-368', '2028-09-19', 198, 4110.00, 813780.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(48, 5, 124, 'LOT-PN-5-180', '2026-10-19', 52, 4159.00, 216268.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(49, 5, 103, 'LOT-PN-5-26', '2028-10-19', 210, 695.00, 145950.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(50, 5, 172, 'LOT-PN-5-627', '2027-10-19', 157, 9818.00, 1541426.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(51, 5, 35, 'LOT-PN-5-254', '2028-06-19', 475, 7427.00, 3527825.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(52, 5, 120, 'LOT-PN-5-362', '2027-05-19', 108, 1486.00, 160488.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(53, 6, 22, 'LOT-PN-6-900', '2027-11-19', 80, 9845.00, 787600.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(54, 6, 20, 'LOT-PN-6-240', '2026-10-19', 296, 9073.00, 2685608.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(55, 6, 8, 'LOT-PN-6-290', '2028-12-19', 60, 9116.00, 546960.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(56, 6, 29, 'LOT-PN-6-668', '2028-12-19', 49, 4130.00, 202370.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(57, 6, 130, 'LOT-PN-6-599', '2026-10-19', 88, 4861.00, 427768.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(58, 6, 191, 'LOT-PN-6-718', '2027-02-19', 76, 4308.00, 327408.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(59, 6, 119, 'LOT-PN-6-420', '2028-12-19', 383, 4756.00, 1821548.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(60, 6, 161, 'LOT-PN-6-630', '2028-05-19', 457, 2698.00, 1232986.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(61, 6, 111, 'LOT-PN-6-677', '2026-10-19', 255, 1526.00, 389130.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(62, 7, 150, 'LOT-PN-7-759', '2026-06-19', 71, 820.00, 58220.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(63, 7, 3, 'LOT-PN-7-538', '2028-03-19', 213, 1873.00, 398949.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(64, 7, 12, 'LOT-PN-7-164', '2028-10-19', 199, 8441.00, 1679759.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(65, 7, 179, 'LOT-PN-7-705', '2027-06-19', 267, 1460.00, 389820.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(66, 7, 7, 'LOT-PN-7-153', '2028-02-19', 28, 8540.00, 239120.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(67, 7, 119, 'LOT-PN-7-788', '2028-04-19', 72, 9265.00, 667080.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(68, 7, 148, 'LOT-PN-7-466', '2027-07-19', 127, 6103.00, 775081.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(69, 7, 177, 'LOT-PN-7-471', '2027-02-19', 314, 5504.00, 1728256.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(70, 7, 65, 'LOT-PN-7-825', '2027-04-19', 277, 8167.00, 2262259.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(71, 7, 107, 'LOT-PN-7-805', '2027-05-19', 375, 6660.00, 2497500.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(72, 7, 95, 'LOT-PN-7-265', '2026-08-19', 214, 2041.00, 436774.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(73, 8, 99, 'LOT-PN-8-884', '2027-12-19', 288, 4294.00, 1236672.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(74, 8, 197, 'LOT-PN-8-517', '2027-03-19', 288, 1771.00, 510048.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(75, 8, 36, 'LOT-PN-8-697', '2026-10-19', 90, 9614.00, 865260.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(76, 8, 2, 'LOT-PN-8-863', '2027-02-19', 403, 9249.00, 3727347.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(77, 8, 66, 'LOT-PN-8-654', '2028-07-19', 48, 5577.00, 267696.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(78, 8, 151, 'LOT-PN-8-329', '2028-04-19', 458, 5852.00, 2680216.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(79, 8, 130, 'LOT-PN-8-331', '2027-06-19', 166, 1403.00, 232898.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(80, 8, 13, 'LOT-PN-8-101', '2026-08-19', 164, 7749.00, 1270836.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(81, 8, 165, 'LOT-PN-8-835', '2028-11-19', 454, 2194.00, 996076.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(82, 8, 84, 'LOT-PN-8-243', '2027-01-19', 225, 3986.00, 896850.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(83, 8, 182, 'LOT-PN-8-74', '2026-07-19', 113, 7479.00, 845127.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(84, 8, 187, 'LOT-PN-8-773', '2027-06-19', 295, 8746.00, 2580070.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(85, 8, 166, 'LOT-PN-8-991', '2026-10-19', 96, 2603.00, 249888.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(86, 9, 136, 'LOT-PN-9-475', '2028-03-19', 152, 7348.00, 1116896.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(87, 9, 170, 'LOT-PN-9-384', '2028-06-19', 496, 7065.00, 3504240.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(88, 9, 24, 'LOT-PN-9-63', '2027-04-19', 94, 9252.00, 869688.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(89, 9, 102, 'LOT-PN-9-634', '2027-02-19', 186, 662.00, 123132.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(90, 9, 164, 'LOT-PN-9-355', '2028-11-19', 105, 3738.00, 392490.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(91, 9, 30, 'LOT-PN-9-680', '2027-04-19', 440, 7051.00, 3102440.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(92, 9, 115, 'LOT-PN-9-797', '2026-10-19', 317, 6804.00, 2156868.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(93, 9, 95, 'LOT-PN-9-949', '2026-10-19', 233, 1959.00, 456447.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(94, 9, 40, 'LOT-PN-9-190', '2028-11-19', 46, 9447.00, 434562.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(95, 9, 86, 'LOT-PN-9-690', '2027-09-19', 289, 5417.00, 1565513.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(96, 9, 96, 'LOT-PN-9-941', '2028-10-19', 317, 2969.00, 941173.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(97, 9, 124, 'LOT-PN-9-43', '2026-07-19', 243, 657.00, 159651.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(98, 10, 16, 'LOT-PN-10-388', '2027-11-19', 279, 3994.00, 1114326.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(99, 10, 72, 'LOT-PN-10-684', '2027-01-19', 183, 4439.00, 812337.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(100, 10, 88, 'LOT-PN-10-277', '2028-02-19', 239, 5989.00, 1431371.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(101, 10, 18, 'LOT-PN-10-625', '2028-02-19', 340, 3688.00, 1253920.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(102, 10, 196, 'LOT-PN-10-977', '2026-07-19', 255, 6966.00, 1776330.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(103, 10, 22, 'LOT-PN-10-65', '2027-03-19', 357, 9340.00, 3334380.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(104, 10, 98, 'LOT-PN-10-133', '2028-06-19', 275, 2065.00, 567875.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(105, 10, 28, 'LOT-PN-10-282', '2028-11-19', 66, 2310.00, 152460.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(106, 10, 174, 'LOT-PN-10-901', '2028-09-19', 80, 6831.00, 546480.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(107, 10, 2, 'LOT-PN-10-903', '2026-10-19', 282, 9042.00, 2549844.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(108, 10, 173, 'LOT-PN-10-361', '2028-12-19', 442, 2822.00, 1247324.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46');
 
 -- --------------------------------------------------------
 
@@ -2827,16 +2577,16 @@ CREATE TABLE `phieu_xuats` (
 --
 
 INSERT INTO `phieu_xuats` (`id`, `ma_phieu`, `ngay_xuat`, `user_id`, `doi_tuong`, `tong_tien`, `ghi_chu`, `created_at`, `updated_at`) VALUES
-(1, 'PX-SEED-1', '2025-11-16', NULL, 'Khach le', 2493677.00, 'Seed PX #1', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(2, 'PX-SEED-2', '2025-11-18', NULL, 'Khach le', 1873278.00, 'Seed PX #2', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(3, 'PX-SEED-3', '2025-12-07', NULL, 'Khach le', 1604830.00, 'Seed PX #3', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(4, 'PX-SEED-4', '2025-12-03', NULL, 'Khach le', 1807743.00, 'Seed PX #4', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(5, 'PX-SEED-5', '2025-11-17', NULL, 'Khach le', 2490167.00, 'Seed PX #5', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(6, 'PX-SEED-6', '2025-11-24', NULL, 'Khach le', 1084688.00, 'Seed PX #6', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(7, 'PX-SEED-7', '2025-11-14', NULL, 'Khach le', 1948362.00, 'Seed PX #7', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(8, 'PX-SEED-8', '2025-11-17', NULL, 'Khach le', 589346.00, 'Seed PX #8', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(9, 'PX-SEED-9', '2025-11-25', NULL, 'Khach le', 887430.00, 'Seed PX #9', '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(10, 'PX-SEED-10', '2025-12-04', NULL, 'Khach le', 2046615.00, 'Seed PX #10', '2025-12-12 07:45:56', '2025-12-12 07:50:15');
+(1, 'PX-SEED-1', '2025-12-01', NULL, 'Khach le', 2381073.00, 'Seed PX #1', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 'PX-SEED-2', '2025-12-12', NULL, 'Khach le', 1353762.00, 'Seed PX #2', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 'PX-SEED-3', '2025-11-25', NULL, 'Khach le', 1782985.00, 'Seed PX #3', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(4, 'PX-SEED-4', '2025-12-07', NULL, 'Khach le', 2427175.00, 'Seed PX #4', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(5, 'PX-SEED-5', '2025-12-08', NULL, 'Khach le', 2772562.00, 'Seed PX #5', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(6, 'PX-SEED-6', '2025-12-03', NULL, 'Khach le', 2190744.00, 'Seed PX #6', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(7, 'PX-SEED-7', '2025-12-13', NULL, 'Khach le', 1598503.00, 'Seed PX #7', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(8, 'PX-SEED-8', '2025-12-17', NULL, 'Khach le', 1608674.00, 'Seed PX #8', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(9, 'PX-SEED-9', '2025-12-04', NULL, 'Khach le', 1534938.00, 'Seed PX #9', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(10, 'PX-SEED-10', '2025-12-05', NULL, 'Khach le', 3199764.00, 'Seed PX #10', '2025-12-19 16:00:46', '2025-12-19 16:00:46');
 
 -- --------------------------------------------------------
 
@@ -2860,123 +2610,66 @@ CREATE TABLE `phieu_xuat_items` (
 --
 
 INSERT INTO `phieu_xuat_items` (`id`, `phieu_xuat_id`, `thuoc_id`, `so_luong`, `don_gia`, `thanh_tien`, `created_at`, `updated_at`) VALUES
-(1, 1, 98, 6, 1610.00, 9660.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(2, 1, 68, 90, 1970.00, 177300.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(3, 1, 87, 81, 6650.00, 538650.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(4, 1, 63, 79, 3490.00, 275710.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(5, 1, 95, 92, 9805.00, 902060.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(6, 1, 144, 53, 10549.00, 559097.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(7, 1, 196, 9, 2903.00, 26127.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(8, 2, 3, 10, 7082.00, 70820.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(9, 2, 82, 33, 10513.00, 346929.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(10, 2, 135, 27, 9473.00, 255771.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(11, 3, 23, 19, 1076.00, 20444.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(12, 3, 50, 42, 11632.00, 488544.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(13, 3, 123, 53, 2447.00, 129691.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(14, 3, 118, 65, 2107.00, 136955.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(15, 3, 106, 37, 6032.00, 223184.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(16, 3, 104, 14, 11587.00, 162218.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(17, 3, 1, 62, 2196.00, 136152.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(18, 3, 197, 5, 10827.00, 54135.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(19, 4, 170, 62, 2391.00, 148242.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(20, 4, 44, 85, 7105.00, 603925.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(21, 4, 181, 74, 9263.00, 685462.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(22, 4, 118, 35, 11244.00, 393540.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(23, 4, 98, 84, 11159.00, 937356.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(24, 4, 112, 39, 9824.00, 383136.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(25, 5, 23, 2, 10834.00, 21668.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(26, 5, 84, 49, 5029.00, 246421.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(27, 5, 31, 93, 7843.00, 729399.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(28, 5, 42, 20, 8179.00, 163580.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(29, 5, 44, 87, 4381.00, 381147.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(30, 5, 166, 8, 4913.00, 39304.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(31, 6, 186, 9, 6657.00, 59913.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(32, 6, 26, 67, 2466.00, 165222.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(33, 6, 25, 7, 5867.00, 41069.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(34, 6, 66, 43, 8618.00, 370574.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(35, 6, 84, 48, 6830.00, 327840.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(36, 6, 171, 48, 5884.00, 282432.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(37, 6, 172, 17, 6960.00, 118320.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(38, 6, 7, 19, 10321.00, 196099.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(39, 7, 3, 71, 4499.00, 319429.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(40, 7, 160, 69, 3812.00, 263028.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(41, 7, 157, 62, 8831.00, 547522.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(42, 7, 140, 38, 2889.00, 109782.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(43, 7, 10, 1, 9266.00, 9266.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(44, 8, 114, 36, 4482.00, 161352.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(45, 8, 84, 8, 6934.00, 55472.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(46, 8, 30, 84, 2143.00, 180012.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(47, 8, 80, 70, 8116.00, 568120.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(48, 8, 70, 18, 2492.00, 44856.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(49, 8, 108, 25, 10487.00, 262175.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(50, 8, 165, 50, 10864.00, 543200.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(51, 9, 9, 20, 1055.00, 21100.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(52, 9, 39, 32, 1719.00, 55008.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(53, 9, 39, 37, 1719.00, 63603.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(54, 9, 135, 36, 11333.00, 407988.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(55, 9, 32, 18, 4041.00, 72738.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(56, 9, 153, 47, 7062.00, 331914.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(57, 9, 108, 44, 5304.00, 233376.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(58, 9, 145, 11, 6523.00, 71753.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(59, 9, 21, 33, 4397.00, 145101.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(60, 10, 67, 22, 6673.00, 146806.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(61, 10, 37, 80, 3567.00, 285360.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(62, 10, 138, 30, 4915.00, 147450.00, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(63, 1, 68, 81, 10365.00, 839565.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(64, 1, 3, 82, 1839.00, 150798.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(65, 1, 73, 36, 9947.00, 358092.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(66, 1, 23, 4, 9534.00, 38136.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(67, 1, 4, 27, 11538.00, 311526.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(68, 1, 31, 38, 9754.00, 370652.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(69, 1, 19, 40, 5829.00, 233160.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(70, 1, 148, 58, 3306.00, 191748.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(71, 2, 31, 4, 3242.00, 12968.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(72, 2, 199, 42, 6466.00, 271572.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(73, 2, 40, 98, 5934.00, 581532.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(74, 2, 139, 94, 1507.00, 141658.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(75, 2, 5, 11, 10169.00, 111859.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(76, 2, 127, 64, 8182.00, 523648.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(77, 2, 127, 21, 8182.00, 171822.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(78, 2, 142, 7, 8317.00, 58219.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(79, 3, 197, 15, 8020.00, 120300.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(80, 3, 197, 71, 8020.00, 569420.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(81, 3, 153, 87, 4870.00, 423690.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(82, 3, 40, 75, 4100.00, 307500.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(83, 3, 73, 44, 4180.00, 183920.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(84, 4, 150, 93, 10749.00, 999657.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(85, 4, 75, 35, 2061.00, 72135.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(86, 4, 64, 61, 10151.00, 619211.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(87, 4, 200, 52, 2245.00, 116740.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(88, 5, 118, 73, 5814.00, 424422.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(89, 5, 129, 21, 1126.00, 23646.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(90, 5, 166, 95, 10903.00, 1035785.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(91, 5, 165, 38, 11611.00, 441218.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(92, 5, 124, 44, 5202.00, 228888.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(93, 5, 33, 32, 4989.00, 159648.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(94, 5, 16, 92, 1098.00, 101016.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(95, 5, 122, 8, 9443.00, 75544.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(96, 6, 38, 15, 10229.00, 153435.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(97, 6, 138, 74, 5007.00, 370518.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(98, 6, 10, 25, 10021.00, 250525.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(99, 6, 92, 42, 4583.00, 192486.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(100, 6, 61, 19, 6196.00, 117724.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(101, 7, 23, 46, 9152.00, 420992.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(102, 7, 100, 30, 10651.00, 319530.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(103, 7, 13, 79, 1402.00, 110758.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(104, 7, 108, 2, 9828.00, 19656.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(105, 7, 39, 50, 3003.00, 150150.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(106, 7, 180, 3, 1510.00, 4530.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(107, 7, 75, 93, 9922.00, 922746.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(108, 8, 187, 54, 6498.00, 350892.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(109, 8, 125, 19, 11426.00, 217094.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(110, 8, 44, 10, 2136.00, 21360.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(111, 9, 118, 12, 4118.00, 49416.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(112, 9, 95, 10, 6543.00, 65430.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(113, 9, 136, 14, 9511.00, 133154.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(114, 9, 13, 55, 11626.00, 639430.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(115, 10, 62, 96, 11372.00, 1091712.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(116, 10, 153, 54, 4789.00, 258606.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(117, 10, 200, 71, 9807.00, 696297.00, '2025-12-12 07:50:15', '2025-12-12 07:50:15');
+(1, 1, 95, 94, 11768.00, 1106192.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 1, 59, 23, 1045.00, 24035.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 1, 29, 49, 1508.00, 73892.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(4, 1, 29, 19, 1508.00, 28652.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(5, 1, 186, 79, 2928.00, 231312.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(6, 1, 51, 13, 10125.00, 131625.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(7, 1, 10, 85, 6674.00, 567290.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(8, 1, 188, 55, 3965.00, 218075.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(9, 2, 36, 18, 11288.00, 203184.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(10, 2, 133, 7, 5474.00, 38318.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(11, 2, 126, 96, 4013.00, 385248.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(12, 2, 41, 82, 8866.00, 727012.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(13, 3, 152, 74, 9506.00, 703444.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(14, 3, 176, 23, 7219.00, 166037.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(15, 3, 153, 22, 8358.00, 183876.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(16, 3, 65, 36, 11826.00, 425736.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(17, 3, 114, 34, 5502.00, 187068.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(18, 3, 89, 34, 3436.00, 116824.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(19, 4, 12, 41, 4680.00, 191880.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(20, 4, 30, 3, 6463.00, 19389.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(21, 4, 144, 53, 5960.00, 315880.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(22, 4, 111, 98, 6755.00, 661990.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(23, 4, 177, 79, 10524.00, 831396.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(24, 4, 133, 23, 8504.00, 195592.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(25, 4, 154, 31, 6808.00, 211048.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(26, 5, 97, 95, 5944.00, 564680.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(27, 5, 190, 2, 11235.00, 22470.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(28, 5, 93, 75, 5070.00, 380250.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(29, 5, 91, 51, 5736.00, 292536.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(30, 5, 62, 75, 9390.00, 704250.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(31, 5, 193, 14, 10035.00, 140490.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(32, 5, 136, 15, 11632.00, 174480.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(33, 5, 128, 58, 8507.00, 493406.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(34, 6, 117, 89, 7457.00, 663673.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(35, 6, 107, 61, 8208.00, 500688.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(36, 6, 144, 5, 4278.00, 21390.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(37, 6, 185, 76, 8954.00, 680504.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(38, 6, 27, 33, 9833.00, 324489.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(39, 7, 184, 32, 11767.00, 376544.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(40, 7, 121, 44, 7458.00, 328152.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(41, 7, 112, 61, 7907.00, 482327.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(42, 7, 3, 76, 2964.00, 225264.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(43, 7, 106, 16, 6639.00, 106224.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(44, 7, 138, 22, 3636.00, 79992.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(45, 8, 72, 40, 2141.00, 85640.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(46, 8, 7, 28, 2853.00, 79884.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(47, 8, 7, 60, 2853.00, 171180.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(48, 8, 113, 48, 11025.00, 529200.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(49, 8, 182, 60, 7154.00, 429240.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(50, 8, 93, 30, 10451.00, 313530.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(51, 9, 32, 81, 5579.00, 451899.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(52, 9, 191, 66, 10517.00, 694122.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(53, 9, 73, 79, 4923.00, 388917.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(54, 10, 31, 73, 9573.00, 698829.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(55, 10, 169, 52, 5571.00, 289692.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(56, 10, 86, 60, 11012.00, 660720.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(57, 10, 74, 33, 9719.00, 320727.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(58, 10, 74, 66, 9719.00, 641454.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(59, 10, 197, 27, 1223.00, 33021.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(60, 10, 17, 87, 6383.00, 555321.00, '2025-12-19 16:00:46', '2025-12-19 16:00:46');
 
 -- --------------------------------------------------------
 
@@ -3002,16 +2695,16 @@ CREATE TABLE `phongs` (
 --
 
 INSERT INTO `phongs` (`id`, `ten`, `loai`, `mo_ta`, `trang_thai`, `vi_tri`, `dien_tich`, `suc_chua`, `created_at`, `updated_at`) VALUES
-(17, 'Phòng khám Sản 01 (VIP)', 'phong_kham', 'Phòng khám tiêu chuẩn VIP, không gian riêng tư, trang bị ghế khám thông minh.', 'Sẵn sàng', 'Tầng 1, Khu A (Cạnh lễ tân)', 25.00, 3, '2025-12-12 07:01:59', '2025-12-13 03:14:26'),
-(18, 'Phòng khám Sản 02', 'phong_kham', 'Chuyên khám thai định kỳ và tư vấn dinh dưỡng.', 'Sẵn sàng', 'Tầng 1, Khu A', 20.00, 3, '2025-12-12 07:01:59', '2025-12-13 03:14:26'),
-(19, 'Phòng Siêu âm Chẩn đoán hình ảnh', 'phong_xet_nghiem', 'Trang bị máy siêu âm Voluson E10 hiện đại nhất, màn hình LED lớn cho gia đình cùng xem.', 'Sẵn sàng', 'Tầng 1, Khu B (Đối diện phòng khám Sản)', 30.00, 5, '2025-12-12 07:02:00', '2025-12-13 03:14:26'),
-(20, 'Phòng khám Phụ khoa 01', 'phong_kham', 'Phòng khám phụ khoa tổng quát, có khu vực thay đồ kín đáo cho khách hàng.', 'Sẵn sàng', 'Tầng 2, Khu A', 20.00, 3, '2025-12-12 07:02:00', '2025-12-13 03:14:26'),
-(21, 'Phòng Thủ thuật Kế hoạch hóa GĐ', 'phong_thu_thuat', 'Chuyên thực hiện cấy que, đặt vòng, hút thai an toàn. Đảm bảo tiêu chuẩn vô khuẩn tuyệt đối.', 'Sẵn sàng', 'Tầng 2, Khu B (Khu vực vô trùng)', 35.00, 4, '2025-12-12 07:02:00', '2025-12-13 03:14:26'),
-(22, 'Phòng Laser Thẩm mỹ & Sàn chậu', 'phong_chuc_nang', 'Trang bị máy Laser CO2 và máy tập sàn chậu Biofeedback. Không gian Spa thư giãn.', 'Sẵn sàng', 'Tầng 2, Khu C (Khu vực yên tĩnh)', 25.00, 2, '2025-12-12 07:02:00', '2025-12-13 03:14:26'),
-(23, 'Phòng Tư vấn Vô sinh - Hiếm muộn', 'phong_kham', 'Không gian tư vấn riêng tư, kín đáo cho các cặp đôi.', 'Sẵn sàng', 'Tầng 3, Khu A', 25.00, 4, '2025-12-12 07:02:00', '2025-12-13 03:14:26'),
-(24, 'Phòng Lab IUI & Lọc rửa tinh trùng', 'phong_thu_thuat', 'Phòng Lab đạt chuẩn ISO, kiểm soát nhiệt độ và độ ẩm nghiêm ngặt để nuôi cấy phôi/tinh trùng.', 'Sẵn sàng', 'Tầng 3, Khu B (Cách ly đặc biệt)', 40.00, 5, '2025-12-12 07:02:00', '2025-12-13 03:14:26'),
-(25, 'Trung tâm Xét nghiệm (Labo)', 'phong_xet_nghiem', 'Hệ thống máy xét nghiệm tự động hoàn toàn (Roche/Abbott).', 'Sẵn sàng', 'Tầng 3, Khu C', 50.00, 10, '2025-12-12 07:02:00', '2025-12-13 03:14:26'),
-(26, 'Phòng Tư vấn Sàng lọc Trước sinh', 'phong_kham', 'Tư vấn chuyên sâu về kết quả NIPT và chọc ối.', 'Sẵn sàng', 'Tầng 1, Khu A (Gần khu lấy máu)', 15.00, 3, '2025-12-12 07:02:00', '2025-12-13 03:14:26');
+(1, 'Phòng khám Sản 01 (VIP)', 'phong_kham', 'Phòng khám tiêu chuẩn VIP, không gian riêng tư, trang bị ghế khám thông minh.', 'Sẵn sàng', 'Tầng 1, Khu A (Cạnh lễ tân)', 25.00, 3, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(2, 'Phòng khám Sản 02', 'phong_kham', 'Chuyên khám thai định kỳ và tư vấn dinh dưỡng.', 'Sẵn sàng', 'Tầng 1, Khu A', 20.00, 3, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(3, 'Phòng Siêu âm Chẩn đoán hình ảnh', 'phong_xet_nghiem', 'Trang bị máy siêu âm Voluson E10 hiện đại nhất, màn hình LED lớn cho gia đình cùng xem.', 'Sẵn sàng', 'Tầng 1, Khu B (Đối diện phòng khám Sản)', 30.00, 5, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(4, 'Phòng khám Phụ khoa 01', 'phong_kham', 'Phòng khám phụ khoa tổng quát, có khu vực thay đồ kín đáo cho khách hàng.', 'Sẵn sàng', 'Tầng 2, Khu A', 20.00, 3, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(5, 'Phòng Thủ thuật Kế hoạch hóa GĐ', 'phong_thu_thuat', 'Chuyên thực hiện cấy que, đặt vòng, hút thai an toàn. Đảm bảo tiêu chuẩn vô khuẩn tuyệt đối.', 'Sẵn sàng', 'Tầng 2, Khu B (Khu vực vô trùng)', 35.00, 4, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(6, 'Phòng Laser Thẩm mỹ & Sàn chậu', 'phong_chuc_nang', 'Trang bị máy Laser CO2 và máy tập sàn chậu Biofeedback. Không gian Spa thư giãn.', 'Sẵn sàng', 'Tầng 2, Khu C (Khu vực yên tĩnh)', 25.00, 2, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(7, 'Phòng Tư vấn Vô sinh - Hiếm muộn', 'phong_kham', 'Không gian tư vấn riêng tư, kín đáo cho các cặp đôi.', 'Sẵn sàng', 'Tầng 3, Khu A', 25.00, 4, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(8, 'Phòng Lab IUI & Lọc rửa tinh trùng', 'phong_thu_thuat', 'Phòng Lab đạt chuẩn ISO, kiểm soát nhiệt độ và độ ẩm nghiêm ngặt để nuôi cấy phôi/tinh trùng.', 'Sẵn sàng', 'Tầng 3, Khu B (Cách ly đặc biệt)', 40.00, 5, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(9, 'Trung tâm Xét nghiệm (Labo)', 'phong_xet_nghiem', 'Hệ thống máy xét nghiệm tự động hoàn toàn (Roche/Abbott).', 'Sẵn sàng', 'Tầng 3, Khu C', 50.00, 10, '2025-12-19 16:00:44', '2025-12-19 16:00:44'),
+(10, 'Phòng Tư vấn Sàng lọc Trước sinh', 'phong_kham', 'Tư vấn chuyên sâu về kết quả NIPT và chọc ối.', 'Sẵn sàng', 'Tầng 1, Khu A (Gần khu lấy máu)', 15.00, 3, '2025-12-19 16:00:44', '2025-12-19 16:00:44');
 
 -- --------------------------------------------------------
 
@@ -3032,14 +2725,14 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'super-admin', 'web', '2025-12-12 04:21:48', '2025-12-12 04:21:48'),
-(2, 'admin', 'web', '2025-12-12 04:21:48', '2025-12-12 04:21:48'),
-(3, 'manager', 'web', '2025-12-12 04:21:48', '2025-12-12 04:21:48'),
-(4, 'doctor', 'web', '2025-12-12 04:21:48', '2025-12-12 04:21:48'),
-(5, 'staff', 'web', '2025-12-12 04:21:48', '2025-12-12 04:21:48'),
-(6, 'patient', 'web', '2025-12-12 04:21:48', '2025-12-12 04:21:48'),
-(7, 'accountant', 'web', '2025-12-12 04:21:48', '2025-12-12 04:21:48'),
-(8, 'pharmacist', 'web', '2025-12-12 04:21:48', '2025-12-12 04:21:48');
+(1, 'super-admin', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(2, 'admin', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(3, 'manager', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(4, 'doctor', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(5, 'staff', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(6, 'patient', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(7, 'accountant', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43'),
+(8, 'pharmacist', 'web', '2025-12-19 16:00:43', '2025-12-19 16:00:43');
 
 -- --------------------------------------------------------
 
@@ -3111,13 +2804,17 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (24, 3),
 (24, 4),
 (25, 1),
+(25, 2),
 (25, 4),
 (25, 5),
 (26, 1),
+(26, 2),
 (26, 4),
 (27, 1),
+(27, 2),
 (27, 4),
 (28, 1),
+(28, 2),
 (29, 1),
 (29, 2),
 (29, 3),
@@ -3192,7 +2889,45 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (56, 1),
 (56, 2),
 (56, 3),
-(56, 5);
+(56, 5),
+(57, 1),
+(57, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `sieu_ams`
+--
+
+CREATE TABLE `sieu_ams` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `benh_an_id` bigint(20) UNSIGNED NOT NULL,
+  `bac_si_chi_dinh_id` bigint(20) UNSIGNED NOT NULL,
+  `loai_sieu_am_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `bac_si_sieu_am_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `phong_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `loai` varchar(255) NOT NULL,
+  `mo_ta` text DEFAULT NULL,
+  `gia` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `file_path` varchar(255) DEFAULT NULL,
+  `disk` varchar(255) NOT NULL DEFAULT 'sieu_am_private',
+  `ket_qua` text DEFAULT NULL,
+  `nhan_xet` text DEFAULT NULL,
+  `trang_thai` varchar(50) NOT NULL DEFAULT 'pending',
+  `ngay_chi_dinh` timestamp NOT NULL DEFAULT current_timestamp(),
+  `ngay_thuc_hien` timestamp NULL DEFAULT NULL,
+  `ngay_hoan_thanh` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `sieu_ams`
+--
+
+INSERT INTO `sieu_ams` (`id`, `user_id`, `benh_an_id`, `bac_si_chi_dinh_id`, `loai_sieu_am_id`, `bac_si_sieu_am_id`, `phong_id`, `loai`, `mo_ta`, `gia`, `file_path`, `disk`, `ket_qua`, `nhan_xet`, `trang_thai`, `ngay_chi_dinh`, `ngay_thuc_hien`, `ngay_hoan_thanh`, `created_at`, `updated_at`) VALUES
+(1, 23, 1, 4, 7, NULL, 3, 'Siêu âm phụ khoa qua bụng', 'Khám Gói Khám Phụ khoa Tổng quát (VIP)', 150000.00, 'sieu_am/VtlQIGtNmG32jErRat0nH054A9BinbnktNgZmWlZ.png', 'sieu_am_private', 'Tư vấn chuyên sâu Vô sinh - Hiếm muộn', 'Tư vấn chuyên sâu Vô sinh - Hiếm muộn', 'completed', '2025-12-19 17:58:37', '2025-12-19 18:02:22', '2025-12-19 18:02:22', '2025-12-19 17:58:37', '2025-12-19 18:03:06');
 
 -- --------------------------------------------------------
 
@@ -3230,12 +2965,43 @@ CREATE TABLE `tags` (
 --
 
 INSERT INTO `tags` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
-(1, 'Dinh dưỡng bà bầu', 'dinh-duong-ba-bau', '2025-12-12 08:30:17', '2025-12-12 08:30:17'),
-(2, 'Lịch khám thai', 'lich-kham-thai', '2025-12-12 08:30:17', '2025-12-12 08:30:17'),
-(3, 'Thụ tinh ống nghiệm (IVF)', 'thu-tinh-ong-nghiem-ivf', '2025-12-12 08:30:17', '2025-12-12 08:30:17'),
-(4, 'Sàng lọc trước sinh', 'sang-loc-truoc-sinh', '2025-12-12 08:30:17', '2025-12-12 08:30:17'),
-(5, 'Ưu đãi', 'uu-dai', '2025-12-12 08:30:17', '2025-12-12 08:30:17'),
-(6, 'Sale', 'sale', '2025-12-12 08:30:17', '2025-12-12 08:30:17');
+(1, 'Dinh dưỡng bà bầu', 'dinh-duong-ba-bau', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 'Lịch khám thai', 'lich-kham-thai', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 'Thụ tinh ống nghiệm (IVF)', 'thu-tinh-ong-nghiem-ivf', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(4, 'Sàng lọc trước sinh', 'sang-loc-truoc-sinh', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(5, 'Ưu đãi', 'uu-dai', '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(6, 'Sale', 'sale', '2025-12-19 16:00:46', '2025-12-19 16:00:46');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `tai_khams`
+--
+
+CREATE TABLE `tai_khams` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `benh_an_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `bac_si_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `lich_hen_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `ngay_tai_kham` date DEFAULT NULL,
+  `thoi_gian_tai_kham` time DEFAULT NULL,
+  `so_ngay_du_kien` tinyint(3) UNSIGNED DEFAULT NULL,
+  `ly_do` text DEFAULT NULL,
+  `ghi_chu` text DEFAULT NULL,
+  `trang_thai` varchar(255) NOT NULL DEFAULT 'Chờ xác nhận',
+  `created_by_role` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `tai_khams`
+--
+
+INSERT INTO `tai_khams` (`id`, `benh_an_id`, `user_id`, `bac_si_id`, `lich_hen_id`, `ngay_tai_kham`, `thoi_gian_tai_kham`, `so_ngay_du_kien`, `ly_do`, `ghi_chu`, `trang_thai`, `created_by_role`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(2, 1, 23, 4, 2, '2025-12-23', '13:40:00', 2, 'Huyết áp và đường huyết cao. Yêu cầu làm thêm xét nghiệm dung nạp đường và protein niệu. Hẹn tái khám sau 3 ngày.', 'Huyết áp và đường huyết cao. Yêu cầu làm thêm xét nghiệm dung nạp đường và protein niệu. Hẹn tái khám sau 3 ngày.', 'Đã đặt lịch', 'doctor', '2025-12-20 04:06:20', '2025-12-20 04:12:45', NULL);
 
 -- --------------------------------------------------------
 
@@ -3245,7 +3011,9 @@ INSERT INTO `tags` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
 
 CREATE TABLE `thanh_toans` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `hoa_don_id` bigint(20) UNSIGNED NOT NULL,
+  `hoa_don_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `payable_type` varchar(255) DEFAULT NULL,
+  `payable_id` bigint(20) UNSIGNED DEFAULT NULL,
   `provider` varchar(255) NOT NULL,
   `so_tien` decimal(12,2) NOT NULL,
   `tien_te` varchar(255) NOT NULL DEFAULT 'VND',
@@ -3262,9 +3030,47 @@ CREATE TABLE `thanh_toans` (
 -- Đang đổ dữ liệu cho bảng `thanh_toans`
 --
 
-INSERT INTO `thanh_toans` (`id`, `hoa_don_id`, `provider`, `so_tien`, `tien_te`, `trang_thai`, `transaction_ref`, `idempotency_key`, `paid_at`, `payload`, `created_at`, `updated_at`) VALUES
-(1, 3, 'VNPAY', 2250000.00, 'VND', 'Thành công', 'VNP15338816', '3_VNP15338816', '2025-12-13 08:02:04', NULL, '2025-12-13 08:02:04', '2025-12-13 08:02:04'),
-(2, 3, 'cash', 2250000.00, 'VND', 'succeeded', 'CASH-20251213150248', NULL, '2025-12-13 08:02:48', '{\"note\":null}', '2025-12-13 08:02:48', '2025-12-13 08:02:48');
+INSERT INTO `thanh_toans` (`id`, `hoa_don_id`, `payable_type`, `payable_id`, `provider`, `so_tien`, `tien_te`, `trang_thai`, `transaction_ref`, `idempotency_key`, `paid_at`, `payload`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, NULL, 'VNPAY', 2500000.00, 'VND', 'Thành công', 'VNP15355638', '1_VNP15355638', '2025-12-19 17:47:22', NULL, '2025-12-19 17:47:22', '2025-12-19 17:47:22'),
+(2, 1, NULL, NULL, 'MOMO', 220000.00, 'VND', 'Thành công', '4633649724', '1_4633649724', '2025-12-19 18:20:27', NULL, '2025-12-19 18:20:27', '2025-12-19 18:20:27'),
+(3, 1, NULL, NULL, 'MOMO', 150000.00, 'VND', 'Thành công', '4633864111', '1_4633864111', '2025-12-20 01:37:05', NULL, '2025-12-20 01:37:05', '2025-12-20 01:37:05');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `theo_doi_thai_kys`
+--
+
+CREATE TABLE `theo_doi_thai_kys` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `benh_an_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `bac_si_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `ngay_theo_doi` date DEFAULT NULL,
+  `tuan_thai` tinyint(3) UNSIGNED DEFAULT NULL,
+  `can_nang_kg` decimal(5,2) DEFAULT NULL,
+  `huyet_ap_tam_thu` smallint(5) UNSIGNED DEFAULT NULL,
+  `huyet_ap_tam_truong` smallint(5) UNSIGNED DEFAULT NULL,
+  `nhip_tim_thai` smallint(5) UNSIGNED DEFAULT NULL,
+  `duong_huyet` decimal(5,2) DEFAULT NULL,
+  `huyet_sac_to` decimal(5,2) DEFAULT NULL,
+  `trieu_chung` text DEFAULT NULL,
+  `ghi_chu` text DEFAULT NULL,
+  `nhan_xet` text DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `disk` varchar(255) DEFAULT NULL,
+  `trang_thai` varchar(255) NOT NULL DEFAULT 'submitted',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `theo_doi_thai_kys`
+--
+
+INSERT INTO `theo_doi_thai_kys` (`id`, `benh_an_id`, `user_id`, `bac_si_id`, `ngay_theo_doi`, `tuan_thai`, `can_nang_kg`, `huyet_ap_tam_thu`, `huyet_ap_tam_truong`, `nhip_tim_thai`, `duong_huyet`, `huyet_sac_to`, `trieu_chung`, `ghi_chu`, `nhan_xet`, `file_path`, `disk`, `trang_thai`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 23, 4, '2025-12-20', 16, 52.00, 110, 70, 150, 85.00, 12.50, 'Ăn ngon miệng, hết nghén, thỉnh thoảng đau lưng nhẹ.', 'Thai nhi phát triển tốt, đã nghe rõ tim thai.', 'Tốt lắm', 'theo_doi_thai_ky/USOemspvtrH9Zj8H8OwihWkGEBFw0Ey9FSm8Yjss.png', 'benh_an_private', 'reviewed', '2025-12-20 02:32:55', '2025-12-20 02:33:55', NULL);
 
 -- --------------------------------------------------------
 
@@ -3289,206 +3095,206 @@ CREATE TABLE `thuocs` (
 --
 
 INSERT INTO `thuocs` (`id`, `ten`, `hoat_chat`, `ham_luong`, `don_vi`, `gia_tham_khao`, `ton_toi_thieu`, `created_at`, `updated_at`) VALUES
-(1, 'Paracetamol 500mg', 'Paracetamol', '500mg', 'viên', 6799.00, 126, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(2, 'Ibuprofen 200mg - Lot02', 'Ibuprofen', '200mg', 'viên', 3144.00, 134, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(3, 'Amoxicillin 500mg - Lot03', 'Amoxicillin', '500mg', 'viên', 8858.00, 177, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(4, 'Azithromycin 250mg - Lot04', 'Azithromycin', '250mg', 'viên', 7111.00, 20, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(5, 'Doxycycline 100mg - Lot05', 'Doxycycline', '100mg', 'viên', 4240.00, 179, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(6, 'Metronidazole 500mg - Lot06', 'Metronidazole', '500mg', 'viên', 6736.00, 38, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(7, 'Cefuroxime 250mg - Lot07', 'Cefuroxime', '250mg', 'viên', 9986.00, 121, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(8, 'Cefixime 400mg - Lot08', 'Cefixime', '400mg', 'viên', 1855.00, 145, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(9, 'Cefadroxil 500mg - Lot09', 'Cefadroxil', '500mg', 'viên', 1744.00, 39, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(10, 'Ceftriaxone 1g - Lot10', 'Ceftriaxone', '1g', 'ống', 1585.00, 189, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(11, 'Omeprazole 20mg - Lot11', 'Omeprazole', '20mg', 'viên', 4696.00, 120, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(12, 'Pantoprazole 40mg - Lot12', 'Pantoprazole', '40mg', 'viên', 4789.00, 199, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(13, 'Ranitidine 150mg - Lot13', 'Ranitidine', '150mg', 'viên', 4943.00, 108, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(14, 'Tranexamic 500mg - Lot14', 'Tranexamic', '500mg', 'viên', 5675.00, 113, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(15, 'Ferrous sulfate 325mg - Lot15', 'Ferrous', '325mg', 'viên', 8143.00, 67, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(16, 'Vitamin C 500mg - Lot16', 'Vitamin', '500mg', 'viên', 4177.00, 130, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(17, 'Vitamin D3 2000IU - Lot17', 'Vitamin', '2000IU', 'ống', 5469.00, 35, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(18, 'Calcium 600mg - Lot18', 'Calcium', '600mg', 'viên', 9503.00, 199, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(19, 'Utrogestan 200mg - Lot19', 'Utrogestan', '200mg', 'viên', 2104.00, 81, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(20, 'Duphaston 10mg - Lot20', 'Duphaston', '10mg', 'viên', 1147.00, 44, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(21, 'Levothyroxine 50mcg - Lot21', 'Levothyroxine', NULL, 'ống', 6592.00, 103, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(22, 'Progesterone 100mg - Lot22', 'Progesterone', '100mg', 'viên', 3887.00, 116, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(23, 'Nitrofurantoin 100mg - Lot23', 'Nitrofurantoin', '100mg', 'viên', 5633.00, 146, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(24, 'Fluconazole 150mg - Lot24', 'Fluconazole', '150mg', 'viên', 7852.00, 78, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(25, 'Ketoconazole 200mg - Lot25', 'Ketoconazole', '200mg', 'viên', 5875.00, 85, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(26, 'Paracetamol 500mg - Lot26', 'Paracetamol', '500mg', 'viên', 3396.00, 127, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(27, 'Ibuprofen 200mg - Lot27', 'Ibuprofen', '200mg', 'viên', 4819.00, 69, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(28, 'Amoxicillin 500mg - Lot28', 'Amoxicillin', '500mg', 'viên', 3256.00, 192, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(29, 'Azithromycin 250mg - Lot29', 'Azithromycin', '250mg', 'viên', 9760.00, 116, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(30, 'Doxycycline 100mg - Lot30', 'Doxycycline', '100mg', 'viên', 9462.00, 22, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(31, 'Metronidazole 500mg - Lot31', 'Metronidazole', '500mg', 'viên', 3125.00, 174, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(32, 'Cefuroxime 250mg - Lot32', 'Cefuroxime', '250mg', 'viên', 4606.00, 75, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(33, 'Cefixime 400mg - Lot33', 'Cefixime', '400mg', 'viên', 5824.00, 59, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(34, 'Cefadroxil 500mg - Lot34', 'Cefadroxil', '500mg', 'viên', 1572.00, 101, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(35, 'Ceftriaxone 1g - Lot35', 'Ceftriaxone', '1g', 'ống', 2198.00, 48, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(36, 'Omeprazole 20mg - Lot36', 'Omeprazole', '20mg', 'viên', 7880.00, 166, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(37, 'Pantoprazole 40mg - Lot37', 'Pantoprazole', '40mg', 'viên', 9457.00, 54, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(38, 'Ranitidine 150mg - Lot38', 'Ranitidine', '150mg', 'viên', 6978.00, 102, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(39, 'Tranexamic 500mg - Lot39', 'Tranexamic', '500mg', 'viên', 6270.00, 64, '2025-12-12 07:45:55', '2025-12-12 07:50:15'),
-(40, 'Ferrous sulfate 325mg - Lot40', 'Ferrous', '325mg', 'viên', 4843.00, 190, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(41, 'Vitamin C 500mg - Lot41', 'Vitamin', '500mg', 'viên', 6869.00, 200, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(42, 'Vitamin D3 2000IU - Lot42', 'Vitamin', '2000IU', 'ống', 6823.00, 103, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(43, 'Calcium 600mg - Lot43', 'Calcium', '600mg', 'viên', 9875.00, 183, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(44, 'Utrogestan 200mg - Lot44', 'Utrogestan', '200mg', 'viên', 4866.00, 87, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(45, 'Duphaston 10mg - Lot45', 'Duphaston', '10mg', 'viên', 5327.00, 148, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(46, 'Levothyroxine 50mcg - Lot46', 'Levothyroxine', NULL, 'ống', 9413.00, 139, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(47, 'Progesterone 100mg - Lot47', 'Progesterone', '100mg', 'viên', 4455.00, 125, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(48, 'Nitrofurantoin 100mg - Lot48', 'Nitrofurantoin', '100mg', 'viên', 9801.00, 88, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(49, 'Fluconazole 150mg - Lot49', 'Fluconazole', '150mg', 'viên', 3257.00, 147, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(50, 'Ketoconazole 200mg - Lot50', 'Ketoconazole', '200mg', 'viên', 1753.00, 142, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(51, 'Paracetamol 500mg - Lot51', 'Paracetamol', '500mg', 'viên', 6168.00, 103, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(52, 'Ibuprofen 200mg - Lot52', 'Ibuprofen', '200mg', 'viên', 1876.00, 159, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(53, 'Amoxicillin 500mg - Lot53', 'Amoxicillin', '500mg', 'viên', 4569.00, 21, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(54, 'Azithromycin 250mg - Lot54', 'Azithromycin', '250mg', 'viên', 6654.00, 13, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(55, 'Doxycycline 100mg - Lot55', 'Doxycycline', '100mg', 'viên', 5440.00, 143, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(56, 'Metronidazole 500mg - Lot56', 'Metronidazole', '500mg', 'viên', 2294.00, 28, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(57, 'Cefuroxime 250mg - Lot57', 'Cefuroxime', '250mg', 'viên', 4464.00, 200, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(58, 'Cefixime 400mg - Lot58', 'Cefixime', '400mg', 'viên', 6275.00, 17, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(59, 'Cefadroxil 500mg - Lot59', 'Cefadroxil', '500mg', 'viên', 4550.00, 128, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(60, 'Ceftriaxone 1g - Lot60', 'Ceftriaxone', '1g', 'ống', 1957.00, 83, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(61, 'Omeprazole 20mg - Lot61', 'Omeprazole', '20mg', 'viên', 4697.00, 60, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(62, 'Pantoprazole 40mg - Lot62', 'Pantoprazole', '40mg', 'viên', 7479.00, 110, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(63, 'Ranitidine 150mg - Lot63', 'Ranitidine', '150mg', 'viên', 2267.00, 178, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(64, 'Tranexamic 500mg - Lot64', 'Tranexamic', '500mg', 'viên', 4399.00, 107, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(65, 'Ferrous sulfate 325mg - Lot65', 'Ferrous', '325mg', 'viên', 2478.00, 135, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(66, 'Vitamin C 500mg - Lot66', 'Vitamin', '500mg', 'viên', 3637.00, 114, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(67, 'Vitamin D3 2000IU - Lot67', 'Vitamin', '2000IU', 'ống', 9238.00, 199, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(68, 'Calcium 600mg - Lot68', 'Calcium', '600mg', 'viên', 3636.00, 46, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(69, 'Utrogestan 200mg - Lot69', 'Utrogestan', '200mg', 'viên', 7124.00, 11, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(70, 'Duphaston 10mg - Lot70', 'Duphaston', '10mg', 'viên', 1828.00, 74, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(71, 'Levothyroxine 50mcg - Lot71', 'Levothyroxine', NULL, 'ống', 1728.00, 158, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(72, 'Progesterone 100mg - Lot72', 'Progesterone', '100mg', 'viên', 4795.00, 56, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(73, 'Nitrofurantoin 100mg - Lot73', 'Nitrofurantoin', '100mg', 'viên', 6075.00, 45, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(74, 'Fluconazole 150mg - Lot74', 'Fluconazole', '150mg', 'viên', 1330.00, 85, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(75, 'Ketoconazole 200mg - Lot75', 'Ketoconazole', '200mg', 'viên', 7633.00, 182, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(76, 'Paracetamol 500mg - Lot76', 'Paracetamol', '500mg', 'viên', 7680.00, 51, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(77, 'Ibuprofen 200mg - Lot77', 'Ibuprofen', '200mg', 'viên', 9155.00, 138, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(78, 'Amoxicillin 500mg - Lot78', 'Amoxicillin', '500mg', 'viên', 6667.00, 26, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(79, 'Azithromycin 250mg - Lot79', 'Azithromycin', '250mg', 'viên', 8741.00, 173, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(80, 'Doxycycline 100mg - Lot80', 'Doxycycline', '100mg', 'viên', 3405.00, 196, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(81, 'Metronidazole 500mg - Lot81', 'Metronidazole', '500mg', 'viên', 4377.00, 131, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(82, 'Cefuroxime 250mg - Lot82', 'Cefuroxime', '250mg', 'viên', 2905.00, 151, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(83, 'Cefixime 400mg - Lot83', 'Cefixime', '400mg', 'viên', 8396.00, 149, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(84, 'Cefadroxil 500mg - Lot84', 'Cefadroxil', '500mg', 'viên', 5915.00, 48, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(85, 'Ceftriaxone 1g - Lot85', 'Ceftriaxone', '1g', 'ống', 3547.00, 48, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(86, 'Omeprazole 20mg - Lot86', 'Omeprazole', '20mg', 'viên', 5234.00, 36, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(87, 'Pantoprazole 40mg - Lot87', 'Pantoprazole', '40mg', 'viên', 9784.00, 16, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(88, 'Ranitidine 150mg - Lot88', 'Ranitidine', '150mg', 'viên', 4413.00, 71, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(89, 'Tranexamic 500mg - Lot89', 'Tranexamic', '500mg', 'viên', 4449.00, 18, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(90, 'Ferrous sulfate 325mg - Lot90', 'Ferrous', '325mg', 'viên', 3402.00, 101, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(91, 'Vitamin C 500mg - Lot91', 'Vitamin', '500mg', 'viên', 9584.00, 155, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(92, 'Vitamin D3 2000IU - Lot92', 'Vitamin', '2000IU', 'ống', 8942.00, 40, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(93, 'Calcium 600mg - Lot93', 'Calcium', '600mg', 'viên', 8442.00, 182, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(94, 'Utrogestan 200mg - Lot94', 'Utrogestan', '200mg', 'viên', 3577.00, 73, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(95, 'Duphaston 10mg - Lot95', 'Duphaston', '10mg', 'viên', 5414.00, 75, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(96, 'Levothyroxine 50mcg - Lot96', 'Levothyroxine', NULL, 'ống', 6832.00, 29, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(97, 'Progesterone 100mg - Lot97', 'Progesterone', '100mg', 'viên', 8093.00, 148, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(98, 'Nitrofurantoin 100mg - Lot98', 'Nitrofurantoin', '100mg', 'viên', 4636.00, 119, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(99, 'Fluconazole 150mg - Lot99', 'Fluconazole', '150mg', 'viên', 4323.00, 81, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(100, 'Ketoconazole 200mg - Lot100', 'Ketoconazole', '200mg', 'viên', 2303.00, 172, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(101, 'Paracetamol 500mg - Lot101', 'Paracetamol', '500mg', 'viên', 1866.00, 112, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(102, 'Ibuprofen 200mg - Lot102', 'Ibuprofen', '200mg', 'viên', 4440.00, 26, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(103, 'Amoxicillin 500mg - Lot103', 'Amoxicillin', '500mg', 'viên', 2031.00, 10, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(104, 'Azithromycin 250mg - Lot104', 'Azithromycin', '250mg', 'viên', 4324.00, 141, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(105, 'Doxycycline 100mg - Lot105', 'Doxycycline', '100mg', 'viên', 8718.00, 134, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(106, 'Metronidazole 500mg - Lot106', 'Metronidazole', '500mg', 'viên', 5178.00, 74, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(107, 'Cefuroxime 250mg - Lot107', 'Cefuroxime', '250mg', 'viên', 3106.00, 43, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(108, 'Cefixime 400mg - Lot108', 'Cefixime', '400mg', 'viên', 9025.00, 24, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(109, 'Cefadroxil 500mg - Lot109', 'Cefadroxil', '500mg', 'viên', 4095.00, 18, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(110, 'Ceftriaxone 1g - Lot110', 'Ceftriaxone', '1g', 'ống', 6250.00, 86, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(111, 'Omeprazole 20mg - Lot111', 'Omeprazole', '20mg', 'viên', 9836.00, 188, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(112, 'Pantoprazole 40mg - Lot112', 'Pantoprazole', '40mg', 'viên', 6877.00, 151, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(113, 'Ranitidine 150mg - Lot113', 'Ranitidine', '150mg', 'viên', 1973.00, 59, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(114, 'Tranexamic 500mg - Lot114', 'Tranexamic', '500mg', 'viên', 8095.00, 56, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(115, 'Ferrous sulfate 325mg - Lot115', 'Ferrous', '325mg', 'viên', 7101.00, 83, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(116, 'Vitamin C 500mg - Lot116', 'Vitamin', '500mg', 'viên', 9795.00, 177, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(117, 'Vitamin D3 2000IU - Lot117', 'Vitamin', '2000IU', 'ống', 6578.00, 63, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(118, 'Calcium 600mg - Lot118', 'Calcium', '600mg', 'viên', 5619.00, 31, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(119, 'Utrogestan 200mg - Lot119', 'Utrogestan', '200mg', 'viên', 3645.00, 121, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(120, 'Duphaston 10mg - Lot120', 'Duphaston', '10mg', 'viên', 5363.00, 93, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(121, 'Levothyroxine 50mcg - Lot121', 'Levothyroxine', NULL, 'ống', 1845.00, 96, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(122, 'Progesterone 100mg - Lot122', 'Progesterone', '100mg', 'viên', 3720.00, 132, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(123, 'Nitrofurantoin 100mg - Lot123', 'Nitrofurantoin', '100mg', 'viên', 6386.00, 146, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(124, 'Fluconazole 150mg - Lot124', 'Fluconazole', '150mg', 'viên', 9755.00, 56, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(125, 'Ketoconazole 200mg - Lot125', 'Ketoconazole', '200mg', 'viên', 3468.00, 19, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(126, 'Paracetamol 500mg - Lot126', 'Paracetamol', '500mg', 'viên', 4600.00, 166, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(127, 'Ibuprofen 200mg - Lot127', 'Ibuprofen', '200mg', 'viên', 5918.00, 70, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(128, 'Amoxicillin 500mg - Lot128', 'Amoxicillin', '500mg', 'viên', 9169.00, 116, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(129, 'Azithromycin 250mg - Lot129', 'Azithromycin', '250mg', 'viên', 1199.00, 156, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(130, 'Doxycycline 100mg - Lot130', 'Doxycycline', '100mg', 'viên', 8440.00, 85, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(131, 'Metronidazole 500mg - Lot131', 'Metronidazole', '500mg', 'viên', 5887.00, 20, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(132, 'Cefuroxime 250mg - Lot132', 'Cefuroxime', '250mg', 'viên', 3420.00, 107, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(133, 'Cefixime 400mg - Lot133', 'Cefixime', '400mg', 'viên', 811.00, 66, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(134, 'Cefadroxil 500mg - Lot134', 'Cefadroxil', '500mg', 'viên', 4789.00, 186, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(135, 'Ceftriaxone 1g - Lot135', 'Ceftriaxone', '1g', 'ống', 4221.00, 65, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(136, 'Omeprazole 20mg - Lot136', 'Omeprazole', '20mg', 'viên', 6124.00, 50, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(137, 'Pantoprazole 40mg - Lot137', 'Pantoprazole', '40mg', 'viên', 4118.00, 70, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(138, 'Ranitidine 150mg - Lot138', 'Ranitidine', '150mg', 'viên', 9498.00, 38, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(139, 'Tranexamic 500mg - Lot139', 'Tranexamic', '500mg', 'viên', 6094.00, 73, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(140, 'Ferrous sulfate 325mg - Lot140', 'Ferrous', '325mg', 'viên', 9584.00, 79, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(141, 'Vitamin C 500mg - Lot141', 'Vitamin', '500mg', 'viên', 4397.00, 94, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(142, 'Vitamin D3 2000IU - Lot142', 'Vitamin', '2000IU', 'ống', 4240.00, 77, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(143, 'Calcium 600mg - Lot143', 'Calcium', '600mg', 'viên', 9831.00, 27, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(144, 'Utrogestan 200mg - Lot144', 'Utrogestan', '200mg', 'viên', 1441.00, 154, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(145, 'Duphaston 10mg - Lot145', 'Duphaston', '10mg', 'viên', 9479.00, 89, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(146, 'Levothyroxine 50mcg - Lot146', 'Levothyroxine', NULL, 'ống', 9128.00, 154, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(147, 'Progesterone 100mg - Lot147', 'Progesterone', '100mg', 'viên', 3549.00, 89, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(148, 'Nitrofurantoin 100mg - Lot148', 'Nitrofurantoin', '100mg', 'viên', 4537.00, 152, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(149, 'Fluconazole 150mg - Lot149', 'Fluconazole', '150mg', 'viên', 7562.00, 175, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(150, 'Ketoconazole 200mg - Lot150', 'Ketoconazole', '200mg', 'viên', 9952.00, 44, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(151, 'Găng tay y tế S', NULL, NULL, 'cái', 13591.00, 7, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(152, 'Găng tay y tế M - Pack 2', NULL, NULL, 'cái', 16683.00, 36, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(153, 'Găng tay y tế L - Pack 3', NULL, NULL, 'cái', 41995.00, 49, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(154, 'Bơm kim tiêm 1ml - Pack 4', NULL, NULL, 'cái', 23842.00, 48, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(155, 'Bơm kim tiêm 5ml - Pack 5', NULL, NULL, 'cái', 28481.00, 24, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(156, 'Bơm kim tiêm 10ml - Pack 6', NULL, NULL, 'cái', 3890.00, 35, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(157, 'Bông gòn 50g - Pack 7', NULL, NULL, 'cái', 10046.00, 9, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(158, 'Cồn 70% - Pack 8', NULL, NULL, 'cái', 13507.00, 17, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(159, 'Gel siêu âm 5L - Pack 9', NULL, NULL, 'cái', 30650.00, 22, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(160, 'Que thử thai - Pack 10', NULL, NULL, 'cái', 7925.00, 16, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(161, 'Que thử rụng trứng - Pack 11', NULL, NULL, 'cái', 47151.00, 39, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(162, 'Kim tiêm 21G - Pack 12', NULL, NULL, 'cái', 40101.00, 6, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(163, 'Kim tiêm 23G - Pack 13', NULL, NULL, 'cái', 18144.00, 36, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(164, 'Khẩu trang N95 - Pack 14', NULL, NULL, 'cái', 20553.00, 15, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(165, 'Khẩu trang y tế 3 lớp - Pack 15', NULL, NULL, 'cái', 6553.00, 35, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(166, 'Gạc vô trùng 10x10 - Pack 16', NULL, NULL, 'cái', 35693.00, 34, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(167, 'Túi đựng máu - Pack 17', NULL, NULL, 'cái', 31993.00, 7, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(168, 'Hộp đựng dụng cụ tiểu phẫu - Pack 18', NULL, NULL, 'cái', 5367.00, 42, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(169, 'Dao mổ 10 - Pack 19', NULL, NULL, 'cái', 37178.00, 23, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(170, 'Dụng cụ lấy máu - Pack 20', NULL, NULL, 'cái', 11783.00, 42, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(171, 'Bồn đựng mẫu - Pack 21', NULL, NULL, 'cái', 37301.00, 46, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(172, 'Găng tay y tế S - Pack 22', NULL, NULL, 'cái', 34936.00, 9, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(173, 'Găng tay y tế M - Pack 23', NULL, NULL, 'cái', 14093.00, 7, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(174, 'Găng tay y tế L - Pack 24', NULL, NULL, 'cái', 35695.00, 17, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(175, 'Bơm kim tiêm 1ml - Pack 25', NULL, NULL, 'cái', 10461.00, 23, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(176, 'Bơm kim tiêm 5ml - Pack 26', NULL, NULL, 'cái', 12544.00, 21, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(177, 'Bơm kim tiêm 10ml - Pack 27', NULL, NULL, 'cái', 28295.00, 14, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(178, 'Bông gòn 50g - Pack 28', NULL, NULL, 'cái', 43893.00, 6, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(179, 'Cồn 70% - Pack 29', NULL, NULL, 'cái', 8745.00, 49, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(180, 'Gel siêu âm 5L - Pack 30', NULL, NULL, 'cái', 37844.00, 9, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(181, 'Que thử thai - Pack 31', NULL, NULL, 'cái', 45831.00, 33, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(182, 'Que thử rụng trứng - Pack 32', NULL, NULL, 'cái', 49252.00, 16, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(183, 'Kim tiêm 21G - Pack 33', NULL, NULL, 'cái', 6474.00, 12, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(184, 'Kim tiêm 23G - Pack 34', NULL, NULL, 'cái', 12473.00, 34, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(185, 'Khẩu trang N95 - Pack 35', NULL, NULL, 'cái', 7835.00, 23, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(186, 'Khẩu trang y tế 3 lớp - Pack 36', NULL, NULL, 'cái', 4903.00, 48, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(187, 'Gạc vô trùng 10x10 - Pack 37', NULL, NULL, 'cái', 39002.00, 29, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(188, 'Túi đựng máu - Pack 38', NULL, NULL, 'cái', 33296.00, 18, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(189, 'Hộp đựng dụng cụ tiểu phẫu - Pack 39', NULL, NULL, 'cái', 47332.00, 20, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(190, 'Dao mổ 10 - Pack 40', NULL, NULL, 'cái', 10994.00, 39, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(191, 'Dụng cụ lấy máu - Pack 41', NULL, NULL, 'cái', 41881.00, 9, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(192, 'Bồn đựng mẫu - Pack 42', NULL, NULL, 'cái', 27750.00, 13, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(193, 'Găng tay y tế S - Pack 43', NULL, NULL, 'cái', 27779.00, 41, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(194, 'Găng tay y tế M - Pack 44', NULL, NULL, 'cái', 45932.00, 27, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(195, 'Găng tay y tế L - Pack 45', NULL, NULL, 'cái', 42004.00, 49, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(196, 'Bơm kim tiêm 1ml - Pack 46', NULL, NULL, 'cái', 29372.00, 31, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(197, 'Bơm kim tiêm 5ml - Pack 47', NULL, NULL, 'cái', 28146.00, 49, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(198, 'Bơm kim tiêm 10ml - Pack 48', NULL, NULL, 'cái', 6496.00, 13, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(199, 'Bông gòn 50g - Pack 49', NULL, NULL, 'cái', 37354.00, 36, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(200, 'Cồn 70% - Pack 50', NULL, NULL, 'cái', 12190.00, 28, '2025-12-12 07:45:56', '2025-12-12 07:50:15');
+(1, 'Paracetamol 500mg', 'Paracetamol', '500mg', 'viên', 9701.00, 47, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(2, 'Ibuprofen 200mg - Lot02', 'Ibuprofen', '200mg', 'viên', 9969.00, 36, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(3, 'Amoxicillin 500mg - Lot03', 'Amoxicillin', '500mg', 'viên', 3679.00, 123, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(4, 'Azithromycin 250mg - Lot04', 'Azithromycin', '250mg', 'viên', 3683.00, 197, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(5, 'Doxycycline 100mg - Lot05', 'Doxycycline', '100mg', 'viên', 6880.00, 20, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(6, 'Metronidazole 500mg - Lot06', 'Metronidazole', '500mg', 'viên', 8601.00, 45, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(7, 'Cefuroxime 250mg - Lot07', 'Cefuroxime', '250mg', 'viên', 6366.00, 122, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(8, 'Cefixime 400mg - Lot08', 'Cefixime', '400mg', 'viên', 5268.00, 89, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(9, 'Cefadroxil 500mg - Lot09', 'Cefadroxil', '500mg', 'viên', 1183.00, 39, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(10, 'Ceftriaxone 1g - Lot10', 'Ceftriaxone', '1g', 'ống', 4574.00, 47, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(11, 'Omeprazole 20mg - Lot11', 'Omeprazole', '20mg', 'viên', 4027.00, 23, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(12, 'Pantoprazole 40mg - Lot12', 'Pantoprazole', '40mg', 'viên', 5265.00, 138, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(13, 'Ranitidine 150mg - Lot13', 'Ranitidine', '150mg', 'viên', 4658.00, 33, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(14, 'Tranexamic 500mg - Lot14', 'Tranexamic', '500mg', 'viên', 4618.00, 107, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(15, 'Ferrous sulfate 325mg - Lot15', 'Ferrous', '325mg', 'viên', 4263.00, 71, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(16, 'Vitamin C 500mg - Lot16', 'Vitamin', '500mg', 'viên', 6515.00, 125, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(17, 'Vitamin D3 2000IU - Lot17', 'Vitamin', '2000IU', 'ống', 8953.00, 133, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(18, 'Calcium 600mg - Lot18', 'Calcium', '600mg', 'viên', 7067.00, 137, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(19, 'Utrogestan 200mg - Lot19', 'Utrogestan', '200mg', 'viên', 6205.00, 134, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(20, 'Duphaston 10mg - Lot20', 'Duphaston', '10mg', 'viên', 4146.00, 199, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(21, 'Levothyroxine 50mcg - Lot21', 'Levothyroxine', NULL, 'ống', 5668.00, 157, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(22, 'Progesterone 100mg - Lot22', 'Progesterone', '100mg', 'viên', 4770.00, 113, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(23, 'Nitrofurantoin 100mg - Lot23', 'Nitrofurantoin', '100mg', 'viên', 7241.00, 182, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(24, 'Fluconazole 150mg - Lot24', 'Fluconazole', '150mg', 'viên', 5457.00, 196, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(25, 'Ketoconazole 200mg - Lot25', 'Ketoconazole', '200mg', 'viên', 3610.00, 21, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(26, 'Paracetamol 500mg - Lot26', 'Paracetamol', '500mg', 'viên', 1664.00, 155, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(27, 'Ibuprofen 200mg - Lot27', 'Ibuprofen', '200mg', 'viên', 7079.00, 41, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(28, 'Amoxicillin 500mg - Lot28', 'Amoxicillin', '500mg', 'viên', 8432.00, 54, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(29, 'Azithromycin 250mg - Lot29', 'Azithromycin', '250mg', 'viên', 9395.00, 57, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(30, 'Doxycycline 100mg - Lot30', 'Doxycycline', '100mg', 'viên', 6347.00, 31, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(31, 'Metronidazole 500mg - Lot31', 'Metronidazole', '500mg', 'viên', 3409.00, 153, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(32, 'Cefuroxime 250mg - Lot32', 'Cefuroxime', '250mg', 'viên', 818.00, 191, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(33, 'Cefixime 400mg - Lot33', 'Cefixime', '400mg', 'viên', 4596.00, 158, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(34, 'Cefadroxil 500mg - Lot34', 'Cefadroxil', '500mg', 'viên', 8097.00, 88, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(35, 'Ceftriaxone 1g - Lot35', 'Ceftriaxone', '1g', 'ống', 4722.00, 132, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(36, 'Omeprazole 20mg - Lot36', 'Omeprazole', '20mg', 'viên', 2259.00, 172, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(37, 'Pantoprazole 40mg - Lot37', 'Pantoprazole', '40mg', 'viên', 5184.00, 28, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(38, 'Ranitidine 150mg - Lot38', 'Ranitidine', '150mg', 'viên', 5818.00, 90, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(39, 'Tranexamic 500mg - Lot39', 'Tranexamic', '500mg', 'viên', 5786.00, 192, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(40, 'Ferrous sulfate 325mg - Lot40', 'Ferrous', '325mg', 'viên', 9119.00, 32, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(41, 'Vitamin C 500mg - Lot41', 'Vitamin', '500mg', 'viên', 9416.00, 169, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(42, 'Vitamin D3 2000IU - Lot42', 'Vitamin', '2000IU', 'ống', 6334.00, 107, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(43, 'Calcium 600mg - Lot43', 'Calcium', '600mg', 'viên', 3183.00, 166, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(44, 'Utrogestan 200mg - Lot44', 'Utrogestan', '200mg', 'viên', 9694.00, 133, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(45, 'Duphaston 10mg - Lot45', 'Duphaston', '10mg', 'viên', 5753.00, 130, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(46, 'Levothyroxine 50mcg - Lot46', 'Levothyroxine', NULL, 'ống', 5550.00, 85, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(47, 'Progesterone 100mg - Lot47', 'Progesterone', '100mg', 'viên', 7560.00, 78, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(48, 'Nitrofurantoin 100mg - Lot48', 'Nitrofurantoin', '100mg', 'viên', 3762.00, 140, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(49, 'Fluconazole 150mg - Lot49', 'Fluconazole', '150mg', 'viên', 4275.00, 142, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(50, 'Ketoconazole 200mg - Lot50', 'Ketoconazole', '200mg', 'viên', 8946.00, 51, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(51, 'Paracetamol 500mg - Lot51', 'Paracetamol', '500mg', 'viên', 4939.00, 58, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(52, 'Ibuprofen 200mg - Lot52', 'Ibuprofen', '200mg', 'viên', 6389.00, 178, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(53, 'Amoxicillin 500mg - Lot53', 'Amoxicillin', '500mg', 'viên', 7789.00, 156, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(54, 'Azithromycin 250mg - Lot54', 'Azithromycin', '250mg', 'viên', 6064.00, 179, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(55, 'Doxycycline 100mg - Lot55', 'Doxycycline', '100mg', 'viên', 3096.00, 121, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(56, 'Metronidazole 500mg - Lot56', 'Metronidazole', '500mg', 'viên', 2992.00, 12, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(57, 'Cefuroxime 250mg - Lot57', 'Cefuroxime', '250mg', 'viên', 6694.00, 59, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(58, 'Cefixime 400mg - Lot58', 'Cefixime', '400mg', 'viên', 1597.00, 180, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(59, 'Cefadroxil 500mg - Lot59', 'Cefadroxil', '500mg', 'viên', 6949.00, 13, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(60, 'Ceftriaxone 1g - Lot60', 'Ceftriaxone', '1g', 'ống', 1200.00, 73, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(61, 'Omeprazole 20mg - Lot61', 'Omeprazole', '20mg', 'viên', 8527.00, 119, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(62, 'Pantoprazole 40mg - Lot62', 'Pantoprazole', '40mg', 'viên', 6274.00, 56, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(63, 'Ranitidine 150mg - Lot63', 'Ranitidine', '150mg', 'viên', 5519.00, 159, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(64, 'Tranexamic 500mg - Lot64', 'Tranexamic', '500mg', 'viên', 4375.00, 84, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(65, 'Ferrous sulfate 325mg - Lot65', 'Ferrous', '325mg', 'viên', 1376.00, 44, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(66, 'Vitamin C 500mg - Lot66', 'Vitamin', '500mg', 'viên', 7019.00, 63, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(67, 'Vitamin D3 2000IU - Lot67', 'Vitamin', '2000IU', 'ống', 4223.00, 199, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(68, 'Calcium 600mg - Lot68', 'Calcium', '600mg', 'viên', 966.00, 70, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(69, 'Utrogestan 200mg - Lot69', 'Utrogestan', '200mg', 'viên', 3256.00, 10, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(70, 'Duphaston 10mg - Lot70', 'Duphaston', '10mg', 'viên', 983.00, 102, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(71, 'Levothyroxine 50mcg - Lot71', 'Levothyroxine', NULL, 'ống', 6272.00, 29, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(72, 'Progesterone 100mg - Lot72', 'Progesterone', '100mg', 'viên', 2667.00, 109, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(73, 'Nitrofurantoin 100mg - Lot73', 'Nitrofurantoin', '100mg', 'viên', 4348.00, 71, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(74, 'Fluconazole 150mg - Lot74', 'Fluconazole', '150mg', 'viên', 4381.00, 47, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(75, 'Ketoconazole 200mg - Lot75', 'Ketoconazole', '200mg', 'viên', 2383.00, 147, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(76, 'Paracetamol 500mg - Lot76', 'Paracetamol', '500mg', 'viên', 6466.00, 40, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(77, 'Ibuprofen 200mg - Lot77', 'Ibuprofen', '200mg', 'viên', 8999.00, 110, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(78, 'Amoxicillin 500mg - Lot78', 'Amoxicillin', '500mg', 'viên', 6805.00, 137, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(79, 'Azithromycin 250mg - Lot79', 'Azithromycin', '250mg', 'viên', 1371.00, 82, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(80, 'Doxycycline 100mg - Lot80', 'Doxycycline', '100mg', 'viên', 9122.00, 59, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(81, 'Metronidazole 500mg - Lot81', 'Metronidazole', '500mg', 'viên', 3789.00, 122, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(82, 'Cefuroxime 250mg - Lot82', 'Cefuroxime', '250mg', 'viên', 3704.00, 175, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(83, 'Cefixime 400mg - Lot83', 'Cefixime', '400mg', 'viên', 1035.00, 54, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(84, 'Cefadroxil 500mg - Lot84', 'Cefadroxil', '500mg', 'viên', 2368.00, 92, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(85, 'Ceftriaxone 1g - Lot85', 'Ceftriaxone', '1g', 'ống', 2710.00, 76, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(86, 'Omeprazole 20mg - Lot86', 'Omeprazole', '20mg', 'viên', 1813.00, 112, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(87, 'Pantoprazole 40mg - Lot87', 'Pantoprazole', '40mg', 'viên', 2044.00, 180, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(88, 'Ranitidine 150mg - Lot88', 'Ranitidine', '150mg', 'viên', 6894.00, 33, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(89, 'Tranexamic 500mg - Lot89', 'Tranexamic', '500mg', 'viên', 6279.00, 50, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(90, 'Ferrous sulfate 325mg - Lot90', 'Ferrous', '325mg', 'viên', 6190.00, 49, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(91, 'Vitamin C 500mg - Lot91', 'Vitamin', '500mg', 'viên', 2932.00, 97, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(92, 'Vitamin D3 2000IU - Lot92', 'Vitamin', '2000IU', 'ống', 6614.00, 49, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(93, 'Calcium 600mg - Lot93', 'Calcium', '600mg', 'viên', 2038.00, 82, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(94, 'Utrogestan 200mg - Lot94', 'Utrogestan', '200mg', 'viên', 5980.00, 153, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(95, 'Duphaston 10mg - Lot95', 'Duphaston', '10mg', 'viên', 9090.00, 72, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(96, 'Levothyroxine 50mcg - Lot96', 'Levothyroxine', NULL, 'ống', 1499.00, 137, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(97, 'Progesterone 100mg - Lot97', 'Progesterone', '100mg', 'viên', 2486.00, 138, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(98, 'Nitrofurantoin 100mg - Lot98', 'Nitrofurantoin', '100mg', 'viên', 1055.00, 186, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(99, 'Fluconazole 150mg - Lot99', 'Fluconazole', '150mg', 'viên', 9486.00, 137, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(100, 'Ketoconazole 200mg - Lot100', 'Ketoconazole', '200mg', 'viên', 1703.00, 104, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(101, 'Paracetamol 500mg - Lot101', 'Paracetamol', '500mg', 'viên', 8452.00, 71, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(102, 'Ibuprofen 200mg - Lot102', 'Ibuprofen', '200mg', 'viên', 7585.00, 192, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(103, 'Amoxicillin 500mg - Lot103', 'Amoxicillin', '500mg', 'viên', 8263.00, 64, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(104, 'Azithromycin 250mg - Lot104', 'Azithromycin', '250mg', 'viên', 8838.00, 164, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(105, 'Doxycycline 100mg - Lot105', 'Doxycycline', '100mg', 'viên', 6774.00, 139, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(106, 'Metronidazole 500mg - Lot106', 'Metronidazole', '500mg', 'viên', 1810.00, 82, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(107, 'Cefuroxime 250mg - Lot107', 'Cefuroxime', '250mg', 'viên', 3798.00, 175, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(108, 'Cefixime 400mg - Lot108', 'Cefixime', '400mg', 'viên', 9431.00, 15, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(109, 'Cefadroxil 500mg - Lot109', 'Cefadroxil', '500mg', 'viên', 1127.00, 189, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(110, 'Ceftriaxone 1g - Lot110', 'Ceftriaxone', '1g', 'ống', 1237.00, 173, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(111, 'Omeprazole 20mg - Lot111', 'Omeprazole', '20mg', 'viên', 4413.00, 181, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(112, 'Pantoprazole 40mg - Lot112', 'Pantoprazole', '40mg', 'viên', 6783.00, 28, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(113, 'Ranitidine 150mg - Lot113', 'Ranitidine', '150mg', 'viên', 5670.00, 191, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(114, 'Tranexamic 500mg - Lot114', 'Tranexamic', '500mg', 'viên', 5633.00, 169, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(115, 'Ferrous sulfate 325mg - Lot115', 'Ferrous', '325mg', 'viên', 4184.00, 12, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(116, 'Vitamin C 500mg - Lot116', 'Vitamin', '500mg', 'viên', 930.00, 91, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(117, 'Vitamin D3 2000IU - Lot117', 'Vitamin', '2000IU', 'ống', 2928.00, 74, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(118, 'Calcium 600mg - Lot118', 'Calcium', '600mg', 'viên', 3180.00, 149, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(119, 'Utrogestan 200mg - Lot119', 'Utrogestan', '200mg', 'viên', 4670.00, 85, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(120, 'Duphaston 10mg - Lot120', 'Duphaston', '10mg', 'viên', 7930.00, 115, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(121, 'Levothyroxine 50mcg - Lot121', 'Levothyroxine', NULL, 'ống', 9323.00, 165, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(122, 'Progesterone 100mg - Lot122', 'Progesterone', '100mg', 'viên', 1885.00, 42, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(123, 'Nitrofurantoin 100mg - Lot123', 'Nitrofurantoin', '100mg', 'viên', 2600.00, 145, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(124, 'Fluconazole 150mg - Lot124', 'Fluconazole', '150mg', 'viên', 6458.00, 112, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(125, 'Ketoconazole 200mg - Lot125', 'Ketoconazole', '200mg', 'viên', 6965.00, 116, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(126, 'Paracetamol 500mg - Lot126', 'Paracetamol', '500mg', 'viên', 2194.00, 130, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(127, 'Ibuprofen 200mg - Lot127', 'Ibuprofen', '200mg', 'viên', 6400.00, 155, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(128, 'Amoxicillin 500mg - Lot128', 'Amoxicillin', '500mg', 'viên', 6511.00, 121, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(129, 'Azithromycin 250mg - Lot129', 'Azithromycin', '250mg', 'viên', 5781.00, 33, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(130, 'Doxycycline 100mg - Lot130', 'Doxycycline', '100mg', 'viên', 6452.00, 174, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(131, 'Metronidazole 500mg - Lot131', 'Metronidazole', '500mg', 'viên', 7433.00, 182, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(132, 'Cefuroxime 250mg - Lot132', 'Cefuroxime', '250mg', 'viên', 8303.00, 167, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(133, 'Cefixime 400mg - Lot133', 'Cefixime', '400mg', 'viên', 6600.00, 183, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(134, 'Cefadroxil 500mg - Lot134', 'Cefadroxil', '500mg', 'viên', 6171.00, 173, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(135, 'Ceftriaxone 1g - Lot135', 'Ceftriaxone', '1g', 'ống', 4761.00, 39, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(136, 'Omeprazole 20mg - Lot136', 'Omeprazole', '20mg', 'viên', 2424.00, 146, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(137, 'Pantoprazole 40mg - Lot137', 'Pantoprazole', '40mg', 'viên', 2458.00, 11, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(138, 'Ranitidine 150mg - Lot138', 'Ranitidine', '150mg', 'viên', 3521.00, 62, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(139, 'Tranexamic 500mg - Lot139', 'Tranexamic', '500mg', 'viên', 2156.00, 47, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(140, 'Ferrous sulfate 325mg - Lot140', 'Ferrous', '325mg', 'viên', 5313.00, 68, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(141, 'Vitamin C 500mg - Lot141', 'Vitamin', '500mg', 'viên', 1949.00, 17, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(142, 'Vitamin D3 2000IU - Lot142', 'Vitamin', '2000IU', 'ống', 9858.00, 199, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(143, 'Calcium 600mg - Lot143', 'Calcium', '600mg', 'viên', 6780.00, 174, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(144, 'Utrogestan 200mg - Lot144', 'Utrogestan', '200mg', 'viên', 2556.00, 110, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(145, 'Duphaston 10mg - Lot145', 'Duphaston', '10mg', 'viên', 3805.00, 35, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(146, 'Levothyroxine 50mcg - Lot146', 'Levothyroxine', NULL, 'ống', 5392.00, 177, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(147, 'Progesterone 100mg - Lot147', 'Progesterone', '100mg', 'viên', 3773.00, 44, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(148, 'Nitrofurantoin 100mg - Lot148', 'Nitrofurantoin', '100mg', 'viên', 8500.00, 56, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(149, 'Fluconazole 150mg - Lot149', 'Fluconazole', '150mg', 'viên', 3168.00, 165, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(150, 'Ketoconazole 200mg - Lot150', 'Ketoconazole', '200mg', 'viên', 5165.00, 151, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(151, 'Găng tay y tế S', NULL, NULL, 'cái', 42705.00, 30, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(152, 'Găng tay y tế M - Pack 2', NULL, NULL, 'cái', 41046.00, 47, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(153, 'Găng tay y tế L - Pack 3', NULL, NULL, 'cái', 49664.00, 5, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(154, 'Bơm kim tiêm 1ml - Pack 4', NULL, NULL, 'cái', 37945.00, 29, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(155, 'Bơm kim tiêm 5ml - Pack 5', NULL, NULL, 'cái', 27606.00, 41, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(156, 'Bơm kim tiêm 10ml - Pack 6', NULL, NULL, 'cái', 49106.00, 41, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(157, 'Bông gòn 50g - Pack 7', NULL, NULL, 'cái', 8195.00, 21, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(158, 'Cồn 70% - Pack 8', NULL, NULL, 'cái', 30379.00, 10, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(159, 'Gel siêu âm 5L - Pack 9', NULL, NULL, 'cái', 8417.00, 42, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(160, 'Que thử thai - Pack 10', NULL, NULL, 'cái', 15106.00, 17, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(161, 'Que thử rụng trứng - Pack 11', NULL, NULL, 'cái', 15070.00, 45, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(162, 'Kim tiêm 21G - Pack 12', NULL, NULL, 'cái', 19187.00, 47, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(163, 'Kim tiêm 23G - Pack 13', NULL, NULL, 'cái', 40108.00, 27, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(164, 'Khẩu trang N95 - Pack 14', NULL, NULL, 'cái', 38513.00, 11, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(165, 'Khẩu trang y tế 3 lớp - Pack 15', NULL, NULL, 'cái', 46940.00, 29, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(166, 'Gạc vô trùng 10x10 - Pack 16', NULL, NULL, 'cái', 26020.00, 43, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(167, 'Túi đựng máu - Pack 17', NULL, NULL, 'cái', 9578.00, 25, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(168, 'Hộp đựng dụng cụ tiểu phẫu - Pack 18', NULL, NULL, 'cái', 46057.00, 35, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(169, 'Dao mổ 10 - Pack 19', NULL, NULL, 'cái', 6904.00, 21, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(170, 'Dụng cụ lấy máu - Pack 20', NULL, NULL, 'cái', 21423.00, 50, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(171, 'Bồn đựng mẫu - Pack 21', NULL, NULL, 'cái', 48325.00, 28, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(172, 'Găng tay y tế S - Pack 22', NULL, NULL, 'cái', 45776.00, 43, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(173, 'Găng tay y tế M - Pack 23', NULL, NULL, 'cái', 32785.00, 20, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(174, 'Găng tay y tế L - Pack 24', NULL, NULL, 'cái', 37050.00, 9, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(175, 'Bơm kim tiêm 1ml - Pack 25', NULL, NULL, 'cái', 39470.00, 38, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(176, 'Bơm kim tiêm 5ml - Pack 26', NULL, NULL, 'cái', 28640.00, 22, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(177, 'Bơm kim tiêm 10ml - Pack 27', NULL, NULL, 'cái', 7272.00, 9, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(178, 'Bông gòn 50g - Pack 28', NULL, NULL, 'cái', 26141.00, 10, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(179, 'Cồn 70% - Pack 29', NULL, NULL, 'cái', 23953.00, 50, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(180, 'Gel siêu âm 5L - Pack 30', NULL, NULL, 'cái', 34453.00, 46, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(181, 'Que thử thai - Pack 31', NULL, NULL, 'cái', 44688.00, 46, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(182, 'Que thử rụng trứng - Pack 32', NULL, NULL, 'cái', 8532.00, 36, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(183, 'Kim tiêm 21G - Pack 33', NULL, NULL, 'cái', 7511.00, 12, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(184, 'Kim tiêm 23G - Pack 34', NULL, NULL, 'cái', 42479.00, 25, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(185, 'Khẩu trang N95 - Pack 35', NULL, NULL, 'cái', 13013.00, 13, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(186, 'Khẩu trang y tế 3 lớp - Pack 36', NULL, NULL, 'cái', 26749.00, 43, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(187, 'Gạc vô trùng 10x10 - Pack 37', NULL, NULL, 'cái', 23516.00, 43, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(188, 'Túi đựng máu - Pack 38', NULL, NULL, 'cái', 36289.00, 20, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(189, 'Hộp đựng dụng cụ tiểu phẫu - Pack 39', NULL, NULL, 'cái', 48910.00, 17, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(190, 'Dao mổ 10 - Pack 40', NULL, NULL, 'cái', 48526.00, 16, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(191, 'Dụng cụ lấy máu - Pack 41', NULL, NULL, 'cái', 21922.00, 38, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(192, 'Bồn đựng mẫu - Pack 42', NULL, NULL, 'cái', 11481.00, 19, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(193, 'Găng tay y tế S - Pack 43', NULL, NULL, 'cái', 13201.00, 41, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(194, 'Găng tay y tế M - Pack 44', NULL, NULL, 'cái', 28796.00, 49, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(195, 'Găng tay y tế L - Pack 45', NULL, NULL, 'cái', 48546.00, 19, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(196, 'Bơm kim tiêm 1ml - Pack 46', NULL, NULL, 'cái', 44470.00, 12, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(197, 'Bơm kim tiêm 5ml - Pack 47', NULL, NULL, 'cái', 24752.00, 40, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(198, 'Bơm kim tiêm 10ml - Pack 48', NULL, NULL, 'cái', 22019.00, 31, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(199, 'Bông gòn 50g - Pack 49', NULL, NULL, 'cái', 9962.00, 32, '2025-12-19 16:00:45', '2025-12-19 16:00:45'),
+(200, 'Cồn 70% - Pack 50', NULL, NULL, 'cái', 23707.00, 10, '2025-12-19 16:00:45', '2025-12-19 16:00:45');
 
 -- --------------------------------------------------------
 
@@ -3514,217 +3320,119 @@ CREATE TABLE `thuoc_khos` (
 --
 
 INSERT INTO `thuoc_khos` (`id`, `thuoc_id`, `ma_lo`, `han_su_dung`, `so_luong`, `gia_nhap`, `gia_xuat`, `nha_cung_cap_id`, `created_at`, `updated_at`) VALUES
-(1, 89, 'LOT-PN-1-689', '2028-06-12', 411, 1041.00, 1457.40, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(2, 98, 'LOT-PN-1-902', '2028-11-12', 380, 5895.00, 8253.00, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(3, 192, 'LOT-PN-1-127', '2026-12-12', 245, 4791.00, 6707.40, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(4, 105, 'LOT-PN-1-103', '2028-10-12', 114, 3785.00, 5299.00, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(5, 3, 'LOT-PN-1-630', '2028-06-12', 24, 1936.00, 2710.40, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(6, 191, 'LOT-PN-1-148', '2027-10-12', 210, 7676.00, 10746.40, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(7, 157, 'LOT-PN-1-7', '2027-07-12', 398, 3160.00, 4424.00, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(8, 174, 'LOT-PN-1-774', '2027-04-12', 54, 1377.00, 1927.80, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(9, 162, 'LOT-PN-1-16', '2027-01-12', 355, 4482.00, 6274.80, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(10, 12, 'LOT-PN-1-268', '2027-03-12', 363, 9030.00, 12642.00, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(11, 187, 'LOT-PN-1-631', '2028-01-12', 222, 6914.00, 9679.60, 8, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(12, 80, 'LOT-PN-1-298', '2028-01-12', 82, 7346.00, 10284.40, 8, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(13, 183, 'LOT-PN-2-856', '2026-12-12', 68, 7057.00, 9879.80, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(14, 117, 'LOT-PN-2-690', '2028-05-12', 65, 9108.00, 12751.20, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(15, 188, 'LOT-PN-2-659', '2028-09-12', 371, 2811.00, 3935.40, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(16, 41, 'LOT-PN-2-284', '2028-12-12', 186, 9117.00, 12763.80, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(17, 139, 'LOT-PN-2-285', '2028-10-12', 464, 9437.00, 13211.80, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(18, 177, 'LOT-PN-2-449', '2027-12-12', 360, 6127.00, 8577.80, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(19, 174, 'LOT-PN-2-415', '2028-04-12', 224, 3813.00, 5338.20, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(20, 163, 'LOT-PN-2-676', '2027-04-12', 483, 6503.00, 9104.20, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(21, 6, 'LOT-PN-2-864', '2028-09-12', 450, 5412.00, 7576.80, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(22, 168, 'LOT-PN-2-200', '2028-08-12', 146, 6734.00, 9427.60, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(23, 110, 'LOT-PN-2-351', '2027-02-12', 224, 1401.00, 1961.40, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(24, 180, 'LOT-PN-2-883', '2026-08-12', 147, 3055.00, 4277.00, 10, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(25, 44, 'LOT-PN-2-463', '2027-06-12', 265, 1429.00, 2000.60, 10, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(26, 35, 'LOT-PN-3-54', '2027-01-12', 150, 1554.00, 2175.60, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(27, 4, 'LOT-PN-3-560', '2027-02-12', 256, 5425.00, 7595.00, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(28, 128, 'LOT-PN-3-472', '2028-12-12', 239, 6622.00, 9270.80, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(29, 8, 'LOT-PN-3-700', '2026-12-12', 70, 7531.00, 10543.40, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(30, 107, 'LOT-PN-3-556', '2028-01-12', 293, 9358.00, 13101.20, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(31, 142, 'LOT-PN-3-441', '2028-01-12', 414, 7792.00, 10908.80, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(32, 81, 'LOT-PN-3-785', '2028-07-12', 445, 8030.00, 11242.00, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(33, 78, 'LOT-PN-3-878', '2026-07-12', 380, 9116.00, 12762.40, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(34, 80, 'LOT-PN-3-554', '2027-01-12', 305, 827.00, 1157.80, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(35, 17, 'LOT-PN-3-923', '2028-05-12', 381, 862.00, 1206.80, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(36, 73, 'LOT-PN-3-474', '2026-12-12', 37, 8159.00, 11422.60, 5, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(37, 98, 'LOT-PN-3-366', '2027-08-12', 180, 8328.00, 11659.20, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(38, 125, 'LOT-PN-4-362', '2027-02-12', 277, 9504.00, 13305.60, 1, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(39, 181, 'LOT-PN-4-859', '2027-03-12', 337, 7429.00, 10400.60, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(40, 87, 'LOT-PN-4-399', '2028-03-12', 369, 5620.00, 7868.00, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(41, 166, 'LOT-PN-4-879', '2028-11-12', 483, 9326.00, 13056.40, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(42, 172, 'LOT-PN-4-291', '2027-01-12', 233, 4102.00, 5742.80, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(43, 64, 'LOT-PN-4-690', '2027-11-12', 139, 7964.00, 11149.60, 1, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(44, 23, 'LOT-PN-4-812', '2028-02-12', 144, 3359.00, 4702.60, 1, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(45, 117, 'LOT-PN-4-864', '2026-09-12', 381, 6614.00, 9259.60, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(46, 127, 'LOT-PN-4-68', '2028-05-12', 11, 4530.00, 6342.00, 1, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(47, 183, 'LOT-PN-4-488', '2027-05-12', 270, 9587.00, 13421.80, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(48, 108, 'LOT-PN-4-548', '2026-10-12', 270, 5446.00, 7624.40, 1, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(49, 40, 'LOT-PN-4-551', '2028-06-12', 185, 2568.00, 3595.20, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(50, 161, 'LOT-PN-5-91', '2028-11-12', 74, 3359.00, 4702.60, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(51, 141, 'LOT-PN-5-354', '2027-06-12', 271, 8679.00, 12150.60, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(52, 168, 'LOT-PN-5-58', '2027-05-12', 390, 2406.00, 3368.40, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(53, 95, 'LOT-PN-5-19', '2027-10-12', 337, 2257.00, 3159.80, 13, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(54, 80, 'LOT-PN-5-913', '2027-05-12', 294, 7192.00, 10068.80, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(55, 23, 'LOT-PN-5-788', '2028-12-12', 129, 3361.00, 4705.40, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(56, 91, 'LOT-PN-5-952', '2027-07-12', 191, 2299.00, 3218.60, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(57, 3, 'LOT-PN-5-165', '2027-12-12', 142, 3417.00, 4783.80, 13, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(58, 63, 'LOT-PN-5-538', '2027-07-12', 186, 7428.00, 10399.20, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(59, 166, 'LOT-PN-5-20', '2028-08-12', 63, 4412.00, 6176.80, 13, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(60, 138, 'LOT-PN-5-688', '2027-05-12', 57, 1139.00, 1594.60, 13, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(61, 103, 'LOT-PN-5-342', '2028-12-12', 281, 5778.00, 8089.20, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(62, 163, 'LOT-PN-5-135', '2027-06-12', 423, 6183.00, 8656.20, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(63, 104, 'LOT-PN-5-217', '2026-06-12', 308, 6413.00, 8978.20, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(64, 24, 'LOT-PN-5-66', '2026-09-12', 303, 8676.00, 12146.40, 13, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(65, 133, 'LOT-PN-6-672', '2028-04-12', 41, 1293.00, 1810.20, 12, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(66, 18, 'LOT-PN-6-676', '2027-02-12', 57, 5281.00, 7393.40, 12, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(67, 115, 'LOT-PN-6-151', '2026-07-12', 315, 7642.00, 10698.80, 12, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(68, 55, 'LOT-PN-6-383', '2026-09-12', 268, 7660.00, 10724.00, 12, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(69, 119, 'LOT-PN-6-128', '2027-10-12', 264, 6228.00, 8719.20, 12, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(70, 30, 'LOT-PN-6-964', '2027-05-12', 40, 4526.00, 6336.40, 12, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(71, 7, 'LOT-PN-6-593', '2028-03-12', 418, 6746.00, 9444.40, 12, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(72, 93, 'LOT-PN-6-486', '2027-05-12', 289, 8303.00, 11624.20, 12, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(73, 3, 'LOT-PN-7-461', '2027-12-12', 259, 9186.00, 12860.40, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(74, 126, 'LOT-PN-7-13', '2028-07-12', 37, 5775.00, 8085.00, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(75, 43, 'LOT-PN-7-38', '2027-06-12', 149, 5042.00, 7058.80, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(76, 29, 'LOT-PN-7-642', '2027-04-12', 364, 4800.00, 6720.00, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(77, 199, 'LOT-PN-7-686', '2028-11-12', 259, 615.00, 861.00, 1, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(78, 4, 'LOT-PN-7-405', '2028-04-12', 471, 4115.00, 5761.00, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(79, 154, 'LOT-PN-8-414', '2026-09-12', 348, 7093.00, 9930.20, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(80, 41, 'LOT-PN-8-609', '2027-03-12', 454, 3811.00, 5335.40, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(81, 131, 'LOT-PN-8-398', '2027-11-12', 499, 6676.00, 9346.40, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(82, 172, 'LOT-PN-8-123', '2028-07-12', 65, 7354.00, 10295.60, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(83, 198, 'LOT-PN-8-280', '2026-06-12', 85, 8710.00, 12194.00, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(84, 108, 'LOT-PN-8-231', '2028-01-12', 411, 2839.00, 3974.60, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(85, 182, 'LOT-PN-8-201', '2026-10-12', 227, 8768.00, 12275.20, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(86, 125, 'LOT-PN-8-307', '2028-08-12', 350, 3386.00, 4740.40, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(87, 76, 'LOT-PN-8-426', '2027-11-12', 140, 6111.00, 8555.40, 10, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(88, 175, 'LOT-PN-9-446', '2027-03-12', 89, 7865.00, 11011.00, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(89, 2, 'LOT-PN-9-380', '2027-07-12', 394, 1382.00, 1934.80, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(90, 28, 'LOT-PN-9-15', '2026-12-12', 122, 6288.00, 8803.20, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(91, 69, 'LOT-PN-9-216', '2027-07-12', 266, 8995.00, 12593.00, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(92, 186, 'LOT-PN-9-13', '2027-06-12', 27, 6228.00, 8719.20, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(93, 77, 'LOT-PN-9-191', '2028-05-12', 63, 6716.00, 9402.40, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(94, 115, 'LOT-PN-9-513', '2027-02-12', 284, 8520.00, 11928.00, 5, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(95, 197, 'LOT-PN-9-533', '2026-08-12', 0, 9506.00, 13308.40, 5, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(96, 127, 'LOT-PN-10-897', '2027-01-12', 0, 3926.00, 5496.40, 1, '2025-12-12 07:45:56', '2025-12-12 07:50:15'),
-(97, 103, 'LOT-PN-10-433', '2028-09-12', 466, 4010.00, 5614.00, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(98, 9, 'LOT-PN-10-245', '2026-06-12', 469, 4746.00, 6644.40, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(99, 56, 'LOT-PN-10-52', '2028-09-12', 327, 3685.00, 5159.00, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(100, 137, 'LOT-PN-10-313', '2028-11-12', 144, 4278.00, 5989.20, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(101, 30, 'LOT-PN-10-581', '2028-10-12', 217, 8069.00, 11296.60, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(102, 73, 'LOT-PN-10-265', '2028-01-12', 270, 3848.00, 5387.20, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(103, 39, 'LOT-PN-10-945', '2028-10-12', 0, 5714.00, 7999.60, 1, '2025-12-12 07:45:56', '2025-12-12 07:45:56'),
-(104, 103, 'LOT-PN-1-352', '2028-07-12', 275, 3139.00, 4394.60, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(105, 149, 'LOT-PN-1-257', '2028-02-12', 28, 2029.00, 2840.60, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(106, 58, 'LOT-PN-1-267', '2026-12-12', 101, 5358.00, 7501.20, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(107, 108, 'LOT-PN-1-567', '2027-07-12', 141, 4768.00, 6675.20, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(108, 47, 'LOT-PN-1-223', '2026-11-12', 431, 4026.00, 5636.40, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(109, 115, 'LOT-PN-1-373', '2028-05-12', 463, 6612.00, 9256.80, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(110, 196, 'LOT-PN-1-32', '2028-03-12', 198, 6119.00, 8566.60, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(111, 144, 'LOT-PN-1-221', '2027-06-12', 64, 9025.00, 12635.00, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(112, 8, 'LOT-PN-1-101', '2028-12-12', 115, 2325.00, 3255.00, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(113, 161, 'LOT-PN-2-763', '2026-11-12', 122, 3801.00, 5321.40, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(114, 40, 'LOT-PN-2-264', '2027-09-12', 409, 9887.00, 13841.80, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(115, 80, 'LOT-PN-2-482', '2028-12-12', 451, 5703.00, 7984.20, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(116, 32, 'LOT-PN-2-370', '2026-12-12', 356, 6376.00, 8926.40, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(117, 15, 'LOT-PN-2-709', '2026-06-12', 415, 9543.00, 13360.20, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(118, 45, 'LOT-PN-2-81', '2027-06-12', 34, 8571.00, 11999.40, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(119, 19, 'LOT-PN-2-234', '2028-01-12', 70, 5079.00, 7110.60, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(120, 14, 'LOT-PN-2-583', '2026-06-12', 45, 3536.00, 4950.40, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(121, 77, 'LOT-PN-2-570', '2028-07-12', 365, 3055.00, 4277.00, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(122, 67, 'LOT-PN-2-25', '2028-06-12', 69, 4490.00, 6286.00, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(123, 46, 'LOT-PN-2-303', '2028-02-12', 397, 7987.00, 11181.80, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(124, 195, 'LOT-PN-2-962', '2028-12-12', 435, 4049.00, 5668.60, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(125, 71, 'LOT-PN-2-949', '2026-12-12', 93, 8193.00, 11470.20, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(126, 192, 'LOT-PN-2-128', '2026-07-12', 74, 6734.00, 9427.60, 3, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(127, 180, 'LOT-PN-3-375', '2028-03-12', 187, 3716.00, 5202.40, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(128, 136, 'LOT-PN-3-490', '2028-07-12', 280, 6185.00, 8659.00, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(129, 87, 'LOT-PN-3-377', '2027-08-12', 159, 1389.00, 1944.60, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(130, 181, 'LOT-PN-3-243', '2026-10-12', 448, 3177.00, 4447.80, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(131, 158, 'LOT-PN-3-704', '2028-09-12', 341, 9674.00, 13543.60, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(132, 83, 'LOT-PN-3-720', '2028-10-12', 85, 4419.00, 6186.60, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(133, 61, 'LOT-PN-4-959', '2027-11-12', 65, 3875.00, 5425.00, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(134, 149, 'LOT-PN-4-183', '2028-12-12', 186, 9211.00, 12895.40, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(135, 78, 'LOT-PN-4-349', '2027-09-12', 373, 4153.00, 5814.20, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(136, 1, 'LOT-PN-4-711', '2028-09-12', 124, 3451.00, 4831.40, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(137, 29, 'LOT-PN-4-198', '2027-12-12', 249, 6723.00, 9412.20, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(138, 164, 'LOT-PN-4-979', '2027-12-12', 245, 6731.00, 9423.40, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(139, 42, 'LOT-PN-4-613', '2027-10-12', 342, 1761.00, 2465.40, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(140, 131, 'LOT-PN-4-736', '2028-11-12', 244, 7153.00, 10014.20, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(141, 56, 'LOT-PN-4-372', '2028-07-12', 265, 2402.00, 3362.80, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(142, 53, 'LOT-PN-4-856', '2027-09-12', 180, 696.00, 974.40, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(143, 58, 'LOT-PN-5-49', '2027-06-12', 39, 8195.00, 11473.00, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(144, 78, 'LOT-PN-5-944', '2026-09-12', 83, 3229.00, 4520.60, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(145, 41, 'LOT-PN-5-743', '2026-12-12', 37, 1766.00, 2472.40, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(146, 129, 'LOT-PN-5-381', '2028-04-12', 105, 824.00, 1153.60, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(147, 127, 'LOT-PN-5-476', '2028-09-12', 31, 1378.00, 1929.20, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(148, 198, 'LOT-PN-5-945', '2028-11-12', 286, 7328.00, 10259.20, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(149, 54, 'LOT-PN-5-486', '2028-04-12', 69, 8518.00, 11925.20, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(150, 19, 'LOT-PN-5-41', '2028-04-12', 140, 3082.00, 4314.80, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(151, 43, 'LOT-PN-5-259', '2026-11-12', 139, 5165.00, 7231.00, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(152, 116, 'LOT-PN-5-467', '2027-02-12', 99, 8065.00, 11291.00, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(153, 51, 'LOT-PN-5-844', '2026-07-12', 496, 2034.00, 2847.60, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(154, 48, 'LOT-PN-5-988', '2026-08-12', 102, 9676.00, 13546.40, 7, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(155, 99, 'LOT-PN-6-528', '2028-02-12', 189, 7558.00, 10581.20, 12, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(156, 123, 'LOT-PN-6-550', '2027-02-12', 309, 4054.00, 5675.60, 12, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(157, 142, 'LOT-PN-6-614', '2027-03-12', 153, 9059.00, 12682.60, 12, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(158, 20, 'LOT-PN-6-643', '2026-10-12', 37, 1122.00, 1570.80, 12, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(159, 28, 'LOT-PN-6-763', '2027-08-12', 358, 985.00, 1379.00, 12, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(160, 179, 'LOT-PN-6-623', '2028-02-12', 77, 3395.00, 4753.00, 12, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(161, 138, 'LOT-PN-6-792', '2028-05-12', 307, 7821.00, 10949.40, 12, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(162, 32, 'LOT-PN-6-22', '2028-08-12', 231, 1379.00, 1930.60, 12, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(163, 160, 'LOT-PN-7-658', '2027-02-12', 414, 9033.00, 12646.20, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(164, 50, 'LOT-PN-7-582', '2026-10-12', 160, 4066.00, 5692.40, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(165, 13, 'LOT-PN-7-245', '2026-12-12', 124, 3268.00, 4575.20, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(166, 49, 'LOT-PN-7-879', '2028-02-12', 356, 8377.00, 11727.80, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(167, 90, 'LOT-PN-7-60', '2028-04-12', 70, 2692.00, 3768.80, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(168, 41, 'LOT-PN-7-189', '2028-02-12', 261, 7870.00, 11018.00, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(169, 121, 'LOT-PN-7-650', '2027-07-12', 494, 9309.00, 13032.60, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(170, 36, 'LOT-PN-7-709', '2027-01-12', 445, 8001.00, 11201.40, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(171, 35, 'LOT-PN-7-652', '2026-09-12', 499, 8813.00, 12338.20, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(172, 52, 'LOT-PN-7-253', '2027-06-12', 440, 9588.00, 13423.20, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(173, 116, 'LOT-PN-7-778', '2027-02-12', 191, 3084.00, 4317.60, 14, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(174, 29, 'LOT-PN-8-595', '2028-03-12', 335, 8335.00, 11669.00, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(175, 167, 'LOT-PN-8-808', '2027-03-12', 315, 5085.00, 7119.00, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(176, 141, 'LOT-PN-8-516', '2027-07-12', 78, 6483.00, 9076.20, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(177, 51, 'LOT-PN-8-804', '2028-12-12', 376, 688.00, 963.20, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(178, 84, 'LOT-PN-8-460', '2028-04-12', 198, 3644.00, 5101.60, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(179, 194, 'LOT-PN-8-109', '2027-12-12', 301, 6826.00, 9556.40, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(180, 139, 'LOT-PN-8-780', '2027-02-12', 242, 4861.00, 6805.40, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(181, 40, 'LOT-PN-8-145', '2026-10-12', 143, 9249.00, 12948.60, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(182, 62, 'LOT-PN-8-840', '2028-10-12', 352, 7776.00, 10886.40, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(183, 11, 'LOT-PN-8-266', '2028-07-12', 392, 646.00, 904.40, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(184, 97, 'LOT-PN-8-889', '2027-03-12', 232, 9635.00, 13489.00, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(185, 30, 'LOT-PN-8-643', '2027-02-12', 67, 1774.00, 2483.60, 4, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(186, 4, 'LOT-PN-9-68', '2027-01-12', 62, 3302.00, 4622.80, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(187, 17, 'LOT-PN-9-741', '2028-12-12', 364, 7170.00, 10038.00, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(188, 16, 'LOT-PN-9-545', '2027-10-12', 348, 1529.00, 2140.60, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(189, 195, 'LOT-PN-9-951', '2026-10-12', 231, 8185.00, 11459.00, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(190, 189, 'LOT-PN-9-843', '2027-07-12', 339, 1698.00, 2377.20, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(191, 170, 'LOT-PN-9-359', '2026-08-12', 251, 634.00, 887.60, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(192, 11, 'LOT-PN-9-94', '2028-08-12', 284, 9357.00, 13099.80, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(193, 7, 'LOT-PN-9-892', '2027-12-12', 39, 6046.00, 8464.40, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(194, 180, 'LOT-PN-9-622', '2028-03-12', 69, 9409.00, 13172.60, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(195, 89, 'LOT-PN-9-194', '2027-10-12', 246, 9939.00, 13914.60, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(196, 108, 'LOT-PN-9-378', '2027-04-12', 209, 1140.00, 1596.00, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(197, 164, 'LOT-PN-9-270', '2027-03-12', 268, 1823.00, 2552.20, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(198, 88, 'LOT-PN-9-11', '2027-05-12', 328, 9406.00, 13168.40, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(199, 3, 'LOT-PN-9-1', '2028-03-12', 166, 7252.00, 10152.80, 13, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(200, 108, 'LOT-PN-10-118', '2027-11-12', 419, 7556.00, 10578.40, 15, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(201, 81, 'LOT-PN-10-545', '2028-09-12', 101, 1470.00, 2058.00, 15, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(202, 115, 'LOT-PN-10-89', '2026-07-12', 457, 7434.00, 10407.60, 15, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(203, 136, 'LOT-PN-10-207', '2026-11-12', 296, 8796.00, 12314.40, 15, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(204, 65, 'LOT-PN-10-145', '2028-06-12', 283, 2269.00, 3176.60, 15, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(205, 76, 'LOT-PN-10-58', '2026-08-12', 128, 5891.00, 8247.40, 15, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(206, 193, 'LOT-PN-10-172', '2027-10-12', 291, 1813.00, 2538.20, 15, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(207, 83, 'LOT-NEAR-5202', '2025-12-20', 8, 8396.00, 10914.80, 6, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(208, 39, 'LOT-NEAR-7726', '2025-12-25', 8, 6270.00, 8151.00, 9, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(209, 80, 'LOT-NEAR-6288', '2025-12-17', 6, 3405.00, 4426.50, 9, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(210, 52, 'LOT-NEAR-6570', '2025-12-19', 6, 1876.00, 2438.80, 2, '2025-12-12 07:50:15', '2025-12-12 07:50:15'),
-(211, 153, 'LOT-NEAR-7854', '2025-12-23', 6, 41995.00, 54593.50, 9, '2025-12-12 07:50:15', '2025-12-12 07:50:15');
+(1, 156, 'LOT-PN-1-566', '2027-03-19', 381, 7292.00, 10208.80, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(2, 106, 'LOT-PN-1-63', '2027-03-19', 183, 3400.00, 4760.00, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(3, 89, 'LOT-PN-1-347', '2027-12-19', 428, 1171.00, 1639.40, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(4, 170, 'LOT-PN-1-481', '2026-10-19', 131, 7174.00, 10043.60, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(5, 70, 'LOT-PN-1-352', '2027-07-19', 23, 2507.00, 3509.80, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(6, 32, 'LOT-PN-1-531', '2028-01-19', 79, 7770.00, 10878.00, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(7, 37, 'LOT-PN-1-39', '2027-05-19', 198, 8868.00, 12415.20, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(8, 108, 'LOT-PN-1-686', '2027-04-19', 242, 3399.00, 4758.60, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(9, 82, 'LOT-PN-2-401', '2027-07-19', 198, 1679.00, 2350.60, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(10, 106, 'LOT-PN-2-759', '2026-12-19', 106, 4238.00, 5933.20, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(11, 195, 'LOT-PN-2-421', '2026-08-19', 452, 9181.00, 12853.40, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(12, 189, 'LOT-PN-2-718', '2027-07-19', 389, 8170.00, 11438.00, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(13, 2, 'LOT-PN-2-40', '2026-07-19', 385, 6685.00, 9359.00, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(14, 128, 'LOT-PN-2-492', '2028-11-19', 112, 9320.00, 13048.00, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(15, 134, 'LOT-PN-2-3', '2027-10-19', 481, 6756.00, 9458.40, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(16, 85, 'LOT-PN-2-68', '2027-02-19', 50, 796.00, 1114.40, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(17, 137, 'LOT-PN-2-59', '2027-08-19', 422, 1415.00, 1981.00, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(18, 24, 'LOT-PN-2-303', '2027-04-19', 63, 8918.00, 12485.20, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(19, 58, 'LOT-PN-3-521', '2026-11-19', 77, 4710.00, 6594.00, 15, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(20, 71, 'LOT-PN-3-434', '2028-08-19', 448, 7785.00, 10899.00, 15, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(21, 166, 'LOT-PN-3-45', '2026-12-19', 56, 1933.00, 2706.20, 15, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(22, 185, 'LOT-PN-3-52', '2027-05-19', 12, 9535.00, 13349.00, 15, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(23, 165, 'LOT-PN-3-302', '2028-09-19', 337, 4322.00, 6050.80, 15, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(24, 103, 'LOT-PN-3-470', '2026-12-19', 425, 8411.00, 11775.40, 15, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(25, 75, 'LOT-PN-3-540', '2028-07-19', 154, 7976.00, 11166.40, 15, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(26, 122, 'LOT-PN-4-248', '2027-01-19', 453, 4230.00, 5922.00, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(27, 77, 'LOT-PN-4-47', '2026-09-19', 434, 4643.00, 6500.20, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(28, 30, 'LOT-PN-4-171', '2028-07-19', 293, 6140.00, 8596.00, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(29, 74, 'LOT-PN-4-918', '2027-07-19', 0, 9053.00, 12674.20, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(30, 178, 'LOT-PN-4-847', '2026-10-19', 361, 6017.00, 8423.80, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(31, 73, 'LOT-PN-4-942', '2027-04-19', 17, 7287.00, 10201.80, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(32, 63, 'LOT-PN-4-204', '2028-09-19', 189, 9107.00, 12749.80, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(33, 107, 'LOT-PN-4-453', '2026-10-19', 53, 7231.00, 10123.40, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(34, 170, 'LOT-PN-4-82', '2027-07-19', 125, 1771.00, 2479.40, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(35, 144, 'LOT-PN-4-18', '2028-08-19', 34, 8249.00, 11548.60, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(36, 186, 'LOT-PN-4-356', '2027-07-19', 187, 2804.00, 3925.60, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(37, 81, 'LOT-PN-4-253', '2027-07-19', 494, 6912.00, 9676.80, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(38, 193, 'LOT-PN-5-553', '2028-09-19', 232, 2401.00, 3361.40, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(39, 112, 'LOT-PN-5-973', '2027-07-19', 175, 3570.00, 4998.00, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(40, 106, 'LOT-PN-5-600', '2028-11-19', 225, 6467.00, 9053.80, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(41, 128, 'LOT-PN-5-989', '2026-10-19', 216, 7406.00, 10368.40, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(42, 44, 'LOT-PN-5-89', '2027-01-19', 301, 5006.00, 7008.40, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(43, 168, 'LOT-PN-5-435', '2028-06-19', 499, 2954.00, 4135.60, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(44, 137, 'LOT-PN-5-681', '2028-04-19', 246, 928.00, 1299.20, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(45, 27, 'LOT-PN-5-92', '2026-09-19', 70, 4689.00, 6564.60, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(46, 169, 'LOT-PN-5-514', '2026-09-19', 295, 9051.00, 12671.40, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(47, 5, 'LOT-PN-5-368', '2027-03-19', 198, 4110.00, 5754.00, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(48, 124, 'LOT-PN-5-180', '2027-05-19', 52, 4159.00, 5822.60, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(49, 103, 'LOT-PN-5-26', '2028-06-19', 210, 695.00, 973.00, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(50, 172, 'LOT-PN-5-627', '2026-10-19', 157, 9818.00, 13745.20, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(51, 35, 'LOT-PN-5-254', '2027-12-19', 475, 7427.00, 10397.80, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(52, 120, 'LOT-PN-5-362', '2027-03-19', 108, 1486.00, 2080.40, 14, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(53, 22, 'LOT-PN-6-900', '2028-01-19', 80, 9845.00, 13783.00, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(54, 20, 'LOT-PN-6-240', '2028-05-19', 296, 9073.00, 12702.20, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(55, 8, 'LOT-PN-6-290', '2028-01-19', 60, 9116.00, 12762.40, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(56, 29, 'LOT-PN-6-668', '2028-03-19', 0, 4130.00, 5782.00, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(57, 130, 'LOT-PN-6-599', '2026-07-19', 88, 4861.00, 6805.40, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(58, 191, 'LOT-PN-6-718', '2027-12-19', 10, 4308.00, 6031.20, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(59, 119, 'LOT-PN-6-420', '2028-05-19', 383, 4756.00, 6658.40, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(60, 161, 'LOT-PN-6-630', '2028-03-19', 457, 2698.00, 3777.20, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(61, 111, 'LOT-PN-6-677', '2026-06-19', 157, 1526.00, 2136.40, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(62, 150, 'LOT-PN-7-759', '2028-03-19', 71, 820.00, 1148.00, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(63, 3, 'LOT-PN-7-538', '2028-12-19', 137, 1873.00, 2622.20, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(64, 12, 'LOT-PN-7-164', '2027-09-19', 158, 8441.00, 11817.40, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(65, 179, 'LOT-PN-7-705', '2027-08-19', 267, 1460.00, 2044.00, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(66, 7, 'LOT-PN-7-153', '2028-06-19', 0, 8540.00, 11956.00, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(67, 119, 'LOT-PN-7-788', '2028-03-19', 72, 9265.00, 12971.00, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(68, 148, 'LOT-PN-7-466', '2027-03-19', 127, 6103.00, 8544.20, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(69, 177, 'LOT-PN-7-471', '2027-08-19', 235, 5504.00, 7705.60, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(70, 65, 'LOT-PN-7-825', '2028-10-19', 241, 8167.00, 11433.80, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(71, 107, 'LOT-PN-7-805', '2027-01-19', 375, 6660.00, 9324.00, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(72, 95, 'LOT-PN-7-265', '2027-11-19', 214, 2041.00, 2857.40, 4, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(73, 99, 'LOT-PN-8-884', '2028-03-19', 288, 4294.00, 6011.60, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(74, 197, 'LOT-PN-8-517', '2026-12-19', 261, 1771.00, 2479.40, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(75, 36, 'LOT-PN-8-697', '2028-10-19', 72, 9614.00, 13459.60, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(76, 2, 'LOT-PN-8-863', '2027-04-19', 403, 9249.00, 12948.60, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(77, 66, 'LOT-PN-8-654', '2027-07-19', 48, 5577.00, 7807.80, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(78, 151, 'LOT-PN-8-329', '2028-12-19', 458, 5852.00, 8192.80, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(79, 130, 'LOT-PN-8-331', '2026-11-19', 166, 1403.00, 1964.20, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(80, 13, 'LOT-PN-8-101', '2027-07-19', 164, 7749.00, 10848.60, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(81, 165, 'LOT-PN-8-835', '2028-09-19', 454, 2194.00, 3071.60, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(82, 84, 'LOT-PN-8-243', '2028-01-19', 225, 3986.00, 5580.40, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(83, 182, 'LOT-PN-8-74', '2026-08-19', 53, 7479.00, 10470.60, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(84, 187, 'LOT-PN-8-773', '2028-12-19', 295, 8746.00, 12244.40, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(85, 166, 'LOT-PN-8-991', '2028-12-19', 96, 2603.00, 3644.20, 13, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(86, 136, 'LOT-PN-9-475', '2028-04-19', 137, 7348.00, 10287.20, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(87, 170, 'LOT-PN-9-384', '2027-06-19', 496, 7065.00, 9891.00, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(88, 24, 'LOT-PN-9-63', '2026-09-19', 94, 9252.00, 12952.80, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(89, 102, 'LOT-PN-9-634', '2026-12-19', 186, 662.00, 926.80, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(90, 164, 'LOT-PN-9-355', '2028-11-19', 105, 3738.00, 5233.20, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(91, 30, 'LOT-PN-9-680', '2028-06-19', 437, 7051.00, 9871.40, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(92, 115, 'LOT-PN-9-797', '2028-02-19', 317, 6804.00, 9525.60, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(93, 95, 'LOT-PN-9-949', '2027-03-19', 139, 1959.00, 2742.60, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(94, 40, 'LOT-PN-9-190', '2028-06-19', 46, 9447.00, 13225.80, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(95, 86, 'LOT-PN-9-690', '2028-04-19', 229, 5417.00, 7583.80, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(96, 96, 'LOT-PN-9-941', '2027-04-19', 317, 2969.00, 4156.60, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(97, 124, 'LOT-PN-9-43', '2027-07-19', 243, 657.00, 919.80, 3, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(98, 16, 'LOT-PN-10-388', '2026-11-19', 279, 3994.00, 5591.60, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(99, 72, 'LOT-PN-10-684', '2028-07-19', 143, 4439.00, 6214.60, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(100, 88, 'LOT-PN-10-277', '2026-06-19', 239, 5989.00, 8384.60, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(101, 18, 'LOT-PN-10-625', '2027-06-19', 340, 3688.00, 5163.20, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(102, 196, 'LOT-PN-10-977', '2027-02-19', 255, 6966.00, 9752.40, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(103, 22, 'LOT-PN-10-65', '2027-12-19', 357, 9340.00, 13076.00, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(104, 98, 'LOT-PN-10-133', '2027-05-19', 275, 2065.00, 2891.00, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(105, 28, 'LOT-PN-10-282', '2027-10-19', 66, 2310.00, 3234.00, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(106, 174, 'LOT-PN-10-901', '2026-07-19', 80, 6831.00, 9563.40, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(107, 2, 'LOT-PN-10-903', '2027-07-19', 282, 9042.00, 12658.80, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(108, 173, 'LOT-PN-10-361', '2028-05-19', 442, 2822.00, 3950.80, 8, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(109, 50, 'LOT-NEAR-2759', '2025-12-29', 5, 8946.00, 11629.80, 2, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(110, 59, 'LOT-NEAR-2672', '2025-12-29', 1, 6949.00, 9033.70, 6, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(111, 55, 'LOT-NEAR-6796', '2025-12-29', 10, 3096.00, 4024.80, 9, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(112, 132, 'LOT-NEAR-7063', '2025-12-27', 9, 8303.00, 10793.90, 7, '2025-12-19 16:00:46', '2025-12-19 16:00:46'),
+(113, 111, 'LOT-NEAR-1613', '2025-12-30', 9, 4413.00, 5736.90, 15, '2025-12-19 16:00:46', '2025-12-19 16:00:46');
 
 -- --------------------------------------------------------
 
@@ -3759,30 +3467,30 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `avatar`, `so_dien_thoai`, `ngay_sinh`, `gioi_tinh`, `email_verified_at`, `password`, `remember_token`, `locked_at`, `locked_until`, `must_change_password`, `last_login_at`, `login_attempts`, `last_login_ip`, `created_at`, `updated_at`, `role`) VALUES
-(13, 'Admin', 'Admin@gmail.com', NULL, NULL, NULL, NULL, NULL, '$2y$10$NfHct5bDMquy9sXw7Ja1UO.x3IaJsaZbJEUJKbWgUN3UZlniSiWx6', NULL, NULL, NULL, 0, '2025-12-13 14:07:18', 0, '127.0.0.1', '2025-12-12 04:24:09', '2025-12-13 14:07:18', 'admin'),
-(115, 'Nguyễn Thị Hồng Hạnh', 'hanh.nguyen@vietcare.com', NULL, '0909222002', '2000-10-20', 'Nữ', '2025-12-12 06:47:23', '$2y$10$0bTwsv5YVaRWfHHa9SO4YeO5IxvYBGtl3EFrx8.UlYUYXC4o5TB6.', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-12 06:41:13', '2025-12-12 06:47:23', 'staff'),
-(116, 'Trần Thị Kim Dung', 'dung.tran@vietcare.com', NULL, '0909222003', '1999-08-15', 'Nữ', '2025-12-12 06:47:23', '$2y$10$pnnjtuzIGJ8KI0w4CUNwQO1f5Whl04xNgESdzn52nIGwxDzeEG7ne', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-12 06:41:13', '2025-12-12 06:47:23', 'staff'),
-(117, 'Phạm Thị Thu Thảo', 'thao.pham@vietcare.com', NULL, '0909222004', '1985-02-05', 'Nữ', '2025-12-12 06:47:24', '$2y$10$2pQLqCpww3anC3eTP5gMBu2nEduMNMMMJB3nnmn7.4kjBz8VD88la', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-12 06:41:13', '2025-12-12 06:47:24', 'staff'),
-(118, 'Lê Thị Thanh Trúc', 'truc.le@vietcare.com', NULL, '0909222005', '1995-11-10', 'Nữ', '2025-12-12 06:47:24', '$2y$10$6yAjv0SgSucUjTBdrBf9eOvPTbjVBKJlTm0SrCjYv/kbp69zga/l2', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-12 06:41:13', '2025-12-12 06:47:24', 'staff'),
-(119, 'Nguyễn Ngọc Huyền', 'huyen.nguyen@vietcare.com', NULL, '0909222006', '1997-07-22', 'Nữ', '2025-12-12 06:47:24', '$2y$10$Oy5Rs07j.BdaHI3olyot/eP/uuSYri/IgAg2xTGuFT52JEe1KYCJe', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-12 06:41:13', '2025-12-12 06:47:24', 'staff'),
-(120, 'Vũ Thị Minh Anh', 'anh.vu@vietcare.com', NULL, '0909222007', '1996-04-30', 'Nữ', '2025-12-12 06:47:24', '$2y$10$SaJ574BFnjJXE2Zfa2rTXeKLFSYAiXukn5VQ1024wTO1RemgQ7wIu', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-12 06:41:14', '2025-12-12 06:47:24', 'staff'),
-(121, 'Hoàng Văn Nam', 'nam.hoang@vietcare.com', NULL, '0909222008', '1990-09-14', 'Nam', '2025-12-12 06:47:24', '$2y$10$0ames9TDSX5.k5I4WhEgJeh2V/illnPcH2tdvJ8BVX23HhSlwOIYK', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-12 06:41:14', '2025-12-12 06:47:24', 'staff'),
-(122, 'Nguyễn Thu Phương', 'phuong.nguyen@vietcare.com', NULL, '0909222009', '1980-01-01', 'Nữ', '2025-12-12 06:47:24', '$2y$10$sYa/q9dfXYLnDia283gKK.OHr.kmPB0ns8hFcEFTdkJ5EF65rkRwq', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-12 06:41:14', '2025-12-12 06:47:24', 'staff'),
-(123, 'Trần Quốc Bảo', 'bao.tran@vietcare.com', NULL, '0909222010', '1995-12-18', 'Nam', '2025-12-12 06:47:24', '$2y$10$Nq1Fl0NEseVCuKc166AAkuxmJwnFI5m46s67eomOkKuN55bPM/PYe', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-12 06:41:14', '2025-12-12 06:47:24', 'staff'),
-(136, 'TS.BS Nguyễn Thị Lan Anh', 'lananh@vietcare.com', 'avatars/NgwECmcOF5OsDRW5m7U47jEgpIwpJNGv9yBECZpz.png', '0909111001', NULL, NULL, '2025-12-12 07:01:42', '$2y$10$8pfnJ6dIyePif5beHwu5lOCc6NaUKdwBT0/0nUFckm./daq46SLkK', NULL, NULL, NULL, 0, '2025-12-13 04:44:39', 0, '127.0.0.1', '2025-12-12 07:01:42', '2025-12-13 04:45:00', 'doctor'),
-(137, 'ThS.BS Phạm Văn Hùng', 'hunghoang@vietcare.com', 'avatars/Dc4rhJ9iMhQbGivllt2KH4SC3wcev2SoV5thMf9W.png', '0909111002', NULL, NULL, '2025-12-12 07:01:42', '$2y$10$Nj4x5jCYFIJ92xVxO5V5R.dg8suQFx.n1hdBxzFbnTyRn7CnhoBQC', NULL, NULL, NULL, 0, '2025-12-13 04:40:34', 0, '127.0.0.1', '2025-12-12 07:01:42', '2025-12-13 04:40:34', 'doctor'),
-(138, 'BSCKII Trần Thu Hà', 'hatran@vietcare.com', 'avatars/msxfncVI0Y4IfkPa2P3Akg9wViu4eg8BkeeFI1kB.png', '0909111003', NULL, NULL, '2025-12-12 07:01:42', '$2y$10$QxndpifIYQP54mLB76BR3ebmq.immmidNdR0QDbL26TKpePzOt96S', NULL, NULL, NULL, 0, '2025-12-13 04:45:17', 0, '127.0.0.1', '2025-12-12 07:01:42', '2025-12-13 04:45:33', 'doctor'),
-(139, 'BS.CKI Nguyễn Thanh Vân', 'vannguyen@vietcare.com', 'avatars/Kn1lryOqsrl2hnJ2oZxSUZR41NdgYBACo1Bn2A2t.png', '0909111004', NULL, NULL, '2025-12-12 07:01:42', '$2y$10$WHqtKBUR7cHm9Zwkb4vQNurFIzJZ63QU7jPXdFiNYyLkxbTYiBR3i', NULL, NULL, NULL, 0, '2025-12-13 14:09:29', 0, '127.0.0.1', '2025-12-12 07:01:42', '2025-12-13 14:09:29', 'doctor'),
-(140, 'TS.BS Hoàng Minh Tuấn', 'tuanhoang@vietcare.com', 'avatars/tFhDIqyGiJGubaeaPIwtHzZhVQKWUQl9ckcKskDv.png', '0909111005', NULL, NULL, '2025-12-12 07:01:42', '$2y$10$QanY1YS97ZhkvemCFYHgB.NvF6R2.k.XeQ470m5S2EVCwssbe8t8a', NULL, NULL, NULL, 0, '2025-12-13 04:46:20', 0, '127.0.0.1', '2025-12-12 07:01:42', '2025-12-13 04:46:35', 'doctor'),
-(141, 'ThS.BS Võ Thị Ngọc', 'ngocvo@vietcare.com', 'avatars/javPWxwi07wRO58pqLeC79LKbHTmU1zEmb5CkZA4.png', '0909111006', NULL, NULL, '2025-12-12 07:01:42', '$2y$10$hmx2XrhGvrLBQziqJLlRquBLA2uFMb1DGKdNq8Kc/WG7paVxw.FDC', NULL, NULL, NULL, 0, '2025-12-13 04:43:11', 0, '127.0.0.1', '2025-12-12 07:01:42', '2025-12-13 04:43:30', 'doctor'),
-(142, 'BS.CKI Phạm Thanh Thúy', 'thuypham@vietcare.com', 'avatars/7Am7ipu0EktY6wXSN9cWfcRtVNtBNWiFqcAToFY6.png', '0909111007', NULL, NULL, '2025-12-12 07:01:42', '$2y$10$8FVpMIeapC0rxEe/zMPIpeE/B8bdZEFK1QVDmEErDSCWMpNvAShTC', NULL, NULL, NULL, 0, '2025-12-13 04:43:44', 0, '127.0.0.1', '2025-12-12 07:01:42', '2025-12-13 04:43:57', 'doctor'),
-(143, 'ThS.BS Nguyễn Hữu Phước', 'phuocnguyen@vietcare.com', 'avatars/RgY8tGvX7ZN7Q6Uar9Z5JF7hhcyxWgsgHpzMkK2m.png', '0909111008', NULL, NULL, '2025-12-12 07:01:43', '$2y$10$rUeQPUJR1UBLTOV7pYVGnON/fpUbm/VAe203gjQdMkDY4V54nqHlu', NULL, NULL, NULL, 0, '2025-12-13 04:49:51', 0, '127.0.0.1', '2025-12-12 07:01:43', '2025-12-13 04:49:51', 'doctor'),
-(144, 'BS.CKI Đỗ Mỹ Linh', 'linhdo@vietcare.com', 'avatars/rSIA5L9IxPl7e3ckaiw8iGmiuiajr6Cc8e6GZLYo.png', '0909111009', NULL, NULL, '2025-12-12 07:01:43', '$2y$10$srWKZNsaJPNvYzLwD9Smh.1I5GILdRRYrUqGCIfiz6xvRhBtdd8am', NULL, NULL, NULL, 0, '2025-12-13 04:47:38', 0, '127.0.0.1', '2025-12-12 07:01:43', '2025-12-13 04:47:49', 'doctor'),
-(145, 'ThS.BS Lê Thị Mai', 'maile@vietcare.com', 'avatars/vF1nqgNi2AZSwjxA7ii2rz5xqH1KPzDjDqeHD8nE.png', '0909111010', NULL, NULL, '2025-12-12 07:01:43', '$2y$10$.5xZRHSCsi2P2K4iI8kT5OTXkZWIYa/hxtfvMPslpwvbIz5u5hxpK', NULL, NULL, NULL, 0, '2025-12-13 04:48:08', 0, '127.0.0.1', '2025-12-12 07:01:43', '2025-12-13 04:48:19', 'doctor'),
-(146, 'BS.CKI Trần Văn Minh', 'minh.xetnghiem@vietcare.com', 'avatars/WkE01UOSwyyKFNjyZVn0lMBkR8lkTfFBCKc0UE4B.png', '0909111011', NULL, NULL, '2025-12-12 07:01:43', '$2y$10$SXhcWBt41QYSMe1TxfadIOvVYxYGRO0TL.SlYex45PHQpzB2B.uPC', NULL, NULL, NULL, 0, '2025-12-13 04:48:32', 0, '127.0.0.1', '2025-12-12 07:01:43', '2025-12-13 04:48:46', 'doctor'),
-(147, 'ThS.BS Nguyễn Ngọc Lan', 'lan.thammy@vietcare.com', 'avatars/wlRgm2tm7BDT0t0gOOmYwIBEvVFpYVTRkxpq4Vaf.png', '0909111012', NULL, NULL, '2025-12-12 07:01:43', '$2y$10$d7gui7/U19F8BC.imDqrh.63JAb77EgMRah8VO1MtrNQdsQMnqCRm', NULL, NULL, NULL, 0, '2025-12-13 04:49:04', 0, '127.0.0.1', '2025-12-12 07:01:43', '2025-12-13 04:49:17', 'doctor'),
-(148, 'Nguyễn Chí Thanh', 'tn822798@gmail.com', NULL, NULL, NULL, NULL, NULL, '$2y$10$GGgNSGZW72uejUeDxFsv/eaD0bJkyfVS9DpBO2AaH2jVqcSFCA90W', NULL, NULL, NULL, 0, '2025-12-13 14:08:56', 0, '127.0.0.1', '2025-12-12 08:39:23', '2025-12-13 14:08:56', 'patient'),
-(149, 'Lê Minh Nhật', 'henvaemhen@gmail.com', NULL, NULL, NULL, NULL, '2025-12-13 04:32:47', '$2y$10$2zaIsqKua20VhsyfMioL3OeatZNmM5d5GYAllSyMDQwUx8juNVeli', '1DoL7fJP5uqtiouM5a0MekQKrHzhmE3wHxYxpddngtXfAo2vi8BQMDb4Dr5R', NULL, NULL, 0, '2025-12-13 14:08:24', 0, '127.0.0.1', '2025-12-13 04:13:11', '2025-12-13 14:08:24', 'staff');
+(1, 'TS.BS Nguyễn Thị Lan Anh', 'lananh@vietcare.com', NULL, '0909111001', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$dZFn7pG3r4cNw3NggNgPNeLgXjmQXKo5hCczNUTrN8pxUTXxhkMrG', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(2, 'ThS.BS Phạm Văn Hùng', 'hunghoang@vietcare.com', NULL, '0909111002', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$Ea0gzCWkvixDyMhkm1OXxeIkWwdrCBQ2dCeZ4NU0ovRgW8R2xlvUm', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(3, 'BSCKII Trần Thu Hà', 'hatran@vietcare.com', NULL, '0909111003', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$MvfhW56wfMos8jGeBrBVweiZ4J62Xbq6dH3UvpF0mTI.vzYtBNqxC', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(4, 'BS.CKI Nguyễn Thanh Vân', 'vannguyen@vietcare.com', NULL, '0909111004', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$H6tWbZDrC.wg81ON1IpfHeSUxFnW64xkmuiD.VOPyR0k972pIm3ja', NULL, NULL, NULL, 0, '2025-12-20 01:08:39', 0, '127.0.0.1', '2025-12-19 16:00:44', '2025-12-20 01:08:39', 'doctor'),
+(5, 'TS.BS Hoàng Minh Tuấn', 'tuanhoang@vietcare.com', NULL, '0909111005', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$jzfmL/8cPhH98raVGuUVk.Z8VRHgnGbqmiNgdrRsu/XelNv8og4z2', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(6, 'ThS.BS Võ Thị Ngọc', 'ngocvo@vietcare.com', NULL, '0909111006', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$oOgqn.evDo7viqaT5DXBvOhb1HCjxoMQ1ZnTgfnIq1xNqMNUqVCO2', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(7, 'BS.CKI Phạm Thanh Thúy', 'thuypham@vietcare.com', NULL, '0909111007', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$KCgg6bLiWm.s7uGt0mbAg.CoeQXD.Fc1N4nB5xUqvBj8ASX67U/NG', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(8, 'ThS.BS Nguyễn Hữu Phước', 'phuocnguyen@vietcare.com', NULL, '0909111008', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$2OBJrCqBmdCzSWV6qZJhXek7oXOuXdXww7CeN.I9noppNWQ4uNrkW', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(9, 'BS.CKI Đỗ Mỹ Linh', 'linhdo@vietcare.com', NULL, '0909111009', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$euSzfENh5Rj/aD8rplmN6OjoiZITB/g4bcsrvOu7HrLwsQDvZqUXa', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(10, 'ThS.BS Lê Thị Mai', 'maile@vietcare.com', NULL, '0909111010', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$YLZL4UjkCBceEVvotMv8quReWvGSAAGMhIKpfO6w/U2AaHtjbt7SG', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(11, 'BS.CKI Trần Văn Minh', 'minh.xetnghiem@vietcare.com', NULL, '0909111011', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$VTv8UbL/4BGUfeSC6IYO2eKcC.bwmaBRb6mmY2HdEc9qwl.pvTleu', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(12, 'ThS.BS Nguyễn Ngọc Lan', 'lan.thammy@vietcare.com', NULL, '0909111012', NULL, NULL, '2025-12-19 16:00:44', '$2y$10$kpeTwkyvXZZa82jgUpRVN.nP4Tx7Mcv85oZtmqbIHof860Vsjq7dO', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:44', '2025-12-19 16:00:44', 'doctor'),
+(14, 'Nguyễn Thị Hồng Hạnh', 'hanh.nguyen@vietcare.com', NULL, '0909222002', '2000-10-20', 'Nữ', '2025-12-19 16:00:45', '$2y$10$ItoBjpODQPFUWlOfQO.sQudRwV3BX.VqoPjrlY0z0zt6BJSxx1b.i', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45', 'staff'),
+(15, 'Trần Thị Kim Dung', 'dung.tran@vietcare.com', NULL, '0909222003', '1999-08-15', 'Nữ', '2025-12-19 16:00:45', '$2y$10$EyRl8Tl2nedliIc06Xu5uu2BrLtZyd1BYCHHRYA1oWxMQXUH.Sn2O', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45', 'staff'),
+(16, 'Phạm Thị Thu Thảo', 'thao.pham@vietcare.com', NULL, '0909222004', '1985-02-05', 'Nữ', '2025-12-19 16:00:45', '$2y$10$SqRJI9frli0cxnGZEHQqaensLUYLolt/FDcl2qfXjMwbcKq6As40i', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45', 'staff'),
+(17, 'Lê Thị Thanh Trúc', 'truc.le@vietcare.com', NULL, '0909222005', '1995-11-10', 'Nữ', '2025-12-19 16:00:45', '$2y$10$YrJqfXrKyBAogHTi4jF8HO2kW9RiOgcb8QgilDP9HLVa.LWQRK3Uy', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45', 'staff'),
+(18, 'Nguyễn Ngọc Huyền', 'huyen.nguyen@vietcare.com', NULL, '0909222006', '1997-07-22', 'Nữ', '2025-12-19 16:00:45', '$2y$10$SX9/pR/E3zqek9cxjBzL1O8nRkNt2XCQ/LoobYW2eEm5kxBgYTbXG', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45', 'staff'),
+(19, 'Vũ Thị Minh Anh', 'anh.vu@vietcare.com', NULL, '0909222007', '1996-04-30', 'Nữ', '2025-12-19 16:00:45', '$2y$10$ufY4FXEcaoxp52FdOBqQ.eg8xPuUQp55oLTRbz6DU4NABWeP3Uvwu', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45', 'staff'),
+(20, 'Hoàng Văn Nam', 'nam.hoang@vietcare.com', NULL, '0909222008', '1990-09-14', 'Nam', '2025-12-19 16:00:45', '$2y$10$8tpsL5uATYNtRFIwSgyzUOdxSTBmPynO/X7GYXvDRS5JrlQfbmj1u', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45', 'staff'),
+(21, 'Nguyễn Thu Phương', 'phuong.nguyen@vietcare.com', NULL, '0909222009', '1980-01-01', 'Nữ', '2025-12-19 16:00:45', '$2y$10$cakk39U9DtVGnEdFr4otieXoz6ebvkvRYndWP1WLEFQHlq78Fj0A.', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45', 'staff'),
+(22, 'Trần Quốc Bảo', 'bao.tran@vietcare.com', NULL, '0909222010', '1995-12-18', 'Nam', '2025-12-19 16:00:45', '$2y$10$vODyi9NSkVCHcGgpmKX.Q.yzwgw9Cb45Aa3mn0dc.HqGCqDLUfV.i', NULL, NULL, NULL, 0, NULL, 0, NULL, '2025-12-19 16:00:45', '2025-12-19 16:00:45', 'staff'),
+(23, 'Nguyễn Chí Thanh', 'tn822798@gmail.com', NULL, NULL, NULL, NULL, NULL, '$2y$10$ZsovaDUzfnDBfjItL9uOOuEs0P3bvF6saTDZ9rPb7qcliGf0HzW0i', NULL, NULL, NULL, 0, '2025-12-20 01:08:21', 0, '127.0.0.1', '2025-12-19 16:11:58', '2025-12-20 01:08:21', 'patient'),
+(24, 'Admin', 'Admin@gmail.com', NULL, NULL, NULL, NULL, NULL, '$2y$10$YkHDlh4u3dgqvvo.0eDz3etB9/rggmPs0zX60PMDXAwj.aiTEESze', NULL, NULL, NULL, 0, '2025-12-20 01:10:09', 0, '127.0.0.1', '2025-12-19 16:17:34', '2025-12-20 01:10:09', 'admin'),
+(25, 'Lê Minh Nhật', 'henvaemhen@gmail.com', NULL, NULL, NULL, NULL, NULL, '$2y$10$noM2sEJJTq5FsTnH/NCkUuDvjT2.2ub63WK9r9XhbweXyZ6.tJx.K', 'hPyVTeslwTmAKhJq7j4ORrCwTnnrEYsPWgLinhe16RMhWaOj3NrQV053E6AW', NULL, NULL, 0, '2025-12-20 01:11:38', 0, '127.0.0.1', '2025-12-19 16:38:16', '2025-12-20 01:11:38', 'staff');
 
 -- --------------------------------------------------------
 
@@ -3793,13 +3501,16 @@ INSERT INTO `users` (`id`, `name`, `email`, `avatar`, `so_dien_thoai`, `ngay_sin
 CREATE TABLE `xet_nghiems` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `benh_an_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `bac_si_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `loai_xet_nghiem_id` bigint(20) UNSIGNED DEFAULT NULL,
   `loai` varchar(255) NOT NULL,
-  `file_path` varchar(255) NOT NULL,
-  `disk` varchar(50) NOT NULL DEFAULT 'public',
+  `file_path` varchar(255) DEFAULT NULL,
+  `disk` varchar(255) DEFAULT NULL,
   `mo_ta` varchar(255) DEFAULT NULL,
+  `gia` decimal(12,2) NOT NULL DEFAULT 0.00,
   `trang_thai` varchar(255) NOT NULL DEFAULT 'pending',
+  `nhan_xet` text DEFAULT NULL,
+  `ket_qua` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3808,9 +3519,40 @@ CREATE TABLE `xet_nghiems` (
 -- Đang đổ dữ liệu cho bảng `xet_nghiems`
 --
 
-INSERT INTO `xet_nghiems` (`id`, `benh_an_id`, `user_id`, `bac_si_id`, `loai`, `file_path`, `disk`, `mo_ta`, `trang_thai`, `created_at`, `updated_at`) VALUES
-(1, 1, 148, 108, 'Xét nghiệm máu', '', 'public', 'Test', 'pending', '2025-12-13 07:58:37', '2025-12-13 07:58:37'),
-(2, 1, 148, 108, 'Testt', 'xet_nghiem/JIeBG21s60GHGm8WEVPOnIH3Dr3U0NFrI7CHtqEB.png', 'benh_an_private', NULL, 'pending', '2025-12-13 08:04:38', '2025-12-13 08:04:38');
+INSERT INTO `xet_nghiems` (`id`, `benh_an_id`, `bac_si_id`, `loai_xet_nghiem_id`, `loai`, `file_path`, `disk`, `mo_ta`, `gia`, `trang_thai`, `nhan_xet`, `ket_qua`, `created_at`, `updated_at`) VALUES
+(1, 1, 4, 8, 'Đường huyết lúc đói', 'xet_nghiem/t8GMTeffNwCSYn8gD7HIUiPFcVxCSPzSYoLMHN8o.png', 'benh_an_private', 'Khám Gói Khám Phụ khoa Tổng quát (VIP)', 70000.00, 'completed', 'Tư vấn chuyên sâu Vô sinh - Hiếm muộn', 'Tư vấn chuyên sâu Vô sinh - Hiếm muộn', '2025-12-19 17:49:47', '2025-12-19 18:01:04');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `x_quangs`
+--
+
+CREATE TABLE `x_quangs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `benh_an_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `bac_si_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `loai_x_quang_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `loai` varchar(255) NOT NULL,
+  `mo_ta` text DEFAULT NULL,
+  `gia` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `ngay_chi_dinh` datetime DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `disk` varchar(255) DEFAULT NULL,
+  `trang_thai` varchar(255) NOT NULL DEFAULT 'pending',
+  `nhan_xet` text DEFAULT NULL,
+  `ket_qua` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `x_quangs`
+--
+
+INSERT INTO `x_quangs` (`id`, `benh_an_id`, `user_id`, `bac_si_id`, `loai_x_quang_id`, `loai`, `mo_ta`, `gia`, `ngay_chi_dinh`, `file_path`, `disk`, `trang_thai`, `nhan_xet`, `ket_qua`, `created_at`, `updated_at`) VALUES
+(1, 1, 23, 4, 6, 'X-Quang bàn chân', 'Chụp X-Quang để đánh giá', 150000.00, '2025-12-20 08:28:01', 'x_quang/mqJBWiZdlcTbXYc1l31QNBVYURWNoIQbHzBWbvLl.png', 'benh_an_private', 'completed', 'Chụp X-Quang để đánh giá', 'Chụp X-Quang để đánh giá', '2025-12-20 01:28:01', '2025-12-20 01:28:47');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -3918,6 +3660,28 @@ ALTER TABLE `chuyen_khoa_dich_vu`
   ADD KEY `chuyen_khoa_dich_vu_dich_vu_id_foreign` (`dich_vu_id`);
 
 --
+-- Chỉ mục cho bảng `chuyen_khoa_loai_sieu_am`
+--
+ALTER TABLE `chuyen_khoa_loai_sieu_am`
+  ADD PRIMARY KEY (`chuyen_khoa_id`,`loai_sieu_am_id`),
+  ADD KEY `chuyen_khoa_loai_sieu_am_loai_sieu_am_id_foreign` (`loai_sieu_am_id`);
+
+--
+-- Chỉ mục cho bảng `chuyen_khoa_loai_xet_nghiem`
+--
+ALTER TABLE `chuyen_khoa_loai_xet_nghiem`
+  ADD PRIMARY KEY (`chuyen_khoa_id`,`loai_xet_nghiem_id`),
+  ADD KEY `chuyen_khoa_loai_xet_nghiem_loai_xet_nghiem_id_foreign` (`loai_xet_nghiem_id`);
+
+--
+-- Chỉ mục cho bảng `chuyen_khoa_loai_x_quang`
+--
+ALTER TABLE `chuyen_khoa_loai_x_quang`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ck_lxq_unique` (`chuyen_khoa_id`,`loai_x_quang_id`),
+  ADD KEY `chuyen_khoa_loai_x_quang_loai_x_quang_id_foreign` (`loai_x_quang_id`);
+
+--
 -- Chỉ mục cho bảng `conversations`
 --
 ALTER TABLE `conversations`
@@ -3988,7 +3752,8 @@ ALTER TABLE `don_thuocs`
   ADD KEY `don_thuocs_benh_an_id_foreign` (`benh_an_id`),
   ADD KEY `don_thuocs_user_id_foreign` (`user_id`),
   ADD KEY `don_thuocs_bac_si_id_foreign` (`bac_si_id`),
-  ADD KEY `don_thuocs_lich_hen_id_foreign` (`lich_hen_id`);
+  ADD KEY `don_thuocs_lich_hen_id_foreign` (`lich_hen_id`),
+  ADD KEY `don_thuocs_nguoi_cap_thuoc_id_foreign` (`nguoi_cap_thuoc_id`);
 
 --
 -- Chỉ mục cho bảng `don_thuoc_items`
@@ -4004,13 +3769,6 @@ ALTER TABLE `don_thuoc_items`
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
-
---
--- Chỉ mục cho bảng `family_members`
---
-ALTER TABLE `family_members`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `family_members_user_id_foreign` (`user_id`);
 
 --
 -- Chỉ mục cho bảng `hoan_tiens`
@@ -4049,7 +3807,8 @@ ALTER TABLE `lich_hens`
   ADD KEY `lich_hens_bacsi_ngay_idx` (`bac_si_id`,`ngay_hen`),
   ADD KEY `lich_hens_user_ngay_idx` (`user_id`,`ngay_hen`),
   ADD KEY `lich_hens_status_idx` (`trang_thai`),
-  ADD KEY `lich_hens_ngay_gio_idx` (`ngay_hen`,`thoi_gian_hen`);
+  ADD KEY `lich_hens_ngay_gio_idx` (`ngay_hen`,`thoi_gian_hen`),
+  ADD KEY `lich_hens_checked_in_by_foreign` (`checked_in_by`);
 
 --
 -- Chỉ mục cho bảng `lich_lam_viecs`
@@ -4066,6 +3825,29 @@ ALTER TABLE `lich_lam_viecs`
 ALTER TABLE `lich_nghis`
   ADD PRIMARY KEY (`id`),
   ADD KEY `lich_nghis_bac_si_id_ngay_index` (`bac_si_id`,`ngay`);
+
+--
+-- Chỉ mục cho bảng `loai_sieu_ams`
+--
+ALTER TABLE `loai_sieu_ams`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `loai_xet_nghiems`
+--
+ALTER TABLE `loai_xet_nghiems`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `loai_xet_nghiems_ma_unique` (`ma`),
+  ADD KEY `loai_xet_nghiems_phong_id_foreign` (`phong_id`),
+  ADD KEY `loai_xet_nghiems_ten_index` (`ten`);
+
+--
+-- Chỉ mục cho bảng `loai_x_quangs`
+--
+ALTER TABLE `loai_x_quangs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `loai_x_quangs_ma_unique` (`ma`),
+  ADD KEY `loai_x_quangs_phong_id_foreign` (`phong_id`);
 
 --
 -- Chỉ mục cho bảng `login_audits`
@@ -4170,7 +3952,8 @@ ALTER TABLE `payment_logs`
   ADD KEY `payment_logs_hoa_don_id_event_type_index` (`hoa_don_id`,`event_type`),
   ADD KEY `payment_logs_provider_transaction_ref_index` (`provider`,`transaction_ref`),
   ADD KEY `payment_logs_idempotency_key_index` (`idempotency_key`),
-  ADD KEY `payment_logs_created_at_index` (`created_at`);
+  ADD KEY `payment_logs_created_at_index` (`created_at`),
+  ADD KEY `payment_logs_payable_type_payable_id_index` (`payable_type`,`payable_id`);
 
 --
 -- Chỉ mục cho bảng `permissions`
@@ -4241,6 +4024,20 @@ ALTER TABLE `role_has_permissions`
   ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
 
 --
+-- Chỉ mục cho bảng `sieu_ams`
+--
+ALTER TABLE `sieu_ams`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sieu_ams_phong_id_foreign` (`phong_id`),
+  ADD KEY `sieu_ams_user_id_trang_thai_index` (`user_id`,`trang_thai`),
+  ADD KEY `sieu_ams_benh_an_id_trang_thai_index` (`benh_an_id`,`trang_thai`),
+  ADD KEY `sieu_ams_bac_si_chi_dinh_id_index` (`bac_si_chi_dinh_id`),
+  ADD KEY `sieu_ams_bac_si_sieu_am_id_index` (`bac_si_sieu_am_id`),
+  ADD KEY `sieu_ams_loai_sieu_am_id_index` (`loai_sieu_am_id`),
+  ADD KEY `sieu_ams_trang_thai_index` (`trang_thai`),
+  ADD KEY `sieu_ams_ngay_chi_dinh_index` (`ngay_chi_dinh`);
+
+--
 -- Chỉ mục cho bảng `slot_locks`
 --
 ALTER TABLE `slot_locks`
@@ -4257,13 +4054,33 @@ ALTER TABLE `tags`
   ADD UNIQUE KEY `tags_slug_unique` (`slug`);
 
 --
+-- Chỉ mục cho bảng `tai_khams`
+--
+ALTER TABLE `tai_khams`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tai_khams_lich_hen_id_foreign` (`lich_hen_id`),
+  ADD KEY `tai_khams_benh_an_id_trang_thai_index` (`benh_an_id`,`trang_thai`),
+  ADD KEY `tai_khams_user_id_trang_thai_index` (`user_id`,`trang_thai`),
+  ADD KEY `tai_khams_bac_si_id_trang_thai_index` (`bac_si_id`,`trang_thai`);
+
+--
 -- Chỉ mục cho bảng `thanh_toans`
 --
 ALTER TABLE `thanh_toans`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `thanh_toans_idempotency_key_unique` (`idempotency_key`),
   ADD KEY `thanh_toans_provider_transaction_ref_index` (`provider`,`transaction_ref`),
-  ADD KEY `thanh_toans_hoa_don_id_trang_thai_index` (`hoa_don_id`,`trang_thai`);
+  ADD KEY `thanh_toans_hoa_don_id_trang_thai_index` (`hoa_don_id`,`trang_thai`),
+  ADD KEY `thanh_toans_payable_type_payable_id_index` (`payable_type`,`payable_id`);
+
+--
+-- Chỉ mục cho bảng `theo_doi_thai_kys`
+--
+ALTER TABLE `theo_doi_thai_kys`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `theo_doi_thai_kys_benh_an_id_foreign` (`benh_an_id`),
+  ADD KEY `theo_doi_thai_kys_user_id_foreign` (`user_id`),
+  ADD KEY `theo_doi_thai_kys_bac_si_id_foreign` (`bac_si_id`);
 
 --
 -- Chỉ mục cho bảng `thuocs`
@@ -4293,9 +4110,19 @@ ALTER TABLE `users`
 --
 ALTER TABLE `xet_nghiems`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `xet_nghiems_benh_an_id_foreign` (`benh_an_id`),
-  ADD KEY `xet_nghiems_user_id_foreign` (`user_id`),
-  ADD KEY `xet_nghiems_bac_si_id_foreign` (`bac_si_id`);
+  ADD KEY `idx_xet_nghiem_bac_si_status` (`bac_si_id`,`trang_thai`),
+  ADD KEY `idx_xet_nghiem_benh_an_time` (`benh_an_id`,`created_at`),
+  ADD KEY `xet_nghiems_loai_xet_nghiem_id_foreign` (`loai_xet_nghiem_id`);
+
+--
+-- Chỉ mục cho bảng `x_quangs`
+--
+ALTER TABLE `x_quangs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `x_quangs_benh_an_id_foreign` (`benh_an_id`),
+  ADD KEY `x_quangs_user_id_foreign` (`user_id`),
+  ADD KEY `x_quangs_bac_si_id_foreign` (`bac_si_id`),
+  ADD KEY `x_quangs_loai_x_quang_id_foreign` (`loai_x_quang_id`);
 
 --
 -- AUTO_INCREMENT cho các bảng đã đổ
@@ -4305,13 +4132,13 @@ ALTER TABLE `xet_nghiems`
 -- AUTO_INCREMENT cho bảng `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `bac_sis`
 --
 ALTER TABLE `bac_sis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT cho bảng `bai_viets`
@@ -4323,13 +4150,13 @@ ALTER TABLE `bai_viets`
 -- AUTO_INCREMENT cho bảng `benh_ans`
 --
 ALTER TABLE `benh_ans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `benh_an_audits`
 --
 ALTER TABLE `benh_an_audits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `benh_an_files`
@@ -4347,7 +4174,7 @@ ALTER TABLE `ca_dieu_chinh_bac_sis`
 -- AUTO_INCREMENT cho bảng `ca_lam_viec_nhan_viens`
 --
 ALTER TABLE `ca_lam_viec_nhan_viens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
 
 --
 -- AUTO_INCREMENT cho bảng `chuyen_khoas`
@@ -4359,25 +4186,31 @@ ALTER TABLE `chuyen_khoas`
 -- AUTO_INCREMENT cho bảng `chuyen_khoa_dich_vu`
 --
 ALTER TABLE `chuyen_khoa_dich_vu`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=267;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT cho bảng `chuyen_khoa_loai_x_quang`
+--
+ALTER TABLE `chuyen_khoa_loai_x_quang`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `conversations`
 --
 ALTER TABLE `conversations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `coupons`
 --
 ALTER TABLE `coupons`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `danh_gias`
 --
 ALTER TABLE `danh_gias`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `danh_mucs`
@@ -4389,7 +4222,7 @@ ALTER TABLE `danh_mucs`
 -- AUTO_INCREMENT cho bảng `dich_vus`
 --
 ALTER TABLE `dich_vus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=147;
 
 --
 -- AUTO_INCREMENT cho bảng `don_hangs`
@@ -4422,12 +4255,6 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT cho bảng `family_members`
---
-ALTER TABLE `family_members`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT cho bảng `hoan_tiens`
 --
 ALTER TABLE `hoan_tiens`
@@ -4437,25 +4264,25 @@ ALTER TABLE `hoan_tiens`
 -- AUTO_INCREMENT cho bảng `hoa_dons`
 --
 ALTER TABLE `hoa_dons`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `lich_hens`
 --
 ALTER TABLE `lich_hens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `lich_lam_viecs`
 --
 ALTER TABLE `lich_lam_viecs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
 
 --
 -- AUTO_INCREMENT cho bảng `lich_nghis`
@@ -4464,34 +4291,52 @@ ALTER TABLE `lich_nghis`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT cho bảng `loai_sieu_ams`
+--
+ALTER TABLE `loai_sieu_ams`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT cho bảng `loai_xet_nghiems`
+--
+ALTER TABLE `loai_xet_nghiems`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT cho bảng `loai_x_quangs`
+--
+ALTER TABLE `loai_x_quangs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT cho bảng `login_audits`
 --
 ALTER TABLE `login_audits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT cho bảng `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT cho bảng `nhan_viens`
 --
 ALTER TABLE `nhan_viens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT cho bảng `nhan_vien_audits`
 --
 ALTER TABLE `nhan_vien_audits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT cho bảng `nha_cung_caps`
@@ -4503,7 +4348,7 @@ ALTER TABLE `nha_cung_caps`
 -- AUTO_INCREMENT cho bảng `nha_cung_cap_thuoc`
 --
 ALTER TABLE `nha_cung_cap_thuoc`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=748;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=401;
 
 --
 -- AUTO_INCREMENT cho bảng `notification_preferences`
@@ -4521,13 +4366,13 @@ ALTER TABLE `patient_profiles`
 -- AUTO_INCREMENT cho bảng `payment_logs`
 --
 ALTER TABLE `payment_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT cho bảng `personal_access_tokens`
@@ -4545,7 +4390,7 @@ ALTER TABLE `phieu_nhaps`
 -- AUTO_INCREMENT cho bảng `phieu_nhap_items`
 --
 ALTER TABLE `phieu_nhap_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=207;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT cho bảng `phieu_xuats`
@@ -4557,13 +4402,13 @@ ALTER TABLE `phieu_xuats`
 -- AUTO_INCREMENT cho bảng `phieu_xuat_items`
 --
 ALTER TABLE `phieu_xuat_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT cho bảng `phongs`
 --
 ALTER TABLE `phongs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT cho bảng `roles`
@@ -4572,10 +4417,16 @@ ALTER TABLE `roles`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT cho bảng `sieu_ams`
+--
+ALTER TABLE `sieu_ams`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT cho bảng `slot_locks`
 --
 ALTER TABLE `slot_locks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `tags`
@@ -4584,10 +4435,22 @@ ALTER TABLE `tags`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT cho bảng `tai_khams`
+--
+ALTER TABLE `tai_khams`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT cho bảng `thanh_toans`
 --
 ALTER TABLE `thanh_toans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT cho bảng `theo_doi_thai_kys`
+--
+ALTER TABLE `theo_doi_thai_kys`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `thuocs`
@@ -4599,19 +4462,25 @@ ALTER TABLE `thuocs`
 -- AUTO_INCREMENT cho bảng `thuoc_khos`
 --
 ALTER TABLE `thuoc_khos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=212;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT cho bảng `xet_nghiems`
 --
 ALTER TABLE `xet_nghiems`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT cho bảng `x_quangs`
+--
+ALTER TABLE `x_quangs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -4693,6 +4562,27 @@ ALTER TABLE `chuyen_khoa_dich_vu`
   ADD CONSTRAINT `chuyen_khoa_dich_vu_dich_vu_id_foreign` FOREIGN KEY (`dich_vu_id`) REFERENCES `dich_vus` (`id`) ON DELETE CASCADE;
 
 --
+-- Các ràng buộc cho bảng `chuyen_khoa_loai_sieu_am`
+--
+ALTER TABLE `chuyen_khoa_loai_sieu_am`
+  ADD CONSTRAINT `chuyen_khoa_loai_sieu_am_chuyen_khoa_id_foreign` FOREIGN KEY (`chuyen_khoa_id`) REFERENCES `chuyen_khoas` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `chuyen_khoa_loai_sieu_am_loai_sieu_am_id_foreign` FOREIGN KEY (`loai_sieu_am_id`) REFERENCES `loai_sieu_ams` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `chuyen_khoa_loai_xet_nghiem`
+--
+ALTER TABLE `chuyen_khoa_loai_xet_nghiem`
+  ADD CONSTRAINT `chuyen_khoa_loai_xet_nghiem_chuyen_khoa_id_foreign` FOREIGN KEY (`chuyen_khoa_id`) REFERENCES `chuyen_khoas` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `chuyen_khoa_loai_xet_nghiem_loai_xet_nghiem_id_foreign` FOREIGN KEY (`loai_xet_nghiem_id`) REFERENCES `loai_xet_nghiems` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `chuyen_khoa_loai_x_quang`
+--
+ALTER TABLE `chuyen_khoa_loai_x_quang`
+  ADD CONSTRAINT `chuyen_khoa_loai_x_quang_chuyen_khoa_id_foreign` FOREIGN KEY (`chuyen_khoa_id`) REFERENCES `chuyen_khoas` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `chuyen_khoa_loai_x_quang_loai_x_quang_id_foreign` FOREIGN KEY (`loai_x_quang_id`) REFERENCES `loai_x_quangs` (`id`) ON DELETE CASCADE;
+
+--
 -- Các ràng buộc cho bảng `conversations`
 --
 ALTER TABLE `conversations`
@@ -4729,6 +4619,7 @@ ALTER TABLE `don_thuocs`
   ADD CONSTRAINT `don_thuocs_bac_si_id_foreign` FOREIGN KEY (`bac_si_id`) REFERENCES `bac_sis` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `don_thuocs_benh_an_id_foreign` FOREIGN KEY (`benh_an_id`) REFERENCES `benh_ans` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `don_thuocs_lich_hen_id_foreign` FOREIGN KEY (`lich_hen_id`) REFERENCES `lich_hens` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `don_thuocs_nguoi_cap_thuoc_id_foreign` FOREIGN KEY (`nguoi_cap_thuoc_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `don_thuocs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
@@ -4737,12 +4628,6 @@ ALTER TABLE `don_thuocs`
 ALTER TABLE `don_thuoc_items`
   ADD CONSTRAINT `don_thuoc_items_don_thuoc_id_foreign` FOREIGN KEY (`don_thuoc_id`) REFERENCES `don_thuocs` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `don_thuoc_items_thuoc_id_foreign` FOREIGN KEY (`thuoc_id`) REFERENCES `thuocs` (`id`) ON DELETE CASCADE;
-
---
--- Các ràng buộc cho bảng `family_members`
---
-ALTER TABLE `family_members`
-  ADD CONSTRAINT `family_members_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `hoan_tiens`
@@ -4764,6 +4649,7 @@ ALTER TABLE `hoa_dons`
 ALTER TABLE `lich_hens`
   ADD CONSTRAINT `lich_hens_bac_si_id_foreign` FOREIGN KEY (`bac_si_id`) REFERENCES `bac_sis` (`id`),
   ADD CONSTRAINT `lich_hens_cancelled_by_foreign` FOREIGN KEY (`cancelled_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `lich_hens_checked_in_by_foreign` FOREIGN KEY (`checked_in_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `lich_hens_dich_vu_id_foreign` FOREIGN KEY (`dich_vu_id`) REFERENCES `dich_vus` (`id`),
   ADD CONSTRAINT `lich_hens_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
@@ -4779,6 +4665,18 @@ ALTER TABLE `lich_lam_viecs`
 --
 ALTER TABLE `lich_nghis`
   ADD CONSTRAINT `lich_nghis_bac_si_id_foreign` FOREIGN KEY (`bac_si_id`) REFERENCES `bac_sis` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `loai_xet_nghiems`
+--
+ALTER TABLE `loai_xet_nghiems`
+  ADD CONSTRAINT `loai_xet_nghiems_phong_id_foreign` FOREIGN KEY (`phong_id`) REFERENCES `phongs` (`id`) ON DELETE SET NULL;
+
+--
+-- Các ràng buộc cho bảng `loai_x_quangs`
+--
+ALTER TABLE `loai_x_quangs`
+  ADD CONSTRAINT `loai_x_quangs_phong_id_foreign` FOREIGN KEY (`phong_id`) REFERENCES `phongs` (`id`) ON DELETE SET NULL;
 
 --
 -- Các ràng buộc cho bảng `login_audits`
@@ -4878,6 +4776,17 @@ ALTER TABLE `role_has_permissions`
   ADD CONSTRAINT `role_has_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
+-- Các ràng buộc cho bảng `sieu_ams`
+--
+ALTER TABLE `sieu_ams`
+  ADD CONSTRAINT `sieu_ams_bac_si_chi_dinh_id_foreign` FOREIGN KEY (`bac_si_chi_dinh_id`) REFERENCES `bac_sis` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `sieu_ams_bac_si_sieu_am_id_foreign` FOREIGN KEY (`bac_si_sieu_am_id`) REFERENCES `bac_sis` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `sieu_ams_benh_an_id_foreign` FOREIGN KEY (`benh_an_id`) REFERENCES `benh_ans` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `sieu_ams_loai_sieu_am_id_foreign` FOREIGN KEY (`loai_sieu_am_id`) REFERENCES `loai_sieu_ams` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `sieu_ams_phong_id_foreign` FOREIGN KEY (`phong_id`) REFERENCES `phongs` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `sieu_ams_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Các ràng buộc cho bảng `slot_locks`
 --
 ALTER TABLE `slot_locks`
@@ -4885,10 +4794,27 @@ ALTER TABLE `slot_locks`
   ADD CONSTRAINT `slot_locks_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
+-- Các ràng buộc cho bảng `tai_khams`
+--
+ALTER TABLE `tai_khams`
+  ADD CONSTRAINT `tai_khams_bac_si_id_foreign` FOREIGN KEY (`bac_si_id`) REFERENCES `bac_sis` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `tai_khams_benh_an_id_foreign` FOREIGN KEY (`benh_an_id`) REFERENCES `benh_ans` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `tai_khams_lich_hen_id_foreign` FOREIGN KEY (`lich_hen_id`) REFERENCES `lich_hens` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `tai_khams_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
 -- Các ràng buộc cho bảng `thanh_toans`
 --
 ALTER TABLE `thanh_toans`
   ADD CONSTRAINT `thanh_toans_hoa_don_id_foreign` FOREIGN KEY (`hoa_don_id`) REFERENCES `hoa_dons` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `theo_doi_thai_kys`
+--
+ALTER TABLE `theo_doi_thai_kys`
+  ADD CONSTRAINT `theo_doi_thai_kys_bac_si_id_foreign` FOREIGN KEY (`bac_si_id`) REFERENCES `bac_sis` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `theo_doi_thai_kys_benh_an_id_foreign` FOREIGN KEY (`benh_an_id`) REFERENCES `benh_ans` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `theo_doi_thai_kys_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Các ràng buộc cho bảng `thuoc_khos`
@@ -4903,7 +4829,16 @@ ALTER TABLE `thuoc_khos`
 ALTER TABLE `xet_nghiems`
   ADD CONSTRAINT `xet_nghiems_bac_si_id_foreign` FOREIGN KEY (`bac_si_id`) REFERENCES `bac_sis` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `xet_nghiems_benh_an_id_foreign` FOREIGN KEY (`benh_an_id`) REFERENCES `benh_ans` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `xet_nghiems_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `xet_nghiems_loai_xet_nghiem_id_foreign` FOREIGN KEY (`loai_xet_nghiem_id`) REFERENCES `loai_xet_nghiems` (`id`) ON DELETE SET NULL;
+
+--
+-- Các ràng buộc cho bảng `x_quangs`
+--
+ALTER TABLE `x_quangs`
+  ADD CONSTRAINT `x_quangs_bac_si_id_foreign` FOREIGN KEY (`bac_si_id`) REFERENCES `bac_sis` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `x_quangs_benh_an_id_foreign` FOREIGN KEY (`benh_an_id`) REFERENCES `benh_ans` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `x_quangs_loai_x_quang_id_foreign` FOREIGN KEY (`loai_x_quang_id`) REFERENCES `loai_x_quangs` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `x_quangs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
