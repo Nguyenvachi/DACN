@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BacSi;
 use App\Models\User;
+use App\Models\ChuyenKhoa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -59,7 +60,9 @@ class BacSiController extends Controller
      */
     public function create()
     {
-        return view('admin.bacsi.create');
+        // Lấy danh sách chuyên khoa để hiển thị dropdown (chỉ thêm, không xóa code cũ)
+        $chuyenKhoaList = ChuyenKhoa::select('ten')->whereNotNull('ten')->orderBy('ten')->pluck('ten');
+        return view('admin.bacsi.create', compact('chuyenKhoaList'));
     }
 
     /**

@@ -88,9 +88,8 @@ class Kernel extends HttpKernel
         'check.locked' => \App\Http\Middleware\CheckAccountLocked::class,
         'must.change.password' => \App\Http\Middleware\MustChangePassword::class,
 
-        // --- 👇 CẬP NHẬT 3 DÒNG NÀY CHO THƯ VIỆN SPATIE 👇 ---
-        // (Lưu ý namespace là Spatie\Permission\...)
-        'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        // --- 👇 THAY SPATIE THÀNH CUSTOM ROLE MIDDLEWARE 👇 ---
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
     ];

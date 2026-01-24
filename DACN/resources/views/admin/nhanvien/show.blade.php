@@ -40,6 +40,16 @@
                 <div class="card card-custom mb-4">
                     <div class="card-body">
 
+                        <div class="text-center mb-3">
+                            @if($nhanvien->avatar_path)
+                                <img src="{{ \Illuminate\Support\Facades\Storage::url($nhanvien->avatar_path) }}" alt="{{ $nhanvien->ho_ten }}" class="rounded-circle mb-3" style="width:120px;height:120px;object-fit:cover;">
+                            @else
+                                <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3" style="width:120px;height:120px;">
+                                    <i class="bi bi-person-circle fs-1 text-muted"></i>
+                                </div>
+                            @endif
+                        </div>
+
                         <h5 class="fw-bold mb-3">Thông tin nhân viên</h5>
 
                         @php

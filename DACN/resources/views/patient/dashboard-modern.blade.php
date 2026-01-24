@@ -35,23 +35,38 @@
         <div class="row mb-4 g-4">
 
             <div class="col-lg-3 col-md-6">
-                <x-patient.stat-card title="Lịch Hẹn Sắp Tới" :value="$statistics['upcoming_appointments']"
-                    icon="fa-calendar-check" color="primary" :route="route('patient.lichhen.index')" />
+                <x-patient.stat-card title="Lịch Hẹn Sắp Tới" :value="$statistics['upcoming_appointments']" icon="fa-calendar-check" color="primary"
+                    :route="route('patient.lichhen.index')" />
             </div>
 
             <div class="col-lg-3 col-md-6">
-                <x-patient.stat-card title="Hồ Sơ Bệnh Án" :value="$statistics['total_medical_records']"
-                    icon="fa-file-medical" color="success" :route="route('patient.benhan.index')" />
+                <x-patient.stat-card title="Hồ Sơ Bệnh Án" :value="$statistics['total_medical_records']" icon="fa-file-medical" color="success"
+                    :route="route('patient.benhan.index')" />
             </div>
 
             <div class="col-lg-3 col-md-6">
-                <x-patient.stat-card title="Hóa Đơn Chưa Thanh Toán" :value="$statistics['unpaid_invoices']"
-                    icon="fa-file-invoice-dollar" color="warning" :route="route('patient.hoadon.index')" />
+                <x-patient.stat-card title="Hóa Đơn Chưa Thanh Toán" :value="$statistics['unpaid_invoices']" icon="fa-file-invoice-dollar"
+                    color="warning" :route="route('patient.hoadon.index')" />
             </div>
 
             <div class="col-lg-3 col-md-6">
-                <x-patient.stat-card title="Xét Nghiệm" :value="$statistics['total_tests']"
-                    icon="fa-flask" color="info" :route="route('patient.xetnghiem.index')" />
+                <x-patient.stat-card title="Xét Nghiệm" :value="$statistics['total_tests']" icon="fa-flask" color="info"
+                    :route="route('patient.xetnghiem.index')" />
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <x-patient.stat-card title="Siêu Âm" :value="($statistics['total_ultrasounds'] ?? $statistics['total_tests'])" icon="fa-flask" color="info"
+                    :route="route('patient.sieuam.index')" />
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <x-patient.stat-card title="X-Quang" :value="($statistics['total_xquangs'] ?? 0)" icon="fa-x-ray" color="info"
+                    :route="route('patient.xquang.index')" />
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <x-patient.stat-card title="Nội soi" :value="($statistics['total_noisois'] ?? 0)" icon="fa-stethoscope" color="info"
+                    :route="route('patient.noisoi.index')" />
             </div>
 
         </div>
@@ -152,8 +167,10 @@
                                     <div class="flex-grow-1 ms-3">
                                         <div class="d-flex justify-content-between">
                                             <div>
-                                                <h6 class="mb-1">{{ $record->dichVu->ten_dich_vu ?? 'Khám tổng quát' }}</h6>
-                                                <p class="mb-1 text-muted small">BS. {{ $record->bacSi->ho_ten ?? 'N/A' }}</p>
+                                                <h6 class="mb-1">{{ $record->dichVu->ten_dich_vu ?? 'Khám tổng quát' }}
+                                                </h6>
+                                                <p class="mb-1 text-muted small">BS. {{ $record->bacSi->ho_ten ?? 'N/A' }}
+                                                </p>
                                                 <p class="mb-0 small text-truncate">
                                                     {{ Str::limit($record->chuan_doan ?? 'Chưa có chẩn đoán', 100) }}</p>
                                             </div>
@@ -435,12 +452,12 @@
     @push('styles')
         <style>
             /* ======================================================
-                VIETCARE PATIENT DASHBOARD — PREMIUM MEDICAL UI 2025
-            ======================================================= */
+                                        VIETCARE PATIENT DASHBOARD — PREMIUM MEDICAL UI 2025
+                                    ======================================================= */
 
             /* ----------------------------------------
-                WELCOME CARD
-            ---------------------------------------- */
+                                        WELCOME CARD
+                                    ---------------------------------------- */
             .welcome-card {
                 background: linear-gradient(135deg, #10b981, #059669);
                 border-radius: 22px;
@@ -514,8 +531,8 @@
 
 
             /* ----------------------------------------
-                STAT CARDS
-            ---------------------------------------- */
+                                        STAT CARDS
+                                    ---------------------------------------- */
             .stat-card {
                 border-radius: 18px !important;
                 transition: .25s ease;
@@ -530,8 +547,8 @@
 
 
             /* ----------------------------------------
-                SECTION CARD
-            ---------------------------------------- */
+                                        SECTION CARD
+                                    ---------------------------------------- */
             .section-card {
                 border-radius: 20px !important;
                 box-shadow: var(--vc-shadow-sm);
@@ -555,8 +572,8 @@
 
 
             /* ----------------------------------------
-                LIST ELEMENTS — hover styles
-            ---------------------------------------- */
+                                        LIST ELEMENTS — hover styles
+                                    ---------------------------------------- */
             .list-item-hover {
                 border-radius: 14px;
                 transition: .25s ease;
@@ -570,8 +587,8 @@
 
 
             /* ----------------------------------------
-                HEALTH BOXES
-            ---------------------------------------- */
+                                        HEALTH BOXES
+                                    ---------------------------------------- */
             .health-box {
                 padding: 1rem;
                 border-radius: 14px;
@@ -594,8 +611,8 @@
 
 
             /* ----------------------------------------
-                INVOICE CARD
-            ---------------------------------------- */
+                                        INVOICE CARD
+                                    ---------------------------------------- */
             .invoice-card .price {
                 font-size: 1.3rem;
                 font-weight: 800;
@@ -609,8 +626,8 @@
 
 
             /* ----------------------------------------
-                QUICK ACTIONS
-            ---------------------------------------- */
+                                        QUICK ACTIONS
+                                    ---------------------------------------- */
             .quick-actions .btn {
                 border-radius: 14px;
                 padding: 11px 16px;
@@ -626,8 +643,8 @@
 
 
             /* ----------------------------------------
-                NOTIFICATIONS
-            ---------------------------------------- */
+                                        NOTIFICATIONS
+                                    ---------------------------------------- */
             .notification-item {
                 transition: .25s ease;
             }
@@ -638,8 +655,8 @@
 
 
             /* ----------------------------------------
-                CHART CARD
-            ---------------------------------------- */
+                                        CHART CARD
+                                    ---------------------------------------- */
             .chart-card {
                 border-radius: 20px !important;
                 box-shadow: var(--vc-shadow-sm);
@@ -651,8 +668,8 @@
 
 
             /* ----------------------------------------
-                EMPTY BLOCKS
-            ---------------------------------------- */
+                                        EMPTY BLOCKS
+                                    ---------------------------------------- */
             .empty-block i {
                 opacity: .4;
             }

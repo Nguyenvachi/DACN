@@ -262,6 +262,7 @@ class LichHenController extends Controller
      */
     public function complete(Request $request, LichHen $lichHen)
     {
+        $this->authorize('completeExam', $lichHen);
         $bacSi = BacSi::where('user_id', auth()->id())->first();
 
         if (!$bacSi || $lichHen->bac_si_id !== $bacSi->id) {
@@ -273,8 +274,8 @@ class LichHenController extends Controller
         }
 
         try {
-            // Sử dụng service để hoàn thành
-            $this->workflowService->completeExamination($lichHen, [
+            // Sử dụng service để hoàn thành (có actor)
+            $this->workflowService->completeExam($lichHen, auth()->user(), [
                 'chuan_doan' => $request->input('chuan_doan'),
                 'dieu_tri' => $request->input('dieu_tri'),
                 'ghi_chu' => $request->input('ghi_chu'),

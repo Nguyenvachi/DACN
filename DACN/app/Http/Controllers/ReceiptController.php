@@ -57,7 +57,7 @@ class ReceiptController extends Controller
         $user = auth()->user();
         if (!$user) abort(401);
 
-        if ($user instanceof \App\Models\User && $user->hasRole('admin')) return;
+        if ($user instanceof \App\Models\User && $user->isAdmin()) return;
 
         if ($hoaDon->user_id !== $user->id) abort(403);
     }

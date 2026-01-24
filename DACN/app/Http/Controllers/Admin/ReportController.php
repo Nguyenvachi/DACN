@@ -258,4 +258,5 @@ class ReportController extends Controller
             fputcsv($file, [$month, $count]);
         }
     }
+
 }

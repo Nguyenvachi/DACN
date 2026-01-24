@@ -228,6 +228,7 @@
                                                 $statusConfig = match($appt->trang_thai) {
                                                     'Đã xác nhận' => ['class' => 'status-confirmed', 'icon' => 'check-circle'],
                                                     'Chờ xác nhận' => ['class' => 'status-pending', 'icon' => 'clock'],
+                                                    'Đã check-in' => ['class' => 'status-checked-in', 'icon' => 'check-circle'],
                                                     'Đã hủy' => ['class' => 'status-cancelled', 'icon' => 'times-circle'],
                                                     'Hoàn thành' => ['class' => 'status-completed', 'icon' => 'check-double'],
                                                     'Đang khám' => ['class' => 'status-in-progress', 'icon' => 'stethoscope'],
@@ -240,11 +241,27 @@
                                             </span>
                                         </td>
                                         <td>
-                                            @if($appt->payment_status === 'paid')
+                                            @php
+                                                $invoiceStatus = $appt->hoaDon?->status;
+                                                $invoiceTrangThai = $appt->hoaDon?->trang_thai;
+                                                $legacyPaymentStatus = $appt->payment_status;
+
+                                                $isPaid = ($invoiceStatus === 'paid')
+                                                    || ($invoiceTrangThai === \App\Models\HoaDon::STATUS_PAID_VN)
+                                                    || ($legacyPaymentStatus === 'paid')
+                                                    || ($legacyPaymentStatus === \App\Models\HoaDon::STATUS_PAID_VN);
+
+                                                $isPartial = ($invoiceStatus === 'partial')
+                                                    || ($invoiceTrangThai === \App\Models\HoaDon::STATUS_PARTIAL_VN)
+                                                    || ($legacyPaymentStatus === 'partial')
+                                                    || ($legacyPaymentStatus === \App\Models\HoaDon::STATUS_PARTIAL_VN);
+                                            @endphp
+
+                                            @if($isPaid)
                                                 <span class="badge" style="background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;">
                                                     <i class="fas fa-check-circle"></i> Đã thanh toán
                                                 </span>
-                                            @elseif($appt->payment_status === 'partial')
+                                            @elseif($isPartial)
                                                 <span class="badge" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">
                                                     <i class="fas fa-exclamation-circle"></i> Một phần
                                                 </span>
@@ -330,6 +347,7 @@
                                             $statusConfig = match($upcoming->trang_thai) {
                                                 'Đã xác nhận' => ['class' => 'status-confirmed', 'icon' => 'check-circle'],
                                                 'Chờ xác nhận' => ['class' => 'status-pending', 'icon' => 'clock'],
+                                                'Đã check-in' => ['class' => 'status-checked-in', 'icon' => 'check-circle'],
                                                 default => ['class' => 'status-badge', 'icon' => 'info-circle']
                                             };
                                         @endphp

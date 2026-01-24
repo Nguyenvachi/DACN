@@ -7,9 +7,10 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Models\LichHen;
+use App\Services\MedicalWorkflowService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use function activity;
+ // Note: activity() helper is optional (spatie/activitylog). Use function_exists checks to guard.
 
 class CheckInController extends Controller
 {
@@ -50,52 +51,22 @@ class CheckInController extends Controller
     /**
      * Process check-in for patient
      */
-    public function checkIn(Request $request, LichHen $lichhen)
+    public function checkIn(Request $request, LichHen $lichhen, MedicalWorkflowService $workflowService)
     {
-        // DEBUG: Check if form reaches controller
-        \Log::info('CheckIn method called', [
-            'lichhen_id' => $lichhen->id,
-            'trang_thai' => $lichhen->trang_thai,
-            'ngay_hen' => $lichhen->ngay_hen
-        ]);
+        // Authorization: only staff/admin allowed via policy
+        $this->authorize('checkin', $lichhen);
 
-        // Validate appointment can be checked in
-        if ($lichhen->trang_thai !== \App\Models\LichHen::STATUS_CONFIRMED_VN) {
-            \Log::warning('CheckIn failed - Invalid status', ['status' => $lichhen->trang_thai]);
-            return back()->with('error', 'Lịch hẹn này không thể check-in. Trạng thái hiện tại: ' . $lichhen->trang_thai);
-        }
-
-        // Ensure appointment is for today — queue only shows today's checked-in appointments
-        // (Keeping pre-checkin for future dates caused confusion: staff check-in should apply on appointment date)
-        $appointmentDate = Carbon::parse($lichhen->ngay_hen);
-        $today = Carbon::today();
-
-        if (! $appointmentDate->isToday()) {
-            return back()->with('error', 'Chỉ có thể check-in vào đúng ngày hẹn (hôm nay).');
-        }
-
-        // Update status to checked-in
-        $lichhen->update([
-            'trang_thai' => \App\Models\LichHen::STATUS_CHECKED_IN_VN,
-            'checked_in_at' => now()
-        ]);
-
-        // Log activity (use global helper if available). Wrap in guard to avoid uncaught exceptions
-        if (function_exists('activity')) {
-            try {
-                activity()
-                    ->performedOn($lichhen)
-                    ->causedBy(auth()->user())
-                    ->withProperties(['old_status' => \App\Models\LichHen::STATUS_CONFIRMED_VN, 'new_status' => \App\Models\LichHen::STATUS_CHECKED_IN_VN])
-                    ->log('Nhân viên check-in bệnh nhân');
-            } catch (\Throwable $e) {
-                \Log::warning('Activity logging failed on check-in: ' . $e->getMessage());
+        // Call workflow service - it will validate and set timestamps
+        try {
+            $ok = $workflowService->checkIn($lichhen, auth()->user());
+            if (! $ok) {
+                return back()->with('error', 'Lịch hẹn này không thể check-in.');
             }
-        } else {
-            \Log::warning('Activity helper not available; skipping activity log for check-in.');
+            return back()->with('success', "Đã check-in thành công cho bệnh nhân {$lichhen->user->name}");
+        } catch (\Throwable $e) {
+            \Log::error('CheckIn failed: ' . $e->getMessage());
+            return back()->with('error', 'Không thể check-in: ' . $e->getMessage());
         }
-
-        return back()->with('success', "Đã check-in thành công cho bệnh nhân {$lichhen->user->name}");
     }
 
     /**
@@ -140,7 +111,7 @@ class CheckInController extends Controller
     /**
      * Bulk check-in for multiple appointments
      */
-    public function bulkCheckIn(Request $request)
+    public function bulkCheckIn(Request $request, MedicalWorkflowService $workflowService)
     {
         $request->validate([
             'appointment_ids' => 'required|array',
@@ -153,20 +124,18 @@ class CheckInController extends Controller
         foreach ($request->appointment_ids as $id) {
             $lichhen = LichHen::find($id);
 
-            if ($lichhen && $lichhen->trang_thai === \App\Models\LichHen::STATUS_CONFIRMED_VN && Carbon::parse($lichhen->ngay_hen)->isToday()) {
-                $lichhen->update([
-                    'trang_thai' => \App\Models\LichHen::STATUS_CHECKED_IN_VN,
-                    'checked_in_at' => now()
-                ]);
-                $updated++;
-                \activity()
-                    ->performedOn($lichhen)
-                    ->causedBy(auth()->user())
-                    ->withProperties(['type' => 'bulk_checkin'])
-                    ->log('Nhân viên check-in hàng loạt');
-            } else {
-                $failed[] = "ID: {$id}";
+            if ($lichhen) {
+                try {
+                    $ok = $workflowService->checkIn($lichhen, auth()->user());
+                    if ($ok) {
+                        $updated++;
+                        continue;
+                    }
+                } catch (\Throwable $e) {
+                    \Log::warning('Bulk check-in failed for ' . $id . ': ' . $e->getMessage());
+                }
             }
+            $failed[] = "ID: {$id}";
         }
 
         $message = "Đã check-in thành công {$updated} lịch hẹn.";
@@ -174,6 +143,21 @@ class CheckInController extends Controller
             $message .= " Không thể check-in: " . implode(', ', $failed);
         }
 
+        if ($updated > 0) {
+            $this->logBulkCheckinActivity($request->appointment_ids, auth()->user());
+        }
+
         return back()->with('success', $message);
+    }
+
+    protected function logBulkCheckinActivity(array $ids, $user)
+    {
+            if (function_exists('activity')) {
+                try {
+                    call_user_func('activity')->causedBy($user)->withProperties(['ids' => $ids])->log('Nhân viên check-in hàng loạt');
+                } catch (\Throwable $e) {
+                    \Log::warning('Activity log bulk check-in failed: ' . $e->getMessage());
+                }
+            }
     }
 }

@@ -90,6 +90,15 @@
                                 <!-- Chuyên khoa -->
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Chuyên khoa <span class="text-danger">*</span></label>
+                                    @if(!empty($chuyenKhoaList) && $chuyenKhoaList->isNotEmpty())
+                                        <select id="chuyen_khoa_select" class="form-control form-control-lg mb-2">
+                                            <option value="">-- Chọn chuyên khoa --</option>
+                                            @foreach($chuyenKhoaList as $ck)
+                                                <option value="{{ $ck }}" @selected(old('chuyen_khoa') == $ck)>{{ $ck }}</option>
+                                            @endforeach
+                                        </select>
+                                        <small class="text-muted d-block mb-2">Chọn một chuyên khoa từ danh sách hoặc nhập thủ công bên dưới.</small>
+                                    @endif
                                     <input type="text" name="chuyen_khoa"
                                         class="form-control form-control-lg @error('chuyen_khoa') is-invalid @enderror"
                                         value="{{ old('chuyen_khoa') }}" placeholder="VD: Tim mạch, Nội tiết, Nhi khoa..."
@@ -207,6 +216,21 @@
                 preview.src = url;
                 preview.style.display = 'block';
             });
+
+            // Nếu có dropdown chuyên khoa, đồng bộ giá trị vào input text
+            const ckSelect = document.getElementById('chuyen_khoa_select');
+            const ckInput = document.querySelector('input[name="chuyen_khoa"]');
+            if (ckSelect && ckInput) {
+                ckSelect.addEventListener('change', function () {
+                    if (this.value) ckInput.value = this.value;
+                });
+                // set initial value nếu có lựa chọn cũ
+                if (ckInput.value) {
+                    // try to select matching option
+                    const opt = Array.from(ckSelect.options).find(o => o.value === ckInput.value);
+                    if (opt) opt.selected = true;
+                }
+            }
         });
     </script>
 @endsection

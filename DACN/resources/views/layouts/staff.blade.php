@@ -258,7 +258,7 @@
                 <i class="bi bi-grid-fill me-1"></i> Dashboard
             </div>
             <a href="{{ route('staff.dashboard') }}"
-               class="menu-item {{ request()->routeIs('staff.dashboard') ? 'active' : '' }}">
+                class="menu-item {{ request()->routeIs('staff.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-speedometer2"></i>
                 <span>Tổng quan</span>
             </a>
@@ -268,34 +268,95 @@
                 <i class="bi bi-person-badge-fill me-1"></i> Tiếp tân
             </div>
             <a href="{{ route('staff.checkin.index') }}"
-               class="menu-item {{ request()->routeIs('staff.checkin.*') ? 'active' : '' }}">
+                class="menu-item {{ request()->routeIs('staff.checkin.*') ? 'active' : '' }}">
                 <i class="bi bi-person-check-fill"></i>
                 <span>Check-in Bệnh nhân</span>
             </a>
             <a href="{{ route('staff.queue.index') }}"
-               class="menu-item {{ request()->routeIs('staff.queue.*') ? 'active' : '' }}">
+                class="menu-item {{ request()->routeIs('staff.queue.*') ? 'active' : '' }}">
                 <i class="bi bi-people-fill"></i>
                 <span>Quản lý Hàng đợi</span>
+            </a>
+
+            <a href="{{ route('staff.taikham.index') }}"
+                class="menu-item {{ request()->routeIs('staff.taikham.*') ? 'active' : '' }}">
+                <i class="bi bi-calendar-check"></i>
+                <span>Tái khám</span>
             </a>
 
             {{-- Schedule Section --}}
             <div class="menu-group-title mt-3">
                 <i class="bi bi-calendar-week-fill me-1"></i> Lịch làm việc
             </div>
-            <a href="{{ route('staff.dashboard') }}#lich"
-               class="menu-item">
+            <a href="{{ route('staff.dashboard') }}#lich" class="menu-item">
                 <i class="bi bi-calendar3"></i>
                 <span>Lịch của tôi</span>
+            </a>
+
+            {{-- Technician Section --}}
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-clipboard-data-fill me-1"></i> Kỹ thuật viên
+            </div>
+
+            <a href="{{ route('staff.xetnghiem.pending') }}"
+                class="menu-item {{ request()->routeIs('staff.xetnghiem.*') ? 'active' : '' }}">
+                <i class="fas fa-flask"></i>
+                <span>Xét nghiệm</span>
+            </a>
+
+            <a href="{{ route('staff.theodoithaiky.index') }}"
+                class="menu-item {{ request()->routeIs('staff.theodoithaiky.*') ? 'active' : '' }}">
+                <i class="fas fa-baby"></i>
+                <span>Theo dõi thai kỳ</span>
+            </a>
+
+            <a href="{{ route('staff.sieuam.pending') }}"
+                class="menu-item {{ request()->routeIs('staff.sieuam.*') ? 'active' : '' }}">
+                <i class="fas fa-notes-medical"></i>
+                <span>Siêu âm</span>
+            </a>
+
+            <a href="{{ route('staff.xquang.pending') }}"
+                class="menu-item {{ request()->routeIs('staff.xquang.*') ? 'active' : '' }}">
+                <i class="fas fa-x-ray"></i>
+                <span>X-Quang</span>
+            </a>
+
+            <a href="{{ route('staff.noisoi.pending') }}"
+                class="menu-item {{ request()->routeIs('staff.noisoi.*') ? 'active' : '' }}">
+                <i class="fas fa-stethoscope"></i>
+                <span>Nội soi</span>
+            </a>
+
+            {{-- Pharmacy Section --}}
+            <div class="menu-group-title mt-3">
+                <i class="bi bi-capsule-pill me-1"></i> Dược
+            </div>
+
+            <a href="{{ route('staff.donthuoc.pending') }}"
+                class="menu-item {{ request()->routeIs('staff.donthuoc.*') ? 'active' : '' }}">
+                <i class="fas fa-prescription-bottle-alt"></i>
+                <span>Cấp thuốc</span>
             </a>
 
             {{-- Profile Section --}}
             <div class="menu-group-title mt-3">
                 <i class="bi bi-person-fill me-1"></i> Cá nhân
             </div>
-            <a href="{{ route('profile.edit') }}"
-               class="menu-item">
+            <a href="{{ route('profile.edit') }}" class="menu-item">
                 <i class="bi bi-person-gear"></i>
                 <span>Hồ sơ của tôi</span>
+            </a>
+            <a href="{{ route('staff.notifications.index') }}"
+                class="menu-item {{ request()->routeIs('staff.notifications.*') ? 'active' : '' }}">
+                <i class="bi bi-bell-fill"></i>
+                <span>Thông báo</span>
+                @php
+                    $unreadNotifications = auth()->user()->unreadNotifications()->count();
+                @endphp
+                @if ($unreadNotifications > 0)
+                    <span class="badge bg-danger rounded-pill ms-auto">{{ $unreadNotifications }}</span>
+                @endif
             </a>
         </nav>
     </aside>
@@ -313,9 +374,8 @@
 
             <div class="topbar-user">
                 <div class="dropdown">
-                    <button class="btn btn-link text-decoration-none d-flex align-items-center gap-2"
-                            type="button"
-                            data-bs-toggle="dropdown">
+                    <button class="btn btn-link text-decoration-none d-flex align-items-center gap-2" type="button"
+                        data-bs-toggle="dropdown">
                         <div class="user-avatar">
                             {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                         </div>
@@ -332,7 +392,9 @@
                                 <i class="bi bi-person-gear me-2"></i>Hồ sơ của tôi
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -380,6 +442,7 @@
 
     {{-- Scripts --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @stack('scripts')
 
     <script>
@@ -400,6 +463,51 @@
                 sidebar.classList.remove('show');
             }
         });
+
+        // Realtime notifications polling
+        let lastUnreadCount = 0;
+
+        function updateSidebarBadge(count) {
+            const sidebarBadge = document.querySelector('.staff-sidebar .badge');
+            if (sidebarBadge) {
+                if (count > 0) {
+                    sidebarBadge.textContent = count;
+                    sidebarBadge.style.display = 'inline-block';
+                } else {
+                    sidebarBadge.style.display = 'none';
+                }
+            }
+        }
+
+        async function fetchUnreadCount() {
+            try {
+                const response = await fetch('/notifications/unread-count', {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
+                            'content') || ''
+                    },
+                    credentials: 'same-origin'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const currentCount = data.count;
+
+                    if (currentCount !== lastUnreadCount) {
+                        updateSidebarBadge(currentCount);
+                        lastUnreadCount = currentCount;
+                    }
+                }
+            } catch (error) {
+                console.log('Error fetching unread count:', error);
+            }
+        }
+
+        // Initial fetch and poll every 200ms for ultra-fast realtime
+        fetchUnreadCount();
+        setInterval(fetchUnreadCount, 200);
     </script>
 
 </body>

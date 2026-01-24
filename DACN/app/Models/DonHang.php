@@ -14,13 +14,14 @@ class DonHang extends Model
 
     protected $fillable = [
         'ma_don_hang', 'user_id', 'coupon_id', 'tong_tien', 'giam_gia', 'thanh_toan',
-        'trang_thai', 'trang_thai_thanh_toan', 'dia_chi_giao', 'sdt_nguoi_nhan', 'ghi_chu',
-        'ngay_dat', 'ngay_giao_du_kien'
+        'trang_thai', 'trang_thai_thanh_toan', 'phuong_thuc_thanh_toan', 'dia_chi_giao',
+        'sdt_nguoi_nhan', 'ghi_chu', 'ngay_dat', 'ngay_giao_du_kien', 'thanh_toan_at'
     ];
 
     protected $casts = [
         'ngay_dat' => 'datetime',
         'ngay_giao_du_kien' => 'datetime',
+        'thanh_toan_at' => 'datetime',
     ];
 
     protected static function booted()
@@ -55,6 +56,11 @@ class DonHang extends Model
     public function items()
     {
         return $this->hasMany(DonHangItem::class);
+    }
+
+    public function thanhToans()
+    {
+        return $this->morphMany(ThanhToan::class, 'payable');
     }
 
     public function recalculateTotal(): void

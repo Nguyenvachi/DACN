@@ -35,8 +35,7 @@
                     <!-- Messages Area -->
                     <div class="card-body bg-light" style="flex: 1; overflow-y: auto;" id="chatMessages">
                         @forelse($conversation->messages as $message)
-                            <div
-                                class="mb-3 d-flex {{ $message->user_id == auth()->id() ? 'justify-content-end' : 'justify-content-start' }}"
+                            <div class="mb-3 d-flex {{ $message->user_id == auth()->id() ? 'justify-content-end' : 'justify-content-start' }}"
                                 data-message-id="{{ $message->id }}">
                                 <div style="max-width: 70%;">
                                     @if ($message->user_id != auth()->id())
@@ -123,6 +122,7 @@
     </div>
 
     @push('scripts')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <script>
             $(document).ready(function() {
                 var lastMessageId = {{ $conversation->messages->last()->id ?? 0 }};
@@ -249,7 +249,8 @@
                     var bgClass = isMyMessage ? 'bg-primary text-white' : 'bg-white';
                     var userName = message.user ? message.user.name : 'User';
 
-                    var messageHtml = '<div class="mb-3 d-flex ' + alignClass + '" data-message-id="' + message.id + '">';
+                    var messageHtml = '<div class="mb-3 d-flex ' + alignClass + '" data-message-id="' + message.id +
+                        '">';
                     messageHtml += '<div style="max-width: 70%;">';
 
                     if (!isMyMessage) {
@@ -257,20 +258,28 @@
                     }
 
                     if (message.noi_dung) {
-                        messageHtml += '<div class="p-3 rounded ' + bgClass + '">' + escapeHtml(message.noi_dung) + '</div>';
+                        messageHtml += '<div class="p-3 rounded ' + bgClass + '">' + escapeHtml(message.noi_dung) +
+                            '</div>';
                     }
 
                     if (message.file_path) {
                         var fileUrl = '{{ asset('storage') }}/' + message.file_path;
                         if (message.file_type === 'image') {
-                            messageHtml += '<div class="mt-2"><img src="' + fileUrl + '" class="img-thumbnail" style="max-width: 300px;"></div>';
+                            messageHtml += '<div class="mt-2"><img src="' + fileUrl +
+                                '" class="img-thumbnail" style="max-width: 300px;"></div>';
                         } else {
-                            messageHtml += '<div class="mt-2"><a href="' + fileUrl + '" target="_blank" class="btn btn-sm ' + (isMyMessage ? 'btn-light' : 'btn-outline-secondary') + '">';
-                            messageHtml += '<i class="bi bi-file-earmark"></i> ' + (message.file_name || 'File') + '</a></div>';
+                            messageHtml += '<div class="mt-2"><a href="' + fileUrl +
+                                '" target="_blank" class="btn btn-sm ' + (isMyMessage ? 'btn-light' :
+                                    'btn-outline-secondary') + '">';
+                            messageHtml += '<i class="bi bi-file-earmark"></i> ' + (message.file_name || 'File') +
+                                '</a></div>';
                         }
                     }
 
-                    var time = new Date(message.created_at).toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
+                    var time = new Date(message.created_at).toLocaleTimeString('vi-VN', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
                     messageHtml += '<div class="small text-muted mt-1 ' + (isMyMessage ? 'text-end' : '') + '">' + time;
                     if (isMyMessage && message.is_read) {
                         messageHtml += ' <i class="bi bi-check2-all text-primary"></i>';
@@ -289,7 +298,9 @@
                         '"': '&quot;',
                         "'": '&#039;'
                     };
-                    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+                    return text.replace(/[&<>"']/g, function(m) {
+                        return map[m];
+                    });
                 }
 
                 // Bổ sung: Real-time polling tối ưu 500ms với check duplicate

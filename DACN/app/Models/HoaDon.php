@@ -25,10 +25,13 @@ class HoaDon extends Model
         'status',
         'phuong_thuc',
         'ghi_chu',
+        'coupon_id',
+        'giam_gia',
     ];
 
     protected $casts = [
         'tong_tien' => 'decimal:2',
+        'giam_gia' => 'decimal:2',
         'so_tien_da_thanh_toan' => 'decimal:2',
         'so_tien_con_lai' => 'decimal:2',
         'so_tien_da_hoan' => 'decimal:2',
@@ -92,15 +95,21 @@ class HoaDon extends Model
         $this->so_tien_con_lai = max(0, $tongTien - $tienThuc);
 
         // Xác định status dựa trên số tiền thực
+        // Lưu ý: thứ tự các điều kiện quan trọng để xử lý đúng các kịch bản
+        // - Nếu đã hoàn >= đã thanh toán => toàn bộ tiền đã bị hoàn
+        // - Nếu số tiền thực >= tổng tiền => đã thanh toán đủ (kể cả khi có hoàn một phần trước đó)
+        // - Nếu có hoàn nhưng vẫn còn tiền thực dương => hoàn một phần
+        // - Nếu chỉ thanh toán một phần => partial
+        // - Ngược lại => unpaid
         if ($daHoan >= $daThanh && $daHoan > 0) {
             $this->status = 'refunded'; // Đã hoàn toàn bộ
             $this->trang_thai = self::STATUS_REFUNDED_VN;
-        } elseif ($daHoan > 0 && $tienThuc > 0) {
-            $this->status = 'partial_refund'; // Hoàn một phần, còn tiền thực
-            $this->trang_thai = self::STATUS_PARTIAL_REFUND_VN;
         } elseif ($tienThuc >= $tongTien && $tongTien > 0) {
             $this->status = 'paid'; // Đã thanh toán đủ
             $this->trang_thai = self::STATUS_PAID_VN;
+        } elseif ($daHoan > 0 && $tienThuc > 0) {
+            $this->status = 'partial_refund'; // Hoàn một phần, còn tiền thực
+            $this->trang_thai = self::STATUS_PARTIAL_REFUND_VN;
         } elseif ($tienThuc > 0 && $tienThuc < $tongTien) {
             $this->status = 'partial'; // Thanh toán một phần
             $this->trang_thai = self::STATUS_PARTIAL_VN;

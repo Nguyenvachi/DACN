@@ -21,6 +21,9 @@
         @csrf
         @method('put')
 
+        {{-- Hidden username for accessibility / password managers --}}
+        <input type="text" name="username" value="{{ old('email', auth()->user()->email ?? '') }}" autocomplete="username" class="d-none" aria-hidden="true" tabindex="-1">
+
         {{-- Mật khẩu hiện tại --}}
         <div>
             <x-input-label for="current_password" :value="__('Mật khẩu hiện tại')" class="font-semibold" />
@@ -54,7 +57,7 @@
         {{-- BUTTON --}}
         <div class="flex items-center gap-4">
             <x-primary-button
-                class="bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-400 text-white rounded-lg px-4 py-2">
+                class="bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 transition rounded-lg px-4 py-2">
                 {{ __('Lưu thay đổi') }}
             </x-primary-button>
 

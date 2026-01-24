@@ -78,7 +78,7 @@
                         <li class="nav-item">
                             <span class="nav-link">Xin chào, {{ auth()->user()->name }}</span>
                         </li>
-                        @if (auth()->user()->role === 'patient')
+                        @if (auth()->check() && auth()->user()->isPatient())
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('patient.lichhen.index') }}">
                                     <i class="fas fa-calendar-alt me-1"></i>Lịch Hẹn

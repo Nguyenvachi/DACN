@@ -40,7 +40,8 @@ class ShopController extends Controller
         } else {
             $cart[$id] = [
                 'ten_thuoc' => $thuoc->ten,
-                'gia' => $thuoc->gia_tham_khao ?? 0,
+                // Dùng accessor `gia_ban` (đã thêm vào model Thuoc) để đồng bộ giá hiển thị
+                'gia' => $thuoc->gia_ban ?? ($thuoc->gia_tham_khao ?? 0),
                 'so_luong' => 1,
                 'hinh_anh' => $thuoc->hinh_anh ?? null,
             ];
@@ -114,7 +115,9 @@ class ShopController extends Controller
             'dia_chi_giao' => 'required|string|max:255',
             'sdt_nguoi_nhan' => 'required|string|max:15',
             'ghi_chu' => 'nullable|string',
-            'coupon_code' => 'nullable|string|exists:coupons,ma',
+            'payment_method' => 'required|in:cod,online',
+            // Bảng coupons dùng cột `ma_giam_gia` theo schema
+            'coupon_code' => 'nullable|string|exists:coupons,ma_giam_gia',
         ]);
 
         $cart = session()->get('cart', []);
@@ -130,7 +133,8 @@ class ShopController extends Controller
 
         $couponId = null;
         if ($request->coupon_code) {
-            $coupon = Coupon::where('ma', $request->coupon_code)
+            // Sử dụng cột `ma_giam_gia` theo cấu trúc DB
+            $coupon = Coupon::where('ma_giam_gia', $request->coupon_code)
                 ->where('kich_hoat', true)
                 ->first();
 
@@ -139,6 +143,7 @@ class ShopController extends Controller
             }
         }
 
+        // Tạo đơn hàng tạm thời
         $donHang = DonHang::create([
             'user_id' => auth()->id(),
             'coupon_id' => $couponId,
@@ -148,33 +153,48 @@ class ShopController extends Controller
             'dia_chi_giao' => $request->dia_chi_giao,
             'sdt_nguoi_nhan' => $request->sdt_nguoi_nhan,
             'ghi_chu' => $request->ghi_chu,
-            'trang_thai' => 'cho_xac_nhan',
-            'trang_thai_thanh_toan' => 'chua_thanh_toan',
+            // Lưu theo enum định nghĩa trong migration (chuỗi tiếng Việt)
+            'trang_thai' => 'Chờ xử lý',
+            'trang_thai_thanh_toan' => $request->payment_method === 'online' ? 'Đang thanh toán' : 'Chưa thanh toán',
             'ngay_dat' => now(),
         ]);
 
-        // Lưu items
+        // Lưu items (sử dụng cột `don_gia` tương ứng migration)
         foreach ($cart as $thuocId => $item) {
             $donHang->items()->create([
                 'thuoc_id' => $thuocId,
                 'so_luong' => $item['so_luong'],
-                'gia' => $item['gia'],
+                'don_gia' => $item['gia'],
             ]);
         }
 
-        // Giảm số lần sử dụng coupon
+        // Tăng số lần đã sử dụng coupon (model có method tangSuDung)
         if ($couponId) {
             $coupon = Coupon::find($couponId);
-            if ($coupon->so_lan_su_dung) {
-                $coupon->decrement('so_lan_su_dung');
+            if ($coupon) {
+                $coupon->tangSuDung();
             }
         }
 
-        // Xóa giỏ hàng
-        session()->forget('cart');
+        // Xử lý theo phương thức thanh toán
+        if ($request->payment_method === 'online') {
+            // Xóa giỏ hàng sau khi tạo đơn hàng
+            session()->forget('cart');
 
-        return redirect()->route('patient.shop.order-success', $donHang->id)
-            ->with('success', 'Đặt hàng thành công!');
+            // Nếu có gateway (vnpay/momo) từ nút nhanh, truyền thông tin để auto submit ở trang payment
+            if ($request->gateway) {
+                session()->flash('auto_gateway', $request->gateway);
+            }
+
+            // Chuyển hướng đến trang thanh toán
+            return redirect()->route('patient.shop.payment', $donHang->id);
+        } else {
+            // COD: Xóa giỏ hàng và chuyển đến trang thành công
+            session()->forget('cart');
+
+            return redirect()->route('patient.shop.order-success', $donHang->id)
+                ->with('success', 'Đặt hàng thành công!');
+        }
     }
 
     public function orderSuccess($id)
@@ -214,14 +234,25 @@ class ShopController extends Controller
     {
         abort_if($donHang->user_id !== auth()->id(), 403);
 
-        if ($donHang->trang_thai !== 'cho_xac_nhan') {
+        if ($donHang->trang_thai !== 'Chờ xử lý') {
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng này');
         }
 
-        $donHang->update(['trang_thai' => 'da_huy']);
+        $donHang->update(['trang_thai' => 'Đã hủy']);
 
         return redirect()->route('patient.shop.orders')
             ->with('success', 'Đã hủy đơn hàng thành công');
+    }
+
+    public function payment(DonHang $donHang)
+    {
+        abort_if($donHang->user_id !== auth()->id(), 403);
+
+        if ($donHang->trang_thai_thanh_toan !== 'Đang thanh toán') {
+            return redirect()->route('patient.shop.order-detail', $donHang);
+        }
+
+        return view('patient.shop.payment', compact('donHang'));
     }
 }
 

@@ -111,6 +111,46 @@
                 </a>
             </li>
 
+            {{-- 5.1. SIÊU ÂM - Quản lý siêu âm --}}
+            <li>
+                <a href="{{ route('doctor.sieuam.index') }}">
+                    <i class="fas fa-notes-medical"></i>
+                    <span>Siêu âm</span>
+                </a>
+            </li>
+
+            {{-- 5.2. X-QUANG - Quản lý X-Quang --}}
+            <li>
+                <a href="{{ route('doctor.xquang.index') }}">
+                    <i class="fas fa-x-ray"></i>
+                    <span>X-Quang</span>
+                </a>
+            </li>
+
+            {{-- 5.3. NỘI SOI - Quản lý Nội soi --}}
+            <li>
+                <a href="{{ route('doctor.noisoi.index') }}">
+                    <i class="fas fa-stethoscope"></i>
+                    <span>Nội soi</span>
+                </a>
+            </li>
+
+            {{-- 5.4. THEO DÕI THAI KỲ - Theo dõi sức khỏe thai kỳ --}}
+            <li>
+                <a href="{{ route('doctor.theodoithaiky.index') }}">
+                    <i class="fas fa-baby"></i>
+                    <span>Theo dõi thai kỳ</span>
+                </a>
+            </li>
+
+            {{-- 5.5. TÁI KHÁM - Theo dõi tái khám --}}
+            <li>
+                <a href="{{ route('doctor.taikham.index') }}">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Tái khám</span>
+                </a>
+            </li>
+
             {{-- 6. LỊCH LÀM VIỆC --}}
             <li>
                 <a href="{{ route('doctor.calendar.index') }}">
@@ -129,6 +169,20 @@
                     @endphp
                     @if($unreadMessages > 0)
                         <span class="sidebar-badge">{{ $unreadMessages }}</span>
+                    @endif
+                </a>
+            </li>
+
+            {{-- 8. THÔNG BÁO --}}
+            <li>
+                <a href="{{ route('doctor.notifications.index') }}">
+                    <i class="fas fa-bell"></i>
+                    <span>Thông báo</span>
+                    @php
+                        $unreadNotifications = auth()->user()->unreadNotifications()->count();
+                    @endphp
+                    @if($unreadNotifications > 0)
+                        <span class="sidebar-badge sidebar-badge-pulse">{{ $unreadNotifications }}</span>
                     @endif
                 </a>
             </li>
@@ -239,6 +293,49 @@
                 bsAlert.close();
             });
         }, 5000);
+
+        // Realtime notifications polling
+        let lastUnreadCount = 0;
+        function updateSidebarBadge(count) {
+            const sidebarBadge = document.querySelector('.doctor-sidebar .sidebar-badge');
+            if (sidebarBadge) {
+                if (count > 0) {
+                    sidebarBadge.textContent = count;
+                    sidebarBadge.style.display = 'inline-block';
+                } else {
+                    sidebarBadge.style.display = 'none';
+                }
+            }
+        }
+
+        async function fetchUnreadCount() {
+            try {
+                const response = await fetch('/notifications/unread-count', {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    credentials: 'same-origin'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const currentCount = data.count;
+
+                    if (currentCount !== lastUnreadCount) {
+                        updateSidebarBadge(currentCount);
+                        lastUnreadCount = currentCount;
+                    }
+                }
+            } catch (error) {
+                console.log('Error fetching unread count:', error);
+            }
+        }
+
+        // Initial fetch and poll every 200ms for ultra-fast realtime
+        fetchUnreadCount();
+        setInterval(fetchUnreadCount, 200);
     </script>
 
     {{-- DataTables Scripts Stack (removed duplicate scripts stack to avoid double-binding events) --}}

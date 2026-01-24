@@ -25,6 +25,60 @@ body { font-family: var(--vc-font); color: #1f2937; }
 /* Form */
 .form-control-lg { padding: .65rem .9rem; border-radius: 10px; }
 
+/* Form controls: unified appearance for inputs across layouts */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea,
+.form-control,
+.form-control-lg {
+  padding: .65rem .9rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  font-size: 0.95rem;
+  color: #1f2937;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus,
+.form-control:focus {
+  border-color: var(--vc-primary);
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(16,185,129,0.06);
+}
+
+/* Make inputs full-width when inside cards/forms */
+.vc-card input[type="text"],
+.vc-card input[type="email"],
+.vc-card input[type="password"],
+.vc-card select,
+.vc-card textarea,
+.vc-card .form-control {
+  width: 100%;
+  display: block;
+}
+
+/* Specific: ensure doctor layout uses same input appearance */
+.doctor-main input[type="text"],
+.doctor-main input[type="email"],
+.doctor-main input[type="password"],
+.doctor-main select,
+.doctor-main textarea,
+.doctor-main .form-control {
+  background: #f8fafc;
+  border-color: #e5e7eb;
+  border-radius: 8px;
+}
+
 /* Section title */
 .vc-section-title { font-size: 1.8rem; font-weight:800; color:var(--vc-primary); }
 
@@ -37,4 +91,96 @@ body { font-family: var(--vc-font); color: #1f2937; }
   .vc-section-title{ font-size:1.4rem; }
 }
 
+/* Avatar helpers: uniform modern crop */
+.avatar-card {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 220px;
+  overflow: hidden;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.vc-avatar-sm { width:48px; height:48px; border-radius:50%; overflow:hidden; display:inline-block; }
+.vc-avatar-sm img{ width:100%; height:100%; object-fit:cover; }
+
+.avatar-img[src=""] { display:none; }
+
+/* Remove padding around doctor images */
+.doctor-card .doctor-image {
+    padding: 0 !important;
+    background: transparent !important;
+    height: auto;
+    display: block;
+}
+
+/* Make avatar-card display the full image */
+.doctor-card .avatar-card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: unset;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
+}
+
+/* SHOW IMAGE FULL — NO CROP */
+.doctor-card .avatar-card .avatar-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain !important;   /* <-- full ảnh */
+    object-position: center top;
+    display: block;
+    max-height: 700px;
+}
+
+@media (max-width: 576px) {
+  .avatar-card { max-height: 160px; aspect-ratio: 3 / 2; }
+}
+
+/* FIX: Hiển thị full ảnh bác sĩ, không cắt mặt */
+.doctor-card .doctor-image {
+    padding: 0 !important;
+    background: transparent !important;
+    height: auto !important;
+}
+
+.doctor-card .avatar-card {
+    width: 100%;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    height: auto !important;
+    aspect-ratio: unset !important;
+    overflow: visible !important;
+}
+
+.doctor-card .avatar-card .avatar-img {
+    width: 100%;
+    height: auto !important;
+    object-fit: contain !important;
+    object-position: top center !important;
+    display: block;
+    max-height: none !important; /* Không giới hạn chiều cao */
+}
+
 /* End design-system-unified.css */
+
+/* Fix CSS warning: Add text-size-adjust for better browser support */
+* {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}

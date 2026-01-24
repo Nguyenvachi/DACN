@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles; // ✅ Giữ dòng này
+use Illuminate\Support\Facades\Log;
 
 /**
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -20,6 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'avatar',
         'password',
         'role', // Vẫn giữ cột role để lưu legacy nếu cần
         'so_dien_thoai',
@@ -63,9 +65,9 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        // Spatie sẽ tự check trong bảng phân quyền
-        return $this->hasRole('admin') || $this->role === 'admin';
-        // (Thêm || check cột cũ để tương thích ngược dữ liệu cũ chưa migrate)
+        // Check cả cột role và Spatie role
+        $result = $this->role === 'admin' || $this->hasRole('admin') || $this->hasRole('super-admin');
+        return $result;
     }
 
     public function isDoctor(): bool
@@ -81,6 +83,17 @@ class User extends Authenticatable
     public function isPatient(): bool
     {
         return $this->hasRole('patient') || $this->role === 'patient';
+    }
+
+    /**
+     * Return a canonical role key ('admin','doctor','staff','patient') for route generation
+     */
+    public function roleKey(): string
+    {
+        if ($this->isAdmin()) return 'admin';
+        if ($this->isDoctor()) return 'doctor';
+        if ($this->isStaff()) return 'staff';
+        return $this->role ?: 'patient';
     }
 
     // --- CÁC RELATIONSHIP KHÁC GIỮ NGUYÊN ---
@@ -109,9 +122,20 @@ class User extends Authenticatable
         return $this->hasOne(\App\Models\NotificationPreference::class);
     }
 
-    public function danhGias()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function notifications()
     {
-        return $this->hasMany(DanhGia::class);
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
     }
 
     public function conversationsAsBenhNhan()
@@ -124,10 +148,6 @@ class User extends Authenticatable
         return $this->hasMany(Message::class);
     }
 
-    public function familyMembers()
-    {
-        return $this->hasMany(FamilyMember::class);
-    }
 
     public function lichHens()
     {
@@ -137,6 +157,17 @@ class User extends Authenticatable
     public function benhAns()
     {
         return $this->hasMany(\App\Models\BenhAn::class, 'user_id');
+    }
+
+    // THÊM: Relationship với Siêu âm (File con: app/Models/SieuAm.php)
+    public function sieuAms()
+    {
+        return $this->hasMany(\App\Models\SieuAm::class, 'user_id');
+    }
+
+    public function xetNghiems()
+    {
+        return $this->hasMany(\App\Models\XetNghiem::class, 'user_id');
     }
 
     public function hoaDons()
@@ -189,9 +220,17 @@ class User extends Authenticatable
                 if (! $user->roles()->exists()) {
                     $roleToAssign = $user->role ?: 'patient';
                     $user->assignRole($roleToAssign);
+                    Log::info('Assigned role ' . $roleToAssign . ' to user #' . $user->id);
                 }
             } catch (\Throwable $e) {
-                \Log::warning('Failed to assign role to user #' . ($user->id ?? 'unknown') . ': ' . $e->getMessage());
+                Log::error('Failed to assign role to user #' . ($user->id ?? 'unknown') . ': ' . $e->getMessage());
+                // THÊM: Retry với role mặc định nếu thất bại
+                try {
+                    $user->assignRole('patient');
+                    Log::info('Fallback: Assigned patient role to user #' . $user->id);
+                } catch (\Throwable $e2) {
+                    Log::critical('Critical: Could not assign any role to user #' . ($user->id ?? 'unknown'));
+                }
             }
         });
     }

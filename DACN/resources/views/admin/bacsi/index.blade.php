@@ -77,7 +77,8 @@
                         <thead class="table-light">
                             <tr>
                                 <th width="5%">ID</th>
-                                <th width="15%">Họ Tên</th>
+                                <th width="6%">Ảnh</th>
+                                <th width="14%">Họ Tên</th>
                                 <th width="13%">Chuyên Khoa</th>
                                 <th width="12%">Số điện thoại</th>
                                 <th width="15%">Email</th>
@@ -90,6 +91,16 @@
                             @forelse($bacSis as $bacSi)
                                 <tr>
                                     <td>{{ $bacSi->id }}</td>
+                                    <td style="vertical-align: middle;">
+                                        @if(!empty($bacSi->avatar_url))
+                                            <img src="{{ $bacSi->avatar_url }}" alt="{{ $bacSi->ho_ten }}" class="rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+                                        @else
+                                            <div class="rounded-circle bg-light text-muted d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                                                <i class="bi bi-person"></i>
+                                            </div>
+                                        @endif
+                                    </td>
+
                                     <td><strong>{{ $bacSi->ho_ten }}</strong></td>
 
                                     <!-- =========================

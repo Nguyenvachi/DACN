@@ -8,6 +8,8 @@ class ThanhToan extends Model
 {
     protected $fillable = [
         'hoa_don_id',
+        'payable_type',
+        'payable_id',
         'provider',
         'so_tien',
         'tien_te',
@@ -27,5 +29,10 @@ class ThanhToan extends Model
     public function hoaDon()
     {
         return $this->belongsTo(HoaDon::class);
+    }
+
+    public function payable()
+    {
+        return $this->morphTo();
     }
 }

@@ -47,7 +47,7 @@
                         </a>
                     </li>
                     @auth
-                        @if(auth()->user()->role === 'patient')
+                        @if(auth()->check() && auth()->user()->isPatient())
                             <li>
                                 <a href="{{ route('patient.shop.index') }}">
                                     <i class="fas fa-pills me-2"></i>Mua Thuốc Online

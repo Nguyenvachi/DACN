@@ -1,5 +1,5 @@
 @php
-    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+    $isPatient = auth()->check() && auth()->user()->isPatient();
 @endphp
 
 @if($isPatient)
@@ -26,7 +26,7 @@
 
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                         <p class="font-bold">✓ Đặt lịch hẹn thành công!</p>
-                        <p class="text-sm">Chúng tôi đã ghi nhận lịch hẹn của bạn. Vui lòng kiểm tra email để biết thêm chi tiết.</p>
+                        <p class="text-sm">Chúng tôi đã ghi nhận lịch hẹn của bạn. Vui lòng thanh toán trong vòng 15 phút, nếu không lịch hẹn sẽ tự động hủy.</p>
                     </div>
 
                     <div class="flex gap-4">

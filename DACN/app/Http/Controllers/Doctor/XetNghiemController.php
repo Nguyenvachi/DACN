@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Doctor;
 use App\Http\Controllers\Controller;
 use App\Models\XetNghiem;
 use App\Models\BenhAn;
+use App\Models\LoaiXetNghiem;
 use App\Services\MedicalWorkflowService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -36,30 +37,22 @@ class XetNghiemController extends Controller
 
         // Kiểm tra trạng thái lịch hẹn
         $lichHen = $benhAn->lichHen;
-        if (!$lichHen || !in_array($lichHen->trang_thai, [\App\Models\LichHen::STATUS_IN_PROGRESS_VN, \App\Models\LichHen::STATUS_COMPLETED_VN])) {
+        if (!$lichHen || !in_array($lichHen->trang_thai, ['Đang khám', 'Hoàn thành'])) {
             return redirect()->back()->with('error', 'Chỉ chỉ định xét nghiệm khi đang khám hoặc đã hoàn thành');
         }
 
-        // Các loại xét nghiệm thường gặp
-        $loaiXetNghiem = [
-            'Xét nghiệm máu',
-            'Xét nghiệm nước tiểu',
-            'X-quang',
-            'Siêu âm',
-            'CT Scan',
-            'MRI',
-            'Điện tim',
-            'Nội soi',
-            'Sinh thiết',
-            'Khác',
-        ];
+        // Load danh mục loại xét nghiệm từ DB (Admin quản lý)
+        $loaiXetNghiems = LoaiXetNghiem::query()
+            ->where('active', true)
+            ->orderBy('ten')
+            ->get();
 
         // Lấy danh sách xét nghiệm đã chỉ định
         $existingTests = XetNghiem::where('benh_an_id', $benhAn->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('doctor.xetnghiem.create', compact('benhAn', 'loaiXetNghiem', 'existingTests'));
+        return view('doctor.xetnghiem.create', compact('benhAn', 'loaiXetNghiems', 'existingTests'));
     }
 
     /**
@@ -73,16 +66,34 @@ class XetNghiemController extends Controller
             abort(403);
         }
 
+        // Hỗ trợ cả 2 kiểu:
+        // - mới: loai_xet_nghiem_id (chọn từ danh mục)
+        // - cũ: loai (string) để không phá luồng/đã tồn tại
         $request->validate([
-            'loai' => 'required|string|max:255',
+            'loai_xet_nghiem_id' => 'nullable|integer|exists:loai_xet_nghiems,id',
+            'loai' => 'nullable|string|max:255',
             'mo_ta' => 'nullable|string|max:1000',
         ], [
-            'loai.required' => 'Vui lòng chọn loại xét nghiệm',
+            'loai_xet_nghiem_id.exists' => 'Loại xét nghiệm không hợp lệ',
         ]);
 
+        if (!$request->filled('loai_xet_nghiem_id') && !$request->filled('loai')) {
+            return redirect()->back()->withInput()->with('error', 'Vui lòng chọn loại xét nghiệm');
+        }
+
         try {
+            $loaiXN = null;
+            if ($request->filled('loai_xet_nghiem_id')) {
+                $loaiXN = LoaiXetNghiem::findOrFail($request->loai_xet_nghiem_id);
+            }
+
+            $loaiText = $loaiXN ? $loaiXN->ten : (string) $request->loai;
+            $gia = $loaiXN ? (float) $loaiXN->gia : 0;
+
             $xetNghiem = $this->workflowService->createTestRequest($benhAn, [
-                'loai' => $request->loai,
+                'loai_xet_nghiem_id' => $loaiXN?->id,
+                'loai' => $loaiText,
+                'gia' => $gia,
                 'mo_ta' => $request->mo_ta,
             ]);
 
@@ -90,7 +101,7 @@ class XetNghiemController extends Controller
 
             return redirect()
                 ->route('doctor.benhan.edit', $benhAn->id)
-                ->with('success', "Đã chỉ định xét nghiệm \"{$request->loai}\". Kỹ thuật viên sẽ thực hiện và upload kết quả.");
+                ->with('success', "Đã chỉ định xét nghiệm \"{$loaiText}\". Kỹ thuật viên sẽ thực hiện và upload kết quả.");
 
         } catch (\Exception $e) {
             Log::error("Lỗi khi chỉ định xét nghiệm: " . $e->getMessage());
@@ -120,13 +131,15 @@ class XetNghiemController extends Controller
     }
 
     /**
-     * Upload kết quả xét nghiệm (cho Kỹ thuật viên)
-     * Note: Có thể chuyển sang StaffController nếu cần
+     * Upload kết quả xét nghiệm (cho Kỹ thuật viên hoặc Bác sĩ)
+     * Note: Có thể dùng cho cả Doctor và Staff
      */
     public function uploadResult(Request $request, XetNghiem $xetNghiem)
     {
         $request->validate([
-            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240', // Max 10MB
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'nhan_xet' => 'nullable|string|max:1000',
+            'ket_qua' => 'nullable|string|max:2000',
         ], [
             'file.required' => 'Vui lòng chọn file kết quả',
             'file.mimes' => 'File phải là PDF hoặc ảnh (JPG, PNG)',
@@ -134,18 +147,13 @@ class XetNghiemController extends Controller
         ]);
 
         try {
-            // Xóa file cũ nếu có
-            if ($xetNghiem->file_path) {
-                Storage::disk($xetNghiem->disk ?? 'private')->delete($xetNghiem->file_path);
-            }
-
-            // Upload file mới
-            $file = $request->file('file');
-            $filename = 'xetnghiem_' . $xetNghiem->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('xet-nghiem', $filename, 'private');
-
-            // Cập nhật xét nghiệm
-            $this->workflowService->updateTestResult($xetNghiem, $path, 'private');
+            // Sử dụng service để upload kết quả
+            $this->workflowService->uploadTestResult(
+                $xetNghiem,
+                $request->file('file'),
+                $request->nhan_xet,
+                $request->ket_qua
+            );
 
             Log::info("Đã upload kết quả xét nghiệm #{$xetNghiem->id}");
 
@@ -175,10 +183,10 @@ class XetNghiemController extends Controller
         }
 
         if (!$xetNghiem->file_path) {
-            return redirect()->back()->with('error', 'Chưa có kết quả xét nghiệm');
+            abort(404, 'Chưa có file kết quả');
         }
 
-        $disk = $xetNghiem->disk ?? 'private';
+        $disk = $xetNghiem->disk ?? 'benh_an_private';
 
         if (!Storage::disk($disk)->exists($xetNghiem->file_path)) {
             return redirect()->back()->with('error', 'File không tồn tại');
@@ -205,7 +213,7 @@ class XetNghiemController extends Controller
 
         // Xóa file nếu có
         if ($xetNghiem->file_path) {
-            Storage::disk($xetNghiem->disk ?? 'private')->delete($xetNghiem->file_path);
+            Storage::disk($xetNghiem->disk ?? 'benh_an_private')->delete($xetNghiem->file_path);
         }
 
         $xetNghiem->delete();
@@ -219,16 +227,94 @@ class XetNghiemController extends Controller
 
     /**
      * Danh sách xét nghiệm của bác sĩ
+     * Parent file: app/Http/Controllers/Doctor/XetNghiemController.php
      */
-    public function index()
+    public function index(Request $request)
     {
         $bacSi = auth()->user()->bacSi;
 
-        $xetNghiems = XetNghiem::where('bac_si_id', $bacSi->id)
-            ->with(['benhAn.user', 'benhAn.lichHen'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        // Query cơ bản
+        $query = XetNghiem::byBacSi($bacSi->id)
+            ->with(['benhAn.user', 'benhAn.lichHen']);
 
-        return view('doctor.xetnghiem.index', compact('xetNghiems'));
+        // Filter theo trạng thái
+        if ($request->filled('status')) {
+            $query->where('trang_thai', $request->status);
+        }
+
+        // Filter theo loại xét nghiệm
+        if ($request->filled('loai')) {
+            $query->where('loai', 'LIKE', '%' . $request->loai . '%');
+        }
+
+        // Filter theo ngày
+        if ($request->filled('from_date')) {
+            $query->whereDate('ngay_chi_dinh', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('ngay_chi_dinh', '<=', $request->to_date);
+        }
+
+        // Tìm kiếm theo tên bệnh nhân
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('benhAn.user', function($q) use ($search) {
+                $q->where('ho_ten', 'LIKE', '%' . $search . '%')
+                  ->orWhere('so_dien_thoai', 'LIKE', '%' . $search . '%');
+            });
+        }
+
+        $xetNghiems = $query->orderBy('created_at', 'desc')->paginate(20);
+
+        // Thống kê
+        $stats = [
+            'total' => XetNghiem::byBacSi($bacSi->id)->count(),
+            'pending' => XetNghiem::byBacSi($bacSi->id)->pending()->count(),
+            'processing' => XetNghiem::byBacSi($bacSi->id)->where('trang_thai', 'processing')->count(),
+            'completed' => XetNghiem::byBacSi($bacSi->id)->completed()->count(),
+        ];
+
+        // Các loại xét nghiệm (cho filter)
+        $loaiXetNghiems = XetNghiem::byBacSi($bacSi->id)
+            ->distinct()
+            ->pluck('loai')
+            ->filter()
+            ->sort();
+
+        return view('doctor.xetnghiem.index', compact('xetNghiems', 'stats', 'loaiXetNghiems'));
+    }
+
+    /**
+     * Thêm nhận xét của bác sĩ vào kết quả xét nghiệm
+     * Parent file: app/Http/Controllers/Doctor/XetNghiemController.php
+     */
+    public function addComment(Request $request, XetNghiem $xetNghiem)
+    {
+        $bacSi = auth()->user()->bacSi;
+
+        if ($xetNghiem->bac_si_id !== $bacSi->id) {
+            abort(403);
+        }
+
+        $request->validate([
+            'nhan_xet_bac_si' => 'required|string|max:2000',
+        ], [
+            'nhan_xet_bac_si.required' => 'Vui lòng nhập nhận xét',
+        ]);
+
+        try {
+            $this->workflowService->updateDoctorComment($xetNghiem, $request->nhan_xet_bac_si);
+
+            return redirect()
+                ->back()
+                ->with('success', 'Đã thêm nhận xét thành công');
+
+        } catch (\Exception $e) {
+            Log::error("Lỗi khi thêm nhận xét: " . $e->getMessage());
+
+            return redirect()
+                ->back()
+                ->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
     }
 }

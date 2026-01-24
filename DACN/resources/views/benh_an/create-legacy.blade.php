@@ -1,5 +1,5 @@
 @php
-    $role = auth()->user()->role ?? 'patient';
+    $role = auth()->check() ? auth()->user()->roleKey() : 'patient';
 
     // Quy tắc: mỗi role có layout riêng — mapping rõ ràng, không phụ thuộc route
     $layout = match ($role) {
@@ -36,7 +36,7 @@
             <div class="card-body">
 
                 <form method="POST" enctype="multipart/form-data"
-                    action="{{ route(auth()->user()->role === 'admin' ? 'admin.benhan.store' : 'doctor.benhan.store') }}">
+                    action="{{ route(auth()->check() && auth()->user()->isAdmin() ? 'admin.benhan.store' : 'doctor.benhan.store') }}">
 
                     @csrf
 
@@ -46,7 +46,7 @@
                     {{-- BUTTONS --}}
                     <div class="mt-4 d-flex justify-content-end gap-2">
 
-                        <a href="{{ route(auth()->user()->role === 'admin' ? 'admin.benhan.index' : 'doctor.benhan.index') }}"
+                        <a href="{{ route(auth()->check() && auth()->user()->isAdmin() ? 'admin.benhan.index' : 'doctor.benhan.index') }}"
                             class="btn btn-light">
                             <i class="bi bi-arrow-left"></i> Quay lại
                         </a>

@@ -95,17 +95,17 @@ class AuthenticatedSessionController extends Controller
             $intendedUrl = redirect()->intended()->getTargetUrl();
             $redirectUrl = null;
 
-            if ($intendedUrl === url('/dashboard') || $intendedUrl === url('/')) {
-                if ($authenticatedUser->role === 'admin') {
-                    $redirectUrl = route('admin.dashboard');
-                } elseif ($authenticatedUser->role === 'doctor') {
-                    $redirectUrl = route('doctor.calendar.index');
-                } elseif ($authenticatedUser->role === 'staff') {
-                    $redirectUrl = route('staff.dashboard');
-                } elseif ($authenticatedUser->role === 'patient') {
-                    $redirectUrl = route('dashboard');
+                if ($intendedUrl === url('/dashboard') || $intendedUrl === url('/')) {
+                    if ($authenticatedUser->isAdmin()) {
+                        $redirectUrl = route('admin.dashboard');
+                    } elseif ($authenticatedUser->isDoctor()) {
+                        $redirectUrl = route('doctor.calendar.index');
+                    } elseif ($authenticatedUser->isStaff()) {
+                        $redirectUrl = route('staff.dashboard');
+                    } elseif ($authenticatedUser->isPatient()) {
+                        $redirectUrl = route('dashboard');
+                    }
                 }
-            }
 
             if (!$redirectUrl) {
                 $redirectUrl = RouteServiceProvider::HOME;

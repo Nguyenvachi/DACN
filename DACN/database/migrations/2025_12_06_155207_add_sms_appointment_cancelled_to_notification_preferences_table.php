@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('notification_preferences', function (Blueprint $table) {
-            $table->boolean('sms_appointment_cancelled')->default(false)->after('sms_appointment_confirmed');
-        });
+        if (!Schema::hasColumn('notification_preferences', 'sms_appointment_cancelled')) {
+            Schema::table('notification_preferences', function (Blueprint $table) {
+                $table->boolean('sms_appointment_cancelled')->default(false)->after('sms_appointment_confirmed');
+            });
+        }
     }
 
     /**

@@ -12,4 +12,10 @@ class ChuyenKhoa extends Model
     {
         return $this->belongsToMany(\App\Models\BacSi::class, 'bac_si_chuyen_khoa');
     }
+
+    // Quan hệ many-to-many với dịch vụ
+    public function dichVus()
+    {
+        return $this->belongsToMany(\App\Models\DichVu::class, 'chuyen_khoa_dich_vu');
+    }
 }

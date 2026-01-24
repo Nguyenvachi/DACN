@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
@@ -33,9 +34,9 @@ use App\Http\Controllers\PatientDashboardController;
 Route::get('/', function () {
     // Nếu đã đăng nhập, redirect theo role
     if (auth()->check()) {
-        $user = auth()->user();
-        $role = strtolower($user->role ?? '');
-
+            /** @var \App\Models\User $user */
+            $user = auth()->user();
+            $role = strtolower($user->roleKey());
         return match ($role) {
             'admin' => redirect()->route('admin.dashboard'),
             'doctor' => redirect()->route('doctor.dashboard'),
@@ -55,8 +56,9 @@ Route::get('/home', function () {
         return redirect()->route('login');
     }
 
+    /** @var \App\Models\User $user */
     $user = auth()->user();
-    $role = strtolower($user->role ?? '');
+    $role = strtolower($user->roleKey());
 
     return match ($role) {
         'admin' => redirect()->route('admin.dashboard'),
@@ -80,11 +82,16 @@ Route::post('/payment/momo-ipn', [PaymentController::class, 'momoIpn'])->name('m
 // Nhóm tất cả các route yêu cầu xác thực (đăng nhập)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/api/bac-si/{bacSi}/thoi-gian-trong/{ngay}', [LichHenController::class, 'getAvailableTimeSlots'])->name('api.bacsi.slots');
+    Route::post('/api/slot-lock', [\App\Http\Controllers\Public\SlotLockController::class, 'lock'])->name('api.slot.lock');
+    Route::post('/api/slot-unlock', [\App\Http\Controllers\Public\SlotLockController::class, 'unlock'])->name('api.slot.unlock');
+    Route::post('/api/slot-check', [\App\Http\Controllers\Public\SlotLockController::class, 'check'])->name('api.slot.check');
+    Route::post('/api/coupons/validate', [\App\Http\Controllers\Patient\CouponController::class, 'check'])->name('api.coupons.validate');
 
     // Dashboard - Tự động chuyển theo role
     Route::get('/dashboard', function () {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
-        $role = strtolower($user->role ?? '');
+        $role = strtolower($user->roleKey());
 
         return match ($role) {
             'admin' => redirect()->route('admin.dashboard'),
@@ -111,6 +118,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dat-lich/{bacSi}', [LichHenController::class, 'create'])->name('lichhen.create');
     Route::post('/luu-lich-hen', [LichHenController::class, 'store'])->name('lichhen.store');
     Route::get('/dat-lich-thanh-cong', function () { return view('public.lichhen.success'); })->name('lichhen.thanhcong');
+
+    // Patient payment page (choose payment method) - used by invoice view
+    Route::get('/payment/{lichHen}', [\App\Http\Controllers\Patient\PaymentController::class, 'show'])->name('patient.payment');
+    Route::post('/payment/{lichHen}/skip', [\App\Http\Controllers\Patient\PaymentController::class, 'skip'])->name('patient.payment.skip');
 
     // Lịch rảnh bác sĩ theo tuần
     Route::get('/bac-si/{bacSi}/lich-ranh', [App\Http\Controllers\Public\BacSiScheduleController::class, 'weeklySchedule'])->name('public.bacsi.schedule');
@@ -164,6 +175,14 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
     // 3. NHÓM DỊCH VỤ & CHUYÊN KHOA (Cần quyền view-services)
     Route::middleware(['permission:view-services'])->group(function () {
         Route::resource('dich-vu', DichVuController::class)->parameters(['dich-vu' => 'dichVu']);
+        Route::resource('loai-xet-nghiem', \App\Http\Controllers\LoaiXetNghiemController::class)
+            ->parameters(['loai-xet-nghiem' => 'loaiXetNghiem']);
+        Route::resource('loai-sieu-am', \App\Http\Controllers\Admin\LoaiSieuAmController::class)
+            ->parameters(['loai-sieu-am' => 'loaiSieuAm']);
+        Route::resource('loai-x-quang', \App\Http\Controllers\Admin\LoaiXQuangController::class)
+            ->parameters(['loai-x-quang' => 'loaiXQuang']);
+        Route::resource('loai-noi-soi', \App\Http\Controllers\Admin\LoaiNoiSoiController::class)
+            ->parameters(['loai-noi-soi' => 'loaiNoiSoi']);
         Route::resource('chuyen-khoa', \App\Http\Controllers\Admin\ChuyenKhoaController::class)->names([
             'index' => 'chuyenkhoa.index', 'create' => 'chuyenkhoa.create', 'store' => 'chuyenkhoa.store', 'show' => 'chuyenkhoa.show', 'edit' => 'chuyenkhoa.edit', 'update' => 'chuyenkhoa.update', 'destroy' => 'chuyenkhoa.destroy',
         ])->parameters(['chuyen-khoa' => 'chuyenkhoa']);
@@ -229,11 +248,50 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::resource('benh-an', BenhAnController::class)->names([
             'index' => 'benhan.index', 'create' => 'benhan.create', 'store' => 'benhan.store', 'show' => 'benhan.show', 'edit' => 'benhan.edit', 'update' => 'benhan.update', 'destroy' => 'benhan.destroy',
         ]);
+        // Expose export-pdf for admin area so view can call route('admin.benhan.exportPdf')
+        Route::get('benh-an/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('benhan.exportPdf');
         Route::post('benh-an/{benh_an}/files', [BenhAnController::class, 'uploadFile'])->name('benhan.files.upload');
         Route::delete('benh-an/{benh_an}/files/{file}', [BenhAnController::class, 'destroyFile'])->name('benhan.files.destroy');
         Route::get('benh-an/{benh_an}/audit', [BenhAnController::class, 'auditLog'])->name('benhan.audit');
         Route::get('benh-an/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('benhan.files.download')->middleware('signed');
         Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
+        Route::get('benh-an/sieu-am/{sieuAm}/download', [BenhAnController::class, 'downloadSieuAm'])->name('benhan.sieuam.download')->middleware('signed');
+        Route::get('benh-an/x-quang/{xQuang}/download', [BenhAnController::class, 'downloadXQuang'])->name('benhan.xquang.download')->middleware('signed');
+        Route::get('benh-an/noi-soi/{noiSoi}/download', [BenhAnController::class, 'downloadNoiSoi'])->name('benhan.noisoi.download')->middleware('signed');
+
+        // QUẢN LÝ XÉT NGHIỆM (Admin) - Parent file: routes/web.php
+        Route::prefix('xet-nghiem')->name('xetnghiem.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\XetNghiemController::class, 'index'])->name('index');
+            Route::get('/statistics', [\App\Http\Controllers\Admin\XetNghiemController::class, 'statistics'])->name('statistics');
+            Route::get('/export', [\App\Http\Controllers\Admin\XetNghiemController::class, 'export'])->name('export');
+            Route::get('/{xetNghiem}', [\App\Http\Controllers\Admin\XetNghiemController::class, 'show'])->name('show');
+        });
+
+        // QUẢN LÝ X-QUANG (Admin) - Parent file: routes/web.php
+        Route::prefix('x-quang')->name('xquang.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\XQuangController::class, 'index'])->name('index');
+            Route::get('/statistics', [\App\Http\Controllers\Admin\XQuangController::class, 'statistics'])->name('statistics');
+            Route::get('/export', [\App\Http\Controllers\Admin\XQuangController::class, 'export'])->name('export');
+            Route::get('/{xQuang}', [\App\Http\Controllers\Admin\XQuangController::class, 'show'])->name('show');
+        });
+
+        // QUẢN LÝ NỘI SOI (Admin) - Parent file: routes/web.php
+        Route::prefix('noi-soi')->name('noisoi.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\NoiSoiController::class, 'index'])->name('index');
+            Route::get('/{noiSoi}', [\App\Http\Controllers\Admin\NoiSoiController::class, 'show'])->name('show');
+        });
+
+        // THEO DÕI THAI KỲ - Quản lý theo dõi thai kỳ (Admin) - Parent file: routes/web.php
+        Route::prefix('theo-doi-thai-ky')->name('theodoithaiky.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\TheoDoiThaiKyController::class, 'index'])->name('index');
+            Route::get('/{theoDoiThaiKy}', [\App\Http\Controllers\Admin\TheoDoiThaiKyController::class, 'show'])->name('show');
+        });
+
+        // TÁI KHÁM - Quản lý tái khám (Admin) - Parent file: routes/web.php
+        Route::prefix('tai-kham')->name('taikham.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\TaiKhamController::class, 'index'])->name('index');
+            Route::get('/{taiKham}', [\App\Http\Controllers\Admin\TaiKhamController::class, 'show'])->name('show');
+        });
     });
 
     // 6. NHÓM HÓA ĐƠN (Cần quyền view-invoices)
@@ -332,11 +390,13 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::delete('baiviet/{id}/force-delete', [\App\Http\Controllers\Admin\BaiVietController::class, 'forceDelete'])->name('baiviet.forceDelete');
     });
 
-    // Tools
-    Route::post('/tools/reminders/tomorrow', [\App\Http\Controllers\Admin\ReminderController::class, 'sendTomorrow'])->name('tools.reminders.tomorrow');
-    Route::post('/tools/reminders/next-3-hours', [\App\Http\Controllers\Admin\ReminderController::class, 'sendNext3Hours'])->name('tools.reminders.next3h');
-    Route::get('/tools/test-mail', [\App\Http\Controllers\Admin\TestMailController::class, 'index'])->name('tools.test-mail');
-    Route::post('/tools/test-mail/{id}', [\App\Http\Controllers\Admin\TestMailController::class, 'send'])->name('tools.test-mail.send');
+    // THÊM: Tools với middleware gửi thông báo
+    Route::middleware('can:send-reminders')->group(function () {
+        Route::post('/tools/reminders/tomorrow', [\App\Http\Controllers\Admin\ReminderController::class, 'sendTomorrow'])->name('tools.reminders.tomorrow');
+        Route::post('/tools/reminders/next-3-hours', [\App\Http\Controllers\Admin\ReminderController::class, 'sendNext3Hours'])->name('tools.reminders.next3h');
+        Route::get('/tools/test-mail', [\App\Http\Controllers\Admin\TestMailController::class, 'index'])->name('tools.test-mail');
+        Route::post('/tools/test-mail/{id}', [\App\Http\Controllers\Admin\TestMailController::class, 'send'])->name('tools.test-mail.send');
+    });
 
     // API Calendar
     Route::prefix('calendar/api')->group(function () {
@@ -348,7 +408,21 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('admin')->name(
         Route::get('events2', [CalendarController::class, 'apiEventsV2'])->name('calendar.api.events2');
         Route::get('stats2', [CalendarController::class, 'apiStatsV2'])->name('calendar.api.stats2');
     });
+
+    // THÊM: Siêu âm Management cho Admin (File mẹ: routes/web.php)
+    Route::prefix('sieu-am')->name('sieuam.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\SieuAmController::class, 'index'])->name('index');
+        Route::get('/statistics', [\App\Http\Controllers\Admin\SieuAmController::class, 'statistics'])->name('statistics');
+        Route::get('/report', [\App\Http\Controllers\Admin\SieuAmController::class, 'report'])->name('report');
+        Route::get('/{sieuAm}', [\App\Http\Controllers\Admin\SieuAmController::class, 'show'])->name('show')->whereNumber('sieuAm');
+        Route::delete('/{sieuAm}', [\App\Http\Controllers\Admin\SieuAmController::class, 'destroy'])->name('destroy')->whereNumber('sieuAm');
+        Route::get('/{sieuAm}/download', [\App\Http\Controllers\Admin\SieuAmController::class, 'download'])->name('download')->whereNumber('sieuAm');
+    });
+
+    // NOTE: Legacy "dịch vụ cận lâm sàng" module has been removed.
 });
+
+
 
 // // Staff Dashboard
 // Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->group(function () {
@@ -371,6 +445,16 @@ Route::middleware(['auth', 'permission:view-dashboard'])->prefix('staff')->name(
     Route::get('/queue', [\App\Http\Controllers\Staff\QueueController::class, 'index'])->name('queue.index');
     Route::post('/queue/call-next/{lichhen}', [\App\Http\Controllers\Staff\QueueController::class, 'callNext'])->name('queue.call_next');
     Route::get('/queue/realtime-data', [\App\Http\Controllers\Staff\QueueController::class, 'realtimeData'])->name('queue.realtime');
+
+    // Siêu âm - Ultrasound Management for Staff (File mẹ: routes/web.php)
+    Route::prefix('sieu-am')->name('sieuam.')->group(function () {
+        Route::get('/pending', [\App\Http\Controllers\Staff\SieuAmController::class, 'pending'])->name('pending');
+        Route::get('/completed', [\App\Http\Controllers\Staff\SieuAmController::class, 'completed'])->name('completed');
+        Route::get('/{sieuAm}', [\App\Http\Controllers\Staff\SieuAmController::class, 'show'])->name('show');
+        Route::get('/{sieuAm}/upload', [\App\Http\Controllers\Staff\SieuAmController::class, 'uploadForm'])->name('upload.form');
+        Route::post('/{sieuAm}/upload', [\App\Http\Controllers\Staff\SieuAmController::class, 'upload'])->name('upload');
+        Route::post('/{sieuAm}/processing', [\App\Http\Controllers\Staff\SieuAmController::class, 'markAsProcessing'])->name('processing');
+    });
 });
 
 // Doctor
@@ -391,7 +475,12 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::get('benh-an/{benh_an}/audit', [BenhAnController::class, 'auditLog'])->name('benhan.audit');
     Route::get('benh-an/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('benhan.exportPdf');
     Route::get('benh-an/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('benhan.files.download')->middleware('signed');
-    Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('benhan.xetnghiem.download')->middleware('signed');
+    Route::get('benh-an/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('patient.benhan.xetnghiem.download')->middleware('signed');
+    Route::get('benh-an/sieu-am/{sieuAm}/download', [BenhAnController::class, 'downloadSieuAm'])->name('benhan.sieuam.download')->middleware('signed');
+    Route::get('benh-an/x-quang/{xQuang}/download', [BenhAnController::class, 'downloadXQuang'])->name('benhan.xquang.download')->middleware('signed');
+    Route::get('benh-an/noi-soi/{noiSoi}/download', [BenhAnController::class, 'downloadNoiSoi'])->name('benhan.noisoi.download')->middleware('signed');
+    // NOTE: Legacy "assign-service" for removed CLS module has been removed.
+
 
     // Doctor Chat Routes (File mẹ: routes/web.php)
     Route::prefix('chat')->name('chat.')->group(function () {
@@ -399,6 +488,13 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
         Route::get('/{conversation}', [\App\Http\Controllers\Doctor\ChatController::class, 'show'])->name('show');
         Route::post('/{conversation}/send', [\App\Http\Controllers\Doctor\ChatController::class, 'sendMessage'])->name('send');
         Route::get('/{conversation}/messages', [\App\Http\Controllers\Doctor\ChatController::class, 'getMessages'])->name('messages');
+    });
+
+    // Thông báo - Notification Management (File mẹ: routes/web.php)
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\NotificationController::class, 'index'])->name('index');
+        Route::get('/fetch-new', [\App\Http\Controllers\Doctor\NotificationController::class, 'fetchNewNotifications'])->name('fetch-new');
+        Route::post('/{notification}/mark-read', [\App\Http\Controllers\Doctor\NotificationController::class, 'markRead'])->name('mark-read');
     });
 
     // Lịch hẹn - Appointment Management (File mẹ: routes/web.php)
@@ -435,8 +531,61 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
         Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'store'])->name('store');
         Route::get('/{xetNghiem}/show', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'show'])->name('show');
         Route::post('/{xetNghiem}/upload', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'uploadResult'])->name('upload');
+        Route::post('/{xetNghiem}/comment', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'addComment'])->name('comment');
         Route::get('/{xetNghiem}/download', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'download'])->name('download');
         Route::delete('/{xetNghiem}', [\App\Http\Controllers\Doctor\XetNghiemController::class, 'destroy'])->name('destroy');
+    });
+
+    // X-Quang - X-Ray Management (File mẹ: routes/web.php)
+    Route::prefix('x-quang')->name('xquang.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\XQuangController::class, 'index'])->name('index');
+        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\XQuangController::class, 'create'])->name('create');
+        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\XQuangController::class, 'store'])->name('store');
+        Route::get('/{xQuang}/show', [\App\Http\Controllers\Doctor\XQuangController::class, 'show'])->name('show');
+        Route::post('/{xQuang}/upload', [\App\Http\Controllers\Doctor\XQuangController::class, 'uploadResult'])->name('upload');
+        Route::post('/{xQuang}/comment', [\App\Http\Controllers\Doctor\XQuangController::class, 'addComment'])->name('comment');
+        Route::get('/{xQuang}/download', [\App\Http\Controllers\Doctor\XQuangController::class, 'download'])->name('download');
+        Route::delete('/{xQuang}', [\App\Http\Controllers\Doctor\XQuangController::class, 'destroy'])->name('destroy');
+    });
+
+    // Nội soi - Endoscopy Management (File mẹ: routes/web.php)
+    Route::prefix('noi-soi')->name('noisoi.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'index'])->name('index');
+        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'create'])->name('create');
+        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'store'])->name('store');
+        Route::get('/{noiSoi}/show', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'show'])->name('show');
+        Route::post('/{noiSoi}/upload', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'uploadResult'])->name('upload');
+        Route::get('/{noiSoi}/download', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'download'])->name('download');
+        Route::delete('/{noiSoi}', [\App\Http\Controllers\Doctor\NoiSoiController::class, 'destroy'])->name('destroy');
+    });
+
+    // Theo dõi thai kỳ - Pregnancy Tracking (File mẹ: routes/web.php)
+    Route::prefix('theo-doi-thai-ky')->name('theodoithaiky.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'index'])->name('index');
+        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'create'])->name('create');
+        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'store'])->name('store');
+        Route::get('/{theoDoiThaiKy}/show', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'show'])->name('show');
+        Route::patch('/{theoDoiThaiKy}', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'update'])->name('update');
+        Route::get('/{theoDoiThaiKy}/download', [\App\Http\Controllers\Doctor\TheoDoiThaiKyController::class, 'download'])->name('download');
+    });
+
+    // Tái khám - Follow-up appointment tracking (File mẹ: routes/web.php)
+    Route::prefix('tai-kham')->name('taikham.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\TaiKhamController::class, 'index'])->name('index');
+        Route::get('/{benhAn}/create', [\App\Http\Controllers\Doctor\TaiKhamController::class, 'create'])->name('create');
+        Route::post('/{benhAn}', [\App\Http\Controllers\Doctor\TaiKhamController::class, 'store'])->name('store');
+        Route::get('/{taiKham}/show', [\App\Http\Controllers\Doctor\TaiKhamController::class, 'show'])->name('show');
+        Route::patch('/{taiKham}', [\App\Http\Controllers\Doctor\TaiKhamController::class, 'update'])->name('update');
+    });
+
+    // Siêu âm - Ultrasound Management (File mẹ: routes/web.php)
+    Route::prefix('sieu-am')->name('sieuam.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Doctor\SieuAmController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Doctor\SieuAmController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Doctor\SieuAmController::class, 'store'])->name('store');
+        Route::get('/{sieuAm}', [\App\Http\Controllers\Doctor\SieuAmController::class, 'show'])->name('show');
+        Route::patch('/{sieuAm}/review', [\App\Http\Controllers\Doctor\SieuAmController::class, 'updateReview'])->name('update-review');
+        Route::get('/{sieuAm}/download', [\App\Http\Controllers\Doctor\SieuAmController::class, 'download'])->name('download');
     });
 });
 
@@ -444,6 +593,8 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
 Route::middleware(['auth', 'role:patient'])->group(function () {
     Route::get('/patient/dashboard', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
     Route::get('/dashboard/health', [PatientDashboardController::class, 'index'])->name('patient.dashboard.health');
+    // NOTE: Legacy /service-results has been removed.
+    Route::post('/submit-health-log', [PatientDashboardController::class, 'submitHealthLog'])->name('patient.submit-health-log');
 
     // Patient Lich Hen Routes (RESTful)
     Route::prefix('lich-hen')->name('patient.lichhen.')->group(function () {
@@ -494,6 +645,7 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::delete('/cart/remove/{id}', [\App\Http\Controllers\Patient\ShopController::class, 'removeFromCart'])->name('cart.remove');
         Route::get('/checkout', [\App\Http\Controllers\Patient\ShopController::class, 'checkout'])->name('checkout');
         Route::post('/checkout', [\App\Http\Controllers\Patient\ShopController::class, 'placeOrder'])->name('place-order');
+        Route::get('/payment/{donHang}', [\App\Http\Controllers\Patient\ShopController::class, 'payment'])->name('payment');
         Route::get('/order-success/{id}', [\App\Http\Controllers\Patient\ShopController::class, 'orderSuccess'])->name('order-success');
         // Orders management
         Route::get('/orders', [\App\Http\Controllers\Patient\ShopController::class, 'orders'])->name('orders');
@@ -510,6 +662,13 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::get('/{conversation}/messages', [\App\Http\Controllers\Patient\ChatController::class, 'getMessages'])->name('messages');
     });
 
+    // THÊM: Siêu âm cho Patient (File mẹ: routes/web.php)
+    Route::prefix('sieu-am')->name('patient.sieuam.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\SieuAmController::class, 'index'])->name('index');
+        Route::get('/{sieuAm}', [\App\Http\Controllers\Patient\SieuAmController::class, 'show'])->name('show');
+        Route::get('/{sieuAm}/download', [\App\Http\Controllers\Patient\SieuAmController::class, 'download'])->name('download');
+    });
+
     // Patient Medical Records Routes
     Route::prefix('benh-an')->name('patient.benhan.')->group(function () {
         Route::get('/', [BenhAnController::class, 'index'])->name('index');
@@ -517,6 +676,9 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::get('/{benh_an}/export-pdf', [BenhAnController::class, 'exportPdf'])->name('exportPdf');
         Route::get('/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('files.download')->middleware('signed');
         Route::get('/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('xetnghiem.download')->middleware('signed');
+        Route::get('/sieu-am/{sieuAm}/download', [BenhAnController::class, 'downloadSieuAm'])->name('sieuam.download')->middleware('signed');
+        Route::get('/x-quang/{xQuang}/download', [BenhAnController::class, 'downloadXQuang'])->name('xquang.download')->middleware('signed');
+        Route::get('/noi-soi/{noiSoi}/download', [BenhAnController::class, 'downloadNoiSoi'])->name('noisoi.download')->middleware('signed');
     });
 
     // Patient Invoice/HoaDon Routes
@@ -537,27 +699,51 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
         Route::get('/{xetNghiem}', [\App\Http\Controllers\Patient\XetNghiemController::class, 'show'])->name('show');
     });
 
+    // Patient X-Quang Results Routes (File mẹ: routes/web.php)
+    Route::prefix('x-quang')->name('patient.xquang.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\XQuangController::class, 'index'])->name('index');
+        Route::get('/{xQuang}', [\App\Http\Controllers\Patient\XQuangController::class, 'show'])->name('show');
+    });
+
+    // Patient Nội soi Results Routes (File mẹ: routes/web.php)
+    Route::prefix('noi-soi')->name('patient.noisoi.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\NoiSoiController::class, 'index'])->name('index');
+        Route::get('/{noiSoi}', [\App\Http\Controllers\Patient\NoiSoiController::class, 'show'])->name('show');
+    });
+
+    // THEO DÕI THAI KỲ - Patient pregnancy tracking (File mẹ: routes/web.php)
+    Route::prefix('theo-doi-thai-ky')->name('patient.theodoithaiky.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\TheoDoiThaiKyController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Patient\TheoDoiThaiKyController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Patient\TheoDoiThaiKyController::class, 'store'])->name('store');
+        Route::get('/{theoDoiThaiKy}', [\App\Http\Controllers\Patient\TheoDoiThaiKyController::class, 'show'])->name('show');
+        Route::get('/{theoDoiThaiKy}/download', [\App\Http\Controllers\Patient\TheoDoiThaiKyController::class, 'download'])->name('download');
+    });
+
+    // TÁI KHÁM - Patient follow-up requests (File mẹ: routes/web.php)
+    Route::prefix('tai-kham')->name('patient.taikham.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Patient\TaiKhamController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Patient\TaiKhamController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Patient\TaiKhamController::class, 'store'])->name('store');
+        Route::get('/{taiKham}', [\App\Http\Controllers\Patient\TaiKhamController::class, 'show'])->name('show');
+        Route::post('/{taiKham}/confirm', [\App\Http\Controllers\Patient\TaiKhamController::class, 'confirm'])->name('confirm');
+        Route::post('/{taiKham}/cancel', [\App\Http\Controllers\Patient\TaiKhamController::class, 'cancel'])->name('cancel');
+    });
+
     // Patient Notifications Routes (File mẹ: routes/web.php)
     Route::get('/thong-bao', [\App\Http\Controllers\Patient\NotificationController::class, 'index'])->name('patient.notifications');
+    Route::get('/thong-bao/fetch-new', [\App\Http\Controllers\Patient\NotificationController::class, 'fetchNewNotifications'])->name('patient.notifications.fetch-new');
     Route::post('/thong-bao/mark-all-read', [\App\Http\Controllers\Patient\NotificationController::class, 'markAllRead'])->name('patient.notifications.mark-all-read');
     Route::post('/thong-bao/{notification}/mark-read', [\App\Http\Controllers\Patient\NotificationController::class, 'markRead'])->name('patient.notifications.mark-read');
     Route::delete('/thong-bao/{notification}', [\App\Http\Controllers\Patient\NotificationController::class, 'delete'])->name('patient.notifications.delete');
 
+
+
     // Patient Medical History Routes (File mẹ: routes/web.php)
     Route::get('/lich-su-kham', [\App\Http\Controllers\Patient\LichSuKhamController::class, 'index'])->name('patient.lich-su-kham');
 
-    // Patient Family Members Routes (File mẹ: routes/web.php)
-    Route::prefix('thanh-vien-gia-dinh')->name('patient.family.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Patient\FamilyController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Patient\FamilyController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Patient\FamilyController::class, 'store'])->name('store');
-        Route::get('/{member}/edit', [\App\Http\Controllers\Patient\FamilyController::class, 'edit'])->name('edit');
-        Route::put('/{member}', [\App\Http\Controllers\Patient\FamilyController::class, 'update'])->name('update');
-        Route::delete('/{member}', [\App\Http\Controllers\Patient\FamilyController::class, 'destroy'])->name('destroy');
-    });
-
-    Route::get('/lich-hen/{lichHen}/thanh-toan', [PatientPaymentController::class, 'show'])->name('patient.payment');
-    Route::post('/lich-hen/{lichHen}/thanh-toan/skip', [PatientPaymentController::class, 'skip'])->name('patient.payment.skip');
+    Route::get('/lich-hen/{lichHen}/thanh-toan', [PatientPaymentController::class, 'show'])->name('patient.lichhen.payment');
+    Route::post('/lich-hen/{lichHen}/thanh-toan/skip', [PatientPaymentController::class, 'skip'])->name('patient.lichhen.payment.skip');
 });
 
 // Staff: cho phép nhân viên xem Bệnh án (chỉ read/download)
@@ -567,6 +753,69 @@ Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->grou
         Route::get('/{benh_an}', [BenhAnController::class, 'show'])->name('show');
         Route::get('/file/{file}/download', [BenhAnController::class, 'downloadFile'])->name('files.download')->middleware('signed');
         Route::get('/xet-nghiem/{xetNghiem}/download', [BenhAnController::class, 'downloadXetNghiem'])->name('xetnghiem.download')->middleware('signed');
+        Route::get('/sieu-am/{sieuAm}/download', [BenhAnController::class, 'downloadSieuAm'])->name('sieuam.download')->middleware('signed');
+        Route::get('/x-quang/{xQuang}/download', [BenhAnController::class, 'downloadXQuang'])->name('xquang.download')->middleware('signed');
+        Route::get('/noi-soi/{noiSoi}/download', [BenhAnController::class, 'downloadNoiSoi'])->name('noisoi.download')->middleware('signed');
+    });
+
+    // Thông báo - Notification Management (File mẹ: routes/web.php)
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Staff\NotificationController::class, 'index'])->name('index');
+        Route::get('/fetch-new', [\App\Http\Controllers\Staff\NotificationController::class, 'fetchNewNotifications'])->name('fetch-new');
+        Route::post('/{notification}/mark-read', [\App\Http\Controllers\Staff\NotificationController::class, 'markRead'])->name('mark-read');
+    });
+
+    // ĐƠN THUỐC - Cấp thuốc (Staff)
+    Route::prefix('don-thuoc')->name('donthuoc.')->group(function () {
+        Route::get('/pending', [\App\Http\Controllers\Staff\DonThuocController::class, 'pending'])->name('pending');
+        Route::get('/completed', [\App\Http\Controllers\Staff\DonThuocController::class, 'completed'])->name('completed');
+        Route::get('/{donThuoc}', [\App\Http\Controllers\Staff\DonThuocController::class, 'show'])->name('show');
+        Route::post('/{donThuoc}/dispense', [\App\Http\Controllers\Staff\DonThuocController::class, 'dispense'])->name('dispense');
+    });
+
+    // XÉT NGHIỆM - Quản lý xét nghiệm (Parent file: routes/web.php)
+    Route::prefix('xet-nghiem')->name('xetnghiem.')->group(function () {
+        Route::get('/pending', [\App\Http\Controllers\Staff\XetNghiemController::class, 'pending'])->name('pending');
+        Route::get('/completed', [\App\Http\Controllers\Staff\XetNghiemController::class, 'completed'])->name('completed');
+        Route::get('/{xetNghiem}', [\App\Http\Controllers\Staff\XetNghiemController::class, 'show'])->name('show');
+        Route::get('/{xetNghiem}/upload', [\App\Http\Controllers\Staff\XetNghiemController::class, 'uploadForm'])->name('upload.form');
+        Route::post('/{xetNghiem}/upload', [\App\Http\Controllers\Staff\XetNghiemController::class, 'upload'])->name('upload');
+        Route::post('/{xetNghiem}/processing', [\App\Http\Controllers\Staff\XetNghiemController::class, 'markAsProcessing'])->name('processing');
+    });
+
+    // X-QUANG - Quản lý X-Quang (Parent file: routes/web.php)
+    Route::prefix('x-quang')->name('xquang.')->group(function () {
+        Route::get('/pending', [\App\Http\Controllers\Staff\XQuangController::class, 'pending'])->name('pending');
+        Route::get('/completed', [\App\Http\Controllers\Staff\XQuangController::class, 'completed'])->name('completed');
+        Route::get('/{xQuang}', [\App\Http\Controllers\Staff\XQuangController::class, 'show'])->name('show');
+        Route::get('/{xQuang}/upload', [\App\Http\Controllers\Staff\XQuangController::class, 'uploadForm'])->name('upload.form');
+        Route::post('/{xQuang}/upload', [\App\Http\Controllers\Staff\XQuangController::class, 'upload'])->name('upload');
+        Route::post('/{xQuang}/processing', [\App\Http\Controllers\Staff\XQuangController::class, 'markAsProcessing'])->name('processing');
+    });
+
+    // NỘI SOI - Quản lý Nội soi (Parent file: routes/web.php)
+    Route::prefix('noi-soi')->name('noisoi.')->group(function () {
+        Route::get('/pending', [\App\Http\Controllers\Staff\NoiSoiController::class, 'pending'])->name('pending');
+        Route::get('/completed', [\App\Http\Controllers\Staff\NoiSoiController::class, 'completed'])->name('completed');
+        Route::get('/{noiSoi}', [\App\Http\Controllers\Staff\NoiSoiController::class, 'show'])->name('show');
+        Route::get('/{noiSoi}/upload', [\App\Http\Controllers\Staff\NoiSoiController::class, 'uploadForm'])->name('upload.form');
+        Route::post('/{noiSoi}/upload', [\App\Http\Controllers\Staff\NoiSoiController::class, 'upload'])->name('upload');
+        Route::post('/{noiSoi}/processing', [\App\Http\Controllers\Staff\NoiSoiController::class, 'markAsProcessing'])->name('processing');
+    });
+
+    // THEO DÕI THAI KỲ - Quản lý theo dõi thai kỳ (Staff) - Parent file: routes/web.php
+    Route::prefix('theo-doi-thai-ky')->name('theodoithaiky.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Staff\TheoDoiThaiKyController::class, 'index'])->name('index');
+        Route::get('/{theoDoiThaiKy}', [\App\Http\Controllers\Staff\TheoDoiThaiKyController::class, 'show'])->name('show');
+        Route::patch('/{theoDoiThaiKy}', [\App\Http\Controllers\Staff\TheoDoiThaiKyController::class, 'update'])->name('update');
+    });
+
+    // TÁI KHÁM - Quản lý tái khám (Staff) - Parent file: routes/web.php
+    Route::prefix('tai-kham')->name('taikham.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Staff\TaiKhamController::class, 'index'])->name('index');
+        Route::get('/{taiKham}', [\App\Http\Controllers\Staff\TaiKhamController::class, 'show'])->name('show');
+        Route::post('/{taiKham}/book', [\App\Http\Controllers\Staff\TaiKhamController::class, 'book'])->name('book');
+        Route::patch('/{taiKham}', [\App\Http\Controllers\Staff\TaiKhamController::class, 'update'])->name('update');
     });
 });
 
@@ -580,6 +829,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/benh-an/{benhAn}/don-thuoc', [BenhAnController::class, 'storePrescription'])->name('benhan.donthuoc.store');
     Route::post('/don-thuoc/{donThuoc}/items', [BenhAnController::class, 'addPrescriptionItem'])->name('donthuoc.item.add');
     Route::post('/benh-an/{benhAn}/xet-nghiem', [BenhAnController::class, 'uploadXetNghiem'])->name('benhan.xetnghiem.upload');
+    Route::post('/benh-an/{benhAn}/x-quang', [BenhAnController::class, 'uploadXQuang'])->name('benhan.xquang.upload');
 
     // Patient Profile Routes
     Route::post('/profile/medical', [ProfileController::class, 'updateMedical'])->name('profile.updateMedical');
@@ -601,17 +851,58 @@ Route::get('/doctor/benh-an/xet-nghiem/{xetNghiem}/download', [\App\Http\Control
     ->name('doctor.benhan.xetnghiem.download')
     ->middleware('signed');
 
-Route::get('/patient/benh-an/xet-nghiem/{xetNghiem}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXetNghiem'])
-    ->name('patient.benhan.xetnghiem.download')
-    ->middleware('signed');
+// X-Quang: Alias routes (guarded) để tránh trùng name/path nếu route đã tồn tại trong group role.
+if (! Route::has('doctor.benhan.xquang.download')) {
+    Route::get('/doctor/benh-an/x-quang/{xQuang}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXQuang'])
+        ->name('doctor.benhan.xquang.download')
+        ->middleware('signed');
+}
+
+if (! Route::has('doctor.benhan.noisoi.download')) {
+    Route::get('/doctor/benh-an/noi-soi/{noiSoi}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadNoiSoi'])
+        ->name('doctor.benhan.noisoi.download')
+        ->middleware('signed');
+}
+
+if (! Route::has('staff.benhan.xquang.download')) {
+    Route::get('/staff/benh-an/x-quang/{xQuang}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXQuang'])
+        ->name('staff.benhan.xquang.download')
+        ->middleware('signed');
+}
+
+if (! Route::has('staff.benhan.noisoi.download')) {
+    Route::get('/staff/benh-an/noi-soi/{noiSoi}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadNoiSoi'])
+        ->name('staff.benhan.noisoi.download')
+        ->middleware('signed');
+}
+
+if (! Route::has('patient.benhan.xquang.download')) {
+    Route::get('/patient/benh-an/x-quang/{xQuang}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXQuang'])
+        ->name('patient.benhan.xquang.download')
+        ->middleware('signed');
+}
+
+if (! Route::has('patient.benhan.noisoi.download')) {
+    Route::get('/patient/benh-an/noi-soi/{noiSoi}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadNoiSoi'])
+        ->name('patient.benhan.noisoi.download')
+        ->middleware('signed');
+}
+
+if (! Route::has('admin.benhan.xquang.download')) {
+    Route::get('/admin/benh-an/x-quang/{xQuang}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadXQuang'])
+        ->name('admin.benhan.xquang.download')
+        ->middleware('signed');
+}
+
+if (! Route::has('admin.benhan.noisoi.download')) {
+    Route::get('/admin/benh-an/noi-soi/{noiSoi}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadNoiSoi'])
+        ->name('admin.benhan.noisoi.download')
+        ->middleware('signed');
+}
 
 // Alias routes for file downloads so role-prefixed temporary signed routes resolve
 Route::get('/doctor/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadFile'])
     ->name('doctor.benhan.files.download')
-    ->middleware('signed');
-
-Route::get('/patient/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadFile'])
-    ->name('patient.benhan.files.download')
     ->middleware('signed');
 
 Route::get('/staff/benh-an/file/{file}/download', [\App\Http\Controllers\BenhAnController::class, 'downloadFile'])
@@ -646,3 +937,95 @@ Route::get('/tin-tuc', [\App\Http\Controllers\BlogController::class, 'index'])->
 
 // Sitemap.xml
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
+// THÊM: Route test trực tiếp (bypass middleware)
+Route::get('/test-notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'create'])->middleware('auth')->name('test.notifications');
+
+
+// Gửi thông báo (form + gửi) - CHỈ GIỮ 1 NHÓM, dùng đúng method store
+Route::middleware(['auth', 'can:send-reminders'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/notifications/send', [\App\Http\Controllers\Admin\NotificationController::class, 'create'])->name('notifications.send');
+    Route::post('/notifications/send', [\App\Http\Controllers\Admin\NotificationController::class, 'store'])->name('notifications.send.store');
+});
+
+// Polling route for realtime notifications
+Route::middleware('auth')->get('/notifications/unread-count', function () {
+    return response()->json([
+        'count' => auth()->user()->unreadNotifications()->count()
+    ]);
+})->name('notifications.unread_count'); // <--- Thêm name để quản lý dễ hơn
+
+// Route to get latest notifications for realtime updates
+Route::middleware('auth')->get('/notifications/latest', function (Request $request) {
+    $user = auth()->user();
+    $lastId = $request->query('last_id', 0);
+
+    // ADDED: hỗ trợ cursor theo thời gian để không phụ thuộc so sánh UUID id
+    $lastCreatedAtInput = $request->query('last_created_at');
+    $cursorCreatedAt = null;
+
+    if (!empty($lastCreatedAtInput)) {
+        try {
+            $cursorCreatedAt = Carbon::parse($lastCreatedAtInput);
+        } catch (\Exception $e) {
+            $cursorCreatedAt = null;
+        }
+    }
+
+    // ADDED: nếu last_id là UUID thì suy ra created_at từ DB làm cursor
+    if (!$cursorCreatedAt && is_string($lastId) && preg_match('/^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$/', $lastId)) {
+        $lastNotification = $user->notifications()->where('id', $lastId)->first();
+        if ($lastNotification && $lastNotification->created_at) {
+            $cursorCreatedAt = Carbon::parse($lastNotification->created_at);
+        }
+    }
+
+    // ADDED: ưu tiên query theo created_at để ổn định với UUID
+    if ($cursorCreatedAt) {
+        $notifications = $user->notifications()
+            ->where(function ($q) use ($cursorCreatedAt, $lastId) {
+                $q->where('created_at', '>', $cursorCreatedAt)
+                    ->orWhere(function ($q2) use ($cursorCreatedAt, $lastId) {
+                        $q2->where('created_at', '=', $cursorCreatedAt);
+                        if (is_string($lastId) && !empty($lastId)) {
+                            $q2->where('id', '!=', $lastId);
+                        }
+                    });
+            })
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(function ($notification) {
+                return [
+                    'id' => $notification->id,
+                    'type' => $notification->type,
+                    'data' => $notification->data,
+                    'read_at' => $notification->read_at,
+                    'created_at' => $notification->created_at,
+                    'updated_at' => $notification->updated_at,
+                ];
+            });
+    } else {
+        // GIỮ NGUYÊN logic cũ (fallback) khi last_id là số hoặc không có cursor
+        $notifications = $user->notifications()
+            ->where('id', '>', $lastId)
+            ->orderBy('id', 'asc')
+            ->get()
+            ->map(function ($notification) {
+                return [
+                    'id' => $notification->id,
+                    'type' => $notification->type,
+                    'data' => $notification->data,
+                    'read_at' => $notification->read_at,
+                    'created_at' => $notification->created_at,
+                    'updated_at' => $notification->updated_at,
+                ];
+            });
+    }
+
+    return response()->json([
+        'notifications' => $notifications,
+        'has_new' => $notifications->count() > 0,
+        // ADDED: trả thêm cursor để client nâng cấp dần (không bắt buộc dùng)
+        'last_created_at' => $notifications->last()['created_at'] ?? $lastCreatedAtInput,
+    ]);
+});

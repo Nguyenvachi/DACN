@@ -26,6 +26,18 @@
 
     <div class="row">
         <div class="col-lg-8">
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             {{-- Thông tin bệnh nhân --}}
             <div class="card vc-card mb-4">
                 <div class="card-body">
@@ -66,17 +78,55 @@
 
                         <div class="mb-3">
                             <label class="form-label">Loại xét nghiệm <span class="text-danger">*</span></label>
-                            <select name="loai" class="form-select" required>
-                                <option value="">-- Chọn loại xét nghiệm --</option>
-                                @foreach($loaiXetNghiem as $loai)
-                                <option value="{{ $loai }}" {{ old('loai') === $loai ? 'selected' : '' }}>
-                                    {{ $loai }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('loai')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
+                            @if(isset($loaiXetNghiems) && $loaiXetNghiems->count() > 0)
+                                <select name="loai_xet_nghiem_id" class="form-select" required id="loaiXetNghiem">
+                                    <option value="">-- Chọn loại xét nghiệm --</option>
+                                    @foreach($loaiXetNghiems as $it)
+                                        <option value="{{ $it->id }}"
+                                                data-gia="{{ $it->gia }}"
+                                                data-time="{{ $it->thoi_gian_uoc_tinh }}"
+                                                {{ (string) old('loai_xet_nghiem_id') === (string) $it->id ? 'selected' : '' }}>
+                                            {{ $it->ten }} - {{ number_format($it->gia, 0, ',', '.') }}đ
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <small class="text-muted" id="xnInfo"></small>
+                                @error('loai_xet_nghiem_id')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+
+                                <script>
+                                    (function () {
+                                        const sel = document.getElementById('loaiXetNghiem');
+                                        const info = document.getElementById('xnInfo');
+                                        if (!sel || !info) return;
+
+                                        const render = () => {
+                                            const opt = sel.options[sel.selectedIndex];
+                                            if (!opt || !opt.dataset) {
+                                                info.textContent = '';
+                                                return;
+                                            }
+                                            const gia = opt.dataset.gia;
+                                            const time = opt.dataset.time;
+                                            if (gia && time) {
+                                                info.textContent = `Chi phí: ${parseInt(gia, 10).toLocaleString('vi-VN')}đ | Thời gian: ${time} phút`;
+                                            } else {
+                                                info.textContent = '';
+                                            }
+                                        };
+
+                                        sel.addEventListener('change', render);
+                                        render();
+                                    })();
+                                </script>
+                            @else
+                                {{-- Fallback: nếu chưa có danh mục trong DB, giữ luồng cũ (nhập text) --}}
+                                <input type="text" name="loai" class="form-control" required value="{{ old('loai') }}" placeholder="Nhập loại xét nghiệm">
+                                @error('loai')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            @endif
                         </div>
 
                         <div class="mb-3">

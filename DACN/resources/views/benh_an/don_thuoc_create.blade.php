@@ -1,5 +1,5 @@
 @php
-    $role = $role ?? auth()->user()->role ?? 'patient';
+    $role = $role ?? (auth()->check() ? auth()->user()->roleKey() : 'patient');
     $layout = match ($role) {
         'admin' => 'layouts.admin',
         'doctor' => 'layouts.doctor',

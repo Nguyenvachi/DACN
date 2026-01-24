@@ -24,7 +24,7 @@ class AppointmentReminder extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -46,5 +46,28 @@ class AppointmentReminder extends Notification implements ShouldQueue
             ->line("Thời gian: {$date} {$time}")
             ->action('Xem lịch hẹn của tôi', $url)
             ->line('Nếu bạn cần thay đổi lịch, vui lòng thao tác sớm để đảm bảo khung giờ.');
+    }
+
+    /**
+     * Store a database notification payload so the in-app UI can read title/message/action_url
+     */
+    public function toDatabase(object $notifiable): array
+    {
+        $lh = $this->lichHen;
+        $doctor = optional($lh->bacSi)->ho_ten ?? 'Bác sĩ';
+        $service = optional($lh->dichVu)->ten ?? 'Dịch vụ khám';
+        $date = $lh->ngay_hen;
+        $time = $lh->thoi_gian_hen;
+
+        $title = "Nhắc lịch khám (T-{$this->windowLabel})";
+        $message = "Bạn có lịch khám với {$doctor} - {$service} vào {$date} {$time}.";
+        $actionUrl = url('/lich-hen-cua-toi');
+
+        return [
+            'title' => $title,
+            'message' => $message,
+            'action_url' => $actionUrl,
+            'lich_hen_id' => $lh->id,
+        ];
     }
 }

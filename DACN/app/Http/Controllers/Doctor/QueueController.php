@@ -74,16 +74,20 @@ class QueueController extends Controller
      */
     public function startExamination(Request $request, LichHen $lichHen)
     {
+        // Authorization
+        $this->authorize('startExam', $lichHen);
+
         // Check quyền
         $bacSi = BacSi::where('user_id', auth()->id())->first();
         if (!$bacSi || $lichHen->bac_si_id !== $bacSi->id) {
             return back()->with('error', 'Bạn không có quyền khám bệnh nhân này.');
         }
 
-        // Check trạng thái (phải đã check-in hoặc đã xác nhận)
+        // Check trạng thái (phải đã check-in, đã xác nhận, hoặc đã được gọi vào khám)
         if (!in_array($lichHen->trang_thai, [
             LichHen::STATUS_CHECKED_IN_VN,
-            LichHen::STATUS_CONFIRMED_VN
+            LichHen::STATUS_CONFIRMED_VN,
+            LichHen::STATUS_IN_PROGRESS_VN,
         ])) {
             return back()->with('error', 'Bệnh nhân chưa check-in hoặc lịch hẹn không hợp lệ.');
         }
@@ -101,14 +105,32 @@ class QueueController extends Controller
             ]);
 
             DB::commit();
+            // If it's an AJAX/JSON request, return JSON for the frontend to handle
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đã bắt đầu khám bệnh.',
+                    'lich_hen' => [
+                        'id' => $lichHen->id,
+                        'trang_thai' => $lichHen->trang_thai,
+                    ],
+                    'benh_an' => [
+                        'id' => $benhAn->id,
+                    ],
+                    'redirect' => route('doctor.benhan.edit', $benhAn->id),
+                ]);
+            }
 
-            // Chuyển sang trang edit bệnh án để bác sĩ nhập thông tin
+            // Non-AJAX: redirect to edit
             return redirect()->route('doctor.benhan.edit', $benhAn->id)
                 ->with('success', 'Đã bắt đầu khám bệnh. Vui lòng nhập thông tin khám bệnh.');
 
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error starting examination: ' . $e->getMessage());
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Có lỗi xảy ra: ' . $e->getMessage()], 500);
+            }
             return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
@@ -123,17 +145,25 @@ class QueueController extends Controller
             return back()->with('error', 'Bạn không có quyền check-in cho bệnh nhân này.');
         }
 
+        $this->authorize('checkin', $lichHen);
+
         if ($lichHen->trang_thai !== LichHen::STATUS_CONFIRMED_VN) {
             return back()->with('error', 'Lịch hẹn chưa được xác nhận hoặc đã được xử lý.');
         }
 
         try {
-            $success = $this->workflowService->checkInAppointment($lichHen);
+            $success = $this->workflowService->checkIn($lichHen, auth()->user());
 
             if ($success) {
+                if (request()->wantsJson() || request()->ajax()) {
+                    return response()->json(['success' => true, 'message' => 'Đã check-in thành công.', 'lich_hen' => ['id' => $lichHen->id, 'trang_thai' => $lichHen->trang_thai]]);
+                }
                 return back()->with('success', 'Đã check-in thành công. Bệnh nhân đã vào hàng đợi.');
             }
 
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Không thể check-in.'], 400);
+            }
             return back()->with('error', 'Không thể check-in.');
 
         } catch (\Exception $e) {

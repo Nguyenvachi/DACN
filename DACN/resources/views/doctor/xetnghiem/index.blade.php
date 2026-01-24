@@ -1,3 +1,4 @@
+{{-- Parent file: resources/views/layouts/doctor.blade.php --}}
 @extends('layouts.doctor')
 
 @section('title', 'Danh sách xét nghiệm')
@@ -22,13 +23,13 @@
 
     {{-- Stats Cards --}}
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="vc-card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <p class="text-muted mb-1 small">Tổng xét nghiệm</p>
-                            <h3 class="fw-bold mb-0" style="color: #8b5cf6;">{{ $xetNghiems->total() }}</h3>
+                            <h3 class="fw-bold mb-0" style="color: #8b5cf6;">{{ $stats['total'] }}</h3>
                         </div>
                         <div class="rounded p-3" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
                             <i class="fas fa-vials fa-2x text-white"></i>
@@ -37,28 +38,43 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="vc-card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <p class="text-muted mb-1 small">Chờ kết quả</p>
-                            <h3 class="fw-bold mb-0" style="color: #f59e0b;">{{ $xetNghiems->whereIn('trang_thai', ['pending', 'processing'])->count() }}</h3>
+                            <p class="text-muted mb-1 small">Chờ xử lý</p>
+                            <h3 class="fw-bold mb-0" style="color: #6b7280;">{{ $stats['pending'] }}</h3>
                         </div>
-                        <div class="bg-warning bg-opacity-10 rounded p-3">
-                            <i class="fas fa-hourglass-half fa-2x text-warning"></i>
+                        <div class="bg-secondary bg-opacity-10 rounded p-3">
+                            <i class="fas fa-clock fa-2x text-secondary"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="vc-card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <p class="text-muted mb-1 small">Đã có kết quả</p>
-                            <h3 class="fw-bold mb-0" style="color: #10b981;">{{ $xetNghiems->where('trang_thai', 'completed')->count() }}</h3>
+                            <p class="text-muted mb-1 small">Đang xử lý</p>
+                            <h3 class="fw-bold mb-0" style="color: #f59e0b;">{{ $stats['processing'] }}</h3>
+                        </div>
+                        <div class="bg-warning bg-opacity-10 rounded p-3">
+                            <i class="fas fa-spinner fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="vc-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted mb-1 small">Đã hoàn thành</p>
+                            <h3 class="fw-bold mb-0" style="color: #10b981;">{{ $stats['completed'] }}</h3>
                         </div>
                         <div class="bg-success bg-opacity-10 rounded p-3">
                             <i class="fas fa-check-circle fa-2x text-success"></i>
@@ -66,6 +82,58 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    {{-- Filter Form --}}
+    <div class="card vc-card mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ route('doctor.xetnghiem.index') }}" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label small">Tìm kiếm bệnh nhân</label>
+                    <input type="text" name="search" class="form-control"
+                           placeholder="Tên, SĐT..."
+                           value="{{ request('search') }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Trạng thái</label>
+                    <select name="status" class="form-select">
+                        <option value="">-- Tất cả --</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
+                        <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Đã hoàn thành</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Loại XN</label>
+                    <select name="loai" class="form-select">
+                        <option value="">-- Tất cả --</option>
+                        @foreach($loaiXetNghiems as $loai)
+                            <option value="{{ $loai }}" {{ request('loai') == $loai ? 'selected' : '' }}>
+                                {{ $loai }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Từ ngày</label>
+                    <input type="date" name="from_date" class="form-control"
+                           value="{{ request('from_date') }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Đến ngày</label>
+                    <input type="date" name="to_date" class="form-control"
+                           value="{{ request('to_date') }}">
+                </div>
+                <div class="col-md-1 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <a href="{{ route('doctor.xetnghiem.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-redo"></i>
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 

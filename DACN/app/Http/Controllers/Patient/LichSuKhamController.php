@@ -59,7 +59,7 @@ class LichSuKhamController extends Controller
                 'date' => $dateString,
                 'doctor' => $appointment->bacSi->ten_bac_si,
                 'description' => 'Dịch vụ: ' . ($appointment->dichVu->ten_dich_vu ?? 'N/A'),
-                'action_url' => route('lichhen.my'),
+                'action_url' => route('patient.lichhen.show', $appointment),
             ];
         }
 

@@ -4,14 +4,17 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
 use App\Models\LichHen;
 use App\Models\HoaDon;
 use App\Models\BenhAn;
 use App\Models\NhanVien;
+use App\Models\TheoDoiThaiKy;
 use App\Observers\LichHenObserver;
 use App\Observers\HoaDonObserver;
 use App\Observers\BenhAnObserver;
 use App\Observers\NhanVienObserver;
+use App\Observers\TheoDoiThaiKyObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,5 +47,15 @@ class AppServiceProvider extends ServiceProvider
         HoaDon::observe(HoaDonObserver::class);
         BenhAn::observe(BenhAnObserver::class);
         NhanVien::observe(NhanVienObserver::class);
+        TheoDoiThaiKy::observe(TheoDoiThaiKyObserver::class);
+
+        // Share danh sách hồ sơ bệnh án của user đang đăng nhập cho view profile.edit
+        // NOTE: avoid calling dynamic relation on possibly untyped auth()->user() to satisfy static analysis (Intelephense)
+        View::composer('profile.edit', function ($view) {
+            $user = auth()->user();
+            // Use BenhAn query by user_id to avoid IDE warning about undefined method on $user
+            $benhAns = $user ? BenhAn::where('user_id', $user->id)->orderBy('ngay_kham', 'desc')->get() : collect();
+            $view->with('benhAns', $benhAns);
+        });
     }
 }

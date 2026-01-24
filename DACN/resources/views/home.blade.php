@@ -57,7 +57,7 @@
                         </li>
 
                         {{-- PATIENT QUICK LINKS --}}
-                        @if (auth()->user()->role === 'patient')
+                        @if (auth()->check() && auth()->user()->isPatient())
                             <li class="nav-item"><a class="nav-link" href="{{ route('patient.shop.index') }}">Cửa Hàng</a>
                             </li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('patient.shop.cart') }}">Giỏ Hàng</a>
@@ -77,8 +77,8 @@
                     @else
                         {{-- REGISTER --}}
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="modal" data-bs-target="#authModal"
-                                    data-tab="register" style="background: none; border: none;">
+                            <button class="nav-link" data-bs-toggle="modal" data-bs-target="#authModal" data-tab="register"
+                                style="background: none; border: none;">
                                 Đăng Ký
                             </button>
                         </li>
@@ -232,7 +232,7 @@
 
                 {{-- FEATURE ITEM 4: Mua thuốc online --}}
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <a href="{{ auth()->check() && auth()->user()->role === 'patient' ? route('patient.shop.index') : route('login') }}"
+                    <a href="{{ auth()->check() && auth()->user()->isPatient() ? route('patient.shop.index') : route('login') }}"
                         class="text-decoration-none">
                         <div class="vc-card feature-card h-100 text-center p-4">
                             <div class="vc-feature-icon mb-3">
@@ -267,7 +267,7 @@
                         <div class="d-flex align-items-start gap-3">
                             <div class="flex-shrink-0">
                                 <div class="rounded-circle bg-success d-flex align-items-center justify-content-center"
-                                     style="width: 40px; height: 40px;">
+                                    style="width: 40px; height: 40px;">
                                     <i class="fas fa-user-md text-white"></i>
                                 </div>
                             </div>
@@ -279,7 +279,7 @@
                         <div class="d-flex align-items-start gap-3">
                             <div class="flex-shrink-0">
                                 <div class="rounded-circle bg-success d-flex align-items-center justify-content-center"
-                                     style="width: 40px; height: 40px;">
+                                    style="width: 40px; height: 40px;">
                                     <i class="fas fa-calendar-check text-white"></i>
                                 </div>
                             </div>
@@ -291,7 +291,7 @@
                         <div class="d-flex align-items-start gap-3">
                             <div class="flex-shrink-0">
                                 <div class="rounded-circle bg-success d-flex align-items-center justify-content-center"
-                                     style="width: 40px; height: 40px;">
+                                    style="width: 40px; height: 40px;">
                                     <i class="fas fa-check-circle text-white"></i>
                                 </div>
                             </div>
@@ -306,7 +306,8 @@
                 {{-- RIGHT: Quick Booking Form --}}
                 <div class="col-lg-7">
                     <div class="vc-card p-4 shadow-lg" style="border-radius: 20px;">
-                        <form action="{{ route('lichhen.create', ['bacSi' => 'select']) }}" method="GET" id="quickBookingForm">
+                        <form action="{{ route('lichhen.create', ['bacSi' => 'select']) }}" method="GET"
+                            id="quickBookingForm">
                             <div class="row g-3">
                                 {{-- Chuyên Khoa --}}
                                 <div class="col-md-6">
@@ -321,7 +322,7 @@
                                                 ->orderBy('ten')
                                                 ->get();
                                         @endphp
-                                        @foreach($chuyenKhoas as $ck)
+                                        @foreach ($chuyenKhoas as $ck)
                                             <option value="{{ $ck->id }}">{{ $ck->ten }}</option>
                                         @endforeach
                                     </select>
@@ -343,7 +344,7 @@
                                         <i class="fas fa-calendar me-1 text-success"></i>Ngày Khám
                                     </label>
                                     <input type="date" class="form-control" name="ngay"
-                                           min="{{ date('Y-m-d') }}" required>
+                                        min="{{ date('Y-m-d') }}" required>
                                 </div>
 
                                 {{-- Họ Tên --}}
@@ -352,8 +353,8 @@
                                         <i class="fas fa-user me-1 text-success"></i>Họ Tên
                                     </label>
                                     <input type="text" class="form-control" name="ho_ten"
-                                           placeholder="Nhập họ tên của bạn" required
-                                           value="{{ auth()->check() ? auth()->user()->name : '' }}">
+                                        placeholder="Nhập họ tên của bạn" required
+                                        value="{{ auth()->check() ? auth()->user()->name : '' }}">
                                 </div>
 
                                 {{-- Số Điện Thoại --}}
@@ -362,8 +363,8 @@
                                         <i class="fas fa-phone me-1 text-success"></i>Số Điện Thoại
                                     </label>
                                     <input type="tel" class="form-control" name="so_dien_thoai"
-                                           placeholder="Nhập số điện thoại" required
-                                           value="{{ auth()->check() ? auth()->user()->so_dien_thoai : '' }}">
+                                        placeholder="Nhập số điện thoại" required
+                                        value="{{ auth()->check() ? auth()->user()->so_dien_thoai : '' }}">
                                 </div>
 
                                 {{-- Lý Do Khám --}}
@@ -371,15 +372,14 @@
                                     <label class="form-label fw-bold">
                                         <i class="fas fa-notes-medical me-1 text-success"></i>Lý Do Khám (Tùy chọn)
                                     </label>
-                                    <textarea class="form-control" name="ly_do" rows="2"
-                                              placeholder="Mô tả triệu chứng hoặc lý do khám..."></textarea>
+                                    <textarea class="form-control" name="ly_do" rows="2" placeholder="Mô tả triệu chứng hoặc lý do khám..."></textarea>
                                 </div>
 
                                 {{-- Submit Button --}}
                                 <div class="col-12">
                                     @auth
                                         <button type="button" class="btn vc-btn-primary w-100 py-3"
-                                                onclick="handleQuickBooking()">
+                                            onclick="handleQuickBooking()">
                                             <i class="fas fa-calendar-check me-2"></i>Đặt Lịch Ngay
                                         </button>
                                     @else
@@ -411,10 +411,10 @@
                     <div class="vc-card overflow-hidden" style="border-radius: 20px; height: 400px;">
                         {{-- Placeholder for video - Replace with actual video --}}
                         <div class="position-relative h-100 bg-dark d-flex align-items-center justify-content-center"
-                             style="background: linear-gradient(135deg, rgba(16,185,129,0.8), rgba(5,150,105,0.8)), url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800') center/cover;">
+                            style="background: linear-gradient(135deg, rgba(16,185,129,0.8), rgba(5,150,105,0.8)), url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800') center/cover;">
                             <button class="btn btn-light rounded-circle"
-                                    style="width: 80px; height: 80px; font-size: 2rem;"
-                                    data-bs-toggle="modal" data-bs-target="#videoModal">
+                                style="width: 80px; height: 80px; font-size: 2rem;" data-bs-toggle="modal"
+                                data-bs-target="#videoModal">
                                 <i class="fas fa-play text-success"></i>
                             </button>
                             <div class="position-absolute bottom-0 start-0 p-4 text-white">
@@ -431,10 +431,9 @@
                         {{-- Virtual Tour --}}
                         <div class="vc-card overflow-hidden flex-fill" style="border-radius: 16px;">
                             <div class="position-relative h-100 bg-dark d-flex align-items-center justify-content-center"
-                                 style="background: linear-gradient(135deg, rgba(16,185,129,0.7), rgba(5,150,105,0.7)), url('https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400') center/cover; min-height: 190px;">
-                                <button class="btn btn-light btn-sm rounded-circle"
-                                        style="width: 50px; height: 50px;"
-                                        data-bs-toggle="modal" data-bs-target="#tourModal">
+                                style="background: linear-gradient(135deg, rgba(16,185,129,0.7), rgba(5,150,105,0.7)), url('https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400') center/cover; min-height: 190px;">
+                                <button class="btn btn-light btn-sm rounded-circle" style="width: 50px; height: 50px;"
+                                    data-bs-toggle="modal" data-bs-target="#tourModal">
                                     <i class="fas fa-play text-success"></i>
                                 </button>
                                 <div class="position-absolute bottom-0 start-0 p-3 text-white w-100">
@@ -447,10 +446,9 @@
                         {{-- Doctor Interview --}}
                         <div class="vc-card overflow-hidden flex-fill" style="border-radius: 16px;">
                             <div class="position-relative h-100 bg-dark d-flex align-items-center justify-content-center"
-                                 style="background: linear-gradient(135deg, rgba(16,185,129,0.7), rgba(5,150,105,0.7)), url('https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400') center/cover; min-height: 190px;">
-                                <button class="btn btn-light btn-sm rounded-circle"
-                                        style="width: 50px; height: 50px;"
-                                        data-bs-toggle="modal" data-bs-target="#interviewModal">
+                                style="background: linear-gradient(135deg, rgba(16,185,129,0.7), rgba(5,150,105,0.7)), url('https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400') center/cover; min-height: 190px;">
+                                <button class="btn btn-light btn-sm rounded-circle" style="width: 50px; height: 50px;"
+                                    data-bs-toggle="modal" data-bs-target="#interviewModal">
                                     <i class="fas fa-play text-success"></i>
                                 </button>
                                 <div class="position-absolute bottom-0 start-0 p-3 text-white w-100">
@@ -476,8 +474,8 @@
                 <div class="modal-body p-0">
                     {{-- Replace with actual video embed --}}
                     <div class="ratio ratio-16x9 bg-dark">
-                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                                allowfullscreen style="border: none;"></iframe>
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen
+                            style="border: none;"></iframe>
                     </div>
                 </div>
             </div>
@@ -494,8 +492,8 @@
                 <div class="modal-body p-0">
                     <div class="ratio ratio-16x9 bg-dark">
                         {{-- Replace with actual 360 tour embed --}}
-                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                                allowfullscreen style="border: none;"></iframe>
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen
+                            style="border: none;"></iframe>
                     </div>
                 </div>
             </div>
@@ -511,8 +509,8 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="ratio ratio-16x9 bg-dark">
-                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                                allowfullscreen style="border: none;"></iframe>
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen
+                            style="border: none;"></iframe>
                     </div>
                 </div>
             </div>
@@ -651,31 +649,53 @@
             <div class="row mt-4">
                 @forelse($doctors as $doctor)
                     <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="vc-card doctor-card h-100">
 
-                            {{-- Doctor Image --}}
-                            <div class="doctor-image">
-                                @if ($doctor->anh_dai_dien)
-                                    <img src="{{ asset('storage/' . $doctor->anh_dai_dien) }}"
-                                        alt="{{ $doctor->ho_ten }}" class="w-100 h-100" loading="lazy"
-                                        style="object-fit: cover;">
+                        <div class="vc-card doctor-card h-100 d-flex flex-column overflow-hidden"
+                            style="border-radius:12px;">
+
+                            {{-- Doctor Image: fixed-height, rounded top and nicely cropped --}}
+                            <div class="doctor-image avatar-card">
+                                @if (!empty($doctor->avatar_url))
+                                    <img src="{{ $doctor->avatar_url }}" alt="{{ $doctor->ho_ten }}" loading="lazy"
+                                        class="avatar-img">
                                 @else
-                                    <div class="d-flex align-items-center justify-content-center h-100">
-                                        <i class="fas fa-user-md fa-5x text-white"></i>
+                                    <div class="d-flex align-items-center justify-content-center"
+                                        style="height:160px; width:100%; background:#e2e8f0; border-radius:8px;">
+                                        <i class="fas fa-user-md fa-5x text-white" style="opacity:0.9;"></i>
                                     </div>
                                 @endif
                             </div>
 
                             {{-- Doctor Info --}}
-                            <div class="p-4">
-                                <h5 class="fw-bold">{{ $doctor->ho_ten }}</h5>
+                            <div class="p-4" style="flex:1 1 auto;">
+                                <h5 class="fw-bold mb-1">{{ $doctor->ho_ten }}</h5>
 
+                                {{-- Specialty line --}}
                                 <div class="text-success small mb-2">
-                                    @if ($doctor->chuyenKhoas->count())
-                                        {{ $doctor->chuyenKhoas->pluck('ten_chuyen_khoa')->join(', ') }}
-                                    @else
-                                        Bác sĩ đa khoa
-                                    @endif
+                                    @php
+                                        $spec = $doctor->chuyenKhoas->count()
+                                            ? $doctor->chuyenKhoas->pluck('ten')->join(', ')
+                                            : $doctor->chuyen_khoa ?? 'Bác sĩ đa khoa';
+                                    @endphp
+                                    {{ $spec }}
+                                </div>
+
+                                {{-- Real doctor stats: experience / location / phone --}}
+                                <div class="d-flex flex-wrap gap-3 text-muted small mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-briefcase text-success me-2"></i>
+                                        <span>{{ $doctor->kinh_nghiem ?? 0 }} năm kinh nghiệm</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-map-marker-alt text-success me-2"></i>
+                                        <span>{{ $doctor->dia_chi ?? 'Đang cập nhật' }}</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-phone text-success me-2"></i>
+                                        <span>{{ $doctor->so_dien_thoai ?? '—' }}</span>
+                                    </div>
                                 </div>
 
                                 <p class="text-muted small mb-3">
@@ -706,7 +726,7 @@
 
                                     {{-- Tư vấn online --}}
                                     @auth
-                                        @if (auth()->user()->role === 'patient')
+                                        @if (auth()->check() && auth()->user()->isPatient())
                                             <a href="{{ route('patient.chat.create', $doctor->id) }}"
                                                 class="btn btn-outline-success">
                                                 <i class="fas fa-comments me-2"></i>Tư Vấn Online
@@ -779,7 +799,7 @@
                         // auto detect icon
                         $icon = 'fa-stethoscope';
                         foreach ($specialtyIcons as $key => $val) {
-                            if (str_contains($specialty->ten_chuyen_khoa, $key)) {
+                            if (str_contains($specialty->ten, $key)) {
                                 $icon = $val;
                                 break;
                             }
@@ -795,7 +815,7 @@
                             </div>
 
                             {{-- Name --}}
-                            <h5 class="fw-bold">{{ $specialty->ten_chuyen_khoa }}</h5>
+                            <h5 class="fw-bold">{{ $specialty->ten }}</h5>
 
                             {{-- Description --}}
                             <p class="text-muted small">
@@ -811,7 +831,7 @@
                             {{-- Buttons --}}
                             <div class="mt-3 d-grid gap-2">
                                 {{-- Xem bác sĩ thuộc chuyên khoa (đúng route thực tế) --}}
-                                <a href="{{ route('public.bacsi.index') . '?chuyen_khoa=' . urlencode($specialty->ten_chuyen_khoa) }}"
+                                <a href="{{ route('public.bacsi.index') . '?chuyen_khoa=' . urlencode($specialty->ten) }}"
                                     class="btn btn-outline-primary btn-sm">
                                     <i class="fas fa-search me-1"></i>Xem bác sĩ
                                 </a>
@@ -869,8 +889,9 @@
                         <div class="vc-card h-100 p-4">
                             {{-- Rating Stars --}}
                             <div class="mb-3">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <i class="fas fa-star" style="color: {{ $i <= $review->rating ? '#fbbf24' : '#e5e7eb' }};"></i>
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fas fa-star"
+                                        style="color: {{ $i <= $review->rating ? '#fbbf24' : '#e5e7eb' }};"></i>
                                 @endfor
                             </div>
 
@@ -881,12 +902,11 @@
 
                             {{-- User Info --}}
                             <div class="d-flex align-items-center gap-3 pt-3 border-top">
-                                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center"
-                                     style="width: 48px; height: 48px; flex-shrink: 0;">
-                                    @if($review->user && $review->user->anh_dai_dien)
+                                <div class="vc-avatar-sm d-flex align-items-center justify-content-center"
+                                    style="flex-shrink:0; background:#10b981;">
+                                    @if ($review->user && $review->user->anh_dai_dien)
                                         <img src="{{ asset('storage/' . $review->user->anh_dai_dien) }}"
-                                             alt="{{ $review->user->name }}"
-                                             class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                                            alt="{{ $review->user->name }}">
                                     @else
                                         <i class="fas fa-user text-white"></i>
                                     @endif
@@ -923,9 +943,8 @@
                 // Lấy 3 bài viết mới nhất đã published
                 $latestPosts = \App\Models\BaiViet::with(['danhMuc', 'author'])
                     ->where('status', 'published')
-                    ->where(function($q) {
-                        $q->whereNull('published_at')
-                          ->orWhere('published_at', '<=', now());
+                    ->where(function ($q) {
+                        $q->whereNull('published_at')->orWhere('published_at', '<=', now());
                     })
                     ->orderBy('published_at', 'desc')
                     ->orderBy('created_at', 'desc')
@@ -938,26 +957,27 @@
                     <div class="col-lg-4 col-md-6">
                         <article class="vc-card h-100" style="overflow: hidden;">
                             {{-- Thumbnail --}}
-                            @if($post->thumbnail)
+                            @if ($post->thumbnail)
                                 <div style="height: 200px; overflow: hidden;">
-                                    <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}"
-                                         class="w-100 h-100" style="object-fit: cover;">
+                                    <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}" class="w-100 h-100"
+                                        style="object-fit: cover;">
                                 </div>
                             @else
-                                <div style="height: 200px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center;">
+                                <div
+                                    style="height: 200px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-newspaper text-white" style="font-size: 3rem; opacity: 0.3;"></i>
                                 </div>
                             @endif
 
                             {{-- Content --}}
                             <div class="p-4">
-                                @if($post->danhMuc)
+                                @if ($post->danhMuc)
                                     <span class="badge bg-success mb-2">{{ $post->danhMuc->name }}</span>
                                 @endif
 
                                 <h5 class="fw-bold mb-2" style="line-height: 1.4;">
                                     <a href="{{ route('blog.show', $post->slug) }}"
-                                       class="text-decoration-none text-dark hover-green">
+                                        class="text-decoration-none text-dark hover-green">
                                         {{ $post->title }}
                                     </a>
                                 </h5>
@@ -972,7 +992,7 @@
                                         {{ optional($post->published_at ?? $post->created_at)->format('d/m/Y') }}
                                     </small>
                                     <a href="{{ route('blog.show', $post->slug) }}"
-                                       class="btn btn-sm btn-outline-success">
+                                        class="btn btn-sm btn-outline-success">
                                         Đọc thêm <i class="fas fa-arrow-right ms-1"></i>
                                     </a>
                                 </div>
@@ -988,7 +1008,7 @@
             </div>
 
             {{-- View All Button --}}
-            @if($latestPosts->count() > 0)
+            @if ($latestPosts->count() > 0)
                 <div class="text-center mt-4">
                     <a href="{{ route('public.blog.index') }}" class="btn vc-btn-primary">
                         <i class="fas fa-book-open me-2"></i>Xem Tất Cả Bài Viết
@@ -1014,13 +1034,14 @@
                         {{-- FAQ 1 --}}
                         <div class="accordion-item border-0 mb-3 vc-card">
                             <h2 class="accordion-header">
-                                <button class="accordion-button fw-bold" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#faq1">
+                                <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq1">
                                     <i class="fas fa-question-circle text-success me-2"></i>
                                     Làm thế nào để đặt lịch khám tại VietCare?
                                 </button>
                             </h2>
-                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div id="faq1" class="accordion-collapse collapse show"
+                                data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
                                     Bạn có thể đặt lịch khám online dễ dàng bằng cách: <br>
                                     1. Chọn chuyên khoa và bác sĩ phù hợp<br>
@@ -1035,7 +1056,7 @@
                         <div class="accordion-item border-0 mb-3 vc-card">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed fw-bold" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    data-bs-toggle="collapse" data-bs-target="#faq2">
                                     <i class="fas fa-question-circle text-success me-2"></i>
                                     Chi phí khám chữa bệnh như thế nào?
                                 </button>
@@ -1053,7 +1074,7 @@
                         <div class="accordion-item border-0 mb-3 vc-card">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed fw-bold" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    data-bs-toggle="collapse" data-bs-target="#faq3">
                                     <i class="fas fa-question-circle text-success me-2"></i>
                                     VietCare có chấp nhận bảo hiểm y tế không?
                                 </button>
@@ -1070,7 +1091,7 @@
                         <div class="accordion-item border-0 mb-3 vc-card">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed fw-bold" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#faq4">
+                                    data-bs-toggle="collapse" data-bs-target="#faq4">
                                     <i class="fas fa-question-circle text-success me-2"></i>
                                     Tôi có thể hủy lịch hẹn không?
                                 </button>
@@ -1078,7 +1099,8 @@
                             <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
                                     Có, bạn có thể hủy lịch hẹn trước giờ khám ít nhất 2 tiếng.
-                                    Vui lòng liên hệ hotline hoặc hủy trực tiếp trên hệ thống để được hoàn tiền (nếu đã thanh toán).
+                                    Vui lòng liên hệ hotline hoặc hủy trực tiếp trên hệ thống để được hoàn tiền (nếu đã
+                                    thanh toán).
                                 </div>
                             </div>
                         </div>
@@ -1087,7 +1109,7 @@
                         <div class="accordion-item border-0 mb-3 vc-card">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed fw-bold" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#faq5">
+                                    data-bs-toggle="collapse" data-bs-target="#faq5">
                                     <i class="fas fa-question-circle text-success me-2"></i>
                                     VietCare có dịch vụ khám tại nhà không?
                                 </button>
@@ -1095,7 +1117,8 @@
                             <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
                                     Hiện tại VietCare đang triển khai dịch vụ khám tại nhà cho một số chuyên khoa.
-                                    Vui lòng liên hệ hotline <strong>1900 xxxx</strong> để biết thêm chi tiết và đăng ký.
+                                    Vui lòng liên hệ hotline <strong>1900 xxxx</strong> để biết thêm chi tiết và đăng
+                                    ký.
                                 </div>
                             </div>
                         </div>
@@ -1119,31 +1142,31 @@
                 {{-- Placeholder for partner logos --}}
                 <div class="col-lg-2 col-md-3 col-4">
                     <div class="vc-card p-4 h-100 d-flex align-items-center justify-content-center"
-                         style="min-height: 100px; opacity: 0.7;">
+                        style="min-height: 100px; opacity: 0.7;">
                         <i class="fas fa-hospital fa-3x text-success"></i>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-3 col-4">
                     <div class="vc-card p-4 h-100 d-flex align-items-center justify-content-center"
-                         style="min-height: 100px; opacity: 0.7;">
+                        style="min-height: 100px; opacity: 0.7;">
                         <i class="fas fa-shield-alt fa-3x text-success"></i>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-3 col-4">
                     <div class="vc-card p-4 h-100 d-flex align-items-center justify-content-center"
-                         style="min-height: 100px; opacity: 0.7;">
+                        style="min-height: 100px; opacity: 0.7;">
                         <i class="fas fa-certificate fa-3x text-success"></i>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-3 col-4">
                     <div class="vc-card p-4 h-100 d-flex align-items-center justify-content-center"
-                         style="min-height: 100px; opacity: 0.7;">
+                        style="min-height: 100px; opacity: 0.7;">
                         <i class="fas fa-award fa-3x text-success"></i>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-3 col-4">
                     <div class="vc-card p-4 h-100 d-flex align-items-center justify-content-center"
-                         style="min-height: 100px; opacity: 0.7;">
+                        style="min-height: 100px; opacity: 0.7;">
                         <i class="fas fa-medal fa-3x text-success"></i>
                     </div>
                 </div>
@@ -1191,7 +1214,7 @@
 
                 {{-- Tư vấn online: chỉ dành cho bệnh nhân --}}
                 @auth
-                    @if (auth()->user()->role === 'patient')
+                    @if (auth()->check() && auth()->user()->isPatient())
                         <a href="{{ route('patient.chat.index') }}" class="btn vc-btn-primary">
                             <i class="fas fa-comments me-2"></i>Tư Vấn Online
                         </a>
@@ -1270,7 +1293,7 @@
                         {{-- Mua thuốc online --}}
                         <li>
                             @auth
-                                @if (auth()->user()->role === 'patient')
+                                @if (auth()->check() && auth()->user()->isPatient())
                                     <a href="{{ route('patient.shop.index') }}">Mua Thuốc Online</a>
                                 @else
                                     <a href="{{ route('login') }}">Mua Thuốc Online</a>
@@ -1283,7 +1306,7 @@
                         {{-- Tư vấn online --}}
                         <li>
                             @auth
-                                @if (auth()->user()->role === 'patient')
+                                @if (auth()->check() && auth()->user()->isPatient())
                                     <a href="{{ route('patient.chat.index') }}">Tư Vấn Online</a>
                                 @else
                                     <a href="{{ route('login') }}">Tư Vấn Online</a>
@@ -1373,20 +1396,25 @@
                         animateCounter(entry.target, target);
                     }
                 });
-            }, { threshold: 0.5 });
+            }, {
+                threshold: 0.5
+            });
 
             stats.forEach(stat => observer.observe(stat));
         });
 
         // ========== SMOOTH SCROLL ==========
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
                 if (href !== '#' && href.length > 1) {
                     e.preventDefault();
                     const target = document.querySelector(href);
                     if (target) {
-                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
                     }
                 }
             });
@@ -1407,7 +1435,9 @@
                             bsTab.show();
                         }
                     }
-                }, { once: true });
+                }, {
+                    once: true
+                });
             });
         });
 

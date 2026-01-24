@@ -137,6 +137,9 @@
                             <input type="file" name="avatar" class="form-control" accept="image/*">
 
                             @if ($nhanvien->avatar_path)
+                                <div class="mt-2">
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($nhanvien->avatar_path) }}" alt="avatar" style="max-width:140px;border-radius:8px;object-fit:cover;">
+                                </div>
                                 <small class="text-muted d-block mt-1">
                                     Hiện tại: {{ basename($nhanvien->avatar_path) }}
                                 </small>

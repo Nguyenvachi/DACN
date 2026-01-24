@@ -1,164 +1,154 @@
 @php
-    $isPatient = auth()->check() && auth()->user()->role === 'patient';
+    $isPatient = auth()->check() && auth()->user()->isPatient();
     $layout = $isPatient ? 'layouts.patient-modern' : 'layouts.app';
 @endphp
 
 @extends($layout)
 
+@section('title', 'Lịch khám - ' . $bacSi->ho_ten)
+
 @section('content')
-    <style>
-        .schedule-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-        }
-
-        .week-navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .schedule-table {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .day-column {
-            border: 1px solid #e0e0e0;
-            padding: 1rem;
-            min-height: 200px;
-        }
-
-        .day-header {
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #667eea;
-        }
-
-        .day-header.weekend {
-            color: #dc3545;
-            border-bottom-color: #dc3545;
-        }
-
-        .slot-item {
-            background: #f0f4ff;
-            border-left: 3px solid #667eea;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .slot-item:hover {
-            background: #667eea;
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .no-slots {
-            color: #999;
-            font-style: italic;
-            text-align: center;
-            padding: 1rem;
-        }
-    </style>
-
     <div class="container py-4">
-        <!-- Header -->
-        <div class="schedule-header">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h2 class="mb-2">
-                        <i class="fas fa-calendar-week"></i>
-                        Lịch Rảnh - {{ $bacSi->ten }}
-                    </h2>
-                    <p class="mb-0">
-                        <i class="fas fa-stethoscope"></i>
-                        {{ $bacSi->chuyenKhoa->ten ?? 'Đa khoa' }}
-                    </p>
+        {{-- 1. HEADER: THÔNG TIN BÁC SĨ --}}
+        <div class="card shadow-sm border-0 mb-4 overflow-hidden">
+            <div class="card-body p-0">
+                <div class="row g-0">
+                    <div class="col-md-8 p-4 d-flex align-items-center bg-white">
+                        <div class="d-flex align-items-center">
+                            {{-- Avatar --}}
+                            <div class="me-4 position-relative">
+                                @if ($bacSi->avatar_url)
+                                    <img src="{{ $bacSi->avatar_url }}" class="rounded-circle shadow-sm object-fit-cover"
+                                        width="80" height="80" alt="{{ $bacSi->ho_ten }}">
+                                @else
+                                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-primary"
+                                        style="width: 80px; height: 80px;">
+                                        <i class="fas fa-user-md fa-2x"></i>
+                                    </div>
+                                @endif
+                                <div class="position-absolute bottom-0 end-0 p-1 bg-white rounded-circle">
+                                    <i class="fas fa-check-circle text-success fs-5"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="fw-bold mb-1">{{ $bacSi->ho_ten ?? optional($bacSi->user)->name }}</h4>
+                                @php
+                                    $spec =
+                                        optional($bacSi->chuyenKhoas->first())->ten ??
+                                        ($bacSi->chuyen_khoa ?? 'Đa khoa');
+                                @endphp
+                                <div class="text-muted mb-2">
+                                    <i class="fas fa-stethoscope text-info me-1"></i>
+                                    {{ $spec }}
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary">
+                                        <i
+                                            class="fas fa-star me-1"></i>{{ number_format(\App\Models\DanhGia::getAverageRating($bacSi->id), 1) }}
+                                    </span>
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                        <i
+                                            class="fas fa-user-friends me-1"></i>{{ \App\Models\DanhGia::getTotalReviews($bacSi->id) }}
+                                        đánh giá
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 bg-light p-4 d-flex flex-column justify-content-center border-start">
+                        <a href="{{ route('public.bacsi.index') }}" class="btn btn-outline-secondary w-100 mb-2">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+                        </a>
+                        <div class="small text-muted text-center">
+                            <i class="fas fa-info-circle me-1"></i>Chọn khung giờ bên dưới để đặt lịch
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <a href="{{ route('public.bacsi.index') }}" class="btn btn-light">
-                        <i class="fas fa-arrow-left"></i> Quay lại danh sách
+            </div>
+        </div>
+
+        {{-- 2. LỊCH KHÁM (Weekly Schedule) --}}
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h5 class="mb-0 fw-bold"><i class="far fa-calendar-alt me-2 text-primary"></i>Lịch làm việc</h5>
+
+                {{-- Điều hướng tuần --}}
+                <div class="btn-group shadow-sm">
+                    <a href="{{ route('public.bacsi.schedule', ['bacSi' => $bacSi->id, 'week_start' => $weekStart->copy()->subWeek()->format('Y-m-d')]) }}"
+                        class="btn btn-light border">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <button type="button" class="btn btn-white border px-3 fw-bold disabled">
+                        {{ $weekStart->format('d/m') }} - {{ $weekEnd->format('d/m/Y') }}
+                    </button>
+                    <a href="{{ route('public.bacsi.schedule', ['bacSi' => $bacSi->id, 'week_start' => $weekStart->copy()->addWeek()->format('Y-m-d')]) }}"
+                        class="btn btn-light border">
+                        <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>
             </div>
-        </div>
 
-        <!-- Week Navigation -->
-        <div class="week-navigation">
-            <a href="{{ route('public.bacsi.schedule', ['bacSi' => $bacSi->id, 'week_start' => $weekStart->copy()->subWeek()->format('Y-m-d')]) }}"
-                class="btn btn-outline-primary">
-                <i class="fas fa-chevron-left"></i> Tuần trước
-            </a>
-            <h4 class="mb-0">
-                {{ $weekStart->format('d/m/Y') }} - {{ $weekEnd->format('d/m/Y') }}
-            </h4>
-            <a href="{{ route('public.bacsi.schedule', ['bacSi' => $bacSi->id, 'week_start' => $weekStart->copy()->addWeek()->format('Y-m-d')]) }}"
-                class="btn btn-outline-primary">
-                Tuần sau <i class="fas fa-chevron-right"></i>
-            </a>
-        </div>
-
-        <!-- Schedule Table -->
-        <div class="schedule-table">
-            <div class="row g-0">
-                @php
-                    $daysOfWeek = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'];
-                    $currentDay = $weekStart->copy();
-                @endphp
-
-                @for ($i = 0; $i < 7; $i++)
-                    @php
-                        $dateStr = $currentDay->format('Y-m-d');
-                        $daySlots = $slotsByDate->get($dateStr, collect());
-                        $isWeekend = $i >= 5;
-                    @endphp
-
-                    <div class="col-md-12 col-lg-{{ 12 / 7 }} day-column">
-                        <div class="day-header {{ $isWeekend ? 'weekend' : '' }}">
-                            {{ $daysOfWeek[$i] }}<br>
-                            <small>{{ $currentDay->format('d/m') }}</small>
-                        </div>
-
-                        @if ($daySlots->isNotEmpty())
-                            @foreach ($daySlots as $slot)
-                                <div class="slot-item" onclick="bookSlot('{{ $dateStr }}', '{{ $slot['start'] }}')">
-                                    <i class="far fa-clock"></i>
-                                    {{ $slot['start'] }} - {{ $slot['end'] }}
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="no-slots">
-                                Không có lịch
-                            </div>
-                        @endif
-                    </div>
-
-                    @php
-                        $currentDay->addDay();
-                    @endphp
-                @endfor
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-0 text-center align-middle" style="min-width: 800px;">
+                        <thead class="bg-light text-secondary">
+                            <tr>
+                                @php $currentDay = $weekStart->copy(); @endphp
+                                @for ($i = 0; $i < 7; $i++)
+                                    <th class="py-3 {{ $i >= 5 ? 'text-danger bg-danger bg-opacity-10' : '' }}"
+                                        style="width: 14.28%;">
+                                        <div class="small text-uppercase">{{ $i == 6 ? 'Chủ nhật' : 'Thứ ' . ($i + 2) }}
+                                        </div>
+                                        <div class="fs-5 fw-bold">{{ $currentDay->format('d/m') }}</div>
+                                    </th>
+                                    @php $currentDay->addDay(); @endphp
+                                @endfor
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @php $currentDay = $weekStart->copy(); @endphp
+                                @for ($i = 0; $i < 7; $i++)
+                                    @php
+                                        $dateStr = $currentDay->format('Y-m-d');
+                                        $daySlots = $slotsByDate->get($dateStr, collect());
+                                    @endphp
+                                    <td class="align-top p-2 bg-white">
+                                        @if ($daySlots->isNotEmpty())
+                                            <div class="d-grid gap-2">
+                                                @foreach ($daySlots as $slot)
+                                                    <button
+                                                        onclick="bookSlot('{{ $dateStr }}', '{{ $slot['start'] }}')"
+                                                        class="btn btn-outline-primary btn-sm py-2 rounded-3 hover-scale transition-all">
+                                                        {{ $slot['start'] }}
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <div class="py-4 text-muted opacity-50">
+                                                <i class="far fa-calendar-times mb-1"></i><br>
+                                                <small>Trống</small>
+                                            </div>
+                                        @endif
+                                    </td>
+                                    @php $currentDay->addDay(); @endphp
+                                @endfor
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-light py-3">
+                <div class="d-flex align-items-center small text-muted">
+                    <i class="fas fa-info-circle text-primary me-2"></i>
+                    <span>Thời gian khám mỗi ca là <strong>30 phút</strong>. Vui lòng đến sớm 10 phút để làm thủ tục.</span>
+                </div>
             </div>
         </div>
 
-        <!-- Quick Info -->
-        <div class="alert alert-info mt-4">
-            <i class="fas fa-info-circle"></i>
-            <strong>Lưu ý:</strong> Click vào khung giờ để đặt lịch khám. Mỗi slot có thời lượng 30 phút.
-        </div>
-
-        <!-- Reviews Section -->
+        {{-- 3. ĐÁNH GIÁ (Reviews) --}}
         @php
             $avgRating = \App\Models\DanhGia::getAverageRating($bacSi->id);
             $totalReviews = \App\Models\DanhGia::getTotalReviews($bacSi->id);
@@ -171,88 +161,96 @@
         @endphp
 
         @if ($totalReviews > 0)
-            <div class="card mt-4 shadow-sm border-0">
+            <div class="card shadow-sm border-0">
                 <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">
-                        <i class="bi bi-star-fill text-warning"></i>
-                        Đánh giá từ bệnh nhân
-                    </h5>
+                    <h5 class="mb-0 fw-bold">Đánh giá từ bệnh nhân ({{ $totalReviews }})</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row mb-4">
-                        <div class="col-md-3 text-center border-end">
-                            <div class="display-4 fw-bold text-warning">{{ number_format($avgRating, 1) }}</div>
-                            <div class="mb-2">
+                    <div class="row g-4">
+                        {{-- Cột trái: Tổng quan điểm số --}}
+                        <div class="col-md-4 text-center border-end">
+                            <div class="display-3 fw-bold text-dark">{{ number_format($avgRating, 1) }}</div>
+                            <div class="mb-2 text-warning fs-5">
                                 @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= round($avgRating))
-                                        <i class="bi bi-star-fill text-warning"></i>
-                                    @else
-                                        <i class="bi bi-star text-muted"></i>
-                                    @endif
+                                    <i class="{{ $i <= round($avgRating) ? 'fas' : 'far' }} fa-star"></i>
                                 @endfor
                             </div>
-                            <div class="text-muted">{{ $totalReviews }} đánh giá</div>
+                            <p class="text-muted">Dựa trên {{ $totalReviews }} lượt đánh giá</p>
                         </div>
-                        <div class="col-md-9">
-                            @php
-                                $distribution = \App\Models\DanhGia::getRatingDistribution($bacSi->id);
-                            @endphp
-                            @for ($i = 5; $i >= 1; $i--)
-                                @php
-                                    $count = $distribution[$i] ?? 0;
-                                    $percentage = $totalReviews > 0 ? ($count / $totalReviews) * 100 : 0;
-                                @endphp
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="me-2" style="width: 60px;">{{ $i }} sao</span>
-                                    <div class="progress flex-grow-1" style="height: 20px;">
-                                        <div class="progress-bar bg-warning" role="progressbar"
-                                             style="width: {{ $percentage }}%"
-                                             aria-valuenow="{{ $percentage }}" aria-valuemin="0" aria-valuemax="100">
+
+                        {{-- Cột phải: Danh sách comment --}}
+                        <div class="col-md-8">
+                            <div class="list-group list-group-flush">
+                                @foreach ($reviews as $review)
+                                    <div class="list-group-item px-0 py-3 border-bottom">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="fw-bold mb-0 text-dark">{{ $review->user->name }}</h6>
+                                                <div class="text-warning small">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <i class="{{ $i <= $review->rating ? 'fas' : 'far' }} fa-star"></i>
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
                                         </div>
+                                        <p class="mb-0 text-secondary small bg-light p-2 rounded">
+                                            <i class="fas fa-quote-left text-muted me-2 opacity-50"></i>
+                                            {{ $review->noi_dung }}
+                                        </p>
                                     </div>
-                                    <span class="ms-2 text-muted" style="width: 50px;">{{ $count }}</span>
-                                </div>
-                            @endfor
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-
-                    <hr>
-
-                    <h6 class="fw-bold mb-3">Đánh giá gần đây</h6>
-                    @foreach ($reviews as $review)
-                        <div class="mb-3 pb-3 border-bottom">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <strong>{{ $review->user->name }}</strong>
-                                    <div class="text-warning">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= $review->rating)
-                                                <i class="bi bi-star-fill"></i>
-                                            @else
-                                                <i class="bi bi-star"></i>
-                                            @endif
-                                        @endfor
-                                    </div>
-                                </div>
-                                <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
-                            </div>
-                            <p class="mb-0">{{ $review->noi_dung }}</p>
-                        </div>
-                    @endforeach
                 </div>
             </div>
         @endif
     </div>
 
-    <script>
-        function bookSlot(date, time) {
-            // Chuyển đến trang đặt lịch với thông tin đã chọn
-            const url = "{{ route('lichhen.create', ['bacSi' => $bacSi->id]) }}";
-            const params = new URLSearchParams({
-                ngay: date,
-                gio: time
-            });
-            window.location.href = `${url}?${params.toString()}`;
-        }
-    </script>
+    @push('scripts')
+        <script>
+            function bookSlot(date, time) {
+                // Hiệu ứng loading nút bấm
+                const btn = event.currentTarget;
+                const originalText = btn.innerText;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                btn.classList.add('disabled');
+
+                const url = "{{ route('lichhen.create', ['bacSi' => $bacSi->id]) }}";
+                const params = new URLSearchParams({
+                    ngay: date,
+                    gio: time
+                });
+
+                setTimeout(() => {
+                    window.location.href = `${url}?${params.toString()}`;
+                }, 300);
+            }
+        </script>
+    @endpush
+
+    @push('styles')
+        <style>
+            .hover-scale:hover {
+                transform: scale(1.05);
+                background-color: var(--bs-primary);
+                color: white;
+            }
+
+            .transition-all {
+                transition: all 0.2s ease;
+            }
+
+            /* Ẩn scrollbar ngang của bảng trên desktop nhưng vẫn scroll được nếu màn nhỏ */
+            .table-responsive::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            .table-responsive::-webkit-scrollbar-thumb {
+                background-color: #dee2e6;
+                border-radius: 4px;
+            }
+        </style>
+    @endpush
 @endsection

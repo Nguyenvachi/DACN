@@ -97,7 +97,7 @@
                         @endphp
                         @if ($change != 0)
                             <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
-                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center">
+                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center text-dark">
                                     <i class="bi {{ $change > 0 ? 'bi-arrow-up' : 'bi-arrow-down' }} me-1"></i>
                                     <span class="small fw-bold">{{ abs($change) }}%</span>
                                 </div>
@@ -129,7 +129,7 @@
                         @endphp
                         @if ($change != 0)
                             <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
-                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center">
+                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center text-dark">
                                     <i class="bi {{ $change > 0 ? 'bi-arrow-up' : 'bi-arrow-down' }} me-1"></i>
                                     <span class="small fw-bold">{{ abs($change) }}%</span>
                                 </div>
@@ -161,7 +161,7 @@
                         @endphp
                         @if ($change != 0)
                             <div class="d-flex align-items-center mt-3 pt-3 border-top border-white border-opacity-25">
-                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center">
+                                <div class="px-2 py-1 rounded bg-white bg-opacity-20 d-inline-flex align-items-center text-dark">
                                     <i class="bi {{ $change > 0 ? 'bi-arrow-up' : 'bi-arrow-down' }} me-1"></i>
                                     <span class="small fw-bold">{{ abs($change) }}%</span>
                                 </div>

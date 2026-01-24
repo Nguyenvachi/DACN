@@ -25,7 +25,7 @@ class BacSi extends Model
     protected static function booted()
     {
         static::created(function ($bacSi) {
-            if ($bacSi->user && $bacSi->user->role !== 'doctor') {
+            if ($bacSi->user && !$bacSi->user->isDoctor()) {
                 $bacSi->user->forceFill(['role' => 'doctor'])->save();
             }
         });
@@ -64,6 +64,40 @@ class BacSi extends Model
     public function conversations()
     {
         return $this->hasMany(Conversation::class, 'bac_si_id');
+    }
+
+    public function xetNghiems()
+    {
+        return $this->hasMany(\App\Models\XetNghiem::class, 'bac_si_id');
+    }
+
+    // THÊM: Relationship với Siêu âm (File con: app/Models/SieuAm.php)
+    // Alias cho sieuAmsChiDinh (backward compatibility)
+    public function sieuAms()
+    {
+        return $this->hasMany(\App\Models\SieuAm::class, 'bac_si_chi_dinh_id');
+    }
+
+    /**
+     * Siêu âm do bác sĩ chỉ định
+     */
+    public function sieuAmsChiDinh()
+    {
+        return $this->hasMany(\App\Models\SieuAm::class, 'bac_si_chi_dinh_id');
+    }
+
+    /**
+     * Siêu âm do bác sĩ thực hiện (có thể khác bác sĩ chỉ định)
+     */
+    public function sieuAmsThucHien()
+    {
+        return $this->hasMany(\App\Models\SieuAm::class, 'bac_si_sieu_am_id');
+    }
+
+    // Thuộc 1 chuyên khoa (singular)
+    public function chuyenKhoa()
+    {
+        return $this->belongsTo(\App\Models\ChuyenKhoa::class, 'chuyen_khoa_id');
     }
 
     // Thuộc nhiều chuyên khoa
